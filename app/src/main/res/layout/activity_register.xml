@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/title_bar" />
+
+        <EditText
+            android:id="@id/phone_number"
+            android:layout_width="fill_parent"
+            android:layout_height="45.0dip"
+            android:background="#ffffffff"
+            android:hint="@string/hint_phone_register"
+            android:inputType="phone"
+            android:paddingLeft="10.0dip"
+            android:textColorHint="#ff999999"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="14.0sp"
+            android:typeface="monospace" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dip"
+            android:layout_marginLeft="10.0dip"
+            android:background="#ffdcdcdc" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45.0dip"
+            android:background="#ffffffff"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="10.0dip">
+
+            <EditText
+                android:id="@+id/verify_code"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@null"
+                android:hint="@string/hint_verify_register"
+                android:inputType="phone"
+                android:textColorHint="#ff999999"
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="14.0sp"
+                android:typeface="monospace" />
+
+            <View
+                android:layout_width="0.5dip"
+                android:layout_height="30.0dip"
+                android:layout_marginRight="10.0dip"
+                android:background="#ffdcdcdc" />
+
+            <TextView
+                android:id="@+id/send_verify_code"
+                android:layout_width="75.0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10.0dip"
+                android:gravity="center"
+                android:text="获取验证码"
+                android:textColor="@drawable/textview_verfycode"
+                android:textSize="14.0sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dip"
+            android:layout_marginLeft="10.0dip"
+            android:background="#ffdcdcdc" />
+
+        <com.real.doctor.realdoc.widget.EditTextPassword
+            android:id="@+id/userpassword"
+            android:layout_width="fill_parent"
+            android:layout_height="45.0dip"
+            android:background="#ffffffff"
+            android:hint="@string/hint_password_register"
+            android:inputType="textPassword"
+            android:paddingLeft="10.0dip"
+            android:paddingRight="10.0dip"
+            android:textColorHint="#ff999999"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="14.0sp"
+            android:typeface="monospace"
+            app:hidePasswordIcon="@mipmap/hide_password"
+            app:showPasswordIcon="@mipmap/show_password" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dip"
+            android:background="#ffdcdcdc" />
+
+        <EditText
+            android:id="@+id/invite_code"
+            android:layout_width="155.0dip"
+            android:layout_height="45.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginTop="10.0dip"
+            android:background="#ffffffff"
+            android:hint="输入邀请码（可填）"
+            android:maxLines="1"
+            android:paddingLeft="10.0dip"
+            android:textColorHint="#ff999999"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="14.0sp"
+            android:typeface="monospace" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45.0dip"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/button_register_login"
+                android:layout_width="fill_parent"
+                android:layout_height="43.0dip"
+                android:layout_marginLeft="18.0dip"
+                android:layout_marginRight="18.0dip"
+                android:background="@drawable/button_selector"
+                android:text="注册登录"
+                android:textColor="#ffffffff"
+                android:textSize="15.0sp" />
+        </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10.0dip"
+            android:background="#55ffffff"
+            android:padding="10.0dip"
+            android:visibility="gone" />
+    </LinearLayout>
+</RelativeLayout>

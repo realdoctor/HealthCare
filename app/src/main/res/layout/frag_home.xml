@@ -1,68 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/home_search"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/home_search_height"
+            android:background="#ff03b5e5"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/search_text"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/home_searchText_height"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip"
+                android:background="@drawable/search_background"
+                android:drawableLeft="@mipmap/icon_search_white"
+                android:drawablePadding="10.0dip"
+                android:gravity="center_vertical"
+                android:hint="@string/search_hint"
+                android:paddingLeft="10.0dip"
+                android:textColorHint="#b3ffffff" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/function_title"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/home_search_height"
+            android:alpha="0.0"
+            android:background="@color/appthemecolor"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/title_search"
+                android:layout_width="@dimen/function_image_size"
+                android:layout_height="@dimen/function_image_size"
+                android:layout_marginLeft="30.0dip"
+                android:background="@mipmap/title_fun_one" />
+
+            <ImageView
+                android:id="@+id/title_uplaod"
+                android:layout_width="@dimen/function_image_size"
+                android:layout_height="@dimen/function_image_size"
+                android:layout_marginLeft="34.0dip"
+                android:background="@mipmap/title_fun_two" />
+
+            <ImageView
+                android:id="@+id/title_communicate"
+                android:layout_width="@dimen/function_image_size"
+                android:layout_height="@dimen/function_image_size"
+                android:layout_marginLeft="34.0dip"
+                android:background="@mipmap/title_fun_three" />
+
+            <ImageView
+                android:id="@+id/title_doctor_online"
+                android:layout_width="@dimen/function_image_size"
+                android:layout_height="@dimen/function_image_size"
+                android:layout_marginLeft="34.0dip"
+                android:background="@mipmap/title_fun_four" />
+
+            <ImageView
+                android:id="@+id/title_base_cure"
+                android:layout_width="@dimen/function_image_size"
+                android:layout_height="@dimen/function_image_size"
+                android:layout_marginLeft="34.0dip"
+                android:background="@mipmap/title_fun_five" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- <ScrollerView
+         android:id="@+id/swipe_target"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:overScrollMode="never">-->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:orientation="vertical">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentScrim="@color/white"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleEnabled="false">
+        <LinearLayout
+            android:id="@+id/main_function_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/home_base_height"
+            android:background="@color/appthemecolor"
+            android:orientation="horizontal">
 
+            <LinearLayout
+                android:id="@+id/upload_data"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
+                <ImageView
+                    android:layout_width="@dimen/main_funciton_image_size"
+                    android:layout_height="@dimen/main_funciton_image_size"
+                    android:background="@mipmap/icon_upload_data" />
 
                 <TextView
-                    android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:lines="1"
-                    android:text="@string/home_titile"
-                    android:textSize="20sp" />
-            </android.support.v7.widget.Toolbar>
+                    android:layout_marginTop="14.0dip"
+                    android:text="@string/function_one_string"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
 
-            <include
-                android:id="@+id/bga_banner"
-                layout="@layout/layout_banner"
-                android:layout_width="match_parent"
-                android:layout_height="200dp" />
+            <LinearLayout
+                android:id="@+id/case_comunicate"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="vertical">
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+                <ImageView
+                    android:layout_width="@dimen/main_funciton_image_size"
+                    android:layout_height="@dimen/main_funciton_image_size"
+                    android:background="@mipmap/icon_case_communicate" />
 
-    <include
-        layout="@layout/content_scrolling"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14.0dip"
+                    android:text="@string/function_two_string"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:onClick="scrollTop"
-        android:scaleType="centerInside"
-        android:src="@mipmap/ic_back_top"
-        app:backgroundTint="@color/white"
-        app:backgroundTintMode="src_in"
-        app:fabSize="mini"
-        app:layout_anchor="@+id/recyclerview"
-        app:layout_anchorGravity="right|bottom" />
+            <LinearLayout
+                android:id="@+id/doctor_online"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="vertical">
 
-</android.support.design.widget.CoordinatorLayout>
+                <ImageView
+                    android:layout_width="@dimen/main_funciton_image_size"
+                    android:layout_height="@dimen/main_funciton_image_size"
+                    android:background="@mipmap/icon_doctor_online" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14.0dip"
+                    android:text="@string/function_three_string"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/base_cure"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/main_funciton_image_size"
+                    android:layout_height="@dimen/main_funciton_image_size"
+                    android:background="@mipmap/icon_base_cure" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14.0dip"
+                    android:text="@string/function_four_string"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <include layout="@layout/function_two_layout" />
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@null" />
+    </LinearLayout>
+    <!--    </ScrollerView>-->
+</LinearLayout>

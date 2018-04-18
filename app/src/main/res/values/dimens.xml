@@ -32,4 +32,18 @@
     <dimen name="main_v_margin_db">7dp</dimen>
     <dimen name="main_item_title_size">38px</dimen>
     <dimen name="topbar_big_icon_size">66px</dimen>
+
+    <dimen name="home_search_height">48.0dip</dimen>
+    <dimen name="home_searchText_height">33.0dip</dimen>
+    <dimen name="function_image_size">30.0dip</dimen>
+    <dimen name="home_base_height">114.0dip</dimen>
+    <dimen name="main_funciton_image_size">38.0dip</dimen>
+    <dimen name="text_size_12sp">12.0sp</dimen>
+    <dimen name="text_size_14sp">14.0sp</dimen>
+    <dimen name="text_size_primary">16.0sp</dimen>
+    <dimen name="user_backgroud_height">180.0dip</dimen>
+    <dimen name="margin_8dp">8.0dip</dimen>
+    <dimen name="linearLayout_height">45.0dip</dimen>
+    <dimen name="user_function_height">86.0dip</dimen>
+    <dimen name="user_avatar_height">60.0dip</dimen>
 </resources>

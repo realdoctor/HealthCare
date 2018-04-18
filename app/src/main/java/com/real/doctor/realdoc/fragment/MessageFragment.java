@@ -7,19 +7,17 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseFragment;
 
 /**
- * user：lqm
- * desc：第二个模块，主页Fragment
+ * Created by Administrator on 2018/4/18.
  */
 
-public class ShopFragment extends BaseFragment {
-
-    public static ShopFragment newInstance() {
-        return new ShopFragment();
+public class MessageFragment extends BaseFragment {
+    public static MessageFragment newInstance() {
+        return new MessageFragment();
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_shop;
+        return R.layout.frag_message;
     }
 
     @Override

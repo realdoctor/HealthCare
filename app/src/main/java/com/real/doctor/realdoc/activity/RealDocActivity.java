@@ -1,4 +1,4 @@
-package com.real.doctor.realdoc.ui.activity;
+package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.HomeFragment;
-import com.real.doctor.realdoc.fragment.ShopFragment;
-import com.real.doctor.realdoc.fragment.TypeFragment;
+import com.real.doctor.realdoc.fragment.ReadFragment;
+import com.real.doctor.realdoc.fragment.MessageFragment;
 import com.real.doctor.realdoc.fragment.UserFragment;
-import com.real.doctor.realdoc.ui.adapter.FragPagerAdapter;
+import com.real.doctor.realdoc.adapter.FragPagerAdapter;
 import com.real.doctor.realdoc.util.UIUtils;
 import com.real.doctor.realdoc.widget.IconFontTextView;
 
@@ -34,18 +34,18 @@ public class RealDocActivity extends BaseActivity {
     TextView tvHome;
     @BindView(R.id.ll_home)
     LinearLayout llHome;
-    @BindView(R.id.if_shop)
-    IconFontTextView ifShop;
-    @BindView(R.id.tv_shop)
-    TextView tvShop;
-    @BindView(R.id.ll_shop)
-    LinearLayout llShop;
-    @BindView(R.id.if_type)
-    IconFontTextView ifType;
-    @BindView(R.id.tv_type)
-    TextView tvType;
-    @BindView(R.id.ll_type)
-    LinearLayout llType;
+    @BindView(R.id.if_read)
+    IconFontTextView ifRead;
+    @BindView(R.id.tv_read)
+    TextView tvRead;
+    @BindView(R.id.ll_read)
+    LinearLayout llRead;
+    @BindView(R.id.if_msg)
+    IconFontTextView ifMsg;
+    @BindView(R.id.tv_msg)
+    TextView tvMsg;
+    @BindView(R.id.ll_msg)
+    LinearLayout llMsg;
     @BindView(R.id.if_user)
     IconFontTextView ifUser;
     @BindView(R.id.tv_user)
@@ -69,8 +69,8 @@ public class RealDocActivity extends BaseActivity {
     public void initData() {
         setTabColor(ifHome, tvHome);
         mFragments.add(HomeFragment.newInstance());
-        mFragments.add(ShopFragment.newInstance());
-        mFragments.add(TypeFragment.newInstance());
+        mFragments.add(ReadFragment.newInstance());
+        mFragments.add(MessageFragment.newInstance());
         mFragments.add(UserFragment.newInstance());
         viewPager.setAdapter(new FragPagerAdapter(getSupportFragmentManager(), mFragments));
         viewPager.setCurrentItem(0, false);
@@ -89,10 +89,10 @@ public class RealDocActivity extends BaseActivity {
                         setTabColor(ifHome, tvHome);
                         break;
                     case 1:
-                        setTabColor(ifShop, tvShop);
+                        setTabColor(ifRead, tvRead);
                         break;
                     case 2:
-                        setTabColor(ifType, tvType);
+                        setTabColor(ifMsg, tvMsg);
                         break;
                     case 3:
                         setTabColor(ifUser, tvUser);
@@ -113,20 +113,20 @@ public class RealDocActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.ll_home,R.id.ll_shop, R.id.ll_type,R.id.ll_user})
+    @OnClick({R.id.ll_home,R.id.ll_read, R.id.ll_msg,R.id.ll_user})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.ll_home:
                 viewPager.setCurrentItem(0);
                 setTabColor(ifHome, tvHome);
                 break;
-            case R.id.ll_shop:
+            case R.id.ll_read:
                 viewPager.setCurrentItem(1);
-                setTabColor(ifShop, tvShop);
+                setTabColor(ifRead, tvRead);
                 break;
-            case R.id.ll_type:
+            case R.id.ll_msg:
                 viewPager.setCurrentItem(2);
-                setTabColor(ifType, tvType);
+                setTabColor(ifMsg, tvMsg);
                 break;
             case R.id.ll_user:
                 viewPager.setCurrentItem(3);
@@ -143,10 +143,10 @@ public class RealDocActivity extends BaseActivity {
     private void setTabColor(IconFontTextView icon, TextView textView) {
         ifHome.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
         tvHome.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
-        ifShop.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
-        tvShop.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
-        ifType.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
-        tvType.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
+        ifRead.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
+        tvRead.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
+        ifMsg.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
+        tvMsg.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
         ifUser.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
         tvUser.setTextColor(UIUtils.getColor(R.color.tab_nor_color));
         icon.setTextColor(UIUtils.getColor(R.color.tab_sel_color));

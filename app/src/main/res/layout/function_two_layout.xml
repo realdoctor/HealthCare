@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="86.0dip"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/case_one"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/main_funciton_image_size"
+                android:layout_height="@dimen/main_funciton_image_size"
+                android:background="@mipmap/icon_function_one" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.0dip"
+                android:text="@string/second_function_one_string"
+                android:textColor="@color/text_special_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/case_two"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/main_funciton_image_size"
+                android:layout_height="@dimen/main_funciton_image_size"
+                android:background="@mipmap/icon_function_two" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.0dip"
+                android:text="@string/second_function_two_string"
+                android:textColor="@color/text_special_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/case_three"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/main_funciton_image_size"
+                android:layout_height="@dimen/main_funciton_image_size"
+                android:background="@mipmap/icon_function_three" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.0dip"
+                android:text="@string/second_function_three_string"
+                android:textColor="@color/text_special_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/case_four"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/main_funciton_image_size"
+                android:layout_height="@dimen/main_funciton_image_size"
+                android:background="@mipmap/icon_function_four" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.0dip"
+                android:text="@string/second_function_four_string"
+                android:textColor="@color/text_special_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="86.0dip"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/case_five"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/main_funciton_image_size"
+                android:layout_height="@dimen/main_funciton_image_size"
+                android:background="@mipmap/icon_function_five" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.0dip"
+                android:text="@string/second_function_five_string"
+                android:textColor="@color/text_special_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/case_six"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/main_funciton_image_size"
+                android:layout_height="@dimen/main_funciton_image_size"
+                android:background="@mipmap/icon_function_six" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.0dip"
+                android:text="@string/second_function_six_string"
+                android:textColor="@color/text_special_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/case_seven"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/main_funciton_image_size"
+                android:layout_height="@dimen/main_funciton_image_size"
+                android:background="@mipmap/icon_function_seven" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.0dip"
+                android:text="@string/second_function_seven_string"
+                android:textColor="@color/text_special_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/case_egiht"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/main_funciton_image_size"
+                android:layout_height="@dimen/main_funciton_image_size"
+                android:background="@mipmap/icon_function_eight" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.0dip"
+                android:text="@string/second_function_eight_string"
+                android:textColor="@color/text_special_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

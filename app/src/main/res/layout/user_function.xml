@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/user_function_height"
+        android:background="#ffffffff"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/user_function_one"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:src="@mipmap/function_one" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:text="病例档案"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dip"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="12.0dip"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:id="@+id/user_function_two"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:src="@mipmap/function_two" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:text="体检档案"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dip"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="12.0dip"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:id="@+id/user_function_three"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:src="@mipmap/function_three" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:text="我的收藏"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dip"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:background="@color/divider_color" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/user_function_height"
+        android:background="#ffffffff"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/user_function_four"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:src="@mipmap/function_four" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:text="我的医票"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dip"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="12.0dip"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:id="@+id/user_function_five"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:src="@mipmap/function_five" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:text="我的医币"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dip"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="12.0dip"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:id="@+id/user_function_six"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:src="@mipmap/function_six" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:text="处方记录"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dip"
+        android:background="@color/divider_color" />
+</LinearLayout>

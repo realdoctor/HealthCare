@@ -48,7 +48,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_shop"
+            android:id="@+id/ll_read"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -56,7 +56,7 @@
             android:orientation="vertical">
 
             <com.real.doctor.realdoc.widget.IconFontTextView
-                android:id="@+id/if_shop"
+                android:id="@+id/if_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ic_type"
@@ -64,18 +64,18 @@
                 android:textSize="@dimen/tab_icon_size" />
 
             <TextView
-                android:id="@+id/tv_shop"
+                android:id="@+id/tv_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5px"
-                android:text="商城"
+                android:text="阅读"
                 android:textColor="@color/main"
                 android:textSize="@dimen/tab_text_size" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_type"
+            android:id="@+id/ll_msg"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -83,7 +83,7 @@
             android:orientation="vertical">
 
             <com.real.doctor.realdoc.widget.IconFontTextView
-                android:id="@+id/if_type"
+                android:id="@+id/if_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ic_type"
@@ -91,11 +91,11 @@
                 android:textSize="@dimen/tab_icon_size" />
 
             <TextView
-                android:id="@+id/tv_type"
+                android:id="@+id/tv_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5px"
-                android:text="分类"
+                android:text="消息"
                 android:textColor="@color/main"
                 android:textSize="@dimen/tab_text_size" />
 
