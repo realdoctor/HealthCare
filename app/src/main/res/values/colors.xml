@@ -28,7 +28,7 @@
 
 
     <color name= "tab_nor_color">#969696</color>
-    <color name= "tab_sel_color">#2395FF</color>
+    <color name= "tab_sel_color">#ff03b5e5</color>
 
     <!--TabLayout-->
     <color name="TabTextColor">#FFFFFF</color>

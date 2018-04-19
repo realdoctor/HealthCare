@@ -19,6 +19,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.util.StatusBarUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +69,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
             }
             if (isSetStatusBar) {
                 steepStatusBar();
+            } else {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//显示状态栏
+                StatusBarUtil. setStatusBarColor(this, R.color.appthemecolor);
             }
             if (!isAllowScreenRoate) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -88,9 +94,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
      */
     private void steepStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // 透明状态栏
-            getWindow().addFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            StatusBarUtil.transparencyBar(this);
             // 透明导航栏
             getWindow().addFlags(
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
