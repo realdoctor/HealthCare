@@ -40,4 +40,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'//配合rxjava2
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'//拦截器
+    //SmartRefreshLayout
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
+    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'//没有使用特殊Header，可以不加这行
 }

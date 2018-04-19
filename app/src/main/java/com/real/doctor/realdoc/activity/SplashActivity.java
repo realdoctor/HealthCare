@@ -83,8 +83,8 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void startActivity() {
-        //  actionStart(SplashActivity.this, LoginActivity.class);
-        actionStart(SplashActivity.this, RealDocActivity.class);
+        actionStart(SplashActivity.this, LoginActivity.class);
+//        actionStart(SplashActivity.this, RealDocActivity.class);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
     }

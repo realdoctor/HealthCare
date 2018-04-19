@@ -76,116 +76,138 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- <ScrollerView
-         android:id="@+id/swipe_target"
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:overScrollMode="never">-->
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        app:srlAccentColor="@android:color/darker_gray"
+        app:srlEnableLoadmore="true"
+        app:srlEnablePreviewInEditMode="true"
+        app:srlPrimaryColor="@android:color/white">
+        <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
+        <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srlClassicsSpinnerStyle="FixedBehind"
+            app:srlDrawableArrowSize="20dp"
+            app:srlDrawableMarginRight="20dp"
+            app:srlDrawableProgressSize="20dp"
+            app:srlEnableLastTime="true"
+            app:srlFinishDuration="500"
+            app:srlTextSizeTime="10dp"
+            app:srlTextSizeTitle="16sp"
+            app:srlTextTimeMarginTop="2dp" />
 
         <LinearLayout
-            android:id="@+id/main_function_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/home_base_height"
-            android:background="@color/appthemecolor"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/upload_data"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:id="@+id/main_function_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/home_base_height"
+                android:background="@color/appthemecolor"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="@dimen/main_funciton_image_size"
-                    android:layout_height="@dimen/main_funciton_image_size"
-                    android:background="@mipmap/icon_upload_data" />
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/upload_data"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14.0dip"
-                    android:text="@string/function_one_string"
-                    android:textColor="@android:color/white" />
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/main_funciton_image_size"
+                        android:layout_height="@dimen/main_funciton_image_size"
+                        android:background="@mipmap/icon_upload_data" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14.0dip"
+                        android:text="@string/function_one_string"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/case_comunicate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/main_funciton_image_size"
+                        android:layout_height="@dimen/main_funciton_image_size"
+                        android:background="@mipmap/icon_case_communicate" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14.0dip"
+                        android:text="@string/function_two_string"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/doctor_online"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/main_funciton_image_size"
+                        android:layout_height="@dimen/main_funciton_image_size"
+                        android:background="@mipmap/icon_doctor_online" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14.0dip"
+                        android:text="@string/function_three_string"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/base_cure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/main_funciton_image_size"
+                        android:layout_height="@dimen/main_funciton_image_size"
+                        android:background="@mipmap/icon_base_cure" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14.0dip"
+                        android:text="@string/function_four_string"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/case_comunicate"
-                android:layout_width="wrap_content"
+            <include layout="@layout/function_two_layout" />
+
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="@dimen/main_funciton_image_size"
-                    android:layout_height="@dimen/main_funciton_image_size"
-                    android:background="@mipmap/icon_case_communicate" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14.0dip"
-                    android:text="@string/function_two_string"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/doctor_online"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="@dimen/main_funciton_image_size"
-                    android:layout_height="@dimen/main_funciton_image_size"
-                    android:background="@mipmap/icon_doctor_online" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14.0dip"
-                    android:text="@string/function_three_string"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/base_cure"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="@dimen/main_funciton_image_size"
-                    android:layout_height="@dimen/main_funciton_image_size"
-                    android:background="@mipmap/icon_base_cure" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14.0dip"
-                    android:text="@string/function_four_string"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
+                android:divider="@null" />
         </LinearLayout>
 
-        <include layout="@layout/function_two_layout" />
-
-        <ListView
-            android:id="@+id/listview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:divider="@null" />
-    </LinearLayout>
-    <!--    </ScrollerView>-->
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

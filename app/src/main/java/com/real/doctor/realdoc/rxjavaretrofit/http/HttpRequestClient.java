@@ -32,7 +32,6 @@ import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-
 /**
  * @author zhujiabin
  * @package rxjavaretrofit.http
@@ -212,7 +211,7 @@ public class HttpRequestClient {
     /**
      * json请求获取数据
      */
-    public void json(String url, RequestBody jsonStr, BaseObserver<HttpResult> subscriber) {
+    public void json(String url, RequestBody jsonStr, BaseObserver<ResponseBody> subscriber) {
         retrofitService.json(url, jsonStr)
                 .compose(schedulersTransformer())
                 .subscribe(subscriber);

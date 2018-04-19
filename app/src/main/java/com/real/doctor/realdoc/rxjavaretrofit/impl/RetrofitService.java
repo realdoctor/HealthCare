@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.rxjavaretrofit.impl;
 
+import java.net.URLDecoder;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -18,6 +19,7 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 /**
  * @author zhujiabin
@@ -31,57 +33,49 @@ import retrofit2.http.Streaming;
 public interface RetrofitService {
 
     //get 请求接口
-    @Headers({
-            "Allow:GET, HEAD, OPTIONS",
-            "Content-Type:application/json",
-            "Transfer-Encoding:chunked",
-            "Vary:Cookie",
-            "Date:Sun, 21 Jan 2018 15:48:28 GMT",
-            "X-Application-Context:application:prod",
-            "X-Frame-Options:SAMEORIGIN"
-    })
-    @GET("{url}")
+    @GET
     Observable<ResponseBody> executeGet(
-            @Path("url") String url,
+            @Url String url,
             @QueryMap Map<String, String> maps
     );
 
     //post 请求接口
     @FormUrlEncoded
-    @POST("{url}")
+    @POST
     Observable<ResponseBody> executePost(
-            @Path("url") String url,
+            @Url String url,
             @FieldMap Map<String, String> maps);
 
     //json 请求数据接口
-    @POST("{url}")
+    @POST
+    @Headers({"Content-Type: application/json","Accept: application/json"})//需要添加头
     Observable<ResponseBody> json(
-            @Path("url") String url,
+            @Url String url,
             @Body RequestBody jsonStr);
 
     //上传图片数据接口
     @Multipart
-    @POST("{url}")
+    @POST
     Observable<ResponseBody> upLoadFile(
-            @Path("url") String url,
+            @Url String url,
             @Part("image\"; filename=\"image.jpg") RequestBody requestBody);
 
     @Multipart
-    @POST("{url}")
+    @POST
     Observable<ResponseBody> upLoadMap(
-            @Path("url") String url,
+            @Url String url,
             @PartMap Map<String, RequestBody> params);
 
     //上传文件接口
-    @POST("{url}")
+    @POST
     Call<ResponseBody> uploadFiles(
-            @Path("url") String url,
+            @Url String url,
             @Path("headers") Map<String, String> headers,
             @Part("filename") String description,
             @PartMap() Map<String, RequestBody> maps);
 
     //下载接口，单个文件下载
     @Streaming
-    @POST("{url}")
-    Observable<ResponseBody> downloadFile(@Path("url") String fileUrl);
+    @POST
+    Observable<ResponseBody> downloadFile(@Url String fileUrl);
 }
