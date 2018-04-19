@@ -1,133 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1.5px"
-        android:background="@color/line" />
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dip"
+        android:background="#ffdcdcdc" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150px"
-        android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip">
 
-        <LinearLayout
-            android:id="@+id/ll_home"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:background="#ffffffff"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <com.real.doctor.realdoc.widget.IconFontTextView
-                android:id="@+id/if_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ic_home"
-                android:textColor="@color/main"
-                android:textSize="@dimen/tab_icon_size" />
+            <RadioButton
+                android:id="@+id/homepage"
+                style="@style/MenuBtnStyle"
+                android:drawableTop="@drawable/rb_home_bg"
+                android:text="首页" />
 
-            <TextView
-                android:id="@+id/tv_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5px"
-                android:text="首页"
-                android:textColor="@color/main"
-                android:textSize="@dimen/tab_text_size" />
+            <RadioButton
+                android:id="@+id/read"
+                style="@style/MenuBtnStyle"
+                android:drawableTop="@drawable/rb_read_bg"
+                android:text="阅读" />
 
-        </LinearLayout>
+            <RadioButton
+                android:id="@+id/message"
+                style="@style/MenuBtnStyle"
+                android:drawableTop="@drawable/rb_message_bg"
+                android:text="消息" />
 
-        <LinearLayout
-            android:id="@+id/ll_read"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            <RadioButton
+                android:id="@+id/user"
+                style="@style/MenuBtnStyle"
+                android:drawableTop="@drawable/rb_user_bg"
+                android:text="我的" />
+        </RadioGroup>
 
-            <com.real.doctor.realdoc.widget.IconFontTextView
-                android:id="@+id/if_read"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ic_type"
-                android:textColor="@color/main"
-                android:textSize="@dimen/tab_icon_size" />
-
-            <TextView
-                android:id="@+id/tv_read"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5px"
-                android:text="阅读"
-                android:textColor="@color/main"
-                android:textSize="@dimen/tab_text_size" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_msg"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <com.real.doctor.realdoc.widget.IconFontTextView
-                android:id="@+id/if_msg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ic_type"
-                android:textColor="@color/main"
-                android:textSize="@dimen/tab_icon_size" />
-
-            <TextView
-                android:id="@+id/tv_msg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5px"
-                android:text="消息"
-                android:textColor="@color/main"
-                android:textSize="@dimen/tab_text_size" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_user"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <com.real.doctor.realdoc.widget.IconFontTextView
-                android:id="@+id/if_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ic_user"
-                android:textColor="@color/main"
-                android:textSize="@dimen/tab_icon_size" />
-
-            <TextView
-                android:id="@+id/tv_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5px"
-                android:text="个人"
-                android:textColor="@color/main"
-                android:textSize="@dimen/tab_text_size" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
+    </RelativeLayout>
 </LinearLayout>
