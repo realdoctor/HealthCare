@@ -1,4 +1,4 @@
-package com.real.doctor.realdoc.ui.adapter;
+package com.real.doctor.realdoc.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

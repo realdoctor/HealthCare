@@ -16,8 +16,23 @@
     <string name="ic_type">&#xe654; </string> <!--分类-->
     <string name="ic_user">&#xe652; </string> <!--用户-->
     <string name="ic_more">&#xe62b; </string> <!--更多-->
-
-
     <string name="home_titile">睿医软件</string>
-    <string name="title">睿医软件</string>
+    <string name="hint_username">请输入手机号</string>
+    <string name="hint_password">请输入登录密码</string>
+    <string name="search_hint">搜索疾病、医生、医院</string>
+    <string name="second_function_one_string">皮肤病</string>
+    <string name="second_function_two_string">慢性病</string>
+    <string name="second_function_four_string">肿瘤病</string>
+    <string name="second_function_three_string">血液病</string>
+    <string name="second_function_five_string">婴幼儿疾病</string>
+    <string name="second_function_six_string">妇科疾病</string>
+    <string name="second_function_seven_string">口腔疾病</string>
+    <string name="function_four_string">基层首诊</string>
+    <string name="function_one_string">存储病例</string>
+    <string name="function_three_string">在线复诊</string>
+    <string name="function_two_string">同病交友</string>
+    <string name="second_function_eight_string">更多疾病</string>
+    <string name="hint_phone_register">请输入手机号</string>
+    <string name="hint_verify_register">验证码</string>
+    <string name="hint_password_register">设置密码</string>
 </resources>

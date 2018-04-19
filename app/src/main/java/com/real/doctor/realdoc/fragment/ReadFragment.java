@@ -7,19 +7,18 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseFragment;
 
 /**
- * user：lqm
- * desc：第三个模块，分类Fragment
+ * Created by Administrator on 2018/4/18.
  */
 
-public class TypeFragment extends BaseFragment {
+public class ReadFragment extends BaseFragment {
 
-    public static TypeFragment newInstance() {
-        return new TypeFragment();
+    public static ReadFragment newInstance() {
+        return new ReadFragment();
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_type;
+        return R.layout.frag_read;
     }
 
     @Override

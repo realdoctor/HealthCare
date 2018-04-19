@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="44.0dip"
+        android:background="@color/appthemecolor"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/readrank_search"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/home_searchText_height"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="10.0dip"
+            android:layout_weight="1.0"
+            android:background="@drawable/search_background"
+            android:drawableLeft="@mipmap/icon_search_white"
+            android:drawablePadding="10.0dip"
+            android:gravity="center_vertical"
+            android:hint="@string/search_hint"
+            android:paddingLeft="10.0dip"
+            android:textColorHint="#b3ffffff" />
+
+        <ImageView
+            android:id="@+id/case_more"
+            android:layout_width="18.0dip"
+            android:layout_height="19.0dip"
+            android:layout_marginLeft="8.0dip"
+            android:layout_marginRight="15.0dip"
+            android:background="@mipmap/icon_search_more" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="46.0dip">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="48.0dip"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.0dip"
+                android:layout_weight="1.0" />
+
+            <TextView
+                android:id="@+id/person_case"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="普通病例"
+                android:textColor="@drawable/textcolor_indicator"
+                android:textSize="14.0sp" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1.0dip"
+                android:layout_weight="1.0" />
+
+            <TextView
+                android:id="@+id/doctor_case"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="精华病例"
+                android:textColor="@drawable/textcolor_indicator"
+                android:textSize="14.0sp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.0dip"
+                android:layout_weight="1.0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.0dip"
+                android:layout_weight="1.0" />
+
+            <View
+                android:id="@+id/left_indicator"
+                android:layout_width="56.0dip"
+                android:layout_height="2.0dip"
+                android:layout_marginBottom="5.5dip"
+                android:background="@color/appthemecolor" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.0dip"
+                android:layout_weight="1.0" />
+
+            <View
+                android:id="@+id/right_indicator"
+                android:layout_width="56.0dip"
+                android:layout_height="2.0dip"
+                android:layout_marginBottom="5.5dip"
+                android:background="@color/appthemecolor" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.0dip"
+                android:layout_weight="1.0" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dip"
+        android:background="@color/divider_color" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/read_viewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.0" />
+</LinearLayout>
