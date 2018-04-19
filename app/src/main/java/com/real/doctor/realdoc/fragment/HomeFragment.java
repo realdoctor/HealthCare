@@ -9,10 +9,19 @@ import android.widget.ImageView;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.model.BannerBean;
+import com.real.doctor.realdoc.util.DynamicTimeFormat;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 /**
@@ -21,6 +30,12 @@ import cn.bingoogolapple.bgabanner.BGABanner;
  */
 
 public class HomeFragment extends BaseFragment {
+
+    private Unbinder unbinder;
+    private static boolean isFirstEnter = true;
+    private ClassicsHeader mClassicsHeader;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout mRefreshLayout;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -33,11 +48,22 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void initView(View view) {
-
+        unbinder = ButterKnife.bind(this, view);
     }
 
     @Override
     public void doBusiness(Context mContext) {
+        int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
+        mClassicsHeader = (ClassicsHeader)mRefreshLayout.getRefreshHeader();
+        mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis()-deta));
+        mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
+        mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
+
+        if (isFirstEnter) {
+            isFirstEnter = false;
+            //触发自动刷新
+            mRefreshLayout.autoRefresh();
+        }
 
     }
 
@@ -46,4 +72,9 @@ public class HomeFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

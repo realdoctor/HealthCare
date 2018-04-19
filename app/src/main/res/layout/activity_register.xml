@@ -95,7 +95,7 @@
             android:layout_height="0.5dip"
             android:background="#ffdcdcdc" />
 
-        <EditText
+ <!--       <EditText
             android:id="@+id/invite_code"
             android:layout_width="155.0dip"
             android:layout_height="45.0dip"
@@ -108,7 +108,7 @@
             android:textColorHint="#ff999999"
             android:textCursorDrawable="@drawable/color_cursor"
             android:textSize="14.0sp"
-            android:typeface="monospace" />
+            android:typeface="monospace" />-->
 
         <RelativeLayout
             android:layout_width="fill_parent"

@@ -5,5 +5,5 @@ package com.real.doctor.realdoc.rxjavaretrofit.http;
  */
 
 public class HttpNetUtil {
-    public static final String BASE_URL = "";
+    public static final String BASE_URL = "http://192.168.1.119:8081/";
 }
