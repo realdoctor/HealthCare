@@ -1,22 +1,26 @@
 <resources>
-    <string name="app_name">RealDoc</string>
+    <string name="app_name">康链</string>
 
-    <!--iconfont字体图标-->
-    <string name="tab_left">&#xe620; </string> <!--左对齐-->
-    <string name="tab_right">&#xe618; </string> <!--右对齐-->
-    <string name="ic_hot">&#xe66d; </string> <!--火-->
-    <string name="ic_return">&#xe6e5; </string> <!--返回-->
-    <string name="ic_share">&#xe66c; </string> <!--分享-->
-    <string name="ic_search">&#xe6a8; </string> <!--搜索-->
-    <string name="ic_collect_nor">&#xe63c; </string> <!--未收藏-->
-    <string name="ic_collect_sel">&#xe63b; </string> <!--已收藏-->
-    <string name="ic_about">&#xe7ca; </string> <!--关于-->
-    <string name="ic_close">&#xe80b; </string> <!--关闭的叉-->
-    <string name="ic_home">&#xe611; </string> <!--首页-->
-    <string name="ic_type">&#xe654; </string> <!--分类-->
-    <string name="ic_user">&#xe652; </string> <!--用户-->
-    <string name="ic_more">&#xe62b; </string> <!--更多-->
-
+    <!--新浪-->
+    <string name="weibosdk_demo_toast_auth_success">授权成功</string>
+    <string name="weibosdk_demo_toast_auth_failed">授权失败</string>
+    <string name="weibosdk_demo_toast_auth_canceled">取消授权</string>
+    <string name="weibosdk_demo_token_to_string_format_1">Token：%1$s \n有效期：%2$s</string>
+    <string name="weibosdk_demo_token_has_existed">Token 仍在有效期内，无需再次登录。</string>
+    <!--PhotoPicker-->
+    <string name="__picker_title">图片</string>
+    <string name="__picker_delete">删除</string>
+    <string name="__picker_done">完成</string>
+    <string name="__picker_done_with_count">完成(%1$d/%2$d)</string>
+    <string name="__picker_image_index">%1$d/%2$d</string>
+    <string name="__picker_undo">撤消</string>
+    <string name="__picker_deleted_a_photo">删除了一张图片</string>
+    <string name="__picker_confirm_to_delete">确认删除？</string>
+    <string name="__picker_yes">确定</string>
+    <string name="__picker_cancel">取消</string>
+    <string name="__picker_all_image">所有图片</string>
+    <string name="__picker_over_max_count_tips">你最多可以选择%1$d张图片</string>
+    <string name="__picker_image_count">%1$d张</string>
 
     <string name="home_titile">睿医软件</string>
     <string name="hint_username">请输入手机号</string>
@@ -37,4 +41,10 @@
     <string name="hint_phone_register">请输入手机号</string>
     <string name="hint_verify_register">验证码</string>
     <string name="hint_password_register">设置密码</string>
+    <string name="save_doc_ill">疾病名称:</string>
+    <string name="save_doc_hospital">就诊医院:</string>
+    <string name="save_doc_hospital_edit">请输入您就诊的医院名称</string>
+    <string name="save_doc_doctor">就诊医生:</string>
+    <string name="save_doc_doctor_edit">请输入您的就诊医生</string>
+    <string name="save_doc_save_btn">保存</string>
 </resources>

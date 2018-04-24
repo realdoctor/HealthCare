@@ -2,13 +2,17 @@ package com.real.doctor.realdoc.fragment;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.SearchActivity;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.model.BannerBean;
+import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.DynamicTimeFormat;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
@@ -21,6 +25,7 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
@@ -36,6 +41,8 @@ public class HomeFragment extends BaseFragment {
     private ClassicsHeader mClassicsHeader;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.home_search)
+    RelativeLayout homeSearch;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -54,8 +61,8 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void doBusiness(Context mContext) {
         int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
-        mClassicsHeader = (ClassicsHeader)mRefreshLayout.getRefreshHeader();
-        mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis()-deta));
+        mClassicsHeader = (ClassicsHeader) mRefreshLayout.getRefreshHeader();
+        mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis() - deta));
         mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
         mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
 
@@ -67,9 +74,19 @@ public class HomeFragment extends BaseFragment {
 
     }
 
+    @OnClick({R.id.home_search})
     @Override
     public void widgetClick(View v) {
-
+        if (DocUtils.isFastClick()) {
+            switch (v.getId()) {
+                case R.id.home_search:
+                    Intent intent = new Intent(getActivity(), SearchActivity.class);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    getActivity().finish();
+                    break;
+            }
+        }
     }
 
     @Override

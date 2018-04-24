@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
@@ -13,6 +14,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.CheckPhoneUtils;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.widget.EditTextPassword;
 
@@ -39,8 +41,9 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.userpassword)
     EditTextPassword userepassword;
     @BindView(R.id.button_register_login)
-    Button RegisterLoginBtn;
-
+    Button registerLoginBtn;
+    @BindView(R.id.finish_back)
+    ImageView finishBack;
 
     @Override
     public int getLayoutId() {
@@ -63,15 +66,25 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.button_register_login})
+    @OnClick({R.id.button_register_login, R.id.finish_back})
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
             switch (v.getId()) {
                 case R.id.button_register_login:
-                    String mobilePhone = phoneNumber.getText().toString().trim();
-                    String pwd = userepassword.getText().toString().trim();
-                    register(mobilePhone, pwd);
+                    if (NetworkUtil.isNetworkAvailable(RegisterActivity.this)) {
+                        String mobilePhone = phoneNumber.getText().toString().trim();
+                        String pwd = userepassword.getText().toString().trim();
+                        register(mobilePhone, pwd);
+                    } else {
+                        ToastUtil.showLong(RegisterActivity.this, "请链接互联网!");
+                        return;
+                    }
                     break;
+                case R.id.finish_back:
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    finish();
+                    break;
+
             }
         }
     }

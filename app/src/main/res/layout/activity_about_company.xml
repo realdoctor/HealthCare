@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <ImageView
+        android:layout_width="63.0dip"
+        android:layout_height="63.0dip"
+        android:layout_marginTop="65.0dip"
+        android:background="@mipmap/icon_app" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10.0dip"
+        android:text="我病我医"
+        android:textColor="#ff333333"
+        android:textSize="14.0sp" />
+
+    <TextView
+        android:id="@+id/versionName_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13.0dip"
+        android:text="当前版本1.0.0"
+        android:textColor="#ff999999"
+        android:textSize="12.0sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0" />
+
+    <ImageView
+        android:layout_width="190.0dip"
+        android:layout_height="12.0dip"
+        android:background="@mipmap/text_app" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="109.0dip"
+        android:layout_marginLeft="2.0dip"
+        android:layout_marginTop="10.0dip"
+        android:text="邮箱：postmaster@wobingwoyi.com"
+        android:textColor="#ff666666"
+        android:textSize="12.0sp" />
+</LinearLayout>

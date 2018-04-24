@@ -6,7 +6,7 @@
 
 
     <color name="white">#fff</color>
-    <color name="black" >#000</color>
+    <color name="black">#000</color>
     <color name="gray">#5000</color>
     <color name="line">#e7e7e7</color>
     <color name="transparent">#0000</color>
@@ -25,10 +25,21 @@
     <color name="text3">#c8969696</color>
     <color name="text4">#DDDDDD</color>
     <color name="text5">#EFEFEF</color>
+    
+    <!--PhotoPicker-->
+    <color name="__picker_pager_bg">#CA000000</color>
+    <color name="__picker_selected_bg">#44000000</color>
+    <color name="__picker_black_40">#282828</color>
+    <color name="__picker_common_primary">#f3f3f3</color>
 
+    <color name="__picker_text_40">#282828</color>
+    <color name="__picker_text_80">#505050</color>
+    <color name="__picker_text_120">#787878</color>
+    <color name="__picker_item_photo_border_selected">#ff03b5e5</color>
+    <color name="__picker_item_photo_border_n">#33ffffff</color>
 
-    <color name= "tab_nor_color">#969696</color>
-    <color name= "tab_sel_color">#ff03b5e5</color>
+    <color name="tab_nor_color">#969696</color>
+    <color name="tab_sel_color">#ff03b5e5</color>
 
     <!--TabLayout-->
     <color name="TabTextColor">#FFFFFF</color>
