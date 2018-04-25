@@ -1,7 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,21 +9,25 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.GridAdapter;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
-import com.real.doctor.realdoc.bean.ImageBean;
+import com.real.doctor.realdoc.greendao.table.SaveDocManager;
+import com.real.doctor.realdoc.model.ImageBean;
+import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.photopicker.PhotoPreview;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileProvider7;
 import com.real.doctor.realdoc.util.SDCardUtils;
+import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.DocGridView;
 import com.real.doctor.realdoc.view.SelectPopupWindow;
 
@@ -32,13 +35,12 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2018/4/23.
@@ -56,6 +58,8 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     DocGridView docGridView;
     @BindView(R.id.save_doc_layout)
     LinearLayout saveDocLayout;
+    @BindView(R.id.button_save_doc)
+    Button saveDoc;
     private List<ImageBean> imageList;
     private GridAdapter adapter;
     //底部弹出菜单
@@ -102,8 +106,41 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
+    @OnClick({R.id.button_save_doc})
     public void widgetClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.button_save_doc:
+                //TODO 判断是否有数据库的存在
+                SaveDocBean bean = new SaveDocBean();
+                bean.setId(String.valueOf(Math.random()));
+                String illness = ill.getText().toString().trim();
+                bean.setIll(illness);
+                String hospitaName = hospital.getText().toString().trim();
+                bean.setHospital(hospitaName);
+                String doctorName = doctor.getText().toString().trim();
+                bean.setDoctor(doctorName);
+                StringBuilder sb = new StringBuilder();
+                //将数据存储到数据库中
+                //将存储到sdcard中
+                if (SDCardUtils.isSDCardEnable()) {
+                    imageList.remove(imageList.size() - 1); // 现将加号移除（有加号才能显示此按钮）
+                    for (ImageBean image : imageList) {
+                        String img = image.getImgUrl();
+                        SDCardUtils.saveToSdCard(img);
+                        sb.append(img);
+                        sb.append(";");
+                    }
+                } else {
+                    ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存失败!");
+                    return;
+                }
+                bean.setImgs(sb.toString());
+                SaveDocManager instance = SaveDocManager.getInstance(SaveDocActivity.this);
+                instance.insertSaveDoc(SaveDocActivity.this, bean);
+                ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存成功!");
+                finish();
+                break;
+        }
     }
 
     @Override
@@ -195,13 +232,16 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
             imageBean.setImgUrl(photos.get(0));
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
-//            File file = new File(photos.get(0));
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_TAKE_PHOTO) {
             ImageBean imageBean = new ImageBean();
             imageBean.setImgUrl(mCurrentPhotoPath);
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
-//            File file = new File(mCurrentPhotoPath);
+        } else {
+            ImageBean imageBean = new ImageBean();
+            imageBean.setSpareImage(R.mipmap.add);
+            imageList.add(imageBean);
+            adapter.notifyDataSetChanged();
         }
     }
 

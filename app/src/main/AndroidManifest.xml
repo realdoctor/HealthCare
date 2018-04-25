@@ -115,6 +115,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.DocDetailActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
 
         <meta-data
             android:name="WEIBO_APPKEY"
