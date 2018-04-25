@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
     compileSdkVersion 26
@@ -12,8 +13,13 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    repositories {
+        flatDir {
+            dirs 'libs'
         }
     }
 }
@@ -28,10 +34,10 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.android.support:design:27.1.0'
-    implementation 'com.android.support:appcompat-v7:27.1.0'
     //轮播图库
     compile 'cn.bingoogolapple:bga-banner:2.1.7@aar'
-
+    //multidex
+    compile 'com.android.support:multidex:1.0.1'
     //搭建基于retrofit和rxjava2的mvp框架
     compile 'io.reactivex.rxjava2:rxjava:2.1.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
@@ -43,4 +49,18 @@ dependencies {
     //SmartRefreshLayout
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'//没有使用特殊Header，可以不加这行
+    //微信
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    //QQ
+    compile files('libs/open_sdk_r5793.jar')
+    //新浪
+    compile(name: 'openDefault-4.1.0-openDefaultRelease', ext: 'aar')
+    //Eventbus
+    compile 'org.greenrobot:eventbus:3.0.0'
+    //BaseRecyclerViewAdapterHelper
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.5.3'
+    //Glide
+    compile "com.nineoldandroids:library:2.4.0"
+    //Greendao
+    implementation 'org.greenrobot:greendao:3.2.2' // add library
 }

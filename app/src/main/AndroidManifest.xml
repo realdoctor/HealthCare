@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!--操作外部存储设备文件-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name="com.real.doctor.realdoc.application.RealDocApplication"
@@ -25,6 +26,33 @@
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.android7.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <provider
+            android:name="com.real.doctor.realdoc.photopicker.utils.PhotoFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/__picker_provider_paths" />
+        </provider>
+        <provider
+            android:name="com.real.doctor.realdoc.photopicker.utils.PhotoFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/__picker_provider_paths" />
+        </provider>
 
         <activity android:name=".activity.SplashActivity">
 
@@ -32,7 +60,7 @@
         <activity
             android:name=".activity.RealDocActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.LoginActivity"
             android:hardwareAccelerated="false"
@@ -40,12 +68,59 @@
         <activity
             android:name=".activity.RegisterActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1106010163" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SearchActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--注册微信回调 WXEntryActivity -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name="com.real.doctor.realdoc.photopicker.PhotoPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="com.real.doctor.realdoc.photopicker.PhotoPagerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name="com.real.doctor.realdoc.activity.SaveDocActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="WEIBO_APPKEY"
+            android:value="" />
+        <meta-data
+            android:name="WEIBO_CHANNEL"
+            android:value="weibo" />
     </application>
 </manifest>

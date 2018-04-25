@@ -9,7 +9,6 @@ import com.real.doctor.realdoc.rxjavaretrofit.cache.CacheInterceptor;
 import com.real.doctor.realdoc.rxjavaretrofit.down.DownCallBack;
 import com.real.doctor.realdoc.rxjavaretrofit.down.DownSubscriber;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
-import com.real.doctor.realdoc.rxjavaretrofit.entity.HttpResult;
 import com.real.doctor.realdoc.rxjavaretrofit.factory.ResponseConvertFactory;
 import com.real.doctor.realdoc.rxjavaretrofit.impl.RetrofitService;
 import com.real.doctor.realdoc.rxjavaretrofit.manager.HttpCookieManager;
