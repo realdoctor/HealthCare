@@ -7,14 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.activity.SaveDocActivity;
-import com.real.doctor.realdoc.bean.ImageBean;
-import com.real.doctor.realdoc.photopicker.PhotoPickerActivity;
-import com.real.doctor.realdoc.photopicker.fragment.ImagePagerFragment;
+import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,17 +49,6 @@ public class GridAdapter extends RdBaseAdapter<ImageBean> {
         } else {
             Bitmap bitmap = ImageUtils.compressBitmapByPath(url.toString(), ScreenUtil.getScreenWidth(mContext), ScreenUtil.getScreenHeight(mContext));
             holder.mImg.setImageBitmap(bitmap);
-//            mContext.addImagePagerFragment(imagePagerFragment);
-//            if (position != getCount()) {
-//                holder.mImg.setOnLongClickListener(new View.OnLongClickListener() {
-//                    @Override
-//                    public boolean onLongClick(View v) {
-//                        //红色删除按钮显示
-//                        holder.mDelImg.setVisibility(View.VISIBLE);
-//                        return false;
-//                    }
-//                });
-//            }
         }
         return convertView;
     }

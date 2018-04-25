@@ -1,4 +1,4 @@
-package com.real.doctor.realdoc.bean;
+package com.real.doctor.realdoc.model;
 
 /**
  * @author zhujiabin

@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.util;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.os.StatFs;
 
@@ -10,16 +11,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- *     author: zhujiabin
- *     time  : 2018/1/3
- *     desc  : SD卡相关的辅助类
+ * author: zhujiabin
+ * time  : 2018/1/3
+ * desc  : SD卡相关的辅助类
  */
 
-public class SDCardUtils
-{
-    private SDCardUtils()
-    {
-		/* cannot be instantiated */
+public class SDCardUtils {
+    private SDCardUtils() {
+        /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
@@ -28,8 +27,7 @@ public class SDCardUtils
      *
      * @return
      */
-    public static boolean isSDCardEnable()
-    {
+    public static boolean isSDCardEnable() {
         return Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED);
 
@@ -40,8 +38,7 @@ public class SDCardUtils
      *
      * @return
      */
-    public static String getSDCardPath()
-    {
+    public static String getSDCardPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator;
     }
@@ -51,10 +48,8 @@ public class SDCardUtils
      *
      * @return
      */
-    public static long getSDCardAllSize()
-    {
-        if (isSDCardEnable())
-        {
+    public static long getSDCardAllSize() {
+        if (isSDCardEnable()) {
             StatFs stat = new StatFs(getSDCardPath());
             // 获取空闲的数据块的数量
             long availableBlocks = (long) stat.getAvailableBlocks() - 4;
@@ -71,27 +66,26 @@ public class SDCardUtils
      * @param filePath
      * @return 容量字节 SDCard可用空间，内部存储可用空间
      */
-    public static long getFreeBytes(String filePath)
-    {
+    public static long getFreeBytes(String filePath) {
         // 如果是sd卡的下的路径，则获取sd卡可用容量
-        if (filePath.startsWith(getSDCardPath()))
-        {
+        if (filePath.startsWith(getSDCardPath())) {
             filePath = getSDCardPath();
-        } else
-        {// 如果是内部存储的路径，则获取内存存储的可用容量
+        } else {// 如果是内部存储的路径，则获取内存存储的可用容量
             filePath = Environment.getDataDirectory().getAbsolutePath();
         }
         StatFs stat = new StatFs(filePath);
         long availableBlocks = (long) stat.getAvailableBlocks() - 4;
         return stat.getBlockSize() * availableBlocks;
     }
+
     /**
      * 图片保存到SD卡
+     *
      * @param bitmap
      * @return
      */
     public static String saveToSdCard(Bitmap bitmap) {
-        String imageUrl = getPictureDir() + System.currentTimeMillis() + "-";
+        String imageUrl = getPictureDir() + System.currentTimeMillis() + ".png";
         File file = new File(imageUrl);
         try {
             FileOutputStream out = new FileOutputStream(file);
@@ -107,14 +101,16 @@ public class SDCardUtils
         return file.getAbsolutePath();
     }
 
+
     /**
      * 获得文章图片保存路径
+     *
      * @return
      */
-    public static String getPictureDir(){
-        String imageCacheUrl = getSDCardPath() + "PlayGame" + File.separator ;
+    public static String getPictureDir() {
+        String imageCacheUrl = getSDCardPath() + "RealDoc" + File.separator;
         File file = new File(imageCacheUrl);
-        if(!file.exists())
+        if (!file.exists())
             file.mkdir();  //如果不存在则创建
         return imageCacheUrl;
     }
@@ -124,16 +120,51 @@ public class SDCardUtils
      *
      * @return
      */
-    public static String getRootDirectoryPath()
-    {
+    public static String getRootDirectoryPath() {
         return Environment.getRootDirectory().getAbsolutePath();
     }
 
-    /** 删除文件 **/
+    /**
+     * 删除文件
+     **/
     public static void deleteFile(String filePath) {
         File file = new File(filePath);
         if (file.isFile() && file.exists())
             file.delete(); // 删除文件
+    }
+
+    /**
+     * 根据路径，获取图片，并将图片放置在指定文件夹下
+     */
+    public static boolean saveToSdCard(String path) {
+        File file = new File(path);
+        //若该文件存在
+        if (file.exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            String imageCacheUrl = getPictureDir();
+            if (EmptyUtils.isNotEmpty(imageCacheUrl)) {
+                //截图图片名称,保存到sdcard中
+                String fileName = path.substring(path.lastIndexOf("/") + 1, path.length());
+                String imageUrl = getPictureDir() + fileName;
+                File newFile = new File(imageUrl);
+                try {
+                    FileOutputStream out = new FileOutputStream(newFile);
+                    if (bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)) {
+                        out.flush();
+                        out.close();
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
 
