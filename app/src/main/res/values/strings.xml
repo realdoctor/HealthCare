@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">康链</string>
-
     <!--新浪-->
     <string name="weibosdk_demo_toast_auth_success">授权成功</string>
     <string name="weibosdk_demo_toast_auth_failed">授权失败</string>
@@ -47,4 +46,11 @@
     <string name="save_doc_doctor">就诊医生:</string>
     <string name="save_doc_doctor_edit">请输入您的就诊医生</string>
     <string name="save_doc_save_btn">保存</string>
+    <string name="collection_pull_to_refresh">下拉刷新</string>
+    <string name="collection_release_refresh">释放刷新</string>
+    <string name="collection_refresh_done">刷新完成</string>
+    <string name="collection_refreshing">正在刷新...</string>
+    <string name="collection_last_refresh_time">上次更新时间：</string>
+    <string name="collection_loading_more">正在加载...</string>
+    <string name="collection_no_more_data">没有更多数据</string>
 </resources>
