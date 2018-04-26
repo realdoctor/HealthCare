@@ -2,34 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:padding="5dp">
 
-    <RelativeLayout
-        android:id="@+id/doc_detail_relative"
+    <TextView
+        android:id="@+id/doc_detail_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="标题"
+        android:textColor="@color/text_primary_color"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/doc_detail_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:text="标题"
-            android:textColor="@color/text_primary_color"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/doc_detail_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/doc_detail_title"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:text="内容"
-            android:textColor="@color/text_secondary_color" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/doc_detail_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/doc_detail_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="内容"
+        android:textColor="@color/text_secondary_color" />
 
     <ImageView
         android:id="@+id/doc_detail_img"
@@ -37,6 +32,6 @@
         android:layout_height="80dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/doc_detail_relative"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:scaleType="fitXY" />
 </RelativeLayout>

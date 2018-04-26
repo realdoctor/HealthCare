@@ -109,16 +109,26 @@
             android:name="com.real.doctor.realdoc.activity.SaveDocActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".activity.DocDetailActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.DocContentActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.CheckDocActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.DocDetailActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
 
         <meta-data
             android:name="WEIBO_APPKEY"

@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -60,6 +61,10 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     LinearLayout saveDocLayout;
     @BindView(R.id.button_save_doc)
     Button saveDoc;
+    @BindView(R.id.right_title)
+    TextView rightTitle;
+    @BindView(R.id.finish_back)
+    ImageView finishBack;
     private List<ImageBean> imageList;
     private GridAdapter adapter;
     //底部弹出菜单
@@ -87,6 +92,8 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
         ImageBean bean = new ImageBean();
         bean.setSpareImage(R.mipmap.add);
         imageList.add(bean);
+        rightTitle.setText("查看");
+        rightTitle.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -106,7 +113,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
-    @OnClick({R.id.button_save_doc})
+    @OnClick({R.id.button_save_doc, R.id.right_title, R.id.finish_back})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.button_save_doc:
@@ -127,7 +134,8 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                     for (ImageBean image : imageList) {
                         String img = image.getImgUrl();
                         SDCardUtils.saveToSdCard(img);
-                        sb.append(img);
+                        String fileName = img.substring(img.lastIndexOf("/") + 1, img.length());
+                        sb.append(fileName);
                         sb.append(";");
                     }
                 } else {
@@ -138,6 +146,13 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 SaveDocManager instance = SaveDocManager.getInstance(SaveDocActivity.this);
                 instance.insertSaveDoc(SaveDocActivity.this, bean);
                 ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存成功!");
+                finish();
+                break;
+            case R.id.right_title:
+                actionStart(SaveDocActivity.this, DocDetailActivity.class);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                break;
+            case R.id.finish_back:
                 finish();
                 break;
         }
@@ -237,7 +252,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
             imageBean.setImgUrl(mCurrentPhotoPath);
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
-        } else {
+        } else if (resultCode == RESULT_OK && requestCode != REQUEST_CODE_TAKE_PHOTO) {
             ImageBean imageBean = new ImageBean();
             imageBean.setSpareImage(R.mipmap.add);
             imageList.add(imageBean);

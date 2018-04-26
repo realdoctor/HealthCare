@@ -61,18 +61,17 @@
                     android:textColor="#ff333333"
                     android:typeface="monospace" />
 
-                <EditText
+                <TextView
                     android:id="@+id/hospital"
                     android:layout_width="fill_parent"
                     android:layout_height="45.0dip"
                     android:layout_below="@id/hospital_text"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
                     android:background="#ffffffff"
-                    android:hint="@string/save_doc_hospital_edit"
-                    android:inputType="text"
-                    android:paddingLeft="10.0dip"
+                    android:text=""
                     android:textColor="@color/text_special_color"
-                    android:textColorHint="#ff999999"
-                    android:textCursorDrawable="@drawable/color_cursor"
                     android:textSize="14.0sp"
                     android:typeface="monospace" />
 
@@ -88,18 +87,17 @@
                     android:textColor="#ff333333"
                     android:typeface="monospace" />
 
-                <EditText
+                <TextView
                     android:id="@+id/doctor"
                     android:layout_width="fill_parent"
                     android:layout_height="45.0dip"
                     android:layout_below="@id/doctor_text"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
                     android:background="#ffffffff"
-                    android:hint="@string/save_doc_doctor_edit"
-                    android:inputType="text"
-                    android:paddingLeft="10.0dip"
+                    android:text=""
                     android:textColor="@color/text_special_color"
-                    android:textColorHint="#ff999999"
-                    android:textCursorDrawable="@drawable/color_cursor"
                     android:textSize="14.0sp"
                     android:typeface="monospace" />
 
@@ -123,25 +121,6 @@
                         android:stretchMode="columnWidth"
                         android:verticalSpacing="5dp" />
                 </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/doc_grid_view_linear"
-                    android:layout_marginTop="45.0dip"
-                    android:gravity="center_horizontal">
-
-                    <Button
-                        android:id="@+id/button_save_doc"
-                        android:layout_width="fill_parent"
-                        android:layout_height="43.0dip"
-                        android:layout_marginLeft="18.0dip"
-                        android:layout_marginRight="18.0dip"
-                        android:background="@drawable/button_selector"
-                        android:text="@string/save_doc_save_btn"
-                        android:textColor="#ffffffff"
-                        android:textSize="15.0sp" />
-                </RelativeLayout>
             </RelativeLayout>
 
         </LinearLayout>

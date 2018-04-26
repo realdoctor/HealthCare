@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,11 @@ import android.widget.ImageView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.ImageBean;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.widget.ImagePagerView;
 
 import java.util.List;
 
@@ -50,6 +54,14 @@ public class GridAdapter extends RdBaseAdapter<ImageBean> {
             Bitmap bitmap = ImageUtils.compressBitmapByPath(url.toString(), ScreenUtil.getScreenWidth(mContext), ScreenUtil.getScreenHeight(mContext));
             holder.mImg.setImageBitmap(bitmap);
         }
+
+//        holder.mImg.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ToastUtil.showLong(mContext, "你点击了一张图片!");
+//            }
+//        });
+
         return convertView;
     }
 

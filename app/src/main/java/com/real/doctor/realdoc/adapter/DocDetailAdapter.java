@@ -2,7 +2,6 @@ package com.real.doctor.realdoc.adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -22,7 +21,7 @@ public class DocDetailAdapter extends BaseQuickAdapter<SaveDocBean, BaseViewHold
 
     private Context context;
 
-    public DocDetailAdapter(Context context,@LayoutRes int layoutResId, List<SaveDocBean> data) {
+    public DocDetailAdapter(Context context, @LayoutRes int layoutResId, List<SaveDocBean> data) {
         super(layoutResId, data);
         this.context = context;
     }
@@ -32,7 +31,7 @@ public class DocDetailAdapter extends BaseQuickAdapter<SaveDocBean, BaseViewHold
         viewHolder.setText(R.id.doc_detail_title, item.getIll())
                 .setText(R.id.doc_detail_content, item.getHospital());
         String[] imgs = item.getImgs().split(";");
-        String path = SDCardUtils.getPictureDir() + imgs;
+        String path = SDCardUtils.getPictureDir() + imgs[0];
         Glide.with(mContext).load(path).crossFade().into((ImageView) viewHolder.getView(R.id.doc_detail_img));
     }
 }
