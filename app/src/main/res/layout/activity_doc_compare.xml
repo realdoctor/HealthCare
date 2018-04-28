@@ -106,21 +106,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/doctor"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-                    <com.real.doctor.realdoc.view.DocGridView
-                        android:id="@+id/doc_grid_view"
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/image_one"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:columnWidth="90dp"
-                        android:gravity="center"
-                        android:horizontalSpacing="5dp"
-                        android:numColumns="4"
-                        android:stretchMode="columnWidth"
-                        android:verticalSpacing="5dp" />
+                        android:src="@mipmap/ic_launcher" />
+
+                    <ImageView
+                        android:id="@+id/image_two"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:src="@mipmap/ic_launcher" />
+
                 </LinearLayout>
             </RelativeLayout>
 

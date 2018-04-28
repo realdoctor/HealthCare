@@ -25,7 +25,10 @@
     <color name="text3">#c8969696</color>
     <color name="text4">#DDDDDD</color>
     <color name="text5">#EFEFEF</color>
-    
+
+    <color name="ltcolorAccent">#FF8081</color>
+    <color name="progressBg">#FFDDDDDD</color>
+    <color name="secondProgressColor">#f8db90</color>
     <!--PhotoPicker-->
     <color name="__picker_pager_bg">#CA000000</color>
     <color name="__picker_selected_bg">#44000000</color>

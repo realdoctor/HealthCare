@@ -1,8 +1,15 @@
 package com.real.doctor.realdoc.activity;
 
 import android.app.Activity;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,21 +21,24 @@ import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.CheckDocAdapter;
-import com.real.doctor.realdoc.model.CheckDocBean;
+import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.greendao.table.SaveDocManager;
+import com.real.doctor.realdoc.model.SaveDocBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by zhujiabin on 2017/9/6.
  */
-public class CheckDocActivity extends Activity implements View.OnClickListener, CheckDocAdapter.OnItemClickListener {
+public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.OnItemClickListener {
 
-    private static final int MYLIVE_MODE_CHECK = 0;
-    private static final int MYLIVE_MODE_EDIT = 1;
+    private static final int mSaveDocBean_MODE_CHECK = 0;
+    private static final int mSaveDocBean_MODE_EDIT = 1;
 
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
@@ -38,47 +48,68 @@ public class CheckDocActivity extends Activity implements View.OnClickListener, 
     Button mBtnDelete;
     @BindView(R.id.select_all)
     TextView mSelectAll;
-    @BindView(R.id.ll_mycollection_bottom_dialog)
-    LinearLayout mLlMycollectionBottomDialog;
+    @BindView(R.id.ll_bottom_dialog)
+    LinearLayout mBottomDialog;
     @BindView(R.id.btn_editor)
     TextView mBtnEditor;
-    private CheckDocAdapter mRadioAdapter = null;
+    @BindView(R.id.btn_update)
+    TextView mBtnUpdate;
+
+    private CheckDocAdapter mCheckDocAdapter = null;
     private LinearLayoutManager mLinearLayoutManager;
-    private List<CheckDocBean> mList = new ArrayList<>();
-    private int mEditMode = MYLIVE_MODE_CHECK;
+    private int mEditMode = mSaveDocBean_MODE_CHECK;
     private boolean isSelectAll = false;
     private boolean editorStatus = false;
     private int index = 0;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_doc);
-        ButterKnife.bind(this);
-
-        initView();
-        initData();
-        initListener();
+    public void initEvent() {
+        mCheckDocAdapter.setOnItemClickListener(this);
+        mBtnDelete.setOnClickListener(this);
+        mSelectAll.setOnClickListener(this);
+        mBtnEditor.setOnClickListener(this);
     }
 
-    private void initView() {
-    }
-
-    private void initData() {
-        mRadioAdapter = new CheckDocAdapter(this);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerview.setLayoutManager(mLinearLayoutManager);
-//        DividerItemDecoration itemDecorationHeader = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-//        itemDecorationHeader.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.divider_main_bg_height_1));
-//        mRecyclerview.addItemDecoration(itemDecorationHeader);
-        mRecyclerview.setAdapter(mRadioAdapter);
-        for (int i = 0; i < 30; i++) {
-            CheckDocBean checkDocBean = new CheckDocBean();
-            checkDocBean.setIll("这是第" + i + "个条目");
-            checkDocBean.setHospital("来源" + i);
-            mList.add(checkDocBean);
-            mRadioAdapter.notifyAdapter(mList, false);
+    @Override
+    @OnClick({R.id.btn_delete, R.id.select_all, R.id.btn_editor, R.id.btn_update})
+    public void widgetClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_delete:
+                deleteItem();
+                break;
+            case R.id.select_all:
+                selectAllMain();
+                break;
+            case R.id.btn_editor:
+                updataEditMode();
+                break;
+            case R.id.btn_update:
+                //跳转到进度条页面，并开启Service，上传成功，进度条页面消失
+                updateService();
+            default:
+                break;
         }
+    }
+
+    private void updateService() {
+        Intent intent = new Intent(CheckDocActivity.this, ProgressBarActivity.class);
+        List<SaveDocBean> mList = new ArrayList<>();
+        for (int i = mCheckDocAdapter.getSaveDocBeanList().size(), j = 0; i > j; i--) {
+            SaveDocBean mSaveDocBean = mCheckDocAdapter.getSaveDocBeanList().get(i - 1);
+            if (mSaveDocBean.getIsSelect()) {
+                mList.add(mSaveDocBean);
+            }
+        }
+        intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
+    }
+
+    @Override
+    public void doBusiness(Context mContext) {
+
     }
 
 
@@ -99,53 +130,51 @@ public class CheckDocActivity extends Activity implements View.OnClickListener, 
         }
     }
 
-    private void initListener() {
-        mRadioAdapter.setOnItemClickListener(this);
-        mBtnDelete.setOnClickListener(this);
-        mSelectAll.setOnClickListener(this);
-        mBtnEditor.setOnClickListener(this);
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_check_doc;
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_delete:
-                deleteVideo();
-                break;
-            case R.id.select_all:
-                selectAllMain();
-                break;
-            case R.id.btn_editor:
-                updataEditMode();
-                break;
-            default:
-                break;
-        }
+    public void initView() {
+        ButterKnife.bind(this);
+    }
+
+    @Override
+    public void initData() {
+        mCheckDocAdapter = new CheckDocAdapter(this);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerview.setLayoutManager(mLinearLayoutManager);
+        mRecyclerview.setAdapter(mCheckDocAdapter);
+        SaveDocManager instance = SaveDocManager.getInstance(CheckDocActivity.this);
+        List<SaveDocBean> mList = instance.querySaveDocList(CheckDocActivity.this);
+        mCheckDocAdapter.notifyAdapter(mList, false);
     }
 
     /**
      * 全选和反选
      */
     private void selectAllMain() {
-        if (mRadioAdapter == null) return;
+        if (mCheckDocAdapter == null) return;
         if (!isSelectAll) {
-            for (int i = 0, j = mRadioAdapter.getMyLiveList().size(); i < j; i++) {
-                mRadioAdapter.getMyLiveList().get(i).setSelect(true);
+            for (int i = 0, j = mCheckDocAdapter.getSaveDocBeanList().size(); i < j; i++) {
+                mCheckDocAdapter.getSaveDocBeanList().get(i).setIsSelect(true);
             }
-            index = mRadioAdapter.getMyLiveList().size();
+            index = mCheckDocAdapter.getSaveDocBeanList().size();
             mBtnDelete.setEnabled(true);
             mSelectAll.setText("取消全选");
             isSelectAll = true;
         } else {
-            for (int i = 0, j = mRadioAdapter.getMyLiveList().size(); i < j; i++) {
-                mRadioAdapter.getMyLiveList().get(i).setSelect(false);
+            for (int i = 0, j = mCheckDocAdapter.getSaveDocBeanList().size(); i < j; i++) {
+                mCheckDocAdapter.getSaveDocBeanList().get(i).setIsSelect(false);
             }
             index = 0;
             mBtnDelete.setEnabled(false);
             mSelectAll.setText("全选");
             isSelectAll = false;
         }
-        mRadioAdapter.notifyDataSetChanged();
+        mCheckDocAdapter.notifyDataSetChanged();
         setBtnBackground(index);
         mTvSelectNum.setText(String.valueOf(index));
     }
@@ -153,7 +182,7 @@ public class CheckDocActivity extends Activity implements View.OnClickListener, 
     /**
      * 删除逻辑
      */
-    private void deleteVideo() {
+    private void deleteItem() {
         if (index == 0) {
             mBtnDelete.setEnabled(false);
             return;
@@ -182,39 +211,38 @@ public class CheckDocActivity extends Activity implements View.OnClickListener, 
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = mRadioAdapter.getMyLiveList().size(), j = 0; i > j; i--) {
-                    CheckDocBean myLive = mRadioAdapter.getMyLiveList().get(i - 1);
-                    if (myLive.isSelect()) {
-
-                        mRadioAdapter.getMyLiveList().remove(myLive);
+                for (int i = mCheckDocAdapter.getSaveDocBeanList().size(), j = 0; i > j; i--) {
+                    SaveDocBean mSaveDocBean = mCheckDocAdapter.getSaveDocBeanList().get(i - 1);
+                    if (mSaveDocBean.getIsSelect()) {
+                        mCheckDocAdapter.getSaveDocBeanList().remove(mSaveDocBean);
                         index--;
                     }
                 }
                 index = 0;
                 mTvSelectNum.setText(String.valueOf(0));
                 setBtnBackground(index);
-                if (mRadioAdapter.getMyLiveList().size() == 0) {
-                    mLlMycollectionBottomDialog.setVisibility(View.GONE);
+                if (mCheckDocAdapter.getSaveDocBeanList().size() == 0) {
+                    mBottomDialog.setVisibility(View.GONE);
                 }
-                mRadioAdapter.notifyDataSetChanged();
+                mCheckDocAdapter.notifyDataSetChanged();
                 builder.dismiss();
             }
         });
     }
 
     private void updataEditMode() {
-        mEditMode = mEditMode == MYLIVE_MODE_CHECK ? MYLIVE_MODE_EDIT : MYLIVE_MODE_CHECK;
-        if (mEditMode == MYLIVE_MODE_EDIT) {
+        mEditMode = mEditMode == mSaveDocBean_MODE_CHECK ? mSaveDocBean_MODE_EDIT : mSaveDocBean_MODE_CHECK;
+        if (mEditMode == mSaveDocBean_MODE_EDIT) {
             mBtnEditor.setText("取消");
-            mLlMycollectionBottomDialog.setVisibility(View.VISIBLE);
+            mBottomDialog.setVisibility(View.VISIBLE);
             editorStatus = true;
         } else {
             mBtnEditor.setText("编辑");
-            mLlMycollectionBottomDialog.setVisibility(View.GONE);
+            mBottomDialog.setVisibility(View.GONE);
             editorStatus = false;
             clearAll();
         }
-        mRadioAdapter.setEditMode(mEditMode);
+        mCheckDocAdapter.setEditMode(mEditMode);
     }
 
 
@@ -226,27 +254,27 @@ public class CheckDocActivity extends Activity implements View.OnClickListener, 
     }
 
     @Override
-    public void onItemClickListener(int pos, List<CheckDocBean> myLiveList) {
+    public void onItemClickListener(int pos, List<SaveDocBean> mSaveDocBeanList) {
         if (editorStatus) {
-            CheckDocBean myLive = myLiveList.get(pos);
-            boolean isSelect = myLive.isSelect();
+            SaveDocBean mSaveDocBean = mSaveDocBeanList.get(pos);
+            boolean isSelect = mSaveDocBean.getIsSelect();
             if (!isSelect) {
                 index++;
-                myLive.setSelect(true);
-                if (index == myLiveList.size()) {
+                mSaveDocBean.setIsSelect(true);
+                if (index == mSaveDocBeanList.size()) {
                     isSelectAll = true;
                     mSelectAll.setText("取消全选");
                 }
 
             } else {
-                myLive.setSelect(false);
+                mSaveDocBean.setIsSelect(false);
                 index--;
                 isSelectAll = false;
                 mSelectAll.setText("全选");
             }
             setBtnBackground(index);
             mTvSelectNum.setText(String.valueOf(index));
-            mRadioAdapter.notifyDataSetChanged();
+            mCheckDocAdapter.notifyDataSetChanged();
         }
     }
 }

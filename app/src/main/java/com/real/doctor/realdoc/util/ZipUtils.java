@@ -324,33 +324,4 @@ public class ZipUtils {
         return files;
     }
 
-    /**
-     * 获取压缩文件中的文件路径链表
-     *
-     * @param zipFilePath 压缩文件路径
-     * @return 压缩文件中的文件路径链表
-     * @throws IOException IO错误时抛出
-     */
-//    public static List<String> getFilesPath(String zipFilePath)
-//            throws IOException {
-//        return getFilesPath(FileUtils.getFileByPath(zipFilePath));
-//    }
-
-    /**
-     * 获取压缩文件中的文件路径链表
-     *
-     * @param zipFile 压缩文件
-     * @return 压缩文件中的文件路径链表
-     * @throws IOException IO错误时抛出
-     */
-//    public static List<String> getFilesPath(File zipFile)
-//            throws IOException {
-//        if (zipFile == null) return null;
-//        List<String> paths = new ArrayList<>();
-//        Enumeration<?> entries = getEntries(zipFile);
-//        while (entries.hasMoreElements()) {
-//            paths.add(((ZipEntry) entries.nextElement()).getName());
-//        }
-//        return paths;
-//    }
 }

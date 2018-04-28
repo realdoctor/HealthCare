@@ -1,5 +1,7 @@
 package com.real.doctor.realdoc.util;
 
+import android.support.annotation.NonNull;
+
 import org.json.JSONObject;
 
 import java.io.File;
@@ -7,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 /**
@@ -84,7 +87,14 @@ public class DocUtils {
         return fileBody;
     }
 
-
+    // 封装请求体，可以看到这里和OkHttp的请求体封装基本上是一样的
+    @NonNull
+    public static MultipartBody.Part prepareFilePart(String path) {
+        File file = new File(path);
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        return MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+    }
     public static boolean isFastClick() {
         boolean flag = false;
         long curClickTime = System.currentTimeMillis();

@@ -21,14 +21,14 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/btn_update"
+            android:id="@+id/btn_compare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:text="上传"
+            android:text="对照"
             android:textColor="#ffffff"
             android:textSize="15sp" />
     </RelativeLayout>
@@ -98,19 +98,6 @@
                 android:gravity="center"
                 android:text="删除"
                 android:textColor="#b7b8bd"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/select_all"
-                android:layout_width="80dp"
-                android:layout_height="33dp"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:layout_toLeftOf="@+id/btn_delete"
-                android:background="@drawable/bg_selete_all"
-                android:gravity="center"
-                android:text="全选"
-                android:textColor="#000001"
                 android:textSize="14sp" />
 
         </RelativeLayout>

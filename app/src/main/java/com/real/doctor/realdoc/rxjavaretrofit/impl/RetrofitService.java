@@ -4,6 +4,7 @@ import java.net.URLDecoder;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -78,4 +79,11 @@ public interface RetrofitService {
     @Streaming
     @POST
     Observable<ResponseBody> downloadFile(@Url String fileUrl);
+
+
+    @POST
+//    @Headers({"Content-Type: application/json","Accept: application/json"})//需要添加头
+    Observable<ResponseBody> upLoadjsonFile(
+            @Url String url,
+            @Body RequestBody jsonStr,@Part MultipartBody.Part file);
 }

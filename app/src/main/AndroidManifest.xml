@@ -108,19 +108,27 @@
         <activity
             android:name="com.real.doctor.realdoc.activity.SaveDocActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".activity.DocDetailActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".activity.DocContentActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.CheckDocActivity"
+            android:name=".activity.ProgressBarActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.DocCompareActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.CheckCompareActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -129,6 +137,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.CheckDocActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <service
+            android:name=".service.UpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <meta-data
             android:name="WEIBO_APPKEY"

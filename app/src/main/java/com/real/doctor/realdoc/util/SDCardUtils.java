@@ -84,8 +84,8 @@ public class SDCardUtils {
      * @param bitmap
      * @return
      */
-    public static String saveToSdCard(Bitmap bitmap) {
-        String imageUrl = getPictureDir() + System.currentTimeMillis() + ".png";
+    public static String saveToSdCard(String path, Bitmap bitmap, String name) {
+        String imageUrl = path + name;
         File file = new File(imageUrl);
         try {
             FileOutputStream out = new FileOutputStream(file);

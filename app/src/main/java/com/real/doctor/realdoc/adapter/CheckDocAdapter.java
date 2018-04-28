@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.model.CheckDocBean;
+import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.GlideUtils;
+import com.real.doctor.realdoc.util.SDCardUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +27,10 @@ import butterknife.ButterKnife;
 
 public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHolder> {
 
-    private static final int MYLIVE_MODE_CHECK = 0;
-    int mEditMode = MYLIVE_MODE_CHECK;
-
-    private int secret = 0;
-    private String title = "";
+    private static final int saveDocBean_MODE_CHECK = 0;
+    int mEditMode = saveDocBean_MODE_CHECK;
     private Context context;
-    private List<CheckDocBean> mCheckDocBean;
+    private List<SaveDocBean> mSaveDocBean;
     private OnItemClickListener mOnItemClickListener;
 
     public CheckDocAdapter(Context context) {
@@ -39,20 +38,20 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
     }
 
 
-    public void notifyAdapter(List<CheckDocBean> myLiveList, boolean isAdd) {
+    public void notifyAdapter(List<SaveDocBean> saveDocBeanList, boolean isAdd) {
         if (!isAdd) {
-            this.mCheckDocBean = myLiveList;
+            this.mSaveDocBean = saveDocBeanList;
         } else {
-            this.mCheckDocBean.addAll(myLiveList);
+            this.mSaveDocBean.addAll(saveDocBeanList);
         }
         notifyDataSetChanged();
     }
 
-    public List<CheckDocBean> getMyLiveList() {
-        if (mCheckDocBean == null) {
-            mCheckDocBean = new ArrayList<>();
+    public List<SaveDocBean> getSaveDocBeanList() {
+        if (mSaveDocBean == null) {
+            mSaveDocBean = new ArrayList<>();
         }
-        return mCheckDocBean;
+        return mSaveDocBean;
     }
 
     @Override
@@ -64,20 +63,22 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return mCheckDocBean.size();
+        return mSaveDocBean.size();
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final CheckDocBean myLive = mCheckDocBean.get(holder.getAdapterPosition());
-        holder.mTvTitle.setText(myLive.getIll());
-        holder.mTvSource.setText(myLive.getHospital());
-        if (mEditMode == MYLIVE_MODE_CHECK) {
+        final SaveDocBean saveDocBean = mSaveDocBean.get(holder.getAdapterPosition());
+        holder.mTvTitle.setText(saveDocBean.getIll());
+        holder.mTvContent.setText(saveDocBean.getHospital());
+        String[] imgs = saveDocBean.getImgs().split(";");
+        GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir() + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        if (mEditMode == saveDocBean_MODE_CHECK) {
             holder.mCheckBox.setVisibility(View.GONE);
         } else {
             holder.mCheckBox.setVisibility(View.VISIBLE);
 
-            if (myLive.isSelect()) {
+            if (saveDocBean.getIsSelect()) {
                 holder.mCheckBox.setImageResource(R.mipmap.ic_checked);
             } else {
                 holder.mCheckBox.setImageResource(R.mipmap.ic_uncheck);
@@ -86,7 +87,7 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClickListener(holder.getAdapterPosition(), mCheckDocBean);
+                mOnItemClickListener.onItemClickListener(holder.getAdapterPosition(), mSaveDocBean);
             }
         });
     }
@@ -96,7 +97,7 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
     }
 
     public interface OnItemClickListener {
-        void onItemClickListener(int pos, List<CheckDocBean> myLiveList);
+        void onItemClickListener(int pos, List<SaveDocBean> saveDocBeanList);
     }
 
     public void setEditMode(int editMode) {
@@ -109,8 +110,8 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
         ImageView mRadioImg;
         @BindView(R.id.tv_title)
         TextView mTvTitle;
-        @BindView(R.id.tv_source)
-        TextView mTvSource;
+        @BindView(R.id.tv_content)
+        TextView mTvContent;
         @BindView(R.id.root_view)
         RelativeLayout mRootView;
         @BindView(R.id.check_box)
