@@ -16,7 +16,7 @@ import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.widget.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.real.doctor.realdoc.widget.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
-import com.youth.banner.Banner;
+//import com.youth.banner.Banner;
 
 import org.w3c.dom.Text;
 
@@ -31,8 +31,8 @@ import butterknife.ButterKnife;
 
 public class ProductShowActivity extends BaseActivity  {
 
-    @BindView(R.id.banner_id)
-    Banner banner;
+//    @BindView(R.id.banner_id)
+//    Banner banner;
     @BindView(R.id.tv_pName)
     TextView tv_pName;
     @BindView(R.id.tv_pCompay)
@@ -53,10 +53,10 @@ public class ProductShowActivity extends BaseActivity  {
     @Override
     public void initData() {
         bean=(ProductBean) getIntent().getSerializableExtra("model");
-        banner.setBannerStyle(Banner.CIRCLE_INDICATOR_TITLE);
-        banner.setIndicatorGravity(Banner.CENTER);
-        banner.isAutoPlay(true) ;
-        banner.setImages(bean.imgs);
+//        banner.setBannerStyle(Banner.CIRCLE_INDICATOR_TITLE);
+//        banner.setIndicatorGravity(Banner.CENTER);
+//        banner.isAutoPlay(true) ;
+//        banner.setImages(bean.imgs);
         tv_pName.setText(bean.product_name);
         tv_price.setText("￥"+bean.product_price);
     }
