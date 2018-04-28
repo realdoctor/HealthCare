@@ -100,13 +100,16 @@
             android:name="com.real.doctor.realdoc.photopicker.PhotoPickerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
+        <activity
+            android:name="com.real.doctor.realdoc.activity.ProductShowActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.real.doctor.realdoc.photopicker.PhotoPagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name="com.real.doctor.realdoc.activity.SaveDocActivity"
+            android:name="com.real.doctor.realdoc.activity.ProductListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
