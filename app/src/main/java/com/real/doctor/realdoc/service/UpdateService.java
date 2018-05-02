@@ -50,7 +50,6 @@ public class UpdateService extends JobService {
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-//            ToastUtil.showLong(UpdateService.this, "UpdateService ");
             for (SaveDocBean bean : mList) {
                 String[] imgs = bean.getImgs().split(";");
                 if (SDCardUtils.isSDCardEnable()) {
@@ -68,17 +67,17 @@ public class UpdateService extends JobService {
                                 SDCardUtils.saveToSdCard(folderName, bitmap, img);
                             }
                         }
-//                        boolean zip = false;
-//                        //打包
-//                        try {
-//                            zip = ZipUtils.zipFile(folderName, SDCardUtils.getSDCardPath() + "doctor.zip", "doctor");
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-////                        if (zip) {
+                        boolean zip = false;
+                        //打包
+                        try {
+                            zip = ZipUtils.zipFile(folderName, SDCardUtils.getSDCardPath() + "doctor.zip", "doctor");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (zip) {
                             //上传文件夹和数据
 //                            uploadData();
-//                        }
+                        }
                     }
                 }
             }

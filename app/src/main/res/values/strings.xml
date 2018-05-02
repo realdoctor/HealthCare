@@ -43,7 +43,8 @@
     <string name="save_doc_ill">疾病名称:</string>
     <string name="save_doc_hospital">就诊医院:</string>
     <string name="save_doc_hospital_edit">请输入您就诊的医院名称</string>
-    <string name="save_doc_doctor">就诊医生:</string>
+    <string name="save_doc_doctor">就诊医生:</string>\
+    <string name="save_doc_time">就诊时间:</string>
     <string name="save_doc_doctor_edit">请输入您的就诊医生</string>
     <string name="save_doc_save_btn">保存</string>
     <string name="collection_pull_to_refresh">下拉刷新</string>

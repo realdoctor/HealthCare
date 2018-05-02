@@ -124,17 +124,29 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 String illness = ill.getText().toString().trim();
                 bean.setIll(illness);
                 String hospitaName = hospital.getText().toString().trim();
+                if (EmptyUtils.isEmpty(hospitaName)) {
+                    ToastUtil.showLong(this, "请填写就诊医院名称!");
+                    return;
+                }
                 bean.setHospital(hospitaName);
                 String doctorName = doctor.getText().toString().trim();
+                if (EmptyUtils.isEmpty(doctorName)) {
+                    ToastUtil.showLong(this, "请填写就诊医生!");
+                    return;
+                }
                 bean.setDoctor(doctorName);
                 StringBuilder sb = new StringBuilder();
+                long time = 0;
+                String folder = null;
                 //将数据存储到数据库中
                 //将存储到sdcard中
                 if (SDCardUtils.isSDCardEnable()) {
                     imageList.remove(imageList.size() - 1); // 现将加号移除（有加号才能显示此按钮）
+                    time = System.currentTimeMillis();
+                    folder = String.valueOf(time);
                     for (ImageBean image : imageList) {
                         String img = image.getImgUrl();
-                        SDCardUtils.saveToSdCard(img);
+                        SDCardUtils.saveToSdCard(img, folder);
                         String fileName = img.substring(img.lastIndexOf("/") + 1, img.length());
                         sb.append(fileName);
                         sb.append(";");
@@ -143,11 +155,19 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                     ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存失败!");
                     return;
                 }
+                bean.setFolder(folder);
+                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                bean.setTime(sf.format(time));
                 bean.setImgs(sb.toString());
                 SaveDocManager instance = SaveDocManager.getInstance(SaveDocActivity.this);
-                instance.insertSaveDoc(SaveDocActivity.this, bean);
-                ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存成功!");
-                finish();
+                if (EmptyUtils.isNotEmpty(instance)) {
+                    instance.insertSaveDoc(SaveDocActivity.this, bean);
+                    ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存成功!");
+                    finish();
+                } else {
+                    ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存失败!");
+                    return;
+                }
                 break;
             case R.id.right_title:
                 actionStart(SaveDocActivity.this, DocDetailActivity.class);
@@ -269,7 +289,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     public void takePhotoCompress() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            String filename = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.CHINA)
+            String filename = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINA)
                     .format(new Date()) + ".png";
             File file = new File(SDCardUtils.getSDCardPath(), filename);
             mCurrentPhotoPath = file.getAbsolutePath();

@@ -17,6 +17,7 @@ import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,13 @@ public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapte
         mRv = rv;
     }
 
+    public List<Integer> getSelectedList() {
+        return selectedList;
+    }
+
+    public void setSelectedList(List<Integer> selectedList) {
+        this.selectedList = selectedList;
+    }
 
     public void notifyAdapter(List<SaveDocBean> saveDocBeanList, boolean isAdd) {
         if (!isAdd) {
@@ -77,9 +85,10 @@ public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapte
         final SaveDocBean saveDocBean = mSaveDocBean.get(holder.getAdapterPosition());
         holder.mTvTitle.setText(saveDocBean.getIll());
         holder.mTvContent.setText(saveDocBean.getHospital());
+        String mFolder = saveDocBean.getFolder();
         String[] imgs = saveDocBean.getImgs().split(";");
 
-        GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir() + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir() + mFolder + File.separator + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
         Log.d("TAG", "onBindViewHolder() called with: holder = [" + holder + "], position = [" + position + "]");
         holder.mCheckBox.setSelected(mSaveDocBean.get(position).getIsSelect());
         holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -88,14 +97,13 @@ public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapte
                 //CouponVH couponVH = (CouponVH) mRv.findViewHolderForLayoutPosition(mSelectedPos);
                 int removed = -1;
                 int selectedItemPosition = holder.getLayoutPosition();
-                if(mSaveDocBean.get(selectedItemPosition).getIsSelect()) {
+                if (mSaveDocBean.get(selectedItemPosition).getIsSelect()) {
                     mSaveDocBean.get(selectedItemPosition).setIsSelect(false);
                     holder.mCheckBox.setSelected(false);
                     int index = selectedList.indexOf(selectedItemPosition);
                     selectedList.remove(index);
-                }
-                else{
-                    if(selectedList.size() == 2){
+                } else {
+                    if (selectedList.size() == 2) {
                         removed = selectedList.remove(0);
                         mSaveDocBean.get(removed).setIsSelect(false);
                         holder.mCheckBox.setSelected(false);
@@ -121,6 +129,7 @@ public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapte
 //            }
 //        });
     }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position, List<Object> payloads) {
 

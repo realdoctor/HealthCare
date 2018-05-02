@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container_iv"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#ffffffff">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -101,13 +103,39 @@
                     android:textSize="14.0sp"
                     android:typeface="monospace" />
 
+                <TextView
+                    android:id="@+id/time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/doctor"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="@string/save_doc_time"
+                    android:textColor="#ff333333"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45.0dip"
+                    android:layout_below="@id/time_text"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:background="#ffffffff"
+                    android:text=""
+                    android:textColor="@color/text_special_color"
+                    android:textSize="14.0sp"
+                    android:typeface="monospace" />
+
                 <LinearLayout
                     android:id="@+id/doc_grid_view_linear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/doctor"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_below="@id/time"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <com.real.doctor.realdoc.view.DocGridView
                         android:id="@+id/doc_grid_view"
@@ -118,13 +146,21 @@
                         android:columnWidth="90dp"
                         android:gravity="center"
                         android:horizontalSpacing="5dp"
+                        android:listSelector="@android:color/transparent"
                         android:numColumns="4"
                         android:stretchMode="columnWidth"
                         android:verticalSpacing="5dp" />
+
                 </LinearLayout>
             </RelativeLayout>
-
         </LinearLayout>
-
     </ScrollView>
-</RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/detail_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:contentDescription="用来展示图片的viewpager"
+        android:visibility="invisible" />
+</FrameLayout>

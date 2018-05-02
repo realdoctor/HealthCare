@@ -15,6 +15,7 @@ import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,8 +72,9 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
         final SaveDocBean saveDocBean = mSaveDocBean.get(holder.getAdapterPosition());
         holder.mTvTitle.setText(saveDocBean.getIll());
         holder.mTvContent.setText(saveDocBean.getHospital());
+        String folder = saveDocBean.getFolder();
         String[] imgs = saveDocBean.getImgs().split(";");
-        GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir() + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir()+folder+ File.separator + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
         if (mEditMode == saveDocBean_MODE_CHECK) {
             holder.mCheckBox.setVisibility(View.GONE);
         } else {

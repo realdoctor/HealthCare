@@ -1,7 +1,10 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,12 +12,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.CheckCompareAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +39,6 @@ public class CheckCompareActivity extends BaseActivity implements CheckCompareAd
 
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
-    @BindView(R.id.tv_select_num)
-    TextView mTvSelectNum;
-    @BindView(R.id.btn_delete)
-    Button mBtnDelete;
-    @BindView(R.id.ll_bottom_dialog)
-    LinearLayout mBottomDialog;
     @BindView(R.id.btn_editor)
     TextView mBtnEditor;
     @BindView(R.id.btn_compare)
@@ -52,7 +51,8 @@ public class CheckCompareActivity extends BaseActivity implements CheckCompareAd
     private boolean editorStatus = false;
     private int index = 0;
     private List<SaveDocBean> mList;
-    private List<SaveDocBean> isSelectList;
+    private List<SaveDocBean> mSelectList;
+    private List<Integer> isSelectList;
 
     @Override
     public int getLayoutId() {
@@ -67,7 +67,8 @@ public class CheckCompareActivity extends BaseActivity implements CheckCompareAd
     @Override
     public void initData() {
         isSelectList = new ArrayList<>();
-        mCheckDocAdapter = new CheckCompareAdapter(this,  mRecyclerview);
+        mSelectList = new ArrayList<>();
+        mCheckDocAdapter = new CheckCompareAdapter(this, mRecyclerview);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(mLinearLayoutManager);
         mRecyclerview.setAdapter(mCheckDocAdapter);
@@ -78,66 +79,50 @@ public class CheckCompareActivity extends BaseActivity implements CheckCompareAd
 
     @Override
     public void initEvent() {
-//        mCheckDocAdapter.setOnItemClickListener(this);
-        mBtnDelete.setOnClickListener(this);
         mBtnEditor.setOnClickListener(this);
     }
 
     @Override
-    @OnClick({R.id.btn_delete, R.id.btn_editor, R.id.btn_compare})
+    @OnClick({R.id.btn_editor, R.id.btn_compare})
     public void widgetClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_delete:
-//                deleteItem();
-                break;
             case R.id.btn_editor:
                 updataEditMode();
                 break;
             case R.id.btn_compare:
                 //跳转到病历对比页面
-
+                isSelectList = mCheckDocAdapter.getSelectedList();
+                if (isSelectList.size() == 2) {
+                    mSelectList.add(mList.get(isSelectList.get(0)));
+                    mSelectList.add(mList.get(isSelectList.get(1)));
+                    Intent mIntent = new Intent(this, DocCompareActivity.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putParcelableArrayList("mSelectList", (ArrayList<? extends Parcelable>) mSelectList);
+                    mIntent.putExtras(mBundle);
+                    startActivity(mIntent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                } else {
+                    ToastUtil.showLong(this,"请选择两份病历,才能进行比较!");
+                }
+                break;
             default:
                 break;
         }
     }
 
-    /**
-     * 根据选择的数量是否为0来判断按钮的是否可点击.
-     *
-     * @param size
-     */
-    private void setBtnBackground(int size) {
-        if (size != 0) {
-            mBtnDelete.setBackgroundResource(R.drawable.button_shape);
-            mBtnDelete.setEnabled(true);
-            mBtnDelete.setTextColor(Color.WHITE);
-        } else {
-            mBtnDelete.setBackgroundResource(R.drawable.button_noclickable_shape);
-            mBtnDelete.setEnabled(false);
-            mBtnDelete.setTextColor(ContextCompat.getColor(this, R.color.appthemecolor));
-        }
-    }
 
     private void updataEditMode() {
         mEditMode = mEditMode == mSaveDocBean_MODE_CHECK ? mSaveDocBean_MODE_EDIT : mSaveDocBean_MODE_CHECK;
         if (mEditMode == mSaveDocBean_MODE_EDIT) {
             mBtnEditor.setText("取消");
-            mBottomDialog.setVisibility(View.VISIBLE);
             editorStatus = true;
         } else {
             mBtnEditor.setText("编辑");
-            mBottomDialog.setVisibility(View.GONE);
             editorStatus = false;
-            clearAll();
         }
         mCheckDocAdapter.setEditMode(mEditMode);
     }
 
-    private void clearAll() {
-        mTvSelectNum.setText(String.valueOf(0));
-        isSelectAll = false;
-        setBtnBackground(0);
-    }
 
     @Override
     public void doBusiness(Context mContext) {
@@ -162,8 +147,6 @@ public class CheckCompareActivity extends BaseActivity implements CheckCompareAd
                 index--;
                 isSelectAll = false;
             }
-            setBtnBackground(index);
-            mTvSelectNum.setText(String.valueOf(index));
             mCheckDocAdapter.notifyDataSetChanged();
         }
     }

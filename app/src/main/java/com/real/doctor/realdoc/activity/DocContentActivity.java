@@ -1,12 +1,14 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.adapter.GridAdapter;
+import com.real.doctor.realdoc.adapter.ContentGridAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
@@ -14,6 +16,10 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.view.DocGridView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +40,16 @@ public class DocContentActivity extends BaseActivity {
     TextView hospital;
     @BindView(R.id.doctor)
     TextView doctor;
+    @BindView(R.id.time)
+    TextView time;
     @BindView(R.id.doc_grid_view)
     DocGridView docGridView;
-    private GridAdapter adapter;
+    private ContentGridAdapter adapter;
     private List<ImageBean> imageList;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    private String[] imgs;
+    private Bitmap[] newImgs;
 
     @Override
     public int getLayoutId() {
@@ -56,17 +66,33 @@ public class DocContentActivity extends BaseActivity {
         imageList = new ArrayList<>();
         saveDocBean = (SaveDocBean) getIntent().getParcelableExtra("SaveDocBean");
         if (EmptyUtils.isNotEmpty(saveDocBean)) {
-            String[] imgs = saveDocBean.getImgs().split(";");
+            String mFolder = saveDocBean.getFolder().trim();
+            imgs = saveDocBean.getImgs().split(";");
             String mIll = saveDocBean.getIll().toString().trim();
             String mDoctor = saveDocBean.getDoctor().toString().trim();
             String mHospital = saveDocBean.getHospital().toString().trim();
-            if (EmptyUtils.isNotEmpty(imgs)) {
+            String mTime = saveDocBean.getTime().toString().trim();
+            newImgs = new Bitmap[imgs.length];
+            if (EmptyUtils.isNotEmpty(mFolder)) {
                 for (int i = 0; i < imgs.length; i++) {
                     ImageBean bean = new ImageBean();
-                    bean.setImgUrl(SDCardUtils.getPictureDir() + imgs[i]);
+                    String path = SDCardUtils.getPictureDir() + mFolder + File.separator + imgs[i];
+                    bean.setImgUrl(path);
+                    File file = new File(path);
+                    FileInputStream fis = null;
+                    try {
+                        fis = new FileInputStream(file);
+                        newImgs[i] = BitmapFactory.decodeStream(fis);
+                        fis.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     imageList.add(bean);
                 }
-                adapter = new GridAdapter(this, imageList);
+                adapter = new ContentGridAdapter(this, imageList,newImgs);
                 docGridView.setAdapter(adapter);
             }
             if (EmptyUtils.isNotEmpty(mIll)) {
@@ -77,6 +103,9 @@ public class DocContentActivity extends BaseActivity {
             }
             if (EmptyUtils.isNotEmpty(mDoctor)) {
                 doctor.setText(mDoctor);
+            }
+            if (EmptyUtils.isNotEmpty(mTime)) {
+                time.setText(mTime);
             }
         }
     }
@@ -100,5 +129,15 @@ public class DocContentActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        for (int i = 0; i < imgs.length; i++) {
+            if (newImgs[i] != null && newImgs[i].isRecycled() != false) {
+                newImgs[i].recycle();
+            }
+        }
+        System.gc();
     }
 }
