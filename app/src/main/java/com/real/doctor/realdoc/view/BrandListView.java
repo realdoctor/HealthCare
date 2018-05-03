@@ -5,17 +5,17 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ListView;
 
-public class CategoryListView extends ListView  {
+public class BrandListView extends ListView  {
 
-    public CategoryListView (Context context, AttributeSet attrs) { 
+    public BrandListView(Context context, AttributeSet attrs) {
           super(context, attrs); 
     } 
  
-    public CategoryListView (Context context, AttributeSet attrs, int defStyle) { 
+    public BrandListView(Context context, AttributeSet attrs, int defStyle) {
           super(context, attrs, defStyle); 
     } 
  
-    public CategoryListView (Context context) { 
+    public BrandListView(Context context) {
           super(context); 
     } 
 }
