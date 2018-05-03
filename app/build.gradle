@@ -49,11 +49,14 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'//配合rxjava2
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'//拦截器
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    //配合rxjava2
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    //拦截器
     //SmartRefreshLayout
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
-    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'//没有使用特殊Header，可以不加这行
+    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
+    //没有使用特殊Header，可以不加这行
     //微信
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     //QQ
@@ -65,9 +68,10 @@ dependencies {
     //BaseRecyclerViewAdapterHelper
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.5.3'
     //Glide
-    compile "com.nineoldandroids:library:2.4.0"
+    compile 'com.nineoldandroids:library:2.4.0'
     //Greendao
-    implementation 'org.greenrobot:greendao:3.2.2' // add library
+    implementation 'org.greenrobot:greendao:3.2.2'
+    // add library
     //BaseRecyclerViewAdapterHelper
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -75,4 +79,7 @@ dependencies {
     compile 'com.wang.avi:library:2.1.3'
     //轮播
     compile 'com.youth.banner:banner:1.1.5'
+    implementation files('libs/alipaySdk-20160516.jar')
+    //微信支付
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }
