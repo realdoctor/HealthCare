@@ -105,17 +105,35 @@
             android:screenOrientation="portrait"
             />
         <activity
-            android:name="com.real.doctor.realdoc.activity.ShopCartActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity
             android:name="com.real.doctor.realdoc.photopicker.PhotoPagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name="com.real.doctor.realdoc.activity.PayActivity"
+            android:name="com.real.doctor.realdoc.activity.ProductListActivity"
             android:screenOrientation="portrait"
-            >
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity
+            android:name=".activity.DocDetailActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activity.DocContentActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ProgressBarActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.DocCompareActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.CheckCompareActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -123,9 +141,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.DocDetailActivity"
+            android:name=".activity.CheckDocActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <service
+            android:name=".service.UpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <meta-data
             android:name="WEIBO_APPKEY"

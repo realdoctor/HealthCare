@@ -19,6 +19,7 @@ public class SaveDocBean implements Parcelable {
     private String hospital;
     private String doctor;
     private String imgs;
+    private boolean isSelect = false;
 
     public SaveDocBean() {
     }
@@ -30,17 +31,19 @@ public class SaveDocBean implements Parcelable {
         hospital = in.readString();
         doctor = in.readString();
         imgs = in.readString();
+        isSelect = in.readByte() != 0;
     }
 
 
-    @Generated(hash = 2002800419)
+    @Generated(hash = 355365505)
     public SaveDocBean(String id, String ill, String hospital, String doctor,
-            String imgs) {
+            String imgs, boolean isSelect) {
         this.id = id;
         this.ill = ill;
         this.hospital = hospital;
         this.doctor = doctor;
         this.imgs = imgs;
+        this.isSelect = isSelect;
     }
 
     @Override
@@ -50,7 +53,20 @@ public class SaveDocBean implements Parcelable {
         dest.writeString(hospital);
         dest.writeString(doctor);
         dest.writeString(imgs);
+        dest.writeByte((byte) (isSelect ? 1 : 0));
     }
+
+    public static final Creator<SaveDocBean> CREATOR = new Creator<SaveDocBean>() {
+        @Override
+        public SaveDocBean createFromParcel(Parcel in) {
+            return new SaveDocBean(in);
+        }
+
+        @Override
+        public SaveDocBean[] newArray(int size) {
+            return new SaveDocBean[size];
+        }
+    };
 
     @Override
     public int describeContents() {
@@ -108,16 +124,13 @@ public class SaveDocBean implements Parcelable {
     }
 
 
+    public boolean getIsSelect() {
+        return this.isSelect;
+    }
 
-    public static final Creator<SaveDocBean> CREATOR = new Creator<SaveDocBean>() {
-        @Override
-        public SaveDocBean createFromParcel(Parcel in) {
-            return new SaveDocBean(in);
-        }
 
-        @Override
-        public SaveDocBean[] newArray(int size) {
-            return new SaveDocBean[size];
-        }
-    };
+    public void setIsSelect(boolean isSelect) {
+        this.isSelect = isSelect;
+    }
+
 }

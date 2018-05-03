@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/save_doc_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/title_bar" />
+
+            <include layout="@layout/divider_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffffff">
+
+                <TextView
+                    android:id="@+id/ill_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="@string/save_doc_ill"
+                    android:textColor="#ff333333"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/ill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ill_text"
+                    android:layout_marginBottom="10.0dip"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="@string/second_function_one_string"
+                    android:textColor="#ff333333"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/hospital_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ill"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="@string/save_doc_hospital"
+                    android:textColor="#ff333333"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/hospital"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45.0dip"
+                    android:layout_below="@id/hospital_text"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:background="#ffffffff"
+                    android:text=""
+                    android:textColor="@color/text_special_color"
+                    android:textSize="14.0sp"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/doctor_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hospital"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="@string/save_doc_doctor"
+                    android:textColor="#ff333333"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/doctor"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45.0dip"
+                    android:layout_below="@id/doctor_text"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:background="#ffffffff"
+                    android:text=""
+                    android:textColor="@color/text_special_color"
+                    android:textSize="14.0sp"
+                    android:typeface="monospace" />
+
+                <LinearLayout
+                    android:id="@+id/doc_grid_view_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/doctor"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <com.real.doctor.realdoc.view.DocGridView
+                        android:id="@+id/doc_grid_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:columnWidth="90dp"
+                        android:gravity="center"
+                        android:horizontalSpacing="5dp"
+                        android:numColumns="4"
+                        android:stretchMode="columnWidth"
+                        android:verticalSpacing="5dp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

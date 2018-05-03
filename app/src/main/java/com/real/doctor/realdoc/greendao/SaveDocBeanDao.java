@@ -29,6 +29,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         public final static Property Hospital = new Property(2, String.class, "hospital", false, "HOSPITAL");
         public final static Property Doctor = new Property(3, String.class, "doctor", false, "DOCTOR");
         public final static Property Imgs = new Property(4, String.class, "imgs", false, "IMGS");
+        public final static Property IsSelect = new Property(5, boolean.class, "isSelect", false, "IS_SELECT");
     }
 
 
@@ -48,7 +49,8 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
                 "\"ILL\" TEXT," + // 1: ill
                 "\"HOSPITAL\" TEXT," + // 2: hospital
                 "\"DOCTOR\" TEXT," + // 3: doctor
-                "\"IMGS\" TEXT);"); // 4: imgs
+                "\"IMGS\" TEXT," + // 4: imgs
+                "\"IS_SELECT\" INTEGER NOT NULL );"); // 5: isSelect
     }
 
     /** Drops the underlying database table. */
@@ -85,6 +87,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         if (imgs != null) {
             stmt.bindString(5, imgs);
         }
+        stmt.bindLong(6, entity.getIsSelect() ? 1L: 0L);
     }
 
     @Override
@@ -115,6 +118,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         if (imgs != null) {
             stmt.bindString(5, imgs);
         }
+        stmt.bindLong(6, entity.getIsSelect() ? 1L: 0L);
     }
 
     @Override
@@ -129,7 +133,8 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // ill
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // hospital
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // doctor
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // imgs
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // imgs
+            cursor.getShort(offset + 5) != 0 // isSelect
         );
         return entity;
     }
@@ -141,6 +146,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         entity.setHospital(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setDoctor(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setImgs(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setIsSelect(cursor.getShort(offset + 5) != 0);
      }
     
     @Override

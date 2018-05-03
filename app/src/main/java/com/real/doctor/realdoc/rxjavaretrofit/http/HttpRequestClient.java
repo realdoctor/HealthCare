@@ -25,12 +25,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.ConnectionPool;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 /**
  * @author zhujiabin
  * @package rxjavaretrofit.http
@@ -230,6 +232,15 @@ public class HttpRequestClient {
      */
     public void uploads(String url, Map map, BaseObserver<ResponseBody> subscriber) {
         retrofitService.upLoadMap(url, map)
+                .compose(schedulersTransformer())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 上传文件,并上传json数据
+     */
+    public void uploadJsonFile(String url, RequestBody jsonStr, MultipartBody.Part file, BaseObserver<ResponseBody> subscriber) {
+                              retrofitService.upLoadjsonFile(url, jsonStr, file)
                 .compose(schedulersTransformer())
                 .subscribe(subscriber);
     }
