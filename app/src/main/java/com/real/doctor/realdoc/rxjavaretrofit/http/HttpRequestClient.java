@@ -206,7 +206,6 @@ public class HttpRequestClient {
                 .compose(schedulersTransformer())
                 .subscribe(subscriber);
     }
-
     /**
      * json请求获取数据
      */
