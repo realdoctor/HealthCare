@@ -3,24 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
-
-    <ImageView
-        android:id="@+id/grid_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:layout_margin="4dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/img_bg" />
-
-    <ImageView
-        android:id="@+id/delete_icon"
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@id/grid_image"
-        android:layout_alignTop="@id/grid_image"
-        android:clickable="false"
-        android:src="@mipmap/delete_icon"
-        android:visibility="gone" />
-
+        android:id="@+id/tv_brand"
+        android:gravity="center"
+        android:paddingTop="@dimen/dp_4"
+        android:paddingBottom="@dimen/dp_4"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
