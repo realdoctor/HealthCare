@@ -5,25 +5,14 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.model.ImageBean;
-import com.real.doctor.realdoc.util.EmptyUtils;
-import com.real.doctor.realdoc.util.ImageUtils;
-import com.real.doctor.realdoc.util.ScreenUtil;
-
+import com.real.doctor.realdoc.model.BrandBean;
 import java.util.List;
 
-/**
- * @author zhujiabin
- * @package com.real.doctor.rdsurvey.adapter
- * @fileName ${Name}
- * @Date 2018-2-7 0007
- * @describe TODO
- * @email zhujiabindragon@163.com
- */
 
-public class BrandAdapter extends RdBaseAdapter<ImageBean> {
+public class BrandAdapter extends RdBaseAdapter<BrandBean> {
 
     public BrandAdapter(Context context, List list) {
         super(context, list);
@@ -31,32 +20,21 @@ public class BrandAdapter extends RdBaseAdapter<ImageBean> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageBean bean = getItem(position);
-        final GridHolder holder;
+        BrandBean bean = getItem(position);
+        final BrandHolder holder;
         if (convertView == null) {
-            holder = new GridHolder();
-            convertView = mInflater.inflate(R.layout.grid_adapter_layout, parent, false);
-            holder.mImg = convertView.findViewById(R.id.grid_image);
-            holder.mDelImg = convertView.findViewById(R.id.delete_icon);
+            holder = new BrandHolder();
+            convertView = mInflater.inflate(R.layout.brand_adapter_layout, parent, false);
+            holder.brandText = convertView.findViewById(R.id.tv_brand);
             convertView.setTag(holder);
         } else {
-            holder = (GridHolder) convertView.getTag();
+            holder = (BrandHolder) convertView.getTag();
         }
-        final String url = bean.getImgUrl();
-        int spare = bean.getSpareImage();
-        if (EmptyUtils.isEmpty(url) && spare != 0) {
-            holder.mImg.setImageResource(spare);
-            holder.mDelImg.setVisibility(View.GONE);
-        } else {
-            Bitmap bitmap = ImageUtils.compressBitmapByPath(url.toString(), ScreenUtil.getScreenWidth(mContext), ScreenUtil.getScreenHeight(mContext));
-            holder.mImg.setImageBitmap(bitmap);
-        }
-
+        holder.brandText.setText(bean.breadName);
         return convertView;
     }
 
-    public class GridHolder {
-        private ImageView mImg;
-        private ImageView mDelImg;
+    public class BrandHolder {
+        private TextView brandText;
     }
 }
