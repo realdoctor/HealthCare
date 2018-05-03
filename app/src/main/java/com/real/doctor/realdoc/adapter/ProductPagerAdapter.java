@@ -19,8 +19,7 @@ public class ProductPagerAdapter extends FragmentPagerAdapter {
     public ArrayList<CategoryBean> categoryBeanArrayList;
     public ProductPagerAdapter(FragmentManager fm, ArrayList<CategoryBean> categoryBeanArrayList) {
         super(fm);
-        categoryBeanArrayList = categoryBeanArrayList;
-
+        this.categoryBeanArrayList = categoryBeanArrayList;
     }
 
     @Override
@@ -32,4 +31,9 @@ public class ProductPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return categoryBeanArrayList.size();
     }
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return categoryBeanArrayList.get(position).categoryName;
+    }
+
 }
