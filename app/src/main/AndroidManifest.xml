@@ -26,6 +26,7 @@
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.android7.fileprovider"
@@ -53,7 +54,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/__picker_provider_paths" />
         </provider>
-
+        -->
         <activity android:name=".activity.SplashActivity">
 
         </activity>
@@ -101,17 +102,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name="com.real.doctor.realdoc.activity.ProductShowActivity"
+            android:name=".activity.ProductShowActivity"
             android:screenOrientation="portrait"
             />
         <activity
             android:name="com.real.doctor.realdoc.photopicker.PhotoPagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name="com.real.doctor.realdoc.activity.ProductListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".activity.DocDetailActivity"
             android:hardwareAccelerated="false"
@@ -131,7 +128,15 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.CheckCompareActivity"
+            android:name=".activity.PayActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ShopCartActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ProductShowByCategoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -144,7 +149,6 @@
             android:name=".activity.CheckDocActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-
         </activity>
 
         <service
