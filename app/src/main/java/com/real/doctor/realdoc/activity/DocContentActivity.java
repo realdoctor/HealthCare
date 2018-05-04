@@ -33,6 +33,8 @@ import butterknife.OnClick;
 
 public class DocContentActivity extends BaseActivity {
 
+    @BindView(R.id.right_title)
+    TextView rightTitle;
     SaveDocBean saveDocBean;
     @BindView(R.id.ill)
     TextView ill;
@@ -65,6 +67,8 @@ public class DocContentActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setText("比例对照");
         imageList = new ArrayList<>();
         saveDocBean = (SaveDocBean) getIntent().getParcelableExtra("SaveDocBean");
         if (EmptyUtils.isNotEmpty(saveDocBean)) {
@@ -138,12 +142,15 @@ public class DocContentActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back})
+    @OnClick({R.id.finish_back,R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();
+                break;
+            case R.id.right_title:
+                actionStart(this, CheckCompareActivity.class);
                 break;
         }
     }

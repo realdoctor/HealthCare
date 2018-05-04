@@ -33,6 +33,8 @@ import butterknife.OnClick;
 
 public class DocCompareActivity extends BaseActivity {
 
+    @BindView(R.id.right_title)
+    TextView rightTitle;
     @BindView(R.id.image_one)
     ImageView imageOne;
     @BindView(R.id.image_two)
@@ -122,6 +124,8 @@ public class DocCompareActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setText("病历打包上传");
         mListOne = new ArrayList<>();
         mListTwo = new ArrayList<>();
         if (EmptyUtils.isNotEmpty(folderOne)) {
@@ -144,7 +148,7 @@ public class DocCompareActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back, R.id.image_one, R.id.image_two})
+    @OnClick({R.id.finish_back, R.id.image_one, R.id.image_two, R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
@@ -159,6 +163,9 @@ public class DocCompareActivity extends BaseActivity {
                 break;
             case R.id.image_two:
                 requestPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0002);
+                break;
+            case R.id.right_title:
+                actionStart(this, CheckDocActivity.class);
                 break;
         }
     }

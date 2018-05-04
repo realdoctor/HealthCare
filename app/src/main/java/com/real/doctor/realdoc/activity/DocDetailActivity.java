@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
@@ -42,8 +43,10 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/24.
  */
 
-public class DocDetailActivity extends BaseActivity  {
+public class DocDetailActivity extends BaseActivity {
 
+    @BindView(R.id.right_title)
+    TextView rightTitle;
     DocDetailAdapter docDetailAdapter;
     @BindView(R.id.doc_detail_recycler)
     RecyclerView docDetailRecycleView;
@@ -67,6 +70,8 @@ public class DocDetailActivity extends BaseActivity  {
 
     @Override
     public void initData() {
+        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setText("商城");
         SaveDocManager instance = SaveDocManager.getInstance(DocDetailActivity.this);
         list = instance.querySaveDocList(DocDetailActivity.this);
         docDetailAdapter = new DocDetailAdapter(DocDetailActivity.this, R.layout.doc_detail_item, list);
@@ -178,12 +183,15 @@ public class DocDetailActivity extends BaseActivity  {
     }
 
     @Override
-    @OnClick({R.id.finish_back})
+    @OnClick({R.id.finish_back, R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();
+                break;
+            case R.id.right_title:
+                actionStart(this, ProductShowByCategoryActivity.class);
                 break;
         }
     }
