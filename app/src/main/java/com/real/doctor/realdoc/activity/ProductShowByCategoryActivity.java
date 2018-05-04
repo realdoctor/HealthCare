@@ -55,13 +55,13 @@ public class ProductShowByCategoryActivity extends BaseActivity {
         for(int i=0;i<10;i++){
             CategoryBean bean=new CategoryBean();
             bean.categoryId=i+"d";
-            bean.categoryName=i+"name";
+            bean.categoryName=i+"测试数据";
             for(int k=0;k<4;k++){
                 BrandBean brandBean=new BrandBean();
                 brandBean.breadId=i+"k"+k;
-                brandBean.breadName=i+"k"+k;
+                brandBean.breadName=i+"分类"+k;
                 for(int l=0;l<10;l++){
-                    ProductInfo productInfo=new ProductInfo("l"+l+i+"i","name"+l+"!"+i+"!"+k,"http://img.zcool.cn/community/0166c756e1427432f875520f7cc838.jpg","",88d,22);
+                    ProductInfo productInfo=new ProductInfo("l"+l+i+"i","商品"+l+"!"+i+"!"+k,"http://img.zcool.cn/community/0166c756e1427432f875520f7cc838.jpg","",88d,22);
                     brandBean.productList.add(productInfo);
                 }
                 bean.brands.add(brandBean);
