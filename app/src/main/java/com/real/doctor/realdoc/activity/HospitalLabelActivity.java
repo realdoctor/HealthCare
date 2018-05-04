@@ -6,10 +6,10 @@ import android.view.View;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 
-public class HospitalLabelActivity extends BaseActivity{
+public class HospitalLabelActivity extends BaseActivity {
     @Override
     public int getLayoutId() {
-        return R.layout.activity_search;
+        return R.layout.activity_hospital_label;
     }
 
     @Override

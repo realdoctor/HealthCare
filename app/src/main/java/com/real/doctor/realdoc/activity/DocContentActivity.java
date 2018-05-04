@@ -89,7 +89,9 @@ public class DocContentActivity extends BaseActivity {
                         ImageBean bean = new ImageBean();
                         String path = SDCardUtils.getPictureDir() + mFolder + File.separator + imgs[i];
                         bean.setImgUrl(path);
-                        bean.setAdvice(advice[i]);
+                        if (EmptyUtils.isNotEmpty(advice)) {
+                            bean.setAdvice(advice[i]);
+                        }
                         File file = new File(path);
                         FileInputStream fis = null;
                         try {
@@ -142,7 +144,7 @@ public class DocContentActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back,R.id.right_title})
+    @OnClick({R.id.finish_back, R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:

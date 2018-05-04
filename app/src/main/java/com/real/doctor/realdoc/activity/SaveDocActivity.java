@@ -72,6 +72,10 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     LabelsView illLabels;
     @BindView(R.id.hospital_labels)
     LabelsView hospitalLabels;
+    @BindView(R.id.more_ill)
+    TextView moreIll;
+    @BindView(R.id.more_hospital)
+    TextView moreHospital;
     private List<ImageBean> imageList;
     private GridAdapter adapter;
     //底部弹出菜单
@@ -82,7 +86,9 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     private boolean flag = false;
     //拍照
     private static final int REQUEST_CODE_TAKE_PHOTO = 0x110;
+    //疾病标签
     ArrayList<LabelBean> labelList = new ArrayList<>();
+    //医院标签
     ArrayList<LabelBean> hospitalList = new ArrayList<>();
 
     @Override
@@ -166,7 +172,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
-    @OnClick({R.id.button_save_doc, R.id.right_title, R.id.finish_back})
+    @OnClick({R.id.button_save_doc, R.id.right_title, R.id.finish_back, R.id.more_ill, R.id.more_hospital})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.button_save_doc:
@@ -231,6 +237,12 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 break;
             case R.id.finish_back:
                 finish();
+                break;
+            case R.id.more_ill:
+                //进入疾病标签页
+                break;
+            case R.id.more_hospital:
+                //进入医院标签页
                 break;
         }
     }
