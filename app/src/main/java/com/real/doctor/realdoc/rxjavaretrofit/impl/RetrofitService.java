@@ -49,7 +49,8 @@ public interface RetrofitService {
 
     //json 请求数据接口
     @POST
-    @Headers({"Content-Type: application/json","Accept: application/json"})//需要添加头
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+   //需要添加头
     Observable<ResponseBody> json(
             @Url String url,
             @Body RequestBody jsonStr);
@@ -85,5 +86,5 @@ public interface RetrofitService {
 //    @Headers({"Content-Type: application/json","Accept: application/json"})//需要添加头
     Observable<ResponseBody> upLoadjsonFile(
             @Url String url,
-            @Body RequestBody jsonStr,@Part MultipartBody.Part file);
+            @Body RequestBody jsonStr, @Part MultipartBody.Part file);
 }

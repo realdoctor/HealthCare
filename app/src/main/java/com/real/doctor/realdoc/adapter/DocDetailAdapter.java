@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 
 import java.io.File;
@@ -32,9 +33,11 @@ public class DocDetailAdapter extends BaseQuickAdapter<SaveDocBean, BaseViewHold
         viewHolder.setText(R.id.doc_detail_title, item.getIll())
                 .setText(R.id.doc_detail_content, item.getHospital())
                 .setText(R.id.doc_detail_time, item.getTime());
-        String folder = item.getFolder().toString().trim();
-        String[] imgs = item.getImgs().split(";");
-        String path = SDCardUtils.getPictureDir() + folder + File.separator + imgs[0];
-        Glide.with(mContext).load(path).crossFade().into((ImageView) viewHolder.getView(R.id.doc_detail_img));
+        if (EmptyUtils.isNotEmpty(item) && item.getFolder() != null) {
+            String folder = item.getFolder().toString().trim();
+            String[] imgs = item.getImgs().split(";");
+            String path = SDCardUtils.getPictureDir() + folder + File.separator + imgs[0];
+            Glide.with(mContext).load(path).crossFade().into((ImageView) viewHolder.getView(R.id.doc_detail_img));
+        }
     }
 }

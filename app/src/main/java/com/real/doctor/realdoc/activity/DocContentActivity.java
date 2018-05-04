@@ -49,7 +49,9 @@ public class DocContentActivity extends BaseActivity {
     @BindView(R.id.finish_back)
     ImageView finishBack;
     private String[] imgs;
+    private String[] advice;
     private Bitmap[] newImgs;
+    private String mFolder;
 
     @Override
     public int getLayoutId() {
@@ -66,46 +68,66 @@ public class DocContentActivity extends BaseActivity {
         imageList = new ArrayList<>();
         saveDocBean = (SaveDocBean) getIntent().getParcelableExtra("SaveDocBean");
         if (EmptyUtils.isNotEmpty(saveDocBean)) {
-            String mFolder = saveDocBean.getFolder().trim();
-            imgs = saveDocBean.getImgs().split(";");
             String mIll = saveDocBean.getIll().toString().trim();
             String mDoctor = saveDocBean.getDoctor().toString().trim();
             String mHospital = saveDocBean.getHospital().toString().trim();
-            String mTime = saveDocBean.getTime().toString().trim();
-            newImgs = new Bitmap[imgs.length];
-            if (EmptyUtils.isNotEmpty(mFolder)) {
-                for (int i = 0; i < imgs.length; i++) {
-                    ImageBean bean = new ImageBean();
-                    String path = SDCardUtils.getPictureDir() + mFolder + File.separator + imgs[i];
-                    bean.setImgUrl(path);
-                    File file = new File(path);
-                    FileInputStream fis = null;
-                    try {
-                        fis = new FileInputStream(file);
-                        newImgs[i] = BitmapFactory.decodeStream(fis);
-                        fis.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            String mTime = null;
+            if (saveDocBean.getTime() != null) {
+                mTime = saveDocBean.getTime().toString().trim();
+            }
+            if (saveDocBean.getFolder() != null) {
+                mFolder = saveDocBean.getFolder().trim();
+                imgs = saveDocBean.getImgs().split(";");
+                advice = saveDocBean.getAdvice().split(";");
+                newImgs = new Bitmap[imgs.length];
+                if (EmptyUtils.isNotEmpty(mFolder)) {
+                    for (int i = 0; i < imgs.length; i++) {
+                        ImageBean bean = new ImageBean();
+                        String path = SDCardUtils.getPictureDir() + mFolder + File.separator + imgs[i];
+                        bean.setImgUrl(path);
+                        bean.setAdvice(advice[i]);
+                        File file = new File(path);
+                        FileInputStream fis = null;
+                        try {
+                            fis = new FileInputStream(file);
+                            newImgs[i] = BitmapFactory.decodeStream(fis);
+                            fis.close();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                    imageList.add(bean);
+                        imageList.add(bean);
+                    }
+                    adapter = new ContentGridAdapter(this, imageList, newImgs);
+                    docGridView.setAdapter(adapter);
                 }
-                adapter = new ContentGridAdapter(this, imageList,newImgs);
-                docGridView.setAdapter(adapter);
-            }
-            if (EmptyUtils.isNotEmpty(mIll)) {
-                ill.setText(mIll);
-            }
-            if (EmptyUtils.isNotEmpty(mHospital)) {
-                hospital.setText(mHospital);
-            }
-            if (EmptyUtils.isNotEmpty(mDoctor)) {
-                doctor.setText(mDoctor);
-            }
-            if (EmptyUtils.isNotEmpty(mTime)) {
-                time.setText(mTime);
+                if (EmptyUtils.isNotEmpty(mIll)) {
+                    ill.setText(mIll);
+                }
+                if (EmptyUtils.isNotEmpty(mHospital)) {
+                    hospital.setText(mHospital);
+                }
+                if (EmptyUtils.isNotEmpty(mDoctor)) {
+                    doctor.setText(mDoctor);
+                }
+                if (EmptyUtils.isNotEmpty(mTime)) {
+                    time.setText(mTime);
+                }
+            } else {
+                if (EmptyUtils.isNotEmpty(mIll)) {
+                    ill.setText(mIll);
+                }
+                if (EmptyUtils.isNotEmpty(mHospital)) {
+                    hospital.setText(mHospital);
+                }
+                if (EmptyUtils.isNotEmpty(mDoctor)) {
+                    doctor.setText(mDoctor);
+                }
+                if (EmptyUtils.isNotEmpty(mTime)) {
+                    time.setText(mTime);
+                }
             }
         }
     }
@@ -133,9 +155,11 @@ public class DocContentActivity extends BaseActivity {
 
     protected void onDestroy() {
         super.onDestroy();
-        for (int i = 0; i < imgs.length; i++) {
-            if (newImgs[i] != null && newImgs[i].isRecycled() != false) {
-                newImgs[i].recycle();
+        if (saveDocBean.getFolder() != null) {
+            for (int i = 0; i < imgs.length; i++) {
+                if (newImgs[i] != null && newImgs[i].isRecycled() != false) {
+                    newImgs[i].recycle();
+                }
             }
         }
         System.gc();

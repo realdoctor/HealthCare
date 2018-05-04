@@ -118,14 +118,12 @@
         <activity
             android:name=".activity.DocDetailActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <activity
             android:name=".activity.SaveDocActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".activity.CheckDocActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -135,17 +133,38 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.CheckDocActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
             android:name=".activity.ProgressBarActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.DocCompareActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".activity.CheckCompareActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.IllLabelActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.HospitalLabelActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".view.SaveDialogActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/FloatDialogTheme"></activity>
 
         <service
             android:name=".service.UpdateService"

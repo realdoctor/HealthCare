@@ -8,15 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.view.DocContentDialog;
 import com.real.doctor.realdoc.widget.ZoomTutorial;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @author zhujiabin
@@ -29,6 +34,7 @@ import java.util.List;
 
 public class ContentGridAdapter extends RdBaseAdapter<ImageBean> {
     private Bitmap[] newImgs;
+    private DocContentDialog dialog;
 
     public ContentGridAdapter(Context context, List list, Bitmap[] newImgs) {
         super(context, list);
@@ -40,22 +46,22 @@ public class ContentGridAdapter extends RdBaseAdapter<ImageBean> {
         ImageBean bean = getItem(position);
         final GridHolder holder;
         if (convertView == null) {
-            holder = new GridHolder();
             convertView = mInflater.inflate(R.layout.grid_adapter_layout, parent, false);
-            holder.mImg = convertView.findViewById(R.id.grid_image);
-            holder.mDelImg = convertView.findViewById(R.id.delete_icon);
+            holder = new GridHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (GridHolder) convertView.getTag();
         }
         final String url = bean.getImgUrl();
         int spare = bean.getSpareImage();
+        final String advice = bean.getAdvice();
         if (EmptyUtils.isEmpty(url) && spare != 0) {
             holder.mImg.setImageResource(spare);
             holder.mDelImg.setVisibility(View.GONE);
         } else {
             Bitmap bitmap = ImageUtils.compressBitmapByPath(url.toString(), ScreenUtil.getScreenWidth(mContext), ScreenUtil.getScreenHeight(mContext));
             holder.mImg.setImageBitmap(bitmap);
+            holder.mAdvice.setText(advice);
         }
         holder.mImg.setOnClickListener(new View.OnClickListener() {
 
@@ -65,7 +71,22 @@ public class ContentGridAdapter extends RdBaseAdapter<ImageBean> {
                 setViewPagerAndZoom(holder.mImg, position);
             }
         });
+        holder.mAdvice.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                //弹出对话框界面
+                dialog = new DocContentDialog(mContext,advice).builder()
+                        .setCancelable(false)
+                        .setCanceledOnTouchOutside(true)
+                        .setConfirmBtn(new DocContentDialog.ConfirmListener() {
+                            @Override
+                            public void onConfirmClick() {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        });
         return convertView;
     }
 
@@ -101,7 +122,15 @@ public class ContentGridAdapter extends RdBaseAdapter<ImageBean> {
     }
 
     public class GridHolder {
-        private ImageView mImg;
-        private ImageView mDelImg;
+        @BindView(R.id.grid_image)
+        ImageView mImg;
+        @BindView(R.id.delete_icon)
+        ImageView mDelImg;
+        @BindView(R.id.advice)
+        TextView mAdvice;
+
+        public GridHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

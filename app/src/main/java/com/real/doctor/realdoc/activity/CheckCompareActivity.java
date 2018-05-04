@@ -100,9 +100,10 @@ public class CheckCompareActivity extends BaseActivity implements CheckCompareAd
                     mBundle.putParcelableArrayList("mSelectList", (ArrayList<? extends Parcelable>) mSelectList);
                     mIntent.putExtras(mBundle);
                     startActivity(mIntent);
+                    mSelectList.clear();
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 } else {
-                    ToastUtil.showLong(this,"请选择两份病历,才能进行比较!");
+                    ToastUtil.showLong(this, "请选择两份病历,才能进行比较!");
                 }
                 break;
             default:

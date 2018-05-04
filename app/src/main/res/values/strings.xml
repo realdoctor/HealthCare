@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">康链</string>
+    <!--label-->
+    <item name="tag_key_data" type="id" />
+    <item name="tag_key_position" type="id" />
     <!--新浪-->
     <string name="weibosdk_demo_toast_auth_success">授权成功</string>
     <string name="weibosdk_demo_toast_auth_failed">授权失败</string>
@@ -43,10 +46,15 @@
     <string name="save_doc_ill">疾病名称:</string>
     <string name="save_doc_hospital">就诊医院:</string>
     <string name="save_doc_hospital_edit">请输入您就诊的医院名称</string>
-    <string name="save_doc_doctor">就诊医生:</string>\
+    <string name="save_doc_doctor">就诊医生:</string>
     <string name="save_doc_time">就诊时间:</string>
+    <string name="save_doc_text">描  述</string>
+    <string name="save_doc_ill_edit">请输入您的疾病</string>
+    <string name="save_doc_advice">请输入您对该病历的描述</string>
     <string name="save_doc_doctor_edit">请输入您的就诊医生</string>
     <string name="save_doc_save_btn">保存</string>
+    <string name="confirm_btn">确认</string>
+    <string name="more">更多 >></string>
     <string name="collection_pull_to_refresh">下拉刷新</string>
     <string name="collection_release_refresh">释放刷新</string>
     <string name="collection_refresh_done">刷新完成</string>

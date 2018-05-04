@@ -18,9 +18,10 @@ import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
-import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.GsonUtil;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
-import com.real.doctor.realdoc.view.RecyclerViewSpacesItemDecoration;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +42,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/24.
  */
 
-public class DocDetailActivity extends BaseActivity implements BaseQuickAdapter.RequestLoadMoreListener {
+public class DocDetailActivity extends BaseActivity  {
 
     DocDetailAdapter docDetailAdapter;
     @BindView(R.id.doc_detail_recycler)
@@ -50,6 +52,8 @@ public class DocDetailActivity extends BaseActivity implements BaseQuickAdapter.
     private int num;
     private List<SaveDocBean> mList = new ArrayList<>();
     private List<SaveDocBean> list = null;
+    private static Integer pageNum = 1;
+    private int length = 0;
 
     @Override
     public int getLayoutId() {
@@ -63,48 +67,24 @@ public class DocDetailActivity extends BaseActivity implements BaseQuickAdapter.
 
     @Override
     public void initData() {
-
         SaveDocManager instance = SaveDocManager.getInstance(DocDetailActivity.this);
         list = instance.querySaveDocList(DocDetailActivity.this);
         docDetailAdapter = new DocDetailAdapter(DocDetailActivity.this, R.layout.doc_detail_item, list);
         //给RecyclerView设置适配器
         docDetailRecycleView.setAdapter(docDetailAdapter);
-        docDetailRecycleView = findViewById(R.id.doc_detail_recycler);
         //创建布局管理
         docDetailRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         //添加Android自带的分割线
-        docDetailRecycleView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
-        int length = list.size();
-        num = length / 10;
-//        if (length > 10) {
-//        mList.addAll(list.subList(0, 10));
-        //创建适配器
-        docDetailAdapter = new DocDetailAdapter(DocDetailActivity.this, R.layout.doc_detail_item, list);
-        //给RecyclerView设置适配器
-        docDetailRecycleView.setAdapter(docDetailAdapter);
-//        } else {
-//            int pageNum = 10 - length;
-//            //将网页中的数据加进去
-//            //从网络中获取数据
-//            postData(String.valueOf(pageNum));
-//        }
+        docDetailRecycleView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
     }
 
-    private void postData(String pageNum) {
-        JSONObject json = null;
-        if (EmptyUtils.isNotEmpty(pageNum)) {
-            json = new JSONObject();
-            try {
-                json.put("pageNum", pageNum);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            ToastUtil.showLong(DocDetailActivity.this, "密码不能为空!");
-            return;
-        }
-        HttpRequestClient.getInstance(DocDetailActivity.this).createBaseApi().get("patient/medicalRecord/"
-                , null, new BaseObserver<ResponseBody>(DocDetailActivity.this) {
+    private void postData(String pageSize, String mobilePhone) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("mobilePhone", "13777850036");
+        map.put("pageSize", pageSize);
+        map.put("pageNum", String.valueOf(pageNum));
+        HttpRequestClient.getInstance(DocDetailActivity.this).createBaseApi().get("patient/"
+                , map, new BaseObserver<ResponseBody>(DocDetailActivity.this) {
 
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -131,22 +111,45 @@ public class DocDetailActivity extends BaseActivity implements BaseQuickAdapter.
                             data = responseBody.string().toString();
                             try {
                                 JSONObject object = new JSONObject(data);
-//                                if (DocUtils.hasValue(object, "msg")) {
-//                                    msg = object.getString("msg");
-//                                }
-//                                if (DocUtils.hasValue(object, "code")) {
-//                                    code = object.getString("code");
-//                                }
-//                                if (msg.equals("ok") && code.equals("0")) {
-//                                    ToastUtil.showLong(LoginActivity.this, "用户登录成功!");
-//                                    if (DocUtils.hasValue(object, "data")) {
-//                                        actionStart(LoginActivity.this, RealDocActivity.class);
-//                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                                        finish();
-//                                    }
-//                                } else {
-//                                    ToastUtil.showLong(LoginActivity.this, "用户登录失败!");
-//                                }
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    if (DocUtils.hasValue(object, "data")) {
+                                        JSONObject jsonData = object.getJSONObject("data");
+                                        if (DocUtils.hasValue(jsonData, "pageSize")) {
+                                            String pageSize = jsonData.getString("pageSize");
+                                        }
+                                        if (DocUtils.hasValue(jsonData, "pageNum")) {
+                                            String pageNum = jsonData.getString("pageNum");
+                                        }
+                                        if (DocUtils.hasValue(jsonData, "pages")) {
+                                            String pages = jsonData.getString("pages");
+                                        }
+                                        if (DocUtils.hasValue(jsonData, "total")) {
+                                            String total = jsonData.getString("total");
+                                        }
+                                        List<SaveDocBean> bean = GsonUtil.GsonToList(jsonData.getJSONArray("list").toString(), SaveDocBean.class);
+                                        System.out.print(bean);
+                                        if (bean.size() > 0) {
+                                            mList.addAll(bean);
+                                            //创建适配器
+                                            docDetailAdapter = new DocDetailAdapter(DocDetailActivity.this, R.layout.doc_detail_item, mList);
+                                            //给RecyclerView设置适配器
+                                            docDetailRecycleView.setAdapter(docDetailAdapter);
+                                            docDetailAdapter.loadMoreComplete();
+                                        } else {
+                                            docDetailAdapter.loadMoreComplete();
+                                        }
+                                        initEvent();
+                                    }
+                                } else {
+                                    ToastUtil.showLong(DocDetailActivity.this, "病历数据请求失败!");
+                                }
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -190,8 +193,4 @@ public class DocDetailActivity extends BaseActivity implements BaseQuickAdapter.
 
     }
 
-    @Override
-    public void onLoadMoreRequested() {
-
-    }
 }

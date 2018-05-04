@@ -143,11 +143,11 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:columnWidth="90dp"
+                        android:columnWidth="100dp"
                         android:gravity="center"
                         android:horizontalSpacing="5dp"
                         android:listSelector="@android:color/transparent"
-                        android:numColumns="4"
+                        android:numColumns="3"
                         android:stretchMode="columnWidth"
                         android:verticalSpacing="5dp" />
 

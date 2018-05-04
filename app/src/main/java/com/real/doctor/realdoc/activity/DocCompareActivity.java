@@ -93,8 +93,20 @@ public class DocCompareActivity extends BaseActivity {
                 //填入其他字段
                 if (EmptyUtils.isNotEmpty(illOne) && EmptyUtils.isNotEmpty(illTwo) && StringUtils.equals(illOne, illTwo)) {
                     ill.setText(illOne);
+                    if (EmptyUtils.isNotEmpty(doctorOne)) {
+                        hospital.setText("1." + doctorOne);
+                    }
+                    if (EmptyUtils.isNotEmpty(doctorTwo)) {
+                        hospital.setText("2." + doctorTwo);
+                    }
                     if (EmptyUtils.isNotEmpty(doctorOne) && EmptyUtils.isNotEmpty(doctorTwo)) {
                         hospital.setText("1." + doctorOne + "\n" + "2." + doctorTwo);
+                    }
+                    if (EmptyUtils.isNotEmpty(timeOne)) {
+                        time.setText("1." + timeOne);
+                    }
+                    if (EmptyUtils.isNotEmpty(timeTwo)) {
+                        time.setText("2." + timeTwo);
                     }
                     if (EmptyUtils.isNotEmpty(timeOne) && EmptyUtils.isNotEmpty(timeTwo)) {
                         time.setText("1." + timeOne + "\n" + "2." + timeTwo);
@@ -167,7 +179,7 @@ public class DocCompareActivity extends BaseActivity {
                         .setShowCamera(false)
                         .setShowGif(false)
                         .setPreviewEnabled(true)//是否可以预览
-                        .setSelected((ArrayList<String>) mListOne)
+                        .setDir((ArrayList<String>) mListOne)
                         .start(DocCompareActivity.this, PhotoPicker.REQUEST_CODE);
                 break;
             case 0x0002:
@@ -177,7 +189,7 @@ public class DocCompareActivity extends BaseActivity {
                         .setShowCamera(false)
                         .setShowGif(false)
                         .setPreviewEnabled(true)//是否可以预览
-                        .setSelected((ArrayList<String>) mListTwo)
+                        .setDir((ArrayList<String>) mListTwo)
                         .start(DocCompareActivity.this, PhotoPicker.REQUEST_CODE);
                 break;
         }

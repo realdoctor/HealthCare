@@ -34,10 +34,15 @@ import com.real.doctor.realdoc.photopicker.utils.ImageCaptureManager;
 import com.real.doctor.realdoc.photopicker.utils.MediaStoreHelper;
 import com.real.doctor.realdoc.photopicker.utils.PermissionsConstant;
 import com.real.doctor.realdoc.photopicker.utils.PermissionsUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.DEFAULT_COLUMN_NUMBER;
@@ -58,7 +63,8 @@ public class PhotoPickerFragment extends Fragment {
     private List<PhotoDirectory> directories;
     //传入的已选照片
     private ArrayList<String> originalPhotos;
-
+    //传入的照片
+    private ArrayList<String> dirPhotos;
     private int SCROLL_THRESHOLD = 30;
     int column;
     //目录弹出框的一次最多显示的目录数目
@@ -68,11 +74,12 @@ public class PhotoPickerFragment extends Fragment {
     private final static String EXTRA_COUNT = "count";
     private final static String EXTRA_GIF = "gif";
     private final static String EXTRA_ORIGIN = "origin";
+    private final static String EXTRA_DIR = "dir";
     private ListPopupWindow listPopupWindow;
     private RequestManager mGlideRequestManager;
 
     public static PhotoPickerFragment newInstance(boolean showCamera, boolean showGif,
-                                                  boolean previewEnable, int column, int maxCount, ArrayList<String> originalPhotos) {
+                                                  boolean previewEnable, int column, int maxCount, ArrayList<String> originalPhotos, ArrayList<String> dir) {
         Bundle args = new Bundle();
         args.putBoolean(EXTRA_CAMERA, showCamera);
         args.putBoolean(EXTRA_GIF, showGif);
@@ -80,6 +87,7 @@ public class PhotoPickerFragment extends Fragment {
         args.putInt(EXTRA_COLUMN, column);
         args.putInt(EXTRA_COUNT, maxCount);
         args.putStringArrayList(EXTRA_ORIGIN, originalPhotos);
+        args.putStringArrayList(EXTRA_DIR, dir);
         PhotoPickerFragment fragment = new PhotoPickerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -88,14 +96,22 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setRetainInstance(true);
-
         mGlideRequestManager = Glide.with(this);
-
+        //从当前文件夹中获取图片
         directories = new ArrayList<>();
         originalPhotos = getArguments().getStringArrayList(EXTRA_ORIGIN);
-
+        dirPhotos = getArguments().getStringArrayList(EXTRA_DIR);
+        if (EmptyUtils.isNotEmpty(dirPhotos) && dirPhotos.size() > 0) {
+            PhotoDirectory photoDirectory = new PhotoDirectory();
+            for (int i = 0; i < dirPhotos.size(); i++) {
+                photoDirectory.addPhoto(i, dirPhotos.get(i));
+            }
+            photoDirectory.setName("当前病历文件夹");
+            photoDirectory.setCoverPath(dirPhotos.get(dirPhotos.size() - 1));
+            photoDirectory.setDateAdded(System.currentTimeMillis());
+            directories.add(photoDirectory);
+        }
         column = getArguments().getInt(EXTRA_COLUMN, DEFAULT_COLUMN_NUMBER);
         boolean showCamera = getArguments().getBoolean(EXTRA_CAMERA, true);
         boolean previewEnable = getArguments().getBoolean(EXTRA_PREVIEW_ENABLED, true);
@@ -110,18 +126,19 @@ public class PhotoPickerFragment extends Fragment {
 
         boolean showGif = getArguments().getBoolean(EXTRA_GIF);
         mediaStoreArgs.putBoolean(EXTRA_SHOW_GIF, showGif);
-        MediaStoreHelper.getPhotoDirs(getActivity(), mediaStoreArgs,
-                new MediaStoreHelper.PhotosResultCallback() {
-                    @Override
-                    public void onResultCallback(List<PhotoDirectory> dirs) {
-                        directories.clear();
-                        directories.addAll(dirs);
-                        photoGridAdapter.notifyDataSetChanged();
-                        listAdapter.notifyDataSetChanged();
-                        adjustHeight();
-                    }
-                });
-
+        if (dirPhotos == null) {
+            MediaStoreHelper.getPhotoDirs(getActivity(), mediaStoreArgs,
+                    new MediaStoreHelper.PhotosResultCallback() {
+                        @Override
+                        public void onResultCallback(List<PhotoDirectory> dirs) {
+                            directories.clear();
+                            directories.addAll(dirs);
+                            photoGridAdapter.notifyDataSetChanged();
+                            listAdapter.notifyDataSetChanged();
+                            adjustHeight();
+                        }
+                    });
+        }
         captureManager = new ImageCaptureManager(getActivity());
     }
 

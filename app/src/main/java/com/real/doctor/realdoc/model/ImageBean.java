@@ -12,6 +12,7 @@ package com.real.doctor.realdoc.model;
 public class ImageBean {
     private String id;
     private int spareImage = 0; // 备用显示图片
+    private String advice = "";
     private String imgUrl = "";
 
     public ImageBean() {
@@ -31,6 +32,14 @@ public class ImageBean {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public String getAdvice() {
+        return advice;
+    }
+
+    public void setAdvice(String advice) {
+        this.advice = advice;
     }
 
     public int getSpareImage() {
