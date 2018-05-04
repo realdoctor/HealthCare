@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -8,6 +9,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.ProductShowActivity;
+import com.real.doctor.realdoc.activity.SearchActivity;
 import com.real.doctor.realdoc.adapter.BrandAdapter;
 import com.real.doctor.realdoc.adapter.ProductAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
@@ -74,7 +77,12 @@ public class ProductShowFragment extends BaseFragment {
                         public void onItemClick(AdapterView<?> arg0, View arg1,
                                                 int position, long arg3) {
                             ProductInfo product = bean.productList.get(position);
-                            ToastUtil.show(mContext, product.getName(), Toast.LENGTH_SHORT);
+                            Intent intent = new Intent(getActivity(), ProductShowActivity.class);
+                            intent.putExtra("model",product);
+                            startActivity(intent);
+                            getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            getActivity().finish();
+
                         }
                     });
 
@@ -105,8 +113,12 @@ public class ProductShowFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
-                ProductInfo item= breadBean.productList.get(position);
-                ToastUtil.show(getContext(),"点击了"+item.getId(),Toast.LENGTH_SHORT);
+                ProductInfo product= breadBean.productList.get(position);
+                Intent intent = new Intent(getActivity(), ProductShowActivity.class);
+                intent.putExtra("model",product);
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                getActivity().finish();
             }
         });
     }
