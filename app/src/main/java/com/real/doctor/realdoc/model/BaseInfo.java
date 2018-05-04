@@ -1,7 +1,9 @@
 package com.real.doctor.realdoc.model;
 
 
-public class BaseInfo
+import java.io.Serializable;
+
+public class BaseInfo implements Serializable
 {
 	protected String Id;
 	protected String name;
