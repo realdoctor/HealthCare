@@ -36,24 +36,63 @@
                     android:textColor="#ff333333"
                     android:typeface="monospace" />
 
-                <TextView
+                <EditText
                     android:id="@+id/ill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45.0dip"
                     android:layout_below="@id/ill_text"
-                    android:layout_marginBottom="10.0dip"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/second_function_one_string"
-                    android:textColor="#ff333333"
+                    android:background="#ffffffff"
+                    android:hint="@string/save_doc_ill_edit"
+                    android:inputType="text"
+                    android:paddingLeft="10.0dip"
+                    android:textColorHint="#ff999999"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="14.0sp"
                     android:typeface="monospace" />
+
+                <LinearLayout
+                    android:id="@+id/ill_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ill">
+
+                    <com.real.doctor.realdoc.view.LabelsView
+                        android:id="@+id/ill_labels"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="25dp"
+                        android:padding="5dp"
+                        app:labelBackground="@drawable/label_bg"
+                        app:labelTextColor="@drawable/label_text_color"
+                        app:labelTextPaddingBottom="5dp"
+                        app:labelTextPaddingLeft="10dp"
+                        app:labelTextPaddingRight="10dp"
+                        app:labelTextPaddingTop="5dp"
+                        app:labelTextSize="14sp"
+                        app:lineMargin="10dp"
+                        app:maxSelect="0"
+                        app:selectType="SINGLE"
+                        app:wordMargin="10dp" />
+
+                    <TextView
+                        android:id="@+id/more_ill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:gravity="center"
+                        android:text="@string/more"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/hospital_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/ill"
+                    android:layout_below="@id/ill_linear"
                     android:layout_marginLeft="10.0dip"
                     android:layout_marginRight="10.0dip"
                     android:layout_marginTop="10.0dip"
@@ -68,18 +107,56 @@
                     android:layout_below="@id/hospital_text"
                     android:background="#ffffffff"
                     android:hint="@string/save_doc_hospital_edit"
-                    android:inputType="phone"
+                    android:inputType="text"
                     android:paddingLeft="10.0dip"
                     android:textColorHint="#ff999999"
                     android:textCursorDrawable="@drawable/color_cursor"
                     android:textSize="14.0sp"
                     android:typeface="monospace" />
 
+                <LinearLayout
+                    android:id="@+id/hospital_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hospital">
+
+                    <com.real.doctor.realdoc.view.LabelsView
+                        android:id="@+id/hospital_labels"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="25dp"
+                        android:padding="5dp"
+                        app:labelBackground="@drawable/label_bg"
+                        app:labelTextColor="@drawable/label_text_color"
+                        app:labelTextPaddingBottom="5dp"
+                        app:labelTextPaddingLeft="10dp"
+                        app:labelTextPaddingRight="10dp"
+                        app:labelTextPaddingTop="5dp"
+                        app:labelTextSize="14sp"
+                        app:lineMargin="10dp"
+                        app:maxSelect="0"
+                        app:selectType="SINGLE"
+                        app:wordMargin="10dp" />
+
+                    <TextView
+                        android:id="@+id/more_hospital"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:gravity="center"
+                        android:text="@string/more"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/doctor_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/hospital"
+                    android:layout_below="@id/hospital_linear"
                     android:layout_marginLeft="10.0dip"
                     android:layout_marginRight="10.0dip"
                     android:layout_marginTop="10.0dip"
@@ -94,7 +171,7 @@
                     android:layout_below="@id/doctor_text"
                     android:background="#ffffffff"
                     android:hint="@string/save_doc_doctor_edit"
-                    android:inputType="phone"
+                    android:inputType="text"
                     android:paddingLeft="10.0dip"
                     android:textColorHint="#ff999999"
                     android:textCursorDrawable="@drawable/color_cursor"
@@ -114,10 +191,11 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:columnWidth="90dp"
+                        android:columnWidth="100dp"
                         android:gravity="center"
                         android:horizontalSpacing="5dp"
-                        android:numColumns="4"
+                        android:listSelector="@android:color/transparent"
+                        android:numColumns="3"
                         android:stretchMode="columnWidth"
                         android:verticalSpacing="5dp" />
                 </LinearLayout>

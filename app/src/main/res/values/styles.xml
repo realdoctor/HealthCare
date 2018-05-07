@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -31,6 +32,25 @@
     <style name="AnimBottom" parent="@android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
+    <style name="FloatDialogStyle" parent="android:Theme.DeviceDefault.Light.Dialog">
+
+    </style>
+
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+        <!-- API 14 theme customizations can go here. -->
+    </style>
+    <style name="FloatDialogTheme" parent="AppBaseTheme">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
     <!-- 仿IOS的dialog -->
     <style name="UIAlertViewStyle" parent="@android:style/Theme.Dialog">

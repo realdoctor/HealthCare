@@ -69,10 +69,15 @@ public class GsonUtil {
      * @return
      */
     public static <T> List<T> GsonToList(String gsonString, Class<T> cls) {
-        List<T> list = null;
-        if (gson != null) {
-            list = gson.fromJson(gsonString, new TypeToken<List<T>>() {
-            }.getType());
+        List<T> list = new ArrayList<T>();
+        try {
+            Gson gson = new Gson();
+            JsonArray arry = new JsonParser().parse(gsonString).getAsJsonArray();
+            for (JsonElement jsonElement : arry) {
+                list.add(gson.fromJson(jsonElement, cls));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }

@@ -103,8 +103,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".activity.ProductShowActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.real.doctor.realdoc.photopicker.PhotoPagerActivity"
             android:screenOrientation="portrait"
@@ -139,18 +138,44 @@
             android:name=".activity.ProductShowByCategoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activity.CheckDocActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.SaveDocActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.CheckDocActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait">
-        </activity>
 
+        <activity
+            android:name=".activity.CheckCompareActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.IllLabelActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.HospitalLabelActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".view.SaveDialogActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/FloatDialogTheme"></activity>
+
+        <service
+            android:name=".service.UpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.UpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />

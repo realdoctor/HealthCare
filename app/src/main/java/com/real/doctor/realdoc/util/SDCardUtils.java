@@ -136,16 +136,20 @@ public class SDCardUtils {
     /**
      * 根据路径，获取图片，并将图片放置在指定文件夹下
      */
-    public static boolean saveToSdCard(String path) {
+    public static boolean saveToSdCard(String path, String folder) {
         File file = new File(path);
         //若该文件存在
         if (file.exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(path);
-            String imageCacheUrl = getPictureDir();
+            String imageCacheUrl = getPictureDir() + folder;
             if (EmptyUtils.isNotEmpty(imageCacheUrl)) {
                 //截图图片名称,保存到sdcard中
                 String fileName = path.substring(path.lastIndexOf("/") + 1, path.length());
-                String imageUrl = getPictureDir() + fileName;
+                //创建路径
+                File folderFile = new File(imageCacheUrl);
+                if (!folderFile.exists())
+                    folderFile.mkdir();
+                String imageUrl = folderFile + File.separator + fileName;
                 File newFile = new File(imageUrl);
                 try {
                     FileOutputStream out = new FileOutputStream(newFile);

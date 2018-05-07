@@ -22,6 +22,7 @@ import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.ImageBean;
+import com.real.doctor.realdoc.model.LabelBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.photopicker.PhotoPreview;
@@ -30,6 +31,8 @@ import com.real.doctor.realdoc.util.FileProvider7;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.DocGridView;
+import com.real.doctor.realdoc.view.LabelsView;
+import com.real.doctor.realdoc.view.SaveDialogActivity;
 import com.real.doctor.realdoc.view.SelectPopupWindow;
 
 import java.io.File;
@@ -50,7 +53,7 @@ import butterknife.OnClick;
 public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     @BindView(R.id.ill)
-    TextView ill;
+    EditText ill;
     @BindView(R.id.hospital)
     EditText hospital;
     @BindView(R.id.doctor)
@@ -65,13 +68,28 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     TextView rightTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    @BindView(R.id.ill_labels)
+    LabelsView illLabels;
+    @BindView(R.id.hospital_labels)
+    LabelsView hospitalLabels;
+    @BindView(R.id.more_ill)
+    TextView moreIll;
+    @BindView(R.id.more_hospital)
+    TextView moreHospital;
     private List<ImageBean> imageList;
     private GridAdapter adapter;
     //底部弹出菜单
     private SelectPopupWindow mPopup;
     private String mCurrentPhotoPath = null;
+    private String mAdvice = null;
+    private SaveDialogActivity dialog;
+    private boolean flag = false;
     //拍照
     private static final int REQUEST_CODE_TAKE_PHOTO = 0x110;
+    //疾病标签
+    ArrayList<LabelBean> labelList = new ArrayList<>();
+    //医院标签
+    ArrayList<LabelBean> hospitalList = new ArrayList<>();
 
     @Override
     public int getLayoutId() {
@@ -85,6 +103,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
 
     @Override
     public void initData() {
+        initLable();
         imageList = new ArrayList<>();
         adapter = new GridAdapter(this, imageList);
         docGridView.setAdapter(adapter);
@@ -96,25 +115,64 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
         rightTitle.setVisibility(View.VISIBLE);
     }
 
+    private void initLable() {
+        labelList.add(new LabelBean("心脏病", 1));
+        labelList.add(new LabelBean("呼吸系统疾病", 2));
+        illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
+            @Override
+            public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                return data.getName();
+            }
+        });
+        hospitalList.add(new LabelBean("杭州仁和医院", 1));
+        hospitalList.add(new LabelBean("杭州第一人民医院", 2));
+        hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
+            @Override
+            public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                return data.getName();
+            }
+        });
+    }
+
     @Override
     public void initEvent() {
         docGridView.setOnItemClickListener(this);
         docGridView.setOnItemLongClickListener(this);
+        hospitalLabels.setOnLabelClickListener(new LabelsView.OnLabelClickListener() {
+            @Override
+            public void onLabelClick(TextView label, Object data, int position) {
+                LabelBean hospitalObject = (LabelBean) data;
+                String hospitalLabel = hospitalObject.getName();
+                hospital.setText(hospitalLabel);
+                hospital.setSelection(hospital.getText().length());
+            }
+        });
+        illLabels.setOnLabelClickListener(new LabelsView.OnLabelClickListener() {
+            @Override
+            public void onLabelClick(TextView label, Object data, int position) {
+                LabelBean illObject = (LabelBean) data;
+                String illLabel = illObject.getName();
+                ill.setText(illLabel);
+                ill.setSelection(ill.getText().length());
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (EmptyUtils.isNotEmpty(mCurrentPhotoPath)) {
+        if (EmptyUtils.isNotEmpty(mCurrentPhotoPath) && flag) {
             ImageBean bean = new ImageBean();
             bean.setSpareImage(R.mipmap.add);
+            bean.setImgUrl("");
             imageList.add(bean);
+            flag = false;
             mCurrentPhotoPath = null;
         }
     }
 
     @Override
-    @OnClick({R.id.button_save_doc, R.id.right_title, R.id.finish_back})
+    @OnClick({R.id.button_save_doc, R.id.right_title, R.id.finish_back, R.id.more_ill, R.id.more_hospital})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.button_save_doc:
@@ -124,30 +182,54 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 String illness = ill.getText().toString().trim();
                 bean.setIll(illness);
                 String hospitaName = hospital.getText().toString().trim();
+                if (EmptyUtils.isEmpty(hospitaName)) {
+                    ToastUtil.showLong(this, "请填写就诊医院名称!");
+                    return;
+                }
                 bean.setHospital(hospitaName);
                 String doctorName = doctor.getText().toString().trim();
+                if (EmptyUtils.isEmpty(doctorName)) {
+                    ToastUtil.showLong(this, "请填写就诊医生!");
+                    return;
+                }
                 bean.setDoctor(doctorName);
                 StringBuilder sb = new StringBuilder();
+                StringBuilder ad = new StringBuilder();
+                long time = 0;
+                String folder = null;
                 //将数据存储到数据库中
                 //将存储到sdcard中
                 if (SDCardUtils.isSDCardEnable()) {
                     imageList.remove(imageList.size() - 1); // 现将加号移除（有加号才能显示此按钮）
+                    time = System.currentTimeMillis();
+                    folder = String.valueOf(time);
                     for (ImageBean image : imageList) {
                         String img = image.getImgUrl();
-                        SDCardUtils.saveToSdCard(img);
+                        SDCardUtils.saveToSdCard(img, folder);
                         String fileName = img.substring(img.lastIndexOf("/") + 1, img.length());
                         sb.append(fileName);
                         sb.append(";");
+                        ad.append(image.getAdvice());
+                        ad.append(";");
                     }
                 } else {
                     ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存失败!");
                     return;
                 }
+                bean.setFolder(folder);
+                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                bean.setTime(sf.format(time));
                 bean.setImgs(sb.toString());
+                bean.setAdvice(ad.toString());
                 SaveDocManager instance = SaveDocManager.getInstance(SaveDocActivity.this);
-                instance.insertSaveDoc(SaveDocActivity.this, bean);
-                ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存成功!");
-                finish();
+                if (EmptyUtils.isNotEmpty(instance)) {
+                    instance.insertSaveDoc(SaveDocActivity.this, bean);
+                    ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存成功!");
+                    finish();
+                } else {
+                    ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存失败!");
+                    return;
+                }
                 break;
             case R.id.right_title:
                 actionStart(SaveDocActivity.this, DocDetailActivity.class);
@@ -155,6 +237,12 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 break;
             case R.id.finish_back:
                 finish();
+                break;
+            case R.id.more_ill:
+                //进入疾病标签页
+                break;
+            case R.id.more_hospital:
+                //进入医院标签页
                 break;
         }
     }
@@ -240,7 +328,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK &&
                 (requestCode == PhotoPicker.REQUEST_CODE || requestCode == PhotoPreview.REQUEST_CODE)) {
@@ -249,18 +337,27 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
             }
             mCurrentPhotoPath = photos.get(0);
-            ImageBean imageBean = new ImageBean();
-            imageBean.setImgUrl(photos.get(0));
-            imageList.add(imageBean);
-            adapter.notifyDataSetChanged();
+            Intent intent = new Intent(this, SaveDialogActivity.class);
+            intent.putExtra("mCurrentPhotoPath", mCurrentPhotoPath);
+            startActivityForResult(intent, 0x111);
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_TAKE_PHOTO) {
+            Intent intent = new Intent(this, SaveDialogActivity.class);
+            intent.putExtra("mCurrentPhotoPath", mCurrentPhotoPath);
+            startActivityForResult(intent, 0x111);
+        } else if (resultCode == RESULT_OK && requestCode == 0x111) {
+            flag = true;
+            //弹出完善信息界面
             ImageBean imageBean = new ImageBean();
-            imageBean.setImgUrl(mCurrentPhotoPath);
+            String advice = data.getStringExtra("advice");
+            String path = data.getStringExtra("path");
+            imageBean.setAdvice(advice);
+            imageBean.setImgUrl(path);
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
-        } else if (resultCode == RESULT_OK && requestCode != REQUEST_CODE_TAKE_PHOTO) {
+        } else if (resultCode == 0 && !flag) {
             ImageBean imageBean = new ImageBean();
             imageBean.setSpareImage(R.mipmap.add);
+            imageBean.setImgUrl("");
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
         }
@@ -269,7 +366,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     public void takePhotoCompress() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            String filename = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.CHINA)
+            String filename = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINA)
                     .format(new Date()) + ".png";
             File file = new File(SDCardUtils.getSDCardPath(), filename);
             mCurrentPhotoPath = file.getAbsolutePath();

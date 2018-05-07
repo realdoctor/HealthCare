@@ -15,6 +15,7 @@ import com.real.doctor.realdoc.photopicker.entity.Photo;
 import com.real.doctor.realdoc.photopicker.event.OnItemCheckListener;
 import com.real.doctor.realdoc.photopicker.fragment.ImagePagerFragment;
 import com.real.doctor.realdoc.photopicker.fragment.PhotoPickerFragment;
+import com.real.doctor.realdoc.util.EmptyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import static com.real.doctor.realdoc.photopicker.PhotoPicker.DEFAULT_MAX_COUNT;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_GRID_COLUMN;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_MAX_COUNT;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_ORIGINAL_PHOTOS;
+import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_DIR_PHOTOS;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_SHOW_CAMERA;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_SHOW_GIF;
@@ -46,7 +48,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
     private boolean showGif = false;
     private int columnNumber = DEFAULT_COLUMN_NUMBER;
     private ArrayList<String> originalPhotos = null;
-
+    private ArrayList<String> dir = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +77,15 @@ public class PhotoPickerActivity extends AppCompatActivity {
         maxCount = getIntent().getIntExtra(EXTRA_MAX_COUNT, DEFAULT_MAX_COUNT);
         columnNumber = getIntent().getIntExtra(EXTRA_GRID_COLUMN, DEFAULT_COLUMN_NUMBER);
         originalPhotos = getIntent().getStringArrayListExtra(EXTRA_ORIGINAL_PHOTOS);
+        dir = getIntent().getStringArrayListExtra(EXTRA_DIR_PHOTOS);
 
+        if (EmptyUtils.isNotEmpty(dir) && dir.size() > 0) {
+            setTitle("病历图片替换");
+        }
         pickerFragment = (PhotoPickerFragment) getSupportFragmentManager().findFragmentByTag("tag");
         if (pickerFragment == null) {
             pickerFragment = PhotoPickerFragment
-                    .newInstance(showCamera, showGif, previewEnabled, columnNumber, maxCount, originalPhotos);
+                    .newInstance(showCamera, showGif, previewEnabled, columnNumber, maxCount, originalPhotos, dir);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container, pickerFragment, "tag")
