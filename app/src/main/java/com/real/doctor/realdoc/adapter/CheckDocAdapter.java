@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 
@@ -40,10 +42,17 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
 
 
     public void notifyAdapter(List<SaveDocBean> saveDocBeanList, boolean isAdd) {
+
         if (!isAdd) {
             this.mSaveDocBean = saveDocBeanList;
         } else {
             this.mSaveDocBean.addAll(saveDocBeanList);
+        }
+        //将所有已选中去除
+        for (int i = 0; i < mSaveDocBean.size(); i++) {
+            if (mSaveDocBean.get(i).getIsSelect()) {
+                mSaveDocBean.get(i).setIsSelect(false);
+            }
         }
         notifyDataSetChanged();
     }
@@ -73,8 +82,15 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
         holder.mTvTitle.setText(saveDocBean.getIll());
         holder.mTvContent.setText(saveDocBean.getHospital());
         String folder = saveDocBean.getFolder();
-        String[] imgs = saveDocBean.getImgs().split(";");
-        GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir()+folder+ File.separator + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        String mImgs = saveDocBean.getImgs();
+        if (EmptyUtils.isNotEmpty(mImgs)) {
+            holder.mRadioImg.setVisibility(View.VISIBLE);
+            String[] imgs = mImgs.split(";");
+            GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir() + folder + File.separator + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        } else {
+            holder.mRadioImg.setVisibility(View.GONE);
+        }
+        holder.mTvTime.setText(DateUtil.timeStamp2Date(saveDocBean.getTime(), "y年M月d日"));
         if (mEditMode == saveDocBean_MODE_CHECK) {
             holder.mCheckBox.setVisibility(View.GONE);
         } else {
@@ -114,6 +130,8 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
         TextView mTvTitle;
         @BindView(R.id.tv_content)
         TextView mTvContent;
+        @BindView(R.id.tv_time)
+        TextView mTvTime;
         @BindView(R.id.root_view)
         RelativeLayout mRootView;
         @BindView(R.id.check_box)

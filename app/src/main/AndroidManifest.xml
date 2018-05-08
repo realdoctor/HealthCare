@@ -70,6 +70,7 @@
             android:name=".activity.RegisterActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
+
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -121,6 +122,7 @@
         <activity
             android:name=".activity.ProgressBarActivity"
             android:hardwareAccelerated="false"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.DocCompareActivity"
@@ -137,9 +139,7 @@
         <activity
             android:name=".activity.ProductShowByCategoryActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.CheckDocActivity"
             android:hardwareAccelerated="false"
@@ -154,6 +154,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.RecordListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".activity.CheckCompareActivity"

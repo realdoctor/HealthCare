@@ -1,16 +1,20 @@
 package com.real.doctor.realdoc.greendao.table;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.SaveDocBeanDao;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +22,7 @@ import java.util.List;
  */
 
 public class SaveDocManager {
-    private final static String dbName = "save_doc";
+    public final static String dbName = "save_doc";
     private static SaveDocManager mInstance;
     private DaoMaster.DevOpenHelper openHelper;
     private Context context;
@@ -73,15 +77,13 @@ public class SaveDocManager {
      * @param bean
      */
     public void insertSaveDoc(Context context, SaveDocBean bean) {
-        SaveDocManager manager = SaveDocManager.getInstance(context);
-        DaoMaster daoMaster = new DaoMaster(manager.getWritableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         saveDocDao.insertOrReplace(bean);
     }
 
     /**
-     * 插入Playlist
+     * 插入病历list
      *
      * @param beanList
      */
@@ -89,24 +91,20 @@ public class SaveDocManager {
         if (EmptyUtils.isEmpty(beanList)) {
             return;
         }
-        SaveDocManager manager = SaveDocManager.getInstance(context);
-        DaoMaster daoMaster = new DaoMaster(manager.getWritableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
-        daoSession.deleteAll(SaveDocBean.class);
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+//        daoSession.deleteAll(SaveDocBean.class);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         saveDocDao.insertOrReplaceInTx(beanList);
     }
 
     /**
-     * 查询Playlist列表
+     * 查询病历list列表
      */
     public List<SaveDocBean> querySaveDocList(Context context) {
-        SaveDocManager manager = SaveDocManager.getInstance(context);
-        DaoMaster daoMaster = new DaoMaster(manager.getReadableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        List<SaveDocBean> list = qb.list();
+        List<SaveDocBean> list = qb.orderDesc(SaveDocBeanDao.Properties.Time).list();
         return list;
     }
 
@@ -116,10 +114,61 @@ public class SaveDocManager {
      * @param bean
      */
     public void deleteSaveDocList(SaveDocBean bean) {
-        DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         saveDocDao.delete(bean);
+    }
+
+    /**
+     * 查询规定时间内的病历list列表
+     */
+    public List<SaveDocBean> queryRecordByTimeList(Context context, String start, String end) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        String today = DateUtil.timeToday();
+        List<SaveDocBean> list = null;
+        if (end.equals(today)) {
+            end = String.valueOf(Long.valueOf(end) + (long) 86400000);
+            list = qb.where(SaveDocBeanDao.Properties.Time.ge(Long.valueOf(start)), SaveDocBeanDao.Properties.Time.le(Long.valueOf(end))).orderDesc(SaveDocBeanDao.Properties.Time).list();
+        } else if (start.equals(today) && end.equals(today) && start.equals(end)) {
+            list = qb.where(SaveDocBeanDao.Properties.Time.eq(Long.valueOf(today))).list();
+        } else {
+            list = qb.where(SaveDocBeanDao.Properties.Time.ge(Long.valueOf(start)), SaveDocBeanDao.Properties.Time.le(Long.valueOf(end))).orderDesc(SaveDocBeanDao.Properties.Time).list();
+        }
+
+        return list;
+    }
+
+    private static final String SQL_DISTINCT_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Ill.columnName + " FROM " + SaveDocBeanDao.TABLENAME;
+
+    /**
+     * 查询病历一列列表
+     */
+    public static List<String> queryDiseaseList(DaoSession session) {
+        ArrayList<String> result = new ArrayList<String>();
+        Cursor c = session.getDatabase().rawQuery(SQL_DISTINCT_ILL, null);
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    result.add(c.getString(0));
+                } while (c.moveToNext());
+            }
+        } finally {
+            c.close();
+        }
+        return result;
+    }
+
+    /**
+     * 查询规定时间内的病历list列表
+     */
+    public List<SaveDocBean> queryRecordByDiseaseList(Context context, String disease) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.like("%" + disease + "%")).list();
+        return list;
     }
 }
 

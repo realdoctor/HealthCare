@@ -3,15 +3,19 @@ package com.real.doctor.realdoc.service;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.SyncStateContract;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.real.doctor.realdoc.activity.ProgressBarActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
@@ -21,6 +25,7 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.SDCardUtils;
+import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.util.ZipUtils;
 
@@ -46,38 +51,79 @@ public class UpdateService extends JobService {
 
     public static final String TAG = UpdateService.class.getSimpleName();
     private List<SaveDocBean> mList = new ArrayList<>();
+    private List<Boolean> mFlag = new ArrayList<>();
+    private boolean zip = false;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+            mFlag.clear();
             for (SaveDocBean bean : mList) {
-                String[] imgs = bean.getImgs().split(";");
-                if (SDCardUtils.isSDCardEnable()) {
-                    //新建doctor文件夹
-                    String folderName = SDCardUtils.getSDCardPath() + "doctor" + File.separator;
-                    File file = new File(folderName);
-                    if (!file.exists())
-                        file.mkdir();  //如果不存在则创建
-                    boolean isEmptyFolder = FileUtils.deleteAllInDir(SDCardUtils.getSDCardPath() + "doctor");
-                    if (isEmptyFolder) {
-                        //复制图片
-                        for (String img : imgs) {
-                            Bitmap bitmap = BitmapFactory.decodeFile("/storage/emulated/0/RealDoc/" + img);//filePath
-                            if (EmptyUtils.isNotEmpty(bitmap)) {
-                                SDCardUtils.saveToSdCard(folderName, bitmap, img);
+                String mImg = bean.getImgs();
+                if (EmptyUtils.isNotEmpty(mImg)) {
+                    mFlag.add(true);
+                    String[] imgs = bean.getImgs().split(";");
+                    if (SDCardUtils.isSDCardEnable()) {
+                        //新建doctor文件夹
+                        String folderName = SDCardUtils.getSDCardPath() + "doctor" + File.separator;
+                        File file = new File(folderName);
+                        if (!file.exists())
+                            file.mkdir();  //如果不存在则创建
+                        boolean isEmptyFolder = FileUtils.deleteAllInDir(SDCardUtils.getSDCardPath() + "doctor");
+                        if (isEmptyFolder) {
+                            //复制图片
+                            for (String img : imgs) {
+                                Bitmap bitmap = BitmapFactory.decodeFile("/storage/emulated/0/RealDoc/" + img);//filePath
+                                if (EmptyUtils.isNotEmpty(bitmap)) {
+                                    SDCardUtils.saveToSdCard(folderName, bitmap, img);
+                                }
                             }
+                            zip = false;
+                            //打包
+                            try {
+                                zip = ZipUtils.zipFile(folderName, SDCardUtils.getSDCardPath() + "doctor.zip", "doctor");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+//                            if (zip) {
+//                                String size = FileUtils.getDirSize(SDCardUtils.getSDCardPath() + "doctor.zip");
+//                                if (!StringUtils.equals(size, "0")) {
+                            //通知Activity病历打包已经完成
+                            //动态注册广播
+//                                    Intent intent = new Intent(ProgressBarActivity.HAVE_IMG);
+//                                    LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
+//                                } else {
+//                                    //删除zip包
+//                                    boolean deleteFile = FileUtils.deleteDir(SDCardUtils.getSDCardPath() + "doctor.zip");
+//                                    if (deleteFile) {
+//                                        //动态注册广播
+//                                        Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
+//                                        LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
+//                                    }
+//                                }
+                            //                       }
                         }
-                        boolean zip = false;
-                        //打包
-                        try {
-                            zip = ZipUtils.zipFile(folderName, SDCardUtils.getSDCardPath() + "doctor.zip", "doctor");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        if (zip) {
-                            //上传文件夹和数据
-//                            uploadData();
-                        }
+                    }
+                } else {
+                    mFlag.add(false);
+                }
+            }
+            if (isSample()) {
+                //动态注册广播
+                Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
+                LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
+            } else if (zip) {
+                Intent intent = new Intent(ProgressBarActivity.HAVE_IMG);
+                LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
+            }
+            return true;
+        }
+
+        private boolean isSample() {
+            if (mFlag.size() > 0) {
+                for (boolean flag : mFlag) {
+                    if (flag) {
+                        return false;
                     }
                 }
             }
@@ -143,6 +189,7 @@ public class UpdateService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
+        jobFinished(params, false);//任务执行完后记得调用jobFinsih通知系统释放相关资源
         return false;
     }
 

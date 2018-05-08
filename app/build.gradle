@@ -10,6 +10,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        aaptOptions.cruncherEnabled = false
+        aaptOptions.useNewCruncher = false
     }
     buildTypes {
         release {
@@ -26,6 +28,10 @@ android {
         schemaVersion 1
         daoPackage 'com.real.doctor.realdoc.greendao'
         targetGenDir 'src/main/java'
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
@@ -82,4 +88,5 @@ dependencies {
     implementation files('libs/alipaySdk-20160516.jar')
     //微信支付
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    implementation project(':datetimepicker')
 }

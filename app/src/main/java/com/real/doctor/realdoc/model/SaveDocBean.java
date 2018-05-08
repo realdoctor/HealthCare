@@ -16,6 +16,7 @@ import org.greenrobot.greendao.annotation.Generated;
 public class SaveDocBean implements Parcelable {
 
     @Id
+    @SerializedName("diagCode")
     private String id;
     //疾病
     @SerializedName("diagName")
@@ -27,7 +28,7 @@ public class SaveDocBean implements Parcelable {
     @SerializedName("respDoctorName")
     private String doctor;
     //就诊时间
-    @SerializedName("lastUpdateDtime")
+    @SerializedName("visitDtime")
     private String time;
     //存放病历图片的文件夹
     private String folder;
@@ -35,26 +36,22 @@ public class SaveDocBean implements Parcelable {
     private String imgs;
     //医嘱(每张病历图片一个医嘱)
     private String advice;
+    //机构编码
+    private String orgCode;
+    //诊断信息id
+    private String patientDiagId;
+    //病人ID
+    private String patientId;
+    // 就诊科室名称
+    private String visitDeptName;
+    //就诊通道(1、门诊，2、住院)
+    private String visitWay;
     //是否选中病历
     private boolean isSelect = false;
 
     public SaveDocBean() {
     }
 
-    @Generated(hash = 1448899373)
-    public SaveDocBean(String id, String ill, String hospital, String doctor,
-                       String time, String folder, String imgs, String advice,
-                       boolean isSelect) {
-        this.id = id;
-        this.ill = ill;
-        this.hospital = hospital;
-        this.doctor = doctor;
-        this.time = time;
-        this.folder = folder;
-        this.imgs = imgs;
-        this.advice = advice;
-        this.isSelect = isSelect;
-    }
 
     protected SaveDocBean(Parcel in) {
         id = in.readString();
@@ -65,7 +62,34 @@ public class SaveDocBean implements Parcelable {
         folder = in.readString();
         imgs = in.readString();
         advice = in.readString();
+        orgCode = in.readString();
+        patientDiagId = in.readString();
+        patientId = in.readString();
+        visitDeptName = in.readString();
+        visitWay = in.readString();
         isSelect = in.readByte() != 0;
+    }
+
+
+    @Generated(hash = 434754401)
+    public SaveDocBean(String id, String ill, String hospital, String doctor,
+            String time, String folder, String imgs, String advice, String orgCode,
+            String patientDiagId, String patientId, String visitDeptName,
+            String visitWay, boolean isSelect) {
+        this.id = id;
+        this.ill = ill;
+        this.hospital = hospital;
+        this.doctor = doctor;
+        this.time = time;
+        this.folder = folder;
+        this.imgs = imgs;
+        this.advice = advice;
+        this.orgCode = orgCode;
+        this.patientDiagId = patientDiagId;
+        this.patientId = patientId;
+        this.visitDeptName = visitDeptName;
+        this.visitWay = visitWay;
+        this.isSelect = isSelect;
     }
 
     public static final Creator<SaveDocBean> CREATOR = new Creator<SaveDocBean>() {
@@ -81,21 +105,26 @@ public class SaveDocBean implements Parcelable {
     };
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(ill);
-        dest.writeString(hospital);
-        dest.writeString(doctor);
-        dest.writeString(time);
-        dest.writeString(folder);
-        dest.writeString(imgs);
-        dest.writeString(advice);
-        dest.writeByte((byte) (isSelect ? 1 : 0));
+    public int describeContents() {
+        return 0;
     }
 
     @Override
-    public int describeContents() {
-        return 0;
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(ill);
+        parcel.writeString(hospital);
+        parcel.writeString(doctor);
+        parcel.writeString(time);
+        parcel.writeString(folder);
+        parcel.writeString(imgs);
+        parcel.writeString(advice);
+        parcel.writeString(orgCode);
+        parcel.writeString(patientDiagId);
+        parcel.writeString(patientId);
+        parcel.writeString(visitDeptName);
+        parcel.writeString(visitWay);
+        parcel.writeByte((byte) (isSelect ? 1 : 0));
     }
 
 
@@ -139,23 +168,13 @@ public class SaveDocBean implements Parcelable {
     }
 
 
-    public String getImgs() {
-        return this.imgs;
+    public String getTime() {
+        return this.time;
     }
 
 
-    public void setImgs(String imgs) {
-        this.imgs = imgs;
-    }
-
-
-    public boolean getIsSelect() {
-        return this.isSelect;
-    }
-
-
-    public void setIsSelect(boolean isSelect) {
-        this.isSelect = isSelect;
+    public void setTime(String time) {
+        this.time = time;
     }
 
 
@@ -169,13 +188,13 @@ public class SaveDocBean implements Parcelable {
     }
 
 
-    public String getTime() {
-        return this.time;
+    public String getImgs() {
+        return this.imgs;
     }
 
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setImgs(String imgs) {
+        this.imgs = imgs;
     }
 
 
@@ -188,4 +207,63 @@ public class SaveDocBean implements Parcelable {
         this.advice = advice;
     }
 
+
+    public String getOrgCode() {
+        return this.orgCode;
+    }
+
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+
+    public String getPatientDiagId() {
+        return this.patientDiagId;
+    }
+
+
+    public void setPatientDiagId(String patientDiagId) {
+        this.patientDiagId = patientDiagId;
+    }
+
+
+    public String getPatientId() {
+        return this.patientId;
+    }
+
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+
+    public String getVisitDeptName() {
+        return this.visitDeptName;
+    }
+
+
+    public void setVisitDeptName(String visitDeptName) {
+        this.visitDeptName = visitDeptName;
+    }
+
+
+    public String getVisitWay() {
+        return this.visitWay;
+    }
+
+
+    public void setVisitWay(String visitWay) {
+        this.visitWay = visitWay;
+    }
+
+
+    public boolean getIsSelect() {
+        return this.isSelect;
+    }
+
+
+    public void setIsSelect(boolean isSelect) {
+        this.isSelect = isSelect;
+    }
 }

@@ -12,6 +12,7 @@ import com.real.doctor.realdoc.adapter.ContentGridAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.view.DocGridView;
@@ -119,7 +120,7 @@ public class DocContentActivity extends BaseActivity {
                     doctor.setText(mDoctor);
                 }
                 if (EmptyUtils.isNotEmpty(mTime)) {
-                    time.setText(mTime);
+                    time.setText(DateUtil.timeStamp2Date(mTime, "y年M月d日"));
                 }
             } else {
                 if (EmptyUtils.isNotEmpty(mIll)) {
@@ -132,7 +133,7 @@ public class DocContentActivity extends BaseActivity {
                     doctor.setText(mDoctor);
                 }
                 if (EmptyUtils.isNotEmpty(mTime)) {
-                    time.setText(mTime);
+                    time.setText(DateUtil.timeStamp2Date(mTime, "y年M月d日"));
                 }
             }
         }

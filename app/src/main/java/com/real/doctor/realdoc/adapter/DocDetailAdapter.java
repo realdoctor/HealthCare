@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 
@@ -32,7 +33,7 @@ public class DocDetailAdapter extends BaseQuickAdapter<SaveDocBean, BaseViewHold
     protected void convert(BaseViewHolder viewHolder, SaveDocBean item) {
         viewHolder.setText(R.id.doc_detail_title, item.getIll())
                 .setText(R.id.doc_detail_content, item.getHospital())
-                .setText(R.id.doc_detail_time, item.getTime());
+                .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(),"y年M月d日"));
         if (EmptyUtils.isNotEmpty(item) && item.getFolder() != null) {
             String folder = item.getFolder().toString().trim();
             String[] imgs = item.getImgs().split(";");

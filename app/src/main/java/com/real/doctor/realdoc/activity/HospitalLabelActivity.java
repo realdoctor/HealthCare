@@ -6,6 +6,8 @@ import android.view.View;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 
+import butterknife.ButterKnife;
+
 public class HospitalLabelActivity extends BaseActivity {
     @Override
     public int getLayoutId() {
@@ -14,7 +16,7 @@ public class HospitalLabelActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
+        ButterKnife.bind(this);
     }
 
     @Override

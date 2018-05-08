@@ -56,6 +56,10 @@
     <string name="confirm_btn">确认</string>
     <string name="shop">商城</string>
     <string name="more">更多 >></string>
+    <string name="start_time">开始时间:</string>
+    <string name="end_time">截止时间:</string>
+    <string name="select_time_record">按时间选择病历</string>
+    <string name="select_disease_record">按疾病选择病历</string>
     <string name="collection_pull_to_refresh">下拉刷新</string>
     <string name="collection_release_refresh">释放刷新</string>
     <string name="collection_refresh_done">刷新完成</string>
