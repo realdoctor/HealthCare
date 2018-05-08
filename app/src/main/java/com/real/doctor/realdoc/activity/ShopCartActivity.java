@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
@@ -10,19 +11,37 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.ShopcartExpandableListViewAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.GroupInfo;
+import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.model.ProductInfo;
+import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
+import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ToastUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 /**
  * Created by Administrator on 2018/4/20.
@@ -50,7 +69,12 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
 
     private ShopcartExpandableListViewAdapter selva;
     private List<GroupInfo> groups = new ArrayList<GroupInfo>();// 组元素数据列表
-    private Map<String, List<ProductInfo>> children = new HashMap<String, List<ProductInfo>>();// 子元素数据列表
+    private Map<String, List<ProductBean>> children = new HashMap<String, List<ProductBean>>();// 子元素数据列表
+    String userId;
+    //默认店铺
+    public GroupInfo groupInfo;
+    //默认店铺id
+    public static  String gourpId="0001";
 
     @Override
     public int getLayoutId() {
@@ -65,23 +89,26 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     public void initData() {
         pageTitle.setText("购物车");
         context = this;
-        virtualData();
+        userId= (String)SPUtils.get(ShopCartActivity.this, Constants.USER_KEY,"7");
+        groups.add(new GroupInfo(gourpId,"自营店铺"));
+       // virtualData();
     }
 
     @Override
     public void initEvent() {
-        selva = new ShopcartExpandableListViewAdapter(groups, children, this);
-        selva.setCheckInterface(this);// 关键步骤1,设置复选框接口
-        selva.setModifyCountInterface(this);// 关键步骤2,设置数量增减接口
+        selva = new ShopcartExpandableListViewAdapter(groups, children, ShopCartActivity.this);
+        selva.setCheckInterface(ShopCartActivity.this);// 关键步骤1,设置复选框接口
+        selva.setModifyCountInterface(ShopCartActivity.this);// 关键步骤2,设置数量增减接口
         exListView.setAdapter(selva);
-        for (int i = 0; i < selva.getGroupCount(); i++)
-        {
-            exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
-        }
         finishBack.setOnClickListener(this);
         cbCheck.setOnClickListener(this);
         tvDelete.setOnClickListener(this);
         tvGoToPay.setOnClickListener(this);
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        getCartData();
     }
 
     @Override
@@ -93,24 +120,6 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
 
     }
 
-    /**
-     * 模拟数据<br>
-     * 遵循适配器的数据列表填充原则，组元素被放在一个List中，对应的组元素下辖的子元素被放在Map中，<br>
-     * 其键是组元素的Id(通常是一个唯一指定组元素身份的值)
-     */
-    private void virtualData()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            groups.add(new GroupInfo(i + "", "店铺" + (i + 1) + "号店"));
-            List<ProductInfo> products = new ArrayList<ProductInfo>();
-            for (int j = 0; j <= i; j++)
-            {
-                products.add(new ProductInfo(j + "", "商品", "", groups.get(i).getName() + "的第" + (j + 1) + "个商品", 120.00 + i * j, 1));
-            }
-            children.put(groups.get(i).getId(), products);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
-        }
-    }
     @Override
     public void onClick(View v)
     {
@@ -188,6 +197,8 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     protected void doDelete()
     {
         List<GroupInfo> toBeDeleteGroups = new ArrayList<GroupInfo>();// 待删除的组元素列表
+        //封装要删除的购物车商品
+        final JSONArray jsonArray=new JSONArray();
         for (int i = 0; i < groups.size(); i++)
         {
             GroupInfo group = groups.get(i);
@@ -195,8 +206,8 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
             {
                 toBeDeleteGroups.add(group);
             }
-            List<ProductInfo> toBeDeleteProducts = new ArrayList<ProductInfo>();// 待删除的子元素列表
-            List<ProductInfo> childs = children.get(group.getId());
+            List<ProductBean> toBeDeleteProducts = new ArrayList<ProductBean>();// 待删除的子元素列表
+            List<ProductBean> childs = children.get(group.getId());
             for (int j = 0; j < childs.size(); j++)
             {
                 if (childs.get(j).isChoosed())
@@ -205,21 +216,78 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
                 }
             }
             childs.removeAll(toBeDeleteProducts);
-        }
-        groups.removeAll(toBeDeleteGroups);
-        selva.notifyDataSetChanged();
-        calculate();
-    }
+            for(int k=0;k<toBeDeleteProducts.size();k++){
+                jsonArray.put(toBeDeleteProducts.get(k).getId());
+            }
 
+        }
+        deleteCartIds(jsonArray);
+    }
+    private void deleteCartIds(JSONArray array){
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("ids",array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+        HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().json("cart/deleteCartItem/"
+                ,body , new BaseObserver<ResponseBody>(ShopCartActivity.this) {
+
+                    @Override
+
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    ToastUtil.showLong(ShopCartActivity.this, "删除成功!");
+                                    getCartData();
+                                } else {
+                                    ToastUtil.showLong(ShopCartActivity.this, "删除失败!");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
     @Override
     public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked)
     {
-        ProductInfo product = (ProductInfo) selva.getChild(groupPosition, childPosition);
-        int currentCount = product.getCount();
+        ProductBean product = (ProductBean) selva.getChild(groupPosition, childPosition);
+        int currentCount = product.getNum();
         currentCount++;
-        product.setCount(currentCount);
+        product.setNum(currentCount);
         ((TextView) showCountView).setText(currentCount + "");
-
         selva.notifyDataSetChanged();
         calculate();
     }
@@ -227,12 +295,12 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     @Override
     public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked)
     {
-        ProductInfo product = (ProductInfo) selva.getChild(groupPosition, childPosition);
-        int currentCount = product.getCount();
+        ProductBean product = (ProductBean) selva.getChild(groupPosition, childPosition);
+        int currentCount = product.getNum();
         if (currentCount == 1)
             return;
         currentCount--;
-        product.setCount(currentCount);
+        product.setNum(currentCount);
         ((TextView) showCountView).setText(currentCount + "");
         selva.notifyDataSetChanged();
         calculate();
@@ -242,7 +310,7 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     public void checkGroup(int groupPosition, boolean isChecked)
     {
         GroupInfo group = groups.get(groupPosition);
-        List<ProductInfo> childs = children.get(group.getId());
+        List<ProductBean> childs = children.get(group.getId());
         for (int i = 0; i < childs.size(); i++)
         {
             childs.get(i).setChoosed(isChecked);
@@ -260,7 +328,7 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     {
         boolean allChildSameState = true;// 判断改组下面的所有子元素是否是同一种状态
         GroupInfo group = groups.get(groupPosition);
-        List<ProductInfo> childs = children.get(group.getId());
+        List<ProductBean> childs = children.get(group.getId());
         for (int i = 0; i < childs.size(); i++)
         {
             if (childs.get(i).isChoosed() != isChecked)
@@ -304,7 +372,7 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
         {
             groups.get(i).setChoosed(cbCheck.isChecked());
             GroupInfo group = groups.get(i);
-            List<ProductInfo> childs = children.get(group.getId());
+            List<ProductBean> childs = children.get(group.getId());
             for (int j = 0; j < childs.size(); j++)
             {
                 childs.get(j).setChoosed(cbCheck.isChecked());
@@ -327,18 +395,84 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
         for (int i = 0; i < groups.size(); i++)
         {
             GroupInfo group = groups.get(i);
-            List<ProductInfo> childs = children.get(group.getId());
+            List<ProductBean> childs = children.get(group.getId());
             for (int j = 0; j < childs.size(); j++)
             {
-                ProductInfo product = childs.get(j);
+                ProductBean product = childs.get(j);
                 if (product.isChoosed())
                 {
                     totalCount++;
-                    totalPrice += product.getPrice() * product.getCount();
+                    totalPrice += product.getCost() * product.getNum();
                 }
             }
         }
         tvTotalPrice.setText("￥" + totalPrice);
         tvGoToPay.setText("去支付(" + totalCount + ")");
+    }
+    private void getCartData(){
+        HashMap<String,String> param=new HashMap<>();
+        param.put("userId",userId);
+        HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().get("cart/"
+                , param, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
+
+                    @Override
+
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+//                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONArray array=object.getJSONArray("data");
+                                    List<ProductBean> products= new Gson().fromJson(array.toString(),new TypeToken<ArrayList<ProductBean>>(){}.getType());
+                                    if(products.size()==0){
+                                            groups.clear();
+                                            children.remove(gourpId);
+                                    }else {
+                                            children.remove(gourpId);
+                                            children.put(gourpId, products);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
+                                    }
+                                    selva.notifyDataSetChanged();
+                                    for (int k = 0; k < selva.getGroupCount(); k++) {
+                                        exListView.expandGroup(k);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
+                                    }
+                                    calculate();
+                                } else {
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
     }
 }
