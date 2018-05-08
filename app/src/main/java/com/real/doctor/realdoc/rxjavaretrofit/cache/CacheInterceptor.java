@@ -37,7 +37,7 @@ public class CacheInterceptor implements Interceptor {
         if (NetworkUtil.isNetworkAvailable(context)) {
             Response response = chain.proceed(request);
             // read from cache for 60 s
-            int maxAge = 60;
+            int maxAge = 0;
             String cacheControl = request.cacheControl().toString();
             Log.e("Tamic", "60s load cahe" + cacheControl);
             return response.newBuilder()
