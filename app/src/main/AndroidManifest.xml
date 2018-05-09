@@ -26,7 +26,7 @@
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.android7.fileprovider"
@@ -45,16 +45,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/__picker_provider_paths" />
         </provider>
-        <provider
-            android:name="com.real.doctor.realdoc.photopicker.utils.PhotoFileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/__picker_provider_paths" />
-        </provider>
-        -->
+
         <activity android:name=".activity.SplashActivity">
 
         </activity>
