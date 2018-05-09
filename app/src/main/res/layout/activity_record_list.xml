@@ -33,12 +33,12 @@
                     android:id="@+id/select_time_record"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:background="@drawable/my_tab_background"
                     android:drawableRight="@mipmap/ic_arrow_down_black"
-                    android:layout_gravity="center"
-                    android:singleLine="true"
-                    android:padding="10dp"
                     android:gravity="center"
+                    android:padding="10dp"
+                    android:singleLine="true"
                     android:text="@string/select_time_record"
                     android:textColor="@color/text_primary_color" />
             </LinearLayout>
@@ -57,9 +57,9 @@
                     android:id="@+id/select_disease_record"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:background="@drawable/my_tab_background"
                     android:drawableRight="@mipmap/ic_arrow_down_black"
-                    android:layout_gravity="center"
                     android:gravity="center"
                     android:padding="10dp"
                     android:singleLine="true"
@@ -76,7 +76,7 @@
             android:layout_below="@id/select_linear"
             android:background="@android:color/white"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -365,6 +365,10 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
             imageBean.setImgUrl("");
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
+        } else if (requestCode == RESULT_OK && requestCode == 0x100) {
+            illLabels.refreshDrawableState();
+        } else if (requestCode == RESULT_OK && requestCode == 0x110) {
+            hospitalLabels.refreshDrawableState();
         }
     }
 

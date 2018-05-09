@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -52,6 +53,10 @@ public class IllLabelActivity extends BaseActivity {
             public void onLabelClick(TextView label, Object data, int position) {
                 LabelBean illObject = (LabelBean) data;
                 String illLabel = illObject.getName();
+                Intent intent = new Intent();
+                intent.putExtra("disease",illLabel);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }

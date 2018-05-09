@@ -99,7 +99,6 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
         recordListlRecycleView.setAdapter(docDetailAdapter);
         final Calendar calendar = Calendar.getInstance();
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), true);
-        selectTimeLinear.setVisibility(View.GONE);
         //疾病列表
         diseaseList = instance.queryDiseaseList(RealDocApplication.getDaoSession(RecordListActivity.this));
         //创建布局管理
