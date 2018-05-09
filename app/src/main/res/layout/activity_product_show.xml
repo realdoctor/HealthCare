@@ -2,15 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/finish_back"
-        android:layout_width="55.0dip"
-        android:layout_height="20.0dip"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10.0dip"
-        android:background="@drawable/finish_back_white_selector"
-        android:clickable="true" />
+
     <ScrollView
         android:id="@+id/sc_id"
         android:layout_above="@+id/rl_bottom"
@@ -29,60 +21,45 @@
          <LinearLayout
              android:layout_width="match_parent"
              android:orientation="vertical"
+             android:paddingLeft="@dimen/dp_4"
+             android:paddingRight="@dimen/dp_4"
              android:layout_height="wrap_content">
              <RelativeLayout
                  android:layout_width="match_parent"
                  android:orientation="horizontal"
-                 android:padding="15dp"
+                 android:paddingTop="@dimen/dp_4"
+                 android:paddingBottom="@dimen/dp_4"
                  android:layout_height="wrap_content">
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:text="@string/productname"
-                     android:layout_alignParentLeft="true"
-                     android:layout_height="wrap_content" />
                  <TextView
                      android:id="@+id/tv_pName"
                      android:layout_width="wrap_content"
-                     android:layout_alignParentRight="true"
+                     android:layout_alignParentLeft="true"
+                     android:textColor="@color/black"
                      android:layout_height="wrap_content" />
              </RelativeLayout>
              <RelativeLayout
                  android:layout_width="match_parent"
-                 android:padding="15dp"
                  android:layout_height="wrap_content">
                  <TextView
                      android:layout_width="wrap_content"
                      android:layout_alignParentLeft="true"
+                     android:padding="@dimen/dp_4"
                      android:text="@string/price"
                      android:layout_height="wrap_content" />
                  <TextView
                      android:id="@+id/tv_price"
                      android:layout_width="wrap_content"
+                     android:textColor="@color/red_light"
                      android:layout_alignParentRight="true"
                      android:layout_height="wrap_content" />
              </RelativeLayout>
              <RelativeLayout
                  android:layout_width="match_parent"
-                 android:padding="15dp"
-                 android:layout_height="wrap_content">
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:text="@string/company"
-                     android:layout_alignParentLeft="true"
-                     android:layout_height="wrap_content" />
-                 <TextView
-                     android:id="@+id/tv_pCompay"
-                     android:layout_width="wrap_content"
-                     android:layout_alignParentRight="true"
-                     android:layout_height="wrap_content" />
-             </RelativeLayout>
-             <RelativeLayout
-                 android:layout_width="match_parent"
-                 android:padding="15dp"
                  android:layout_height="wrap_content">
                  <TextView
                      android:layout_width="wrap_content"
                      android:text="@string/property"
+                     android:padding="@dimen/dp_4"
                      android:layout_alignParentLeft="true"
                      android:layout_height="wrap_content" />
                  <TextView
@@ -91,48 +68,76 @@
                      android:layout_alignParentRight="true"
                      android:layout_height="wrap_content" />
              </RelativeLayout>
+             <RelativeLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+                 <TextView
+                     android:id="@+id/tv_description"
+                     android:layout_width="wrap_content"
+                     android:layout_alignParentRight="true"
+                     android:layout_height="wrap_content" />
+             </RelativeLayout>
+
          </LinearLayout>
         </LinearLayout>
 
     </ScrollView>
-    <RelativeLayout
+    <LinearLayout
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:background="@drawable/circle_back"
+        android:id="@+id/finish_back"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:clickable="true" >
+        <ImageView
+            android:layout_width="20dp"
+            android:background="@drawable/arraw_right"
+            android:layout_gravity="center"
+            android:layout_height="20dp" />
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal"
+        android:layout_height="50dp">
         <TextView
             android:layout_width="match_parent"
             android:id="@+id/tv_cart"
             android:text="@string/shopcart"
-            android:layout_toLeftOf="@+id/tv_incart"
-            android:textSize="20sp"
+            android:textSize="@dimen/sp_16"
+            android:gravity="center"
+            android:layout_weight="1"
             android:textColor="@color/white"
-            android:padding="20dp"
-            android:background="@color/orange"
+            android:background="@color/red_light"
             android:layout_centerVertical="true"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
+
         <TextView
-            android:layout_width="wrap_content"
             android:id="@+id/tv_incart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/yellow"
+            android:gravity="center"
+            android:layout_weight="1"
             android:text="@string/inshopcart"
-            android:layout_toLeftOf="@+id/tv_buy"
-            android:textSize="20sp"
             android:textColor="@color/white"
-            android:padding="20dp"
-            android:background="@color/orange"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content" />
+            android:textSize="@dimen/sp_16"
+            />
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:id="@+id/tv_buy"
             android:text="@string/buy"
             android:textColor="@color/white"
-            android:layout_alignParentRight="true"
-            android:textSize="20sp"
-            android:padding="20dp"
-            android:background="@color/red_light"
+            android:textSize="@dimen/sp_16"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@color/orange"
             android:layout_centerVertical="true"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </RelativeLayout>

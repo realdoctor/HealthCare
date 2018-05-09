@@ -1,9 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-      android:orientation="vertical"
-    >
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical">
+	<com.scwang.smartrefresh.layout.SmartRefreshLayout
+		android:id="@+id/refreshLayout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@android:color/white"
+		app:srlAccentColor="@android:color/darker_gray"
+		app:srlEnableLoadmore="true"
+		app:srlEnablePreviewInEditMode="true"
+		app:srlPrimaryColor="@android:color/white">
+		<!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
+		<!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
+		<com.scwang.smartrefresh.layout.header.ClassicsHeader
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:srlClassicsSpinnerStyle="FixedBehind"
+			app:srlDrawableArrowSize="20dp"
+			app:srlDrawableMarginRight="20dp"
+			app:srlDrawableProgressSize="20dp"
+			app:srlEnableLastTime="true"
+			app:srlFinishDuration="500"
+			app:srlTextSizeTime="10dp"
+			app:srlTextSizeTitle="16sp"
+			app:srlTextTimeMarginTop="2dp" />
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -16,6 +39,7 @@
     		    android:layout_height="match_parent"
     		    android:choiceMode="singleChoice"
     		    android:scrollbars="none"
+				android:visibility="gone"
     		    android:divider="@color/transparent"
     		    android:listSelector="#00000000"
     		    android:layout_weight="3"
@@ -31,4 +55,8 @@
     		    android:background="@color/white">
        		    </ListView>
     </LinearLayout>
+		<com.scwang.smartrefresh.layout.footer.ClassicsFooter
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
+	</com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

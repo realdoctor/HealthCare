@@ -8,6 +8,7 @@
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="gray">#5000</color>
+    <color name="graytransparent">#80BFBFBF</color>
     <color name="line">#e7e7e7</color>
     <color name="transparent">#0000</color>
     <color name="main">#2395FF</color>
@@ -18,7 +19,7 @@
     <color name="purple">#A577FB</color>
 
     <color name="black_transparent">#8000</color>
-
+    <color name="yellow">#FFA500</color>
     <color name="text0">#464646</color>
     <color name="text1">#7e7e7e</color>
     <color name="text2">#969696</color>
