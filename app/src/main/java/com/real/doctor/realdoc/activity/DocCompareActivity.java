@@ -110,7 +110,7 @@ public class DocCompareActivity extends BaseActivity {
                     hospital.setText("2." + hospitalTwo);
                 }
                 if (EmptyUtils.isNotEmpty(hospitalOne) && EmptyUtils.isNotEmpty(hospitalTwo)) {
-                    doctor.setText("1." + hospitalOne + "\n" + "2." + hospitalTwo);
+                    hospital.setText("1." + hospitalOne + "\n" + "2." + hospitalTwo);
                 }
                 if (EmptyUtils.isNotEmpty(doctorOne)) {
                     doctor.setText("1." + doctorOne);
