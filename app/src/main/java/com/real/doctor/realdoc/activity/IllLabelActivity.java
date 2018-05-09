@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.real.doctor.realdoc.view.LabelsView;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class IllLabelActivity extends BaseActivity {
 
@@ -27,15 +29,15 @@ public class IllLabelActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
+        ButterKnife.bind(this);
     }
 
     @Override
     public void initData() {
-        labelList.add(new LabelBean("妇科病", 3));
-        labelList.add(new LabelBean("老年痴呆", 4));
-        labelList.add(new LabelBean("脑结核瘤", 5));
-        labelList.add(new LabelBean("颅咽管瘤", 6));
+        labelList.add(new LabelBean("老年痴呆", 1));
+        labelList.add(new LabelBean("脑结核瘤", 2));
+        labelList.add(new LabelBean("颅咽管瘤", 3));
+        labelList.add(new LabelBean("妇科病", 4));
         illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
             @Override
             public CharSequence getLabelText(TextView label, int position, LabelBean data) {
@@ -51,6 +53,10 @@ public class IllLabelActivity extends BaseActivity {
             public void onLabelClick(TextView label, Object data, int position) {
                 LabelBean illObject = (LabelBean) data;
                 String illLabel = illObject.getName();
+                Intent intent = new Intent();
+                intent.putExtra("disease",illLabel);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }

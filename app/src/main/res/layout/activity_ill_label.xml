@@ -4,11 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/title"
+        layout="@layout/title_bar" />
+
     <com.real.doctor.realdoc.view.LabelsView
         android:id="@+id/ill_labels"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_below="@id/title"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
         android:minHeight="25dp"
         android:padding="5dp"
         app:labelBackground="@drawable/label_bg"

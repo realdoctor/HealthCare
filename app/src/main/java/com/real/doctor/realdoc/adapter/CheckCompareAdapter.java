@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 
@@ -85,10 +87,16 @@ public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapte
         final SaveDocBean saveDocBean = mSaveDocBean.get(holder.getAdapterPosition());
         holder.mTvTitle.setText(saveDocBean.getIll());
         holder.mTvContent.setText(saveDocBean.getHospital());
+        holder.mTvTime.setText(DateUtil.timeStamp2Date(saveDocBean.getTime(), "y年M月d日"));
         String mFolder = saveDocBean.getFolder();
-        String[] imgs = saveDocBean.getImgs().split(";");
-
-        GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir() + mFolder + File.separator + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        String mImg = saveDocBean.getImgs();
+        if (EmptyUtils.isNotEmpty(mImg)) {
+            holder.mRadioImg.setVisibility(View.VISIBLE);
+            String[] imgs = mImg.split(";");
+            GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir() + mFolder + File.separator + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        } else {
+            holder.mRadioImg.setVisibility(View.GONE);
+        }
         Log.d("TAG", "onBindViewHolder() called with: holder = [" + holder + "], position = [" + position + "]");
         holder.mCheckBox.setSelected(mSaveDocBean.get(position).getIsSelect());
         holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -164,6 +172,8 @@ public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapte
         TextView mTvTitle;
         @BindView(R.id.tv_content)
         TextView mTvContent;
+        @BindView(R.id.tv_time)
+        TextView mTvTime;
         @BindView(R.id.root_view)
         RelativeLayout mRootView;
         @BindView(R.id.check_box)

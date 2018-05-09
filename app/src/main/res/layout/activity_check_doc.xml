@@ -28,7 +28,7 @@
             android:layout_centerVertical="true"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:text="上传"
+            android:text="病历图片打包"
             android:textColor="#ffffff"
             android:textSize="15sp" />
     </RelativeLayout>

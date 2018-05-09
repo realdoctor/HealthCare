@@ -6,12 +6,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.CheckPhoneUtils;
+import com.real.doctor.realdoc.util.CountDownUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.NetworkUtil;
@@ -22,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,8 +47,13 @@ public class RegisterActivity extends BaseActivity {
     EditTextPassword userepassword;
     @BindView(R.id.button_register_login)
     Button registerLoginBtn;
+    @BindView(R.id.send_verify_code)
+    TextView sendVerifyCode;
+    @BindView(R.id.verify_code)
+    EditText verifyCode;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    private CountDownUtil count;
 
     @Override
     public int getLayoutId() {
@@ -57,7 +67,9 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        count = new CountDownUtil(sendVerifyCode)
+                .setCountDownMillis(50000L)//倒计时50000ms
+                .setCountDownColor(android.R.color.holo_blue_light, android.R.color.darker_gray);//不同状态字体颜色
     }
 
     @Override
@@ -66,15 +78,16 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.button_register_login, R.id.finish_back})
+    @OnClick({R.id.button_register_login, R.id.finish_back, R.id.send_verify_code})
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
             switch (v.getId()) {
                 case R.id.button_register_login:
                     if (NetworkUtil.isNetworkAvailable(RegisterActivity.this)) {
                         String mobilePhone = phoneNumber.getText().toString().trim();
+                        String verify = verifyCode.getText().toString().trim();
                         String pwd = userepassword.getText().toString().trim();
-                        register(mobilePhone, pwd);
+                        register(mobilePhone, verify, pwd);
                     } else {
                         ToastUtil.showLong(RegisterActivity.this, "请链接互联网!");
                         return;
@@ -84,9 +97,85 @@ public class RegisterActivity extends BaseActivity {
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     finish();
                     break;
-
+                case R.id.send_verify_code:
+                    if (NetworkUtil.isNetworkAvailable(RegisterActivity.this)) {
+                        String mobilePhone = phoneNumber.getText().toString().trim();
+                        getVerifyCode(mobilePhone);
+                    }
+                    break;
             }
         }
+    }
+
+    private void getVerifyCode(String mobilePhone) {
+        Map<String, String> map = new HashMap<String, String>();
+        if (EmptyUtils.isEmpty(mobilePhone)) {
+            ToastUtil.showLong(RegisterActivity.this, "手机号为空!");
+            return;
+        }
+        if (!CheckPhoneUtils.isPhone(mobilePhone)) {
+            ToastUtil.showLong(RegisterActivity.this, "请输入正确的手机号!");
+            return;
+        }
+        map.put("mobilePhone", mobilePhone);
+        HttpRequestClient.getInstance(RegisterActivity.this).createBaseApi().get("user/sendCode"
+                , map, new BaseObserver<ResponseBody>(RegisterActivity.this) {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(RegisterActivity.this, "获取验证码失败!");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        String verify = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    if (DocUtils.hasValue(object, "data")) {
+                                        JSONObject obj = object.getJSONObject("data");
+                                        if (DocUtils.hasValue(obj, "code")) {
+                                            verify = obj.getString("code");
+                                        }
+                                        verifyCode.setText(verify.toString().trim());
+                                        verifyCode.requestFocus();
+                                        verifyCode.setSelection(verifyCode.getText().length());
+                                        count.start();
+                                    }
+                                } else {
+                                    ToastUtil.showLong(RegisterActivity.this, "获取验证码失败!");
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
     }
 
     @Override
@@ -94,13 +183,18 @@ public class RegisterActivity extends BaseActivity {
 
     }
 
-    private void register(String mobilePhone, String pwd) {
+    private void register(String mobilePhone, String verify, String pwd) {
         JSONObject json = null;
+        if (EmptyUtils.isEmpty(verify)) {
+            ToastUtil.showLong(RegisterActivity.this, "验证码不能为空!");
+            return;
+        }
         if (CheckPhoneUtils.isPhone(mobilePhone) && EmptyUtils.isNotEmpty(mobilePhone)) {
             if (EmptyUtils.isNotEmpty(pwd)) {
                 json = new JSONObject();
                 try {
                     json.put("mobilePhone", mobilePhone);
+                    json.put("verifyCode", verify);
                     json.put("pwd", pwd);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -157,7 +251,7 @@ public class RegisterActivity extends BaseActivity {
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();
                                 } else {
-                                    ToastUtil.showLong(RegisterActivity.this, "用户注册失败!");
+                                    ToastUtil.showLong(RegisterActivity.this, msg.toString().trim());
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();
                                 }

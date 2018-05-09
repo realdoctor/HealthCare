@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/select_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_linear_background"
+                android:paddingBottom="0.5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0.5dp"
+                android:paddingTop="0dp">
+
+                <TextView
+                    android:id="@+id/select_time_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/my_tab_background"
+                    android:drawableRight="@mipmap/ic_arrow_down_black"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/select_time_record"
+                    android:textColor="@color/text_primary_color" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_linear_background"
+                android:paddingBottom="0.5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0.5dp"
+                android:paddingTop="0dp">
+
+                <TextView
+                    android:id="@+id/select_disease_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/my_tab_background"
+                    android:drawableRight="@mipmap/ic_arrow_down_black"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/select_disease_record"
+                    android:textColor="@color/text_primary_color" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/select_time_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_linear"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/start_time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:background="@drawable/my_tab_background"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/start_time"
+                    android:textColor="@color/text_primary_color" />
+
+                <TextView
+                    android:id="@+id/start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/start_time_text"
+                    android:background="@drawable/my_tab_background"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary_color"
+                    tools:text="2015年5月5日" />
+
+                <ImageView
+                    android:id="@+id/add_start_time"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="50dp"
+                    android:background="@mipmap/add"
+                    android:clickable="true" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/grey_color3" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/end_time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:background="@drawable/my_tab_background"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/end_time"
+                    android:textColor="@color/text_primary_color" />
+
+                <TextView
+                    android:id="@+id/end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/end_time_text"
+                    android:background="@drawable/my_tab_background"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary_color"
+                    tools:text="2015年5月5日" />
+
+                <ImageView
+                    android:id="@+id/add_end_time"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="50dp"
+                    android:background="@mipmap/add"
+                    android:clickable="true" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/grey_color3" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/doc_grid_view_linear"
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:id="@+id/confirm_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="80dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_selector"
+                    android:text="@string/confirm_btn"
+                    android:textColor="@android:color/white"
+                    android:textSize="15.0sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/grey_color3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/select_disease_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_linear"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/select_disease_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/record_list_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    <!--    </com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
+</LinearLayout>

@@ -26,7 +26,7 @@
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.android7.fileprovider"
@@ -45,16 +45,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/__picker_provider_paths" />
         </provider>
-        <provider
-            android:name="com.real.doctor.realdoc.photopicker.utils.PhotoFileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/__picker_provider_paths" />
-        </provider>
-        -->
+
         <activity android:name=".activity.SplashActivity">
 
         </activity>
@@ -70,6 +61,7 @@
             android:name=".activity.RegisterActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
+
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -121,6 +113,7 @@
         <activity
             android:name=".activity.ProgressBarActivity"
             android:hardwareAccelerated="false"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.DocCompareActivity"
@@ -137,9 +130,7 @@
         <activity
             android:name=".activity.ProductShowActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.CheckDocActivity"
             android:hardwareAccelerated="false"
@@ -154,6 +145,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.RecordListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".activity.CheckCompareActivity"

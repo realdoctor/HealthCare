@@ -32,7 +32,12 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         public final static Property Folder = new Property(5, String.class, "folder", false, "FOLDER");
         public final static Property Imgs = new Property(6, String.class, "imgs", false, "IMGS");
         public final static Property Advice = new Property(7, String.class, "advice", false, "ADVICE");
-        public final static Property IsSelect = new Property(8, boolean.class, "isSelect", false, "IS_SELECT");
+        public final static Property OrgCode = new Property(8, String.class, "orgCode", false, "ORG_CODE");
+        public final static Property PatientDiagId = new Property(9, String.class, "patientDiagId", false, "PATIENT_DIAG_ID");
+        public final static Property PatientId = new Property(10, String.class, "patientId", false, "PATIENT_ID");
+        public final static Property VisitDeptName = new Property(11, String.class, "visitDeptName", false, "VISIT_DEPT_NAME");
+        public final static Property VisitWay = new Property(12, String.class, "visitWay", false, "VISIT_WAY");
+        public final static Property IsSelect = new Property(13, boolean.class, "isSelect", false, "IS_SELECT");
     }
 
 
@@ -56,7 +61,12 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
                 "\"FOLDER\" TEXT," + // 5: folder
                 "\"IMGS\" TEXT," + // 6: imgs
                 "\"ADVICE\" TEXT," + // 7: advice
-                "\"IS_SELECT\" INTEGER NOT NULL );"); // 8: isSelect
+                "\"ORG_CODE\" TEXT," + // 8: orgCode
+                "\"PATIENT_DIAG_ID\" TEXT," + // 9: patientDiagId
+                "\"PATIENT_ID\" TEXT," + // 10: patientId
+                "\"VISIT_DEPT_NAME\" TEXT," + // 11: visitDeptName
+                "\"VISIT_WAY\" TEXT," + // 12: visitWay
+                "\"IS_SELECT\" INTEGER NOT NULL );"); // 13: isSelect
     }
 
     /** Drops the underlying database table. */
@@ -108,7 +118,32 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         if (advice != null) {
             stmt.bindString(8, advice);
         }
-        stmt.bindLong(9, entity.getIsSelect() ? 1L: 0L);
+ 
+        String orgCode = entity.getOrgCode();
+        if (orgCode != null) {
+            stmt.bindString(9, orgCode);
+        }
+ 
+        String patientDiagId = entity.getPatientDiagId();
+        if (patientDiagId != null) {
+            stmt.bindString(10, patientDiagId);
+        }
+ 
+        String patientId = entity.getPatientId();
+        if (patientId != null) {
+            stmt.bindString(11, patientId);
+        }
+ 
+        String visitDeptName = entity.getVisitDeptName();
+        if (visitDeptName != null) {
+            stmt.bindString(12, visitDeptName);
+        }
+ 
+        String visitWay = entity.getVisitWay();
+        if (visitWay != null) {
+            stmt.bindString(13, visitWay);
+        }
+        stmt.bindLong(14, entity.getIsSelect() ? 1L: 0L);
     }
 
     @Override
@@ -154,7 +189,32 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         if (advice != null) {
             stmt.bindString(8, advice);
         }
-        stmt.bindLong(9, entity.getIsSelect() ? 1L: 0L);
+ 
+        String orgCode = entity.getOrgCode();
+        if (orgCode != null) {
+            stmt.bindString(9, orgCode);
+        }
+ 
+        String patientDiagId = entity.getPatientDiagId();
+        if (patientDiagId != null) {
+            stmt.bindString(10, patientDiagId);
+        }
+ 
+        String patientId = entity.getPatientId();
+        if (patientId != null) {
+            stmt.bindString(11, patientId);
+        }
+ 
+        String visitDeptName = entity.getVisitDeptName();
+        if (visitDeptName != null) {
+            stmt.bindString(12, visitDeptName);
+        }
+ 
+        String visitWay = entity.getVisitWay();
+        if (visitWay != null) {
+            stmt.bindString(13, visitWay);
+        }
+        stmt.bindLong(14, entity.getIsSelect() ? 1L: 0L);
     }
 
     @Override
@@ -173,7 +233,12 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // folder
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // imgs
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // advice
-            cursor.getShort(offset + 8) != 0 // isSelect
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // orgCode
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // patientDiagId
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // patientId
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // visitDeptName
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // visitWay
+            cursor.getShort(offset + 13) != 0 // isSelect
         );
         return entity;
     }
@@ -188,7 +253,12 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         entity.setFolder(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setImgs(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setAdvice(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setIsSelect(cursor.getShort(offset + 8) != 0);
+        entity.setOrgCode(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setPatientDiagId(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setPatientId(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setVisitDeptName(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setVisitWay(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setIsSelect(cursor.getShort(offset + 13) != 0);
      }
     
     @Override

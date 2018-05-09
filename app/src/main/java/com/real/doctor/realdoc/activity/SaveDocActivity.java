@@ -26,6 +26,7 @@ import com.real.doctor.realdoc.model.LabelBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.photopicker.PhotoPreview;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileProvider7;
 import com.real.doctor.realdoc.util.SDCardUtils;
@@ -174,6 +175,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     @OnClick({R.id.button_save_doc, R.id.right_title, R.id.finish_back, R.id.more_ill, R.id.more_hospital})
     public void widgetClick(View v) {
+        Intent intent = null;
         switch (v.getId()) {
             case R.id.button_save_doc:
                 //TODO 判断是否有数据库的存在
@@ -195,13 +197,13 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 bean.setDoctor(doctorName);
                 StringBuilder sb = new StringBuilder();
                 StringBuilder ad = new StringBuilder();
-                long time = 0;
+                String time = null;
                 String folder = null;
                 //将数据存储到数据库中
                 //将存储到sdcard中
                 if (SDCardUtils.isSDCardEnable()) {
                     imageList.remove(imageList.size() - 1); // 现将加号移除（有加号才能显示此按钮）
-                    time = System.currentTimeMillis();
+                    time = DateUtil.timeStamp();
                     folder = String.valueOf(time);
                     for (ImageBean image : imageList) {
                         String img = image.getImgUrl();
@@ -217,8 +219,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                     return;
                 }
                 bean.setFolder(folder);
-                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                bean.setTime(sf.format(time));
+                bean.setTime(time);
                 bean.setImgs(sb.toString());
                 bean.setAdvice(ad.toString());
                 SaveDocManager instance = SaveDocManager.getInstance(SaveDocActivity.this);
@@ -232,7 +233,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 }
                 break;
             case R.id.right_title:
-                actionStart(SaveDocActivity.this, DocDetailActivity.class);
+                actionStart(SaveDocActivity.this, RecordListActivity.class);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.finish_back:
@@ -240,9 +241,13 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 break;
             case R.id.more_ill:
                 //进入疾病标签页
+                intent = new Intent(this, IllLabelActivity.class);
+                startActivityForResult(intent, 0x100);
                 break;
             case R.id.more_hospital:
                 //进入医院标签页
+                intent = new Intent(this, HospitalLabelActivity.class);
+                startActivityForResult(intent, 0x110);
                 break;
         }
     }
@@ -360,6 +365,10 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
             imageBean.setImgUrl("");
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
+        } else if (requestCode == RESULT_OK && requestCode == 0x100) {
+            illLabels.refreshDrawableState();
+        } else if (requestCode == RESULT_OK && requestCode == 0x110) {
+            hospitalLabels.refreshDrawableState();
         }
     }
 

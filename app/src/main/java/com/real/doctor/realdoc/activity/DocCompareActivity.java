@@ -13,6 +13,7 @@ import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.photopicker.PhotoPreview;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
@@ -72,51 +73,62 @@ public class DocCompareActivity extends BaseActivity {
             mList = getIntent().getParcelableArrayListExtra("mSelectList");
             if (mList.size() > 0 && mList.size() == 2) {
                 String illOne = mList.get(0).getIll();
+                String hospitalOne = mList.get(0).getHospital();
                 String doctorOne = mList.get(0).getDoctor();
                 folderOne = mList.get(0).getFolder();
                 String timeOne = mList.get(0).getTime();
                 String imgsOne = mList.get(0).getImgs();
-                imgOne = imgsOne.split(";");
-
-                if (EmptyUtils.isNotEmpty(folderOne)) {
+                if (EmptyUtils.isNotEmpty(imgsOne)) {
+                    imgOne = imgsOne.split(";");
+                }
+                if (EmptyUtils.isNotEmpty(folderOne) && EmptyUtils.isNotEmpty(imgOne)) {
                     String pathOne = SDCardUtils.getPictureDir() + folderOne + File.separator + imgOne[0];
                     GlideUtils.loadImageViewLoding(DocCompareActivity.this, pathOne, imageOne, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+                } else {
+                    imageOne.setVisibility(View.GONE);
                 }
                 String illTwo = mList.get(1).getIll();
+                String hospitalTwo = mList.get(1).getHospital();
                 String doctorTwo = mList.get(1).getDoctor();
                 folderTwo = mList.get(1).getFolder();
                 String timeTwo = mList.get(1).getTime();
                 String imgsTwo = mList.get(1).getImgs();
-                imgTwo = imgsTwo.split(";");
-                if (EmptyUtils.isNotEmpty(folderTwo)) {
+                if (EmptyUtils.isNotEmpty(imgsTwo)) {
+                    imgTwo = imgsTwo.split(";");
+                }
+                if (EmptyUtils.isNotEmpty(folderTwo) && EmptyUtils.isNotEmpty(imgTwo)) {
                     String pathTwo = SDCardUtils.getPictureDir() + folderTwo + File.separator + imgTwo[0];
                     GlideUtils.loadImageViewLoding(DocCompareActivity.this, pathTwo, imageTwo, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
-                }
-                //填入其他字段
-                if (EmptyUtils.isNotEmpty(illOne) && EmptyUtils.isNotEmpty(illTwo) && StringUtils.equals(illOne, illTwo)) {
-                    ill.setText(illOne);
-                    if (EmptyUtils.isNotEmpty(doctorOne)) {
-                        hospital.setText("1." + doctorOne);
-                    }
-                    if (EmptyUtils.isNotEmpty(doctorTwo)) {
-                        hospital.setText("2." + doctorTwo);
-                    }
-                    if (EmptyUtils.isNotEmpty(doctorOne) && EmptyUtils.isNotEmpty(doctorTwo)) {
-                        hospital.setText("1." + doctorOne + "\n" + "2." + doctorTwo);
-                    }
-                    if (EmptyUtils.isNotEmpty(timeOne)) {
-                        time.setText("1." + timeOne);
-                    }
-                    if (EmptyUtils.isNotEmpty(timeTwo)) {
-                        time.setText("2." + timeTwo);
-                    }
-                    if (EmptyUtils.isNotEmpty(timeOne) && EmptyUtils.isNotEmpty(timeTwo)) {
-                        time.setText("1." + timeOne + "\n" + "2." + timeTwo);
-                    }
                 } else {
-                    //该情况不会发生
-                    ToastUtil.showLong(DocCompareActivity.this, "疾病不相同，不能进行比较!");
-                    return;
+                    imageTwo.setVisibility(View.GONE);
+                }
+                ill.setText("1." + illOne + "\n" + "2." + illTwo);
+                if (EmptyUtils.isNotEmpty(hospitalOne)) {
+                    hospital.setText("1." + hospitalOne);
+                }
+                if (EmptyUtils.isNotEmpty(hospitalTwo)) {
+                    hospital.setText("2." + hospitalTwo);
+                }
+                if (EmptyUtils.isNotEmpty(hospitalOne) && EmptyUtils.isNotEmpty(hospitalTwo)) {
+                    doctor.setText("1." + hospitalOne + "\n" + "2." + hospitalTwo);
+                }
+                if (EmptyUtils.isNotEmpty(doctorOne)) {
+                    doctor.setText("1." + doctorOne);
+                }
+                if (EmptyUtils.isNotEmpty(doctorTwo)) {
+                    doctor.setText("2." + doctorTwo);
+                }
+                if (EmptyUtils.isNotEmpty(doctorOne) && EmptyUtils.isNotEmpty(doctorTwo)) {
+                    doctor.setText("1." + doctorOne + "\n" + "2." + doctorTwo);
+                }
+                if (EmptyUtils.isNotEmpty(timeOne)) {
+                    time.setText("1." + DateUtil.timeStamp2Date(timeOne, "yyyy-MM-dd hh:mm:ss"));
+                }
+                if (EmptyUtils.isNotEmpty(timeTwo)) {
+                    time.setText("2." + DateUtil.timeStamp2Date(timeTwo, "yyyy-MM-dd hh:mm:ss"));
+                }
+                if (EmptyUtils.isNotEmpty(timeOne) && EmptyUtils.isNotEmpty(timeTwo)) {
+                    time.setText("1." + timeOne + "\n" + "2." + timeTwo);
                 }
             }
         }
