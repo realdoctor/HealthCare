@@ -135,7 +135,7 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.ProductShowByCategoryActivity"
+            android:name=".activity.ProductShowActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
 
@@ -145,7 +145,7 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.SaveDocActivity"
+            android:name=".activity.ProductShowByCategoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -172,7 +172,12 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
             android:theme="@style/FloatDialogTheme"></activity>
-
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" >
+        </activity>
         <service
             android:name=".service.UpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
