@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
+import com.google.gson.JsonObject;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.DocDetailActivity;
 import com.real.doctor.realdoc.adapter.DocDetailAdapter;
@@ -16,6 +17,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
+import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 
 import org.json.JSONException;
@@ -49,6 +51,12 @@ public class RealDocApplication extends Application {
     private static DaoMaster daoMaster;
 
     private static DaoSession daoSession;
+
+    private SaveDocManager mInstance;
+    /**
+     * 本地数据库中数据条数
+     */
+    private int count;
 
     List<SaveDocBean> recordList = new ArrayList<>();
 
@@ -106,8 +114,11 @@ public class RealDocApplication extends Application {
     }
 
     private void getRecordListData() {
+        mInstance = SaveDocManager.getInstance(getContext());
+        count = (int) mInstance.getTotalCount();
         Map<String, String> map = new HashMap<String, String>();
         map.put("mobilePhone", "13777850036");
+        map.put("clientNum", String.valueOf(count));
         HttpRequestClient.getInstance(getContext()).createBaseApi().get("patient"
                 , map, new BaseObserver<ResponseBody>(getContext()) {
 
@@ -121,16 +132,14 @@ public class RealDocApplication extends Application {
                         ToastUtil.showLong(getContext(), "获取病历列表出错!");
                     }
 
-                    @Override
-                    public void onComplete() {
 
-                    }
 
                     @Override
                     protected void onHandleSuccess(ResponseBody responseBody) {
                         String data = null;
                         String msg = null;
                         String code = null;
+                        String total = null;
                         try {
                             data = responseBody.string().toString();
                             try {
@@ -141,14 +150,22 @@ public class RealDocApplication extends Application {
                                 if (DocUtils.hasValue(object, "code")) {
                                     code = object.getString("code");
                                 }
+
                                 if (msg.equals("ok") && code.equals("0")) {
                                     if (DocUtils.hasValue(object, "data")) {
-                                        List<SaveDocBean> list = GsonUtil.GsonToList(object.getJSONArray("data").toString(), SaveDocBean.class);
-                                        if (EmptyUtils.isNotEmpty(list) && list.size() > 0) {
-                                            SaveDocManager instance = SaveDocManager.getInstance(getContext());
-                                            if (EmptyUtils.isNotEmpty(instance)) {
-                                                instance.insertSaveDoc(getContext(), list);
-                                                ToastUtil.showLong(getContext(), "获取病历数据列表成功!");
+                                        JSONObject obj = object.getJSONObject("data");
+                                        if (DocUtils.hasValue(obj, "total")) {
+                                            total = obj.getString("total");
+                                        }
+                                        if (!StringUtils.equals(String.valueOf(count), total)) {
+                                            if (DocUtils.hasValue(obj, "list")) {
+                                                List<SaveDocBean> list = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), SaveDocBean.class);
+                                                if (EmptyUtils.isNotEmpty(list) && list.size() > 0) {
+                                                    if (EmptyUtils.isNotEmpty(mInstance)) {
+                                                        mInstance.insertSaveDoc(getContext(), list);
+                                                        ToastUtil.showLong(getContext(), "获取病历数据列表成功!");
+                                                    }
+                                                }
                                             }
                                         }
                                     }

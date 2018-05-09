@@ -154,10 +154,12 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
                     selectTimeLinear.setVisibility(View.VISIBLE);
                     startTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "y年M月d日"));
                     endTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "y年M月d日"));
+                    selectTimeLinear.clearAnimation();
                     selectDiseaseLinear.setVisibility(View.GONE);
                     selectDiseaseLinearFlag = false;
                     selectTimeLinearFlag = true;
                 } else {
+                    selectTimeLinear.clearAnimation();
                     selectTimeLinear.setVisibility(View.GONE);
                     selectTimeLinearFlag = false;
                     selectDiseaseLinearFlag = true;
@@ -171,6 +173,7 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
                     selectTimeLinearFlag = false;
                     selectDiseaseLinearFlag = true;
                 } else {
+                    selectDiseaseLinear.clearAnimation();
                     selectDiseaseLinear.setVisibility(View.GONE);
                     selectDiseaseLinearFlag = false;
                     selectTimeLinearFlag = true;

@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
@@ -14,9 +15,12 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class IllLabelActivity extends BaseActivity {
 
+    @BindView(R.id.finish_back)
+    ImageView finishBack;
     @BindView(R.id.ill_labels)
     LabelsView illLabels;
     //疾病标签
@@ -54,7 +58,7 @@ public class IllLabelActivity extends BaseActivity {
                 LabelBean illObject = (LabelBean) data;
                 String illLabel = illObject.getName();
                 Intent intent = new Intent();
-                intent.putExtra("disease",illLabel);
+                intent.putExtra("disease", illLabel);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -62,8 +66,13 @@ public class IllLabelActivity extends BaseActivity {
     }
 
     @Override
+    @OnClick(R.id.finish_back)
     public void widgetClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.finish_back:
+                finish();
+            break;
+        }
     }
 
     @Override

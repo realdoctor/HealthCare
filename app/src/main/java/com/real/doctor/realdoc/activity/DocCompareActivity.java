@@ -140,13 +140,13 @@ public class DocCompareActivity extends BaseActivity {
         rightTitle.setText("病历打包上传");
         mListOne = new ArrayList<>();
         mListTwo = new ArrayList<>();
-        if (EmptyUtils.isNotEmpty(folderOne)) {
+        if (EmptyUtils.isNotEmpty(folderOne)&&EmptyUtils.isNotEmpty(imgOne)) {
             for (int i = 0; i < imgOne.length; i++) {
                 String path = SDCardUtils.getPictureDir() + folderOne + File.separator + imgOne[i];
                 mListOne.add(path);
             }
         }
-        if (EmptyUtils.isNotEmpty(folderTwo)) {
+        if (EmptyUtils.isNotEmpty(folderTwo)&&EmptyUtils.isNotEmpty(imgTwo)) {
             for (int i = 0; i < imgTwo.length; i++) {
                 String path = SDCardUtils.getPictureDir() + folderTwo + File.separator + imgTwo[i];
                 mListTwo.add(path);

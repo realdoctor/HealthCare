@@ -170,5 +170,16 @@ public class SaveDocManager {
         List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.like("%" + disease + "%")).list();
         return list;
     }
+
+    /**
+     * 查询病历list列表总共条数
+     */
+    public long getTotalCount() {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        return qb.buildCount().count();
+    }
+
 }
 

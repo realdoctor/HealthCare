@@ -66,145 +66,143 @@
                     android:text="@string/select_disease_record"
                     android:textColor="@color/text_primary_color" />
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/select_time_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/select_linear"
-            android:background="@android:color/white"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/start_time_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:background="@drawable/my_tab_background"
-                    android:padding="10dp"
-                    android:singleLine="true"
-                    android:text="@string/start_time"
-                    android:textColor="@color/text_primary_color" />
-
-                <TextView
-                    android:id="@+id/start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/start_time_text"
-                    android:background="@drawable/my_tab_background"
-                    android:padding="10dp"
-                    android:singleLine="true"
-                    android:textColor="@color/text_primary_color"
-                    tools:text="2015年5月5日" />
-
-                <ImageView
-                    android:id="@+id/add_start_time"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="50dp"
-                    android:background="@mipmap/add"
-                    android:clickable="true" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/grey_color3" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/end_time_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:background="@drawable/my_tab_background"
-                    android:padding="10dp"
-                    android:singleLine="true"
-                    android:text="@string/end_time"
-                    android:textColor="@color/text_primary_color" />
-
-                <TextView
-                    android:id="@+id/end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/end_time_text"
-                    android:background="@drawable/my_tab_background"
-                    android:padding="10dp"
-                    android:singleLine="true"
-                    android:textColor="@color/text_primary_color"
-                    tools:text="2015年5月5日" />
-
-                <ImageView
-                    android:id="@+id/add_end_time"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="50dp"
-                    android:background="@mipmap/add"
-                    android:clickable="true" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/grey_color3" />
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/doc_grid_view_linear"
-                android:gravity="center_horizontal">
-
-                <Button
-                    android:id="@+id/confirm_btn"
-                    android:layout_width="fill_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="80dp"
-                    android:layout_marginRight="80dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/button_selector"
-                    android:text="@string/confirm_btn"
-                    android:textColor="@android:color/white"
-                    android:textSize="15.0sp" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/grey_color3" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/select_disease_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/select_linear"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/select_disease_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
         </LinearLayout>
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/select_time_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/select_linear"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/start_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/my_tab_background"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="@string/start_time"
+                android:textColor="@color/text_primary_color" />
+
+            <TextView
+                android:id="@+id/start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/start_time_text"
+                android:background="@drawable/my_tab_background"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/text_primary_color"
+                tools:text="2015年5月5日" />
+
+            <ImageView
+                android:id="@+id/add_start_time"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dp"
+                android:background="@mipmap/add"
+                android:clickable="true" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_color3" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/end_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/my_tab_background"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="@string/end_time"
+                android:textColor="@color/text_primary_color" />
+
+            <TextView
+                android:id="@+id/end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/end_time_text"
+                android:background="@drawable/my_tab_background"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/text_primary_color"
+                tools:text="2015年5月5日" />
+
+            <ImageView
+                android:id="@+id/add_end_time"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dp"
+                android:background="@mipmap/add"
+                android:clickable="true" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_color3" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/doc_grid_view_linear"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/confirm_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_selector"
+                android:text="@string/confirm_btn"
+                android:textColor="@android:color/white"
+                android:textSize="15.0sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_color3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/select_disease_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/select_linear"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/select_disease_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    </LinearLayout>
     <!--    <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"

@@ -242,12 +242,12 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
             case R.id.more_ill:
                 //进入疾病标签页
                 intent = new Intent(this, IllLabelActivity.class);
-                startActivityForResult(intent, 0x100);
+                startActivityForResult(intent, 100);
                 break;
             case R.id.more_hospital:
                 //进入医院标签页
                 intent = new Intent(this, HospitalLabelActivity.class);
-                startActivityForResult(intent, 0x110);
+                startActivityForResult(intent, 110);
                 break;
         }
     }
@@ -359,16 +359,22 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
             imageBean.setImgUrl(path);
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
-        } else if (resultCode == 0 && !flag) {
+        } else if (resultCode == 0 && !flag && requestCode != 100 && requestCode != 110) {
             ImageBean imageBean = new ImageBean();
             imageBean.setSpareImage(R.mipmap.add);
             imageBean.setImgUrl("");
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
-        } else if (requestCode == RESULT_OK && requestCode == 0x100) {
-            illLabels.refreshDrawableState();
-        } else if (requestCode == RESULT_OK && requestCode == 0x110) {
-            hospitalLabels.refreshDrawableState();
+        } else if (resultCode == RESULT_OK && requestCode == 100) {
+            illLabels.clearAllSelect();
+            String disease = data.getStringExtra("disease");
+            ill.setText(disease);
+            ill.setSelection(ill.getText().length());
+        } else if (resultCode == RESULT_OK && requestCode == 110) {
+            hospitalLabels.clearAllSelect();
+            String hospitalLabel = data.getStringExtra("hospital");
+            hospital.setText(hospitalLabel);
+            hospital.setSelection(hospital.getText().length());
         }
     }
 
