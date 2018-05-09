@@ -94,9 +94,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".activity.ProductShowActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.real.doctor.realdoc.photopicker.PhotoPagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
