@@ -22,8 +22,17 @@ public class ProductBean implements Serializable {
    private int store;
    private String updateTime;
    private int num;
+   public String goodsId;
    protected boolean isChoosed;
-    private String goodsDescription;
+   private String goodsDescription;
+
+    public String getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(String goodsId) {
+        this.goodsId = goodsId;
+    }
 
     public String getGoodsDescription() {
         return goodsDescription;

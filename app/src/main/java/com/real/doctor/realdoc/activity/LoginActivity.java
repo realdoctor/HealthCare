@@ -21,6 +21,7 @@ import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.NetworkUtil;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.widget.EditTextPassword;
 import com.sina.weibo.sdk.auth.AccessTokenKeeper;
@@ -236,6 +237,9 @@ public class LoginActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(LoginActivity.this, "用户登录成功!");
                                     if (DocUtils.hasValue(object, "data")) {
+                                        JSONObject dataObject= object.getJSONObject("data");
+                                        String userId=dataObject.getString("userId");
+                                        SPUtils.put(LoginActivity.this,Constants.USER_KEY,userId);
                                         actionStart(LoginActivity.this, RealDocActivity.class);
                                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                         finish();

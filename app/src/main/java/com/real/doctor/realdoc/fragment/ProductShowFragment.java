@@ -26,10 +26,13 @@ import com.real.doctor.realdoc.model.ProductInfo;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.DynamicTimeFormat;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.BrandListView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
@@ -37,8 +40,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +70,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
     public BrandAdapter brandAdapter;
     public ProductAdapter productAdapter;
     public String categoryId;
+    private ClassicsHeader mClassicsHeader;
     public int pageNum=1;
     public int pageSize=10;
     public boolean isFirstEnter=true;
@@ -120,6 +128,12 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
 //                }
 //            });
 //            selectDefault();
+            int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
+            mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
+            mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis() - deta));
+            mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
+            mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
+            ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
             refreshLayout.setOnLoadmoreListener(this);
             refreshLayout.setOnRefreshListener(this);
             productAdapter = new ProductAdapter(mContext, productList);

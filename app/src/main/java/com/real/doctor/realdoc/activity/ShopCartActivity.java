@@ -3,6 +3,8 @@ package com.real.doctor.realdoc.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -31,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,7 +157,16 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        return;
+                        Intent intent =new Intent(ShopCartActivity.this,PayActivity.class);
+                        intent.putExtra("totalPrice",String.valueOf(totalPrice));
+                        ArrayList<ProductBean> list=new ArrayList<ProductBean>();
+                        for(ProductBean bean:children.get(gourpId)){
+                            if(bean.isChoosed()){
+                                list.add(bean);
+                            }
+                        }
+                        intent.putExtra("goodsList",list);
+                        startActivity(intent);
                     }
                 });
                 alert.show();

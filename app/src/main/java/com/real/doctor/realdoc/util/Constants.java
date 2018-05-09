@@ -5,6 +5,8 @@ package com.real.doctor.realdoc.util;
  */
 
 public class Constants {
+    //本地sp存储用户对应的key
+    public static final String USER_KEY = "user_id";
     //微信登录
     public static final String WX_APP_ID = "wxdcd80da641faa3ae";
     public static final String GetCodeRequest = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";

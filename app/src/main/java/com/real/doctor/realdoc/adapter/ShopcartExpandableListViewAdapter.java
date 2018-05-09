@@ -9,16 +9,19 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.model.GroupInfo;
+import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.model.ProductInfo;
 import com.real.doctor.realdoc.R;
 
 public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 {
 	private List<GroupInfo> groups;
-	private Map<String, List<ProductInfo>> children;
+	private Map<String, List<ProductBean>> children;
 	private Context context;
 	//HashMap<Integer, View> groupMap = new HashMap<Integer, View>();
 	//HashMap<Integer, View> childrenMap = new HashMap<Integer, View>();
@@ -34,7 +37,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 	 *            子元素列表
 	 * @param context
 	 */
-	public ShopcartExpandableListViewAdapter(List<GroupInfo> groups, Map<String, List<ProductInfo>> children, Context context)
+	public ShopcartExpandableListViewAdapter(List<GroupInfo> groups, Map<String, List<ProductBean>> children, Context context)
 	{
 		super();
 		this.groups = groups;
@@ -74,7 +77,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 	@Override
 	public Object getChild(int groupPosition, int childPosition)
 	{
-		List<ProductInfo> childs = children.get(groups.get(groupPosition).getId());
+		List<ProductBean> childs = children.get(groups.get(groupPosition).getId());
 
 		return childs.get(childPosition);
 	}
@@ -144,7 +147,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 			cholder = new ChildHolder();
 			convertView = View.inflate(context, R.layout.item_shopcart_product, null);
 			cholder.cb_check = (CheckBox) convertView.findViewById(R.id.check_box);
-
+			cholder.iv_adapter_list_pic=(ImageView)convertView.findViewById(R.id.iv_adapter_list_pic);
 			cholder.tv_product_desc = (TextView) convertView.findViewById(R.id.tv_intro);
 			cholder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
 			cholder.iv_increase = (TextView) convertView.findViewById(R.id.tv_add);
@@ -157,14 +160,15 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 			// convertView = childrenMap.get(groupPosition);
 			cholder = (ChildHolder) convertView.getTag();
 		}
-		final ProductInfo product = (ProductInfo) getChild(groupPosition, childPosition);
+		final ProductBean product = (ProductBean) getChild(groupPosition, childPosition);
 
 		if (product != null)
 		{
 
-			cholder.tv_product_desc.setText(product.getDesc());
-			cholder.tv_price.setText("￥" + product.getPrice() + "");
-			cholder.tv_count.setText(product.getCount() + "");
+			cholder.tv_product_desc.setText(product.getName());
+			cholder.tv_price.setText("￥" + product.getCost() + "");
+			Glide.with(context).load(product.getSmallPic()).crossFade().into((ImageView)cholder.iv_adapter_list_pic);
+			cholder.tv_count.setText(product.getNum() + "");
 			cholder.cb_check.setChecked(product.isChoosed());
 			cholder.cb_check.setOnClickListener(new OnClickListener()
 			{
@@ -228,6 +232,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 		TextView iv_increase;
 		TextView tv_count;
 		TextView iv_decrease;
+		ImageView iv_adapter_list_pic;
 	}
 
 	/**

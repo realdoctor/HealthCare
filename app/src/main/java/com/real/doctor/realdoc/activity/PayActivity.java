@@ -15,21 +15,27 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.adapter.ProductAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.PayResult;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.view.PayShowListView;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,9 +63,15 @@ public class PayActivity extends BaseActivity {
     TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    @BindView(R.id.lv_products)
+    PayShowListView lv_products;
     private String zhifu_type="";
     private static final int SDK_PAY_FLAG = 1;
     private IWXAPI api;
+    public ArrayList<ProductBean> productBeanArrayList=new ArrayList<ProductBean>();
+    public String totalPrice;
+    public ProductAdapter productAdapter;
+    public String userId;
 
     @Override
     public int getLayoutId() {
@@ -73,10 +85,16 @@ public class PayActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        userId= (String) SPUtils.get(PayActivity.this, Constants.USER_KEY,"7");
         api = WXAPIFactory.createWXAPI(this, Constants.WX_APP_ID);
         api.registerApp(Constants.WX_APP_ID);
-        tvCountprice.setText("0.01元");
         pageTitle.setText("支付");
+        productBeanArrayList=(ArrayList<ProductBean>)getIntent().getSerializableExtra("goodsList");
+        totalPrice=getIntent().getStringExtra("totalPrice");
+        tvCountprice.setText(totalPrice);
+        productAdapter=new ProductAdapter(PayActivity.this,productBeanArrayList);
+        lv_products.setAdapter(productAdapter);
+        productAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -137,14 +155,29 @@ public class PayActivity extends BaseActivity {
 
     }
     public void payOrderByAlipay(){
+        JSONArray array=new JSONArray();
+        try {
+        for(ProductBean bean:productBeanArrayList)
+        {
+            JSONObject item=new JSONObject();
+            item.put("goodsId",bean.getGoodsId());
+            item.put("goodsNum",bean.getNum());
+            item.put("goodsPrice",bean.getCost());
+            array.put(item);
+        }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         JSONObject json = new JSONObject();
         try {
-            json.put("name","ddd");
+            json.put("totalAmount",totalPrice);
+            json.put("userId",userId);
+            json.put("goodsList",array);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        HttpRequestClient.getInstance(PayActivity.this).createBaseApi().json("user/regist/"
+        HttpRequestClient.getInstance(PayActivity.this).createBaseApi().json("pay/alipay/orderPay/"
                 , body, new BaseObserver<ResponseBody>(PayActivity.this) {
 
                     @Override
@@ -178,7 +211,8 @@ public class PayActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    final String orderInfo=object.getString("rs");
+                                    JSONObject orderObject=object.getJSONObject("data");
+                                    final String orderInfo= orderObject.getString("orderString");
 
                                     Runnable payRunnable = new Runnable() {
 

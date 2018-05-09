@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
@@ -52,9 +53,11 @@ public class ProductShowActivity extends BaseActivity  {
     TextView cart;
     @BindView(R.id.tv_description)
     TextView description;
+    @BindView(R.id.finish_back)
+    LinearLayout finish_back;
     private ProductBean bean;
     private String  userId;
-    String goodId="2";
+    String goodId;
     int num=1;
     @Override
     public int getLayoutId() {
@@ -73,12 +76,13 @@ public class ProductShowActivity extends BaseActivity  {
         bean=(ProductBean) getIntent().getSerializableExtra("model");
         banner.setBannerStyle(Banner.CIRCLE_INDICATOR_TITLE);
         banner.setIndicatorGravity(Banner.CENTER);
-        banner.isAutoPlay(true) ;
+        banner.isAutoPlay(false) ;
         banner.setImages(new String[]{bean.getBigPic()});
+        goodId=bean.getId();
         tv_pName.setText(bean.getName());
         tv_price.setText("￥"+bean.getCost());
         tv_proproty.setText(bean.getAttribute());
-        description.setText(bean.getDescription());
+        description.setText(bean.getGoodsDescription());
     }
 
     @Override
@@ -88,7 +92,7 @@ public class ProductShowActivity extends BaseActivity  {
 
 
     @Override
-    @OnClick({R.id.tv_buy,R.id.tv_cart,R.id.tv_incart})
+    @OnClick({R.id.tv_buy,R.id.tv_cart,R.id.tv_incart,R.id.finish_back})
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.tv_buy:
@@ -102,6 +106,8 @@ public class ProductShowActivity extends BaseActivity  {
             case R.id.tv_cart:
                 Intent intentCart =new Intent(ProductShowActivity.this,ShopCartActivity.class);
                 startActivity(intentCart);
+                break;
+            case R.id.finish_back:
                 ProductShowActivity.this.finish();
                 break;
         }
