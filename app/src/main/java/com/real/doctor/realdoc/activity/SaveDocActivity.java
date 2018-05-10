@@ -77,6 +77,10 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     TextView moreIll;
     @BindView(R.id.more_hospital)
     TextView moreHospital;
+    @BindView(R.id.ill_linear)
+    LinearLayout illLinear;
+    @BindView(R.id.hospital_linear)
+    LinearLayout hospitalLinear;
     private List<ImageBean> imageList;
     private GridAdapter adapter;
     //底部弹出菜单
@@ -85,6 +89,9 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     private String mAdvice = null;
     private SaveDialogActivity dialog;
     private boolean flag = false;
+    private SaveDocManager instance = null;
+    private List<String> diseasesList;
+    private List<String> hospitalsList;
     //拍照
     private static final int REQUEST_CODE_TAKE_PHOTO = 0x110;
     //疾病标签
@@ -104,6 +111,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
 
     @Override
     public void initData() {
+        instance = SaveDocManager.getInstance(SaveDocActivity.this);
         initLable();
         imageList = new ArrayList<>();
         adapter = new GridAdapter(this, imageList);
@@ -117,22 +125,81 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     private void initLable() {
-        labelList.add(new LabelBean("心脏病", 1));
-        labelList.add(new LabelBean("呼吸系统疾病", 2));
-        illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
-            @Override
-            public CharSequence getLabelText(TextView label, int position, LabelBean data) {
-                return data.getName();
-            }
-        });
-        hospitalList.add(new LabelBean("杭州仁和医院", 1));
-        hospitalList.add(new LabelBean("杭州第一人民医院", 2));
-        hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
-            @Override
-            public CharSequence getLabelText(TextView label, int position, LabelBean data) {
-                return data.getName();
-            }
-        });
+        //疾病列表
+        diseasesList = instance.queryDiseaseList(RealDocApplication.getDaoSession(SaveDocActivity.this));
+        switch (diseasesList.size()) {
+            case 0:
+                illLinear.setVisibility(View.GONE);
+            case 1:
+                illLinear.setVisibility(View.VISIBLE);
+                labelList.add(new LabelBean(diseasesList.get(0), 1));
+                illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+            case 2:
+                illLinear.setVisibility(View.VISIBLE);
+                labelList.add(new LabelBean(diseasesList.get(0), 1));
+                labelList.add(new LabelBean(diseasesList.get(1), 2));
+                illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+            default:
+                illLinear.setVisibility(View.VISIBLE);
+                labelList.add(new LabelBean(diseasesList.get(0), 1));
+                labelList.add(new LabelBean(diseasesList.get(1), 2));
+                illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+        }
+        hospitalsList = instance.queryHospitalList(RealDocApplication.getDaoSession(SaveDocActivity.this));
+        switch (hospitalsList.size()) {
+            case 0:
+                hospitalLinear.setVisibility(View.GONE);
+            case 1:
+                hospitalLinear.setVisibility(View.VISIBLE);
+                hospitalList.add(new LabelBean(hospitalsList.get(0), 1));
+                hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+            case 2:
+                hospitalLinear.setVisibility(View.VISIBLE);
+                hospitalList.add(new LabelBean(hospitalsList.get(0), 1));
+                hospitalList.add(new LabelBean(hospitalsList.get(1), 2));
+                hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+            default:
+                hospitalLinear.setVisibility(View.VISIBLE);
+                hospitalList.add(new LabelBean(hospitalsList.get(0), 1));
+                hospitalList.add(new LabelBean(hospitalsList.get(1), 2));
+                hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+        }
     }
 
     @Override
@@ -222,7 +289,6 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 bean.setTime(time);
                 bean.setImgs(sb.toString());
                 bean.setAdvice(ad.toString());
-                SaveDocManager instance = SaveDocManager.getInstance(SaveDocActivity.this);
                 if (EmptyUtils.isNotEmpty(instance)) {
                     instance.insertSaveDoc(SaveDocActivity.this, bean);
                     ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存成功!");

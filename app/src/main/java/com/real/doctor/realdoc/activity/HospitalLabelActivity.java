@@ -7,11 +7,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.LabelBean;
 import com.real.doctor.realdoc.view.LabelsView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +28,8 @@ public class HospitalLabelActivity extends BaseActivity {
     LabelsView hospitalLabels;
     //医院标签
     ArrayList<LabelBean> hospitalList = new ArrayList<>();
-
+    private SaveDocManager instance = null;
+    private List<String> hospitalsList;
 
     @Override
     public int getLayoutId() {
@@ -39,10 +43,13 @@ public class HospitalLabelActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        hospitalList.add(new LabelBean("长江肛肠科医院", 1));
-        hospitalList.add(new LabelBean("第七人民医院", 2));
-        hospitalList.add(new LabelBean("颅咽管瘤医院", 3));
-        hospitalList.add(new LabelBean("中医药医院", 4));
+        instance = SaveDocManager.getInstance(HospitalLabelActivity.this);
+        hospitalsList = instance.queryHospitalList(RealDocApplication.getDaoSession(HospitalLabelActivity.this));
+        hospitalsList.remove(0);
+        hospitalsList.remove(0);
+        for (int i = 1; i <= hospitalsList.size(); i++) {
+            hospitalList.add(new LabelBean(hospitalsList.get(i - 1), i));
+        }
         hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
             @Override
             public CharSequence getLabelText(TextView label, int position, LabelBean data) {
@@ -59,7 +66,7 @@ public class HospitalLabelActivity extends BaseActivity {
                 LabelBean hospitalObject = (LabelBean) data;
                 String hospitalLabel = hospitalObject.getName();
                 Intent intent = new Intent();
-                intent.putExtra("hospital",hospitalLabel);
+                intent.putExtra("hospital", hospitalLabel);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -75,6 +82,7 @@ public class HospitalLabelActivity extends BaseActivity {
                 break;
         }
     }
+
     @Override
     public void doBusiness(Context mContext) {
 

@@ -33,12 +33,16 @@ public class DocDetailAdapter extends BaseQuickAdapter<SaveDocBean, BaseViewHold
     protected void convert(BaseViewHolder viewHolder, SaveDocBean item) {
         viewHolder.setText(R.id.doc_detail_title, item.getIll())
                 .setText(R.id.doc_detail_content, item.getHospital())
-                .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(),"y年M月d日"));
-        if (EmptyUtils.isNotEmpty(item) && item.getFolder() != null) {
+                .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(), "y年M月d日"));
+        if (EmptyUtils.isNotEmpty(item) && EmptyUtils.isNotEmpty(item.getFolder())) {
             String folder = item.getFolder().toString().trim();
             String[] imgs = item.getImgs().split(";");
-            String path = SDCardUtils.getPictureDir() + folder + File.separator + imgs[0];
-            Glide.with(mContext).load(path).crossFade().into((ImageView) viewHolder.getView(R.id.doc_detail_img));
+            if (EmptyUtils.isNotEmpty(imgs)) {
+                String path = SDCardUtils.getPictureDir() + folder + File.separator + imgs[0];
+                Glide.with(mContext).load(path).crossFade().into((ImageView) viewHolder.getView(R.id.doc_detail_img));
+            }
+        } else {
+            Glide.with(mContext).load("").crossFade().into((ImageView) viewHolder.getView(R.id.doc_detail_img));
         }
     }
 }

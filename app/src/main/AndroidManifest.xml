@@ -50,11 +50,7 @@
             android:name=".activity.SplashActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.RealDocActivity"
@@ -144,7 +140,13 @@
         <activity
             android:name=".activity.SaveDocActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.RecordListActivity"
             android:hardwareAccelerated="false"
