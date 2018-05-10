@@ -26,7 +26,6 @@ public class ProductRecieverAddress extends AppCompatActivity {
     private String recieverProvinceCityDistrict;
     private String recieverDetailsAddress;
 
-
     @BindView(R.id.product_reciever_name)
     TextView productRecieverName;
 
@@ -95,7 +94,6 @@ public class ProductRecieverAddress extends AppCompatActivity {
             mRecieverBean.setAddress_details(recieverDetailsAddress);
 
             setData(recieverName, recieverPhone, recieverProvinceCityDistrict + recieverDetailsAddress);
-
         }
 
     }
