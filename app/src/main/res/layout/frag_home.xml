@@ -114,7 +114,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/upload_data"
+                    android:id="@+id/save_doc_linear"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_weight="1.0"

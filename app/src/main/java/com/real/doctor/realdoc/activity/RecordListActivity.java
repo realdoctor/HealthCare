@@ -38,6 +38,8 @@ import butterknife.OnClick;
 public class RecordListActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener {
 
     public static final String DATEPICKER_TAG = "datepicker";
+    @BindView(R.id.right_title)
+    TextView rightTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
     DocDetailAdapter docDetailAdapter;
@@ -85,6 +87,8 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
 
     @Override
     public void initData() {
+        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setText("商城");
         recordList = new ArrayList<>();
         instance = SaveDocManager.getInstance(RecordListActivity.this);
         if (EmptyUtils.isNotEmpty(instance)) {
@@ -146,7 +150,7 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
     }
 
     @Override
-    @OnClick({R.id.select_time_record, R.id.select_disease_record, R.id.add_start_time, R.id.add_end_time, R.id.confirm_btn, R.id.finish_back})
+    @OnClick({R.id.select_time_record, R.id.select_disease_record, R.id.add_start_time, R.id.add_end_time, R.id.confirm_btn, R.id.finish_back, R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.select_time_record:
@@ -204,6 +208,9 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
                 break;
             case R.id.finish_back:
                 finish();
+                break;
+            case R.id.right_title:
+                actionStart(this, ProductShowByCategoryActivity.class);
                 break;
         }
     }

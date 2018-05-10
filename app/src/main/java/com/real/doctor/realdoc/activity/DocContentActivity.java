@@ -69,7 +69,7 @@ public class DocContentActivity extends BaseActivity {
     @Override
     public void initData() {
         rightTitle.setVisibility(View.VISIBLE);
-        rightTitle.setText("比例对照");
+        rightTitle.setText("病历对照");
         imageList = new ArrayList<>();
         saveDocBean = (SaveDocBean) getIntent().getParcelableExtra("SaveDocBean");
         if (EmptyUtils.isNotEmpty(saveDocBean)) {
