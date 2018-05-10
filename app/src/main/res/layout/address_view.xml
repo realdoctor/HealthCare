@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Hangzhou"
+        android:id="@+id/address_line_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:duplicateParentState="true"
+        android:clickable="false"
+        android:focusable="false"/>
+
+
+ <!--   <TextView
+        android:text=""
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:duplicateParentState="true"
+        android:background="@drawable/address_selected_background"
+        android:clickable="false"
+        android:focusable="false"/> -->
+
+   <ImageView
+        android:id="@+id/address_line_selected"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/address_selected_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:duplicateParentState="true"
+        android:clickable="false"
+        android:focusable="false"/>
+</android.support.constraint.ConstraintLayout>
