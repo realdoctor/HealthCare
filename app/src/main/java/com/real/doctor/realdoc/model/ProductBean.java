@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 
 public class ProductBean implements Serializable {
-   private  String  id;
+   private String goodsId;
    private String attribute;
    private String   bigPic;
    private Double cost;
@@ -22,9 +22,17 @@ public class ProductBean implements Serializable {
    private int store;
    private String updateTime;
    private int num;
-   public String goodsId;
    protected boolean isChoosed;
    private String goodsDescription;
+   private String goodsShopcarId;
+
+    public String getGoodsShopcarId() {
+        return goodsShopcarId;
+    }
+
+    public void setGoodsShopcarId(String goodsShopcarId) {
+        this.goodsShopcarId = goodsShopcarId;
+    }
 
     public String getGoodsId() {
         return goodsId;
@@ -56,14 +64,6 @@ public class ProductBean implements Serializable {
 
     public void setNum(int num) {
         this.num = num;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getAttribute() {
