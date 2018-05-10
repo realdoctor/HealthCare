@@ -229,7 +229,7 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
             }
             childs.removeAll(toBeDeleteProducts);
             for(int k=0;k<toBeDeleteProducts.size();k++){
-                jsonArray.put(toBeDeleteProducts.get(k).getId());
+                jsonArray.put(toBeDeleteProducts.get(k).getGoodsShopcarId());
             }
 
         }

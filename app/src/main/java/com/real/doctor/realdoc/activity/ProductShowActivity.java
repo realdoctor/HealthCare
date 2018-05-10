@@ -78,7 +78,7 @@ public class ProductShowActivity extends BaseActivity  {
         banner.setIndicatorGravity(Banner.CENTER);
         banner.isAutoPlay(false) ;
         banner.setImages(new String[]{bean.getBigPic()});
-        goodId=bean.getId();
+        goodId=bean.getGoodsId();
         tv_pName.setText(bean.getName());
         tv_price.setText("￥"+bean.getCost());
         tv_proproty.setText(bean.getAttribute());
