@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.real.doctor.realdoc">
+          package="com.real.doctor.realdoc">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--添加WiFi以及访问网络的权限-->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!--操作外部存储设备文件-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 添加WiFi以及访问网络的权限 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- 操作外部存储设备文件 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
-        android:name="com.real.doctor.realdoc.application.RealDocApplication"
+        android:name=".application.RealDocApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon_app"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.android7.fileprovider"
@@ -34,161 +32,166 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
         <provider
-            android:name="com.real.doctor.realdoc.photopicker.utils.PhotoFileProvider"
+            android:name=".photopicker.utils.PhotoFileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/__picker_provider_paths" />
+                android:resource="@xml/__picker_provider_paths"/>
         </provider>
 
         <activity android:name=".activity.SplashActivity">
-
         </activity>
         <activity
             android:name=".activity.RealDocActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LoginActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.RegisterActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="tencent1106010163" />
+                <data android:scheme="tencent1106010163"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.SearchActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--注册微信回调 WXEntryActivity -->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <!-- 注册微信回调 WXEntryActivity -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Translucent" />
+            android:theme="@android:style/Theme.Translucent"/>
         <activity
-            android:name="com.real.doctor.realdoc.photopicker.PhotoPickerActivity"
+            android:name=".photopicker.PhotoPickerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
-            android:name="com.real.doctor.realdoc.photopicker.PhotoPagerActivity"
+            android:name=".photopicker.PhotoPagerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".activity.DocDetailActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-
         </activity>
         <activity
             android:name=".activity.DocContentActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ProgressBarActivity"
             android:hardwareAccelerated="false"
             android:launchMode="singleInstance"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.DocCompareActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.PayActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ShopCartActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ProductShowActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.CheckDocActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ProductShowByCategoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-
         </activity>
         <activity
             android:name=".activity.RecordListActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.CheckCompareActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.IllLabelActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.HospitalLabelActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.SaveDialogActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
-            android:theme="@style/FloatDialogTheme"></activity>
+            android:theme="@style/FloatDialogTheme"/>
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind" >
+            android:screenOrientation="behind">
         </activity>
         <activity
             android:name=".activity.AddressActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        </activity>
+
+        <activity
+            android:name=".activity.ProductRecieverAddress"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <service
             android:name=".service.UpdateService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".service.UpdateService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <meta-data
             android:name="WEIBO_APPKEY"
-            android:value="" />
+            android:value=""/>
         <meta-data
             android:name="WEIBO_CHANNEL"
-            android:value="weibo" />
+            android:value="weibo"/>
+
+
     </application>
+
 </manifest>

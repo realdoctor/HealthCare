@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -45,13 +46,14 @@ public class AddressActivity extends AppCompatActivity {
         String addressDetailsStr = addressDetails.getText().toString();
 
         if(!receiverStr.equals("") && !phoneStr.equals("")  && !addressStr.equals("null null null") &&  !addressDetailsStr.equals("")){
-            RecieverBean recieverPerson = new RecieverBean();
 
-            recieverPerson.setName(reciever.getText().toString());
-            recieverPerson.setPhoneNumber(phone.getText().toString());
-            recieverPerson.setProvinceCityDistrict(address.getText().toString());
-            recieverPerson.setAddress_details(addressDetails.getText().toString());
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("recieverName", receiverStr);
+            resultIntent.putExtra("recieverPhone", phoneStr);
+            resultIntent.putExtra("recieverProvinceCityDistrict", addressStr);
+            resultIntent.putExtra("recieverDetailsAddress", addressDetailsStr);
 
+            setResult(RESULT_OK, resultIntent);
             finish();
         }
 

@@ -103,10 +103,9 @@
         android:id="@+id/address_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="details"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:text="Street 16, 122"/>
+        android:hint="Street 16, 122"/>
 
 
 

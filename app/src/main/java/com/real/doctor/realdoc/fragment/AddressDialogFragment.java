@@ -226,7 +226,6 @@ public class AddressDialogFragment extends DialogFragment {
     }
 
     /** Display data **/
-
     public void displayProvince(RecyclerView.ViewHolder holder, final int position){
 
         final ProvinceHolder provinceHolder = (ProvinceHolder) holder;
@@ -356,7 +355,6 @@ public class AddressDialogFragment extends DialogFragment {
 
 
     /** Holders classes **/
-
     public class GeneralHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.address_line_text) TextView address_line_text;
@@ -432,7 +430,6 @@ public class AddressDialogFragment extends DialogFragment {
             return districts.size();
         }
     }
-
 
 
     /** Utility functions **/

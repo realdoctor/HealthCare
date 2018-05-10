@@ -1,10 +1,10 @@
 package com.real.doctor.realdoc.model;
 
 public class RecieverBean {
-    private String name;
-    private String phoneNumber;
-    private String provinceCityDistrict;
-    private String address_details;
+    private static String name;
+    private static String phoneNumber;
+    private static String provinceCityDistrict;
+    private static String address_details;
 
     public RecieverBean(){
 
@@ -48,6 +48,14 @@ public class RecieverBean {
 
     public void setAddress_details(String address_details) {
         this.address_details = address_details;
+    }
+
+    public Boolean isNullObject(){
+        if(name == null || name.equals("")){
+            return false;
+        }
+
+        return true;
     }
 
 
