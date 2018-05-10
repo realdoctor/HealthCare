@@ -30,6 +30,7 @@ import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_DIR_PHOTOS;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_SHOW_CAMERA;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_SHOW_GIF;
+import static com.real.doctor.realdoc.photopicker.PhotoPicker.KEY_SELECTED_INDEXS;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.KEY_SELECTED_PHOTOS;
 
 public class PhotoPickerActivity extends AppCompatActivity {
@@ -180,7 +181,9 @@ public class PhotoPickerActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.done) {
             Intent intent = new Intent();
             ArrayList<String> selectedPhotos = pickerFragment.getPhotoGridAdapter().getSelectedPhotoPaths();
+            ArrayList<String> selectedIndexs =   pickerFragment.getPhotoGridAdapter().getSelectIndex();
             intent.putStringArrayListExtra(KEY_SELECTED_PHOTOS, selectedPhotos);
+            intent.putStringArrayListExtra(KEY_SELECTED_INDEXS, selectedIndexs);
             setResult(RESULT_OK, intent);
             finish();
             return true;

@@ -50,6 +50,10 @@ public class DocCompareActivity extends BaseActivity {
     TextView time;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    @BindView(R.id.text_one)
+    TextView textOne;
+    @BindView(R.id.text_two)
+    TextView textTwo;
     private List<SaveDocBean> mList;
     private String[] imgOne;
     private String[] imgTwo;
@@ -57,6 +61,8 @@ public class DocCompareActivity extends BaseActivity {
     private String folderTwo;
     private List<String> mListOne;
     private List<String> mListTwo;
+    private String[] firstAdvice;
+    private String[] secondAdvice;
     private boolean mOneFlag = false;
     private boolean mTwoFlag = false;
 
@@ -75,30 +81,36 @@ public class DocCompareActivity extends BaseActivity {
                 String illOne = mList.get(0).getIll();
                 String hospitalOne = mList.get(0).getHospital();
                 String doctorOne = mList.get(0).getDoctor();
+                String adviceOne = mList.get(0).getAdvice();
                 folderOne = mList.get(0).getFolder();
                 String timeOne = mList.get(0).getTime();
                 String imgsOne = mList.get(0).getImgs();
+                firstAdvice = adviceOne.substring(0, adviceOne.length() - 1).split(";");
                 if (EmptyUtils.isNotEmpty(imgsOne)) {
                     imgOne = imgsOne.split(";");
                 }
                 if (EmptyUtils.isNotEmpty(folderOne) && EmptyUtils.isNotEmpty(imgOne)) {
                     String pathOne = SDCardUtils.getPictureDir() + folderOne + File.separator + imgOne[0];
                     GlideUtils.loadImageViewLoding(DocCompareActivity.this, pathOne, imageOne, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+                    textOne.setText(firstAdvice[0]);
                 } else {
                     imageOne.setVisibility(View.GONE);
                 }
                 String illTwo = mList.get(1).getIll();
                 String hospitalTwo = mList.get(1).getHospital();
                 String doctorTwo = mList.get(1).getDoctor();
+                String adviceTwo = mList.get(1).getAdvice();
                 folderTwo = mList.get(1).getFolder();
                 String timeTwo = mList.get(1).getTime();
                 String imgsTwo = mList.get(1).getImgs();
+                secondAdvice = adviceTwo.substring(0, adviceTwo.length() - 1).split(";");
                 if (EmptyUtils.isNotEmpty(imgsTwo)) {
                     imgTwo = imgsTwo.split(";");
                 }
                 if (EmptyUtils.isNotEmpty(folderTwo) && EmptyUtils.isNotEmpty(imgTwo)) {
                     String pathTwo = SDCardUtils.getPictureDir() + folderTwo + File.separator + imgTwo[0];
                     GlideUtils.loadImageViewLoding(DocCompareActivity.this, pathTwo, imageTwo, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+                    textTwo.setText(secondAdvice[0]);
                 } else {
                     imageTwo.setVisibility(View.GONE);
                 }
@@ -122,13 +134,13 @@ public class DocCompareActivity extends BaseActivity {
                     doctor.setText("1." + doctorOne + "\n" + "2." + doctorTwo);
                 }
                 if (EmptyUtils.isNotEmpty(timeOne)) {
-                    time.setText("1." + DateUtil.timeStamp2Date(timeOne, "yyyy-MM-dd hh:mm:ss"));
+                    time.setText("1." + DateUtil.timeStamp2Date(timeOne, "y年M月d日"));
                 }
                 if (EmptyUtils.isNotEmpty(timeTwo)) {
-                    time.setText("2." + DateUtil.timeStamp2Date(timeTwo, "yyyy-MM-dd hh:mm:ss"));
+                    time.setText("2." + DateUtil.timeStamp2Date(timeTwo, "y年M月d日"));
                 }
                 if (EmptyUtils.isNotEmpty(timeOne) && EmptyUtils.isNotEmpty(timeTwo)) {
-                    time.setText("1." + timeOne + "\n" + "2." + timeTwo);
+                    time.setText("1." + DateUtil.timeStamp2Date(timeOne, "y年M月d日") + "\n" + "2." + DateUtil.timeStamp2Date(timeTwo, "y年M月d日"));
                 }
             }
         }
@@ -140,13 +152,13 @@ public class DocCompareActivity extends BaseActivity {
         rightTitle.setText("病历打包上传");
         mListOne = new ArrayList<>();
         mListTwo = new ArrayList<>();
-        if (EmptyUtils.isNotEmpty(folderOne)&&EmptyUtils.isNotEmpty(imgOne)) {
+        if (EmptyUtils.isNotEmpty(folderOne) && EmptyUtils.isNotEmpty(imgOne)) {
             for (int i = 0; i < imgOne.length; i++) {
                 String path = SDCardUtils.getPictureDir() + folderOne + File.separator + imgOne[i];
                 mListOne.add(path);
             }
         }
-        if (EmptyUtils.isNotEmpty(folderTwo)&&EmptyUtils.isNotEmpty(imgTwo)) {
+        if (EmptyUtils.isNotEmpty(folderTwo) && EmptyUtils.isNotEmpty(imgTwo)) {
             for (int i = 0; i < imgTwo.length; i++) {
                 String path = SDCardUtils.getPictureDir() + folderTwo + File.separator + imgTwo[i];
                 mListTwo.add(path);
@@ -220,17 +232,21 @@ public class DocCompareActivity extends BaseActivity {
         if (resultCode == RESULT_OK &&
                 (requestCode == PhotoPicker.REQUEST_CODE || requestCode == PhotoPreview.REQUEST_CODE)) {
             List<String> photos = null;
+            List<String> indexs = null;
             if (data != null) {
                 photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                indexs = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_INDEXS);
             }
             if (mOneFlag == true && mTwoFlag == false) {
                 GlideUtils.loadImageViewLoding(DocCompareActivity.this, photos.get(0), imageOne, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
                 mOneFlag = false;
                 mTwoFlag = false;
+                textOne.setText(firstAdvice[Integer.valueOf(indexs.get(0))]);
             } else if (mOneFlag == false && mTwoFlag == true) {
                 GlideUtils.loadImageViewLoding(DocCompareActivity.this, photos.get(0), imageTwo, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
                 mOneFlag = false;
                 mTwoFlag = false;
+                textTwo.setText(secondAdvice[Integer.valueOf(indexs.get(0))]);
             }
 
         }

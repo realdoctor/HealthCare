@@ -22,6 +22,7 @@ public class PhotoPicker {
     public final static int DEFAULT_COLUMN_NUMBER = 3;
 
     public final static String KEY_SELECTED_PHOTOS = "SELECTED_PHOTOS";
+    public final static String KEY_SELECTED_INDEXS = "SELECTED_INDEXS";
 
     public final static String EXTRA_MAX_COUNT = "MAX_COUNT";
     public final static String EXTRA_SHOW_CAMERA = "SHOW_CAMERA";
