@@ -1,0 +1,48 @@
+{
+    "logs": [
+        {
+            "outputFile": "D:\\study\\demo\\RealDoc\\datetimepicker\\build\\intermediates\\res\\merged\\release\\values-small-v4\\values-small-v4.xml",
+            "map": [
+                {
+                    "source": "D:\\study\\demo\\RealDoc\\datetimepicker\\res\\values-small\\dimens.xml",
+                    "from": {
+                        "startLines": "3,2",
+                        "startColumns": "4,4",
+                        "startOffsets": "125,57",
+                        "endColumns": "67,66",
+                        "endOffsets": "188,119"
+                    },
+                    "to": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,123",
+                        "endColumns": "67,66",
+                        "endOffsets": "118,185"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "D:\\study\\demo\\RealDoc\\datetimepicker\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-small-v4\\values-small-v4.xml",
+            "map": [
+                {
+                    "source": "D:\\study\\demo\\RealDoc\\datetimepicker\\res\\values-small\\dimens.xml",
+                    "from": {
+                        "startLines": "3,2",
+                        "startColumns": "4,4",
+                        "startOffsets": "125,57",
+                        "endColumns": "67,66",
+                        "endOffsets": "188,119"
+                    },
+                    "to": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,123",
+                        "endColumns": "67,66",
+                        "endOffsets": "118,185"
+                    }
+                }
+            ]
+        }
+    ]
+}

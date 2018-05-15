@@ -66,7 +66,7 @@ public class PayActivity extends BaseActivity {
     @BindView(R.id.lv_products)
     PayShowListView lv_products;
     private String zhifu_type="";
-    private static final int SDK_PAY_FLAG = 1;
+    private static final int SDK_PAY_FLAG = 0;
     private IWXAPI api;
     public ArrayList<ProductBean> productBeanArrayList=new ArrayList<ProductBean>();
     public String totalPrice;

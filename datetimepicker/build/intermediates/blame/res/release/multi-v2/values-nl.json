@@ -1,0 +1,48 @@
+{
+    "logs": [
+        {
+            "outputFile": "D:\\study\\demo\\RealDoc\\datetimepicker\\build\\intermediates\\res\\merged\\release\\values-nl\\values-nl.xml",
+            "map": [
+                {
+                    "source": "D:\\study\\demo\\RealDoc\\datetimepicker\\res\\values-nl\\strings.xml",
+                    "from": {
+                        "startLines": "24,29,19,20,28,21,26,22,23,27,25",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "1319,1820,828,905,1697,1019,1516,1138,1226,1610,1423",
+                        "endColumns": "102,113,75,112,121,117,92,86,91,85,91",
+                        "endOffsets": "1417,1929,899,1013,1814,1132,1604,1220,1313,1691,1510"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,208,318,394,507,625,743,836,923,1015,1101",
+                        "endColumns": "102,109,75,112,117,117,92,86,91,85,91",
+                        "endOffsets": "203,313,389,502,620,738,831,918,1010,1096,1188"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "D:\\study\\demo\\RealDoc\\datetimepicker\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-nl\\values-nl.xml",
+            "map": [
+                {
+                    "source": "D:\\study\\demo\\RealDoc\\datetimepicker\\res\\values-nl\\strings.xml",
+                    "from": {
+                        "startLines": "24,29,19,20,28,21,26,22,23,27,25",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "1319,1820,828,905,1697,1019,1516,1138,1226,1610,1423",
+                        "endColumns": "102,113,75,112,121,117,92,86,91,85,91",
+                        "endOffsets": "1417,1929,899,1013,1814,1132,1604,1220,1313,1691,1510"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,208,318,394,507,625,743,836,923,1015,1101",
+                        "endColumns": "102,109,75,112,117,117,92,86,91,85,91",
+                        "endOffsets": "203,313,389,502,620,738,831,918,1010,1096,1188"
+                    }
+                }
+            ]
+        }
+    ]
+}
