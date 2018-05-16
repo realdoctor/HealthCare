@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/notification_prescribed_medicine_listitems_margin_bottom">
+
+    <TextView
+        android:id="@+id/prescribed_medicine_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="复方甘草(片剂)"
+        android:textColor="@color/regularTextColor"
+        android:textSize="@dimen/notification_regular_fontsize"
+        android:fontFamily="@font/pingfang_regular_font"
+        />
+
+    <TextView
+        android:id="@+id/prescribed_medicine_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1020200004"
+        android:textColor="@color/regularTextColor"
+        android:textSize="@dimen/notification_regular_fontsize"
+        android:fontFamily="@font/pingfang_regular_font"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>
