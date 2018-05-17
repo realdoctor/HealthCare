@@ -54,7 +54,11 @@
         <activity
             android:name=".activity.LoginActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+
+
+        </activity>
         <activity
             android:name=".activity.RegisterActivity"
             android:hardwareAccelerated="false"
@@ -193,7 +197,6 @@
             android:theme="@style/AppTheme"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

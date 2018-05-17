@@ -50,66 +50,11 @@
     <!-- The recycler view inside another recycler view item:
          displays the list of prescribed medicine -->
      <android.support.v7.widget.RecyclerView
-        android:id="@+id/notification_medicine_list"
+        android:id="@+id/notification_data_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
         android:fontFamily="@font/pingfang_regular_font"
         android:textColor="@color/regularTextColor"/>
-
-
-    <!-- <ListView
-          android:id="@+id/notification_medicine_list"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:visibility="gone" /> -->
-
-    <RelativeLayout
-        android:id="@+id/notification_details_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <TextView
-            android:id="@+id/notification_msg_title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/regularTextColor"
-            android:textSize="@dimen/notification_regular_fontsize"
-            android:fontFamily="@font/pingfang_regular_font"
-            android:layout_marginBottom="@dimen/notification_regular_text_bottom_margin"
-            />
-
-        <TextView
-            android:id="@+id/notification_msg_title2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/notification_regular_fontsize"
-            android:textColor="@color/regularTextColor"
-            android:fontFamily="@font/pingfang_regular_font"
-            android:layout_below="@id/notification_msg_title1"
-            android:layout_marginBottom="@dimen/notification_regular_text_bottom_margin"/>
-
-        <TextView
-            android:id="@+id/notification_msg_code1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/notification_regular_fontsize"
-            android:textColor="@color/regularTextColor"
-            android:fontFamily="@font/pingfang_regular_font"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/notification_regular_text_bottom_margin"/>
-
-        <TextView
-            android:id="@+id/notification_msg_code2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/notification_regular_fontsize"
-            android:textColor="@color/regularTextColor"
-            android:fontFamily="@font/pingfang_regular_font"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/notification_msg_code1"/>
-
-    </RelativeLayout>
 
 </LinearLayout>

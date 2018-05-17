@@ -1,6 +1,5 @@
 package com.real.doctor.realdoc.rxjavaretrofit.impl;
 
-import java.net.URLDecoder;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -32,6 +31,11 @@ import retrofit2.http.Url;
  */
 
 public interface RetrofitService {
+
+   /* @GET
+    Call<NotificationObject> getNotifications(@Url String url,
+                                              @QueryMap Map<String, String> maps);
+*/
 
     //get 请求接口
     @GET

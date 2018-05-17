@@ -8,15 +8,6 @@
     tools:context="com.real.doctor.realdoc.activity.MainPageActivity"
     android:orientation="vertical">
 
-    <!-- app:popupTheme="@style/ThemeOverlay.AppCompat.Light"  -->
-    <!--   <android.support.v7.widget.Toolbar
-         android:id="@+id/my_toolbar"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:background="?attr/colorPrimary">
-
-     </android.support.v7.widget.Toolbar> -->
-
 
    <android.support.v7.widget.Toolbar
          android:id="@+id/my_toolbar"

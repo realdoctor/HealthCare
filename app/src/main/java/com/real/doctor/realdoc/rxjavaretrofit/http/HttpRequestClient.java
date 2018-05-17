@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.real.doctor.realdoc.API.AuthenticationInterceptor;
 import com.real.doctor.realdoc.rxjavaretrofit.cache.BaseInterceptor;
 import com.real.doctor.realdoc.rxjavaretrofit.cache.CacheInterceptor;
 import com.real.doctor.realdoc.rxjavaretrofit.down.DownCallBack;
@@ -200,6 +201,16 @@ public class HttpRequestClient {
                 .subscribe(subscriber);
     }
 
+    public void getNotifications(String url, Map parameters){
+
+        OkHttpClient okHttpClient = getOkHttpClient();
+
+        //retrofitService.getNotifications(url, parameters);
+    }
+
+
+
+
     /**
      * post请求获取数据
      */
@@ -272,4 +283,5 @@ public class HttpRequestClient {
         httpClientBuilder.addInterceptor(loggingInterceptor);
         return httpClientBuilder.build();
     }
+
 }

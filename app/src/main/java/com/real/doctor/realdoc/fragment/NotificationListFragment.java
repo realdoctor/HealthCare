@@ -5,53 +5,64 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.net.TrafficStats;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.real.doctor.realdoc.API.APIClient;
+import com.real.doctor.realdoc.API.NotificationsPOJO.Data;
+import com.real.doctor.realdoc.API.NotificationsPOJO.NotificationBody;
+import com.real.doctor.realdoc.API.NotificationsPOJO.NotificationMessage;
+import com.real.doctor.realdoc.API.NotificationsPOJO.NotificationObject;
+import com.real.doctor.realdoc.API.ServerInterface;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.model.Notifications.NotificationBean;
-import com.real.doctor.realdoc.model.Notifications.NotificationMessageBean;
-import com.real.doctor.realdoc.model.Notifications.NotificationPrescriptionBean;
-import com.real.doctor.realdoc.model.Notifications.NotificationRecordBean;
-import com.real.doctor.realdoc.model.Notifications.PrescribedMedicineBean;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class NotificationListFragment extends Fragment{
 
-
-    NotificationListAdapter mNotificationListAdapter;
-    Unbinder unbinder;
-
     @BindView(R.id.rv_notifications)
     RecyclerView rv_notifications;
 
-    List<PrescribedMedicineBean> prescriptionList;
 
-    NotificationPrescriptionBean mNotificationPrescriptionBean;
-    NotificationRecordBean mNotificationRecordBean;
-    NotificationMessageBean mNotificationMessageBean;
+    // API:
+    ServerInterface serverInterface;
+    List<NotificationBody> all_notifications;
+    String notificationId;
+    int pageNum = 1;
+    int pageSize = 10;
+    int userId = 7;
+    String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMzc3Nzg1MDAzNiIsImlhdCI6MTUyNjM3Nzc1MCwic3ViIjoie1wibW9iaWxlUGhvbmVcIjpcIjEzNzc3ODUwMDM2XCIsXCJyZWZyZXNoVG9rZW5cIjpmYWxzZSxcInVzZXJJZFwiOjd9IiwiaXNzIjoiT25saW5lIEpXVCBCdWlsZGVyIiwiYXVkIjoia2FuZ2xpYW4iLCJleHAiOjE1MjY5ODI1NTAsIm5iZiI6MTUyNjM3Nzc1MH0.Ldhx4u-9OGH-2iWua-t403ZpMNsXUdaytVEBMPL2IpQ";
 
-    List<NotificationBean> all_notifications;
 
     LinearLayoutManager linearLayoutManager;
+    NotificationListAdapter mNotificationListAdapter;
+    Unbinder unbinder;
+
 
     @Nullable
     @Override
@@ -59,7 +70,7 @@ public class NotificationListFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_notification_list, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        initData();
+        fetchDataFromServer();
 
         // All notifications recycler view
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -69,69 +80,52 @@ public class NotificationListFragment extends Fragment{
         RecyclerView.ItemDecoration dividerItemDecoration = new VerticalSpaceItemDecoration(getActivity(), Color.parseColor("#F8FCFA"), 10.0f);
         rv_notifications.addItemDecoration(dividerItemDecoration);
 
-        // create adapter for all notifications
-        mNotificationListAdapter = new NotificationListAdapter(R.layout.notification_view, all_notifications, getActivity());
-
-        // set footer to all notifications recyclerview
-        LinearLayout linearLayout = new LinearLayout(getActivity());
-        View footer = getLayoutInflater().inflate(R.layout.notification_rv_footer, linearLayout);
-        mNotificationListAdapter.addFooterView(footer);
-
-        rv_notifications.setAdapter(mNotificationListAdapter);
-
         return view;
 
     }
 
-    public void initData(){
+    public void fetchDataFromServer(){
 
-        all_notifications = new ArrayList<>();
-
-        for(int i = 0; i < 10; i ++){
-
-            // Prescription:
-            prescriptionList = new ArrayList<>();
-
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)1", "1020200004"));
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)2", "2010654322"));
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)3", "1020200021"));
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)4", "2010608643"));
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)5", "2010605322"));
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)3", "1020200065"));
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)1", "2010606842"));
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)2", "2010605441"));
-            prescriptionList.add(new PrescribedMedicineBean("复方甘草(片剂)3", "10202000084"));
-
-            mNotificationPrescriptionBean = new NotificationPrescriptionBean();
-            mNotificationPrescriptionBean.setType("就诊用药提醒");
-            mNotificationPrescriptionBean.setTime("4:13");
-            mNotificationPrescriptionBean.setTitle("根据就诊情况，医生给您开了药方");
-            mNotificationPrescriptionBean.setPrescriptions(prescriptionList);
-
-            all_notifications.add(mNotificationPrescriptionBean);
+        Map<String, String> map = new HashMap<>();
+        map.put("userId", "7");
 
 
-            // Records:
-            mNotificationRecordBean = new NotificationRecordBean();
-            mNotificationRecordBean.setType("病历更新");
-            mNotificationRecordBean.setTime("4:08");
-            mNotificationRecordBean.setTitle("就诊结束，病历更新啦");
-            mNotificationRecordBean.setNotice("上呼吸道疾病");
-            mNotificationRecordBean.setCode("J39.900");
+        serverInterface = APIClient.createService(ServerInterface.class, map);
 
-            all_notifications.add(mNotificationRecordBean);
+        // get all the Notifications
+        // send parameters: token, pageNum, pageSize, userId
+        Call<NotificationObject> call = serverInterface.getNotifications(token, pageNum, pageSize, userId);
+        call.enqueue(new Callback<NotificationObject>() {
+            @Override
+            public void onResponse(Call<NotificationObject> call, Response<NotificationObject> response) {
+                // fixes the okhttp bug with the strict mode
+                TrafficStats.setThreadStatsTag(1000);
 
-            // Messages:
-            mNotificationMessageBean = new NotificationMessageBean();
-            mNotificationMessageBean.setType("新的回复消息");
-            mNotificationMessageBean.setTime("2018-5-9 10:31");
-            mNotificationMessageBean.setTitle("有人回复了您的评论");
-            mNotificationMessageBean.setQuestion("小罗伯特唐尼：推荐你使用小儿肺咳颗粒，药到病…");
-            mNotificationMessageBean.setAnswer("我儿子生病一直咳，应该怎么办，…");
+                NotificationObject getNotificationJSON = response.body();
+                Data data = getNotificationJSON.getData();
 
-            all_notifications.add(mNotificationMessageBean);
+                // get all the notifications
+                all_notifications = data.getList();
 
-        }
+                mNotificationListAdapter = new NotificationListAdapter(R.layout.notification_view, all_notifications, getActivity());
+
+                // set footer to all notifications recyclerview
+                LinearLayout linearLayout = new LinearLayout(getActivity());
+                View footer = getLayoutInflater().inflate(R.layout.notification_rv_footer, linearLayout);
+                mNotificationListAdapter.addFooterView(footer);
+
+                rv_notifications.setAdapter(mNotificationListAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<NotificationObject> call, Throwable t) {
+                Log.e("RETROFIIIIT: ", "error");
+                Log.e("Throwable: ", t.toString());
+                Log.e("Throwable: ", t.getMessage());
+            }
+
+        });
 
     }
 
@@ -141,218 +135,108 @@ public class NotificationListFragment extends Fragment{
         unbinder.unbind();
     }
 
-    public class NotificationListAdapter extends BaseQuickAdapter<NotificationBean, BaseViewHolder> {
 
-        List<NotificationBean> notifications;
 
-        RecyclerView notification_prescribed_medicine_list_rv;
-        PrescribedMedicineAdapter prescribedMedicineAdapter;
+    public class NotificationListAdapter extends BaseQuickAdapter<NotificationBody, BaseViewHolder> {
 
-       // ListView mListView;
-        //ArrayAdapter<PrescribedMedicineBean> prescribedMedicineAdapter;
+        RecyclerView notification_data_list_rv;
+        NotificationMessagesAdapter notificationMessagesAdapter;
 
         Context context;
 
         public NotificationListAdapter(int layoutResId, @Nullable List data, Context context) {
             super(layoutResId, data);
 
-            notifications = data;
+           // notifications = data;
             this.context = context;
 
         }
 
 
         @Override
-        protected void convert(BaseViewHolder helper, NotificationBean item) {
+        protected void convert(BaseViewHolder helper, NotificationBody item) {
 
             int position = helper.getAdapterPosition();
+            populateNotificationPrescriptionList(helper, item, position);
 
-            switch(item.getType()){
-                // prescription
-                case "就诊用药提醒": populateNotificationPrescriptionList(helper, item, position);
-                    break;
-                // record
-                case "病历更新": populateNotificationRecordList(helper, item, position);
-                    break;
-                // message
-                case "新的回复消息": populateNotificationMessageList(helper, item, position);
-                    break;
-            }
+
         }
 
 
-        protected void populateNotificationPrescriptionList(BaseViewHolder helper, NotificationBean item, int position){
+        protected void populateNotificationPrescriptionList(BaseViewHolder helper, NotificationBody item, int position) {
 
-            // get the prescription notification
-            NotificationPrescriptionBean prescriptionBean = (NotificationPrescriptionBean) notifications.get(position);
+            // get the  content of notification
+            NotificationBody notificationBody = all_notifications.get(position);
+
+            // format date: 2018-5-11 14:58
+            SimpleDateFormat formatter = new SimpleDateFormat("YYYY-M-d H:mm", Locale.CHINA);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(notificationBody.getAddTime());
+            String date =  formatter.format(calendar.getTime());
 
             // set text
-            helper.setText(R.id.notification_type, prescriptionBean.getType())
-                    .setText(R.id.notification_time, prescriptionBean.getTime())
-                    .setText(R.id.notification_name, prescriptionBean.getTitle());
-
+            helper.setText(R.id.notification_type, notificationBody.getNoticeType())
+                    .setText(R.id.notification_time, date)
+                    .setText(R.id.notification_name, notificationBody.getContent());
 
             // initialize the recyclerview with the prescribed medicine and their code, make it visible
-            notification_prescribed_medicine_list_rv =  helper.getView(R.id.notification_medicine_list);
-            notification_prescribed_medicine_list_rv.setVisibility(View.VISIBLE);
-
-            // get rid of the view that are not needed
-            helper.getView(R.id.notification_msg_title1).setVisibility(View.GONE);
-            helper.getView(R.id.notification_msg_title2).setVisibility(View.GONE);
-            helper.getView(R.id.notification_msg_code1).setVisibility(View.GONE);
-            helper.getView(R.id.notification_msg_code2).setVisibility(View.GONE);
-
-
-           // mListView = helper.getView (R.id.notification_medicine_list);
-            //mListView.setVisibility(View.VISIBLE);
-
+            notification_data_list_rv = helper.getView(R.id.notification_data_list);
 
             // populate the medicine-code recyclerview
-            addPrescribedMedicineRecyclerView(prescriptionBean);
+            addNotificationMessagesRecyclerView(notificationBody);
 
         }
 
-        protected void addPrescribedMedicineRecyclerView(NotificationPrescriptionBean prescriptionBean){
+        protected void addNotificationMessagesRecyclerView(NotificationBody prescriptionBean) {
 
             // get the list of medicine and their codes
-            List<PrescribedMedicineBean> prescribedMedicineBeans = prescriptionBean.getPrescriptions();
+            List<NotificationMessage> notificationMessages = prescriptionBean.getDataList();
 
             // populate a recyclerview with medicines and codes
             linearLayoutManager = new LinearLayoutManager(context);
-            notification_prescribed_medicine_list_rv.setLayoutManager(linearLayoutManager);
+            notification_data_list_rv.setLayoutManager(linearLayoutManager);
+
+            notificationId = prescriptionBean.getNoticeTypeId();
 
             // set adapter to the prescribed medicine recycler view
-            prescribedMedicineAdapter = new PrescribedMedicineAdapter(R.layout.prescribed_medicine_view, prescribedMedicineBeans);
-            notification_prescribed_medicine_list_rv.setAdapter(prescribedMedicineAdapter);
+            notificationMessagesAdapter = new NotificationMessagesAdapter(R.layout.notification_data_list_view, notificationMessages);
+            notification_data_list_rv.setAdapter(notificationMessagesAdapter);
 
-            /**  listview **/
-            //prescribedMedicineAdapter = new PrescribedMedicineAdapter(context, R.layout.prescribed_medicine_view, prescribedMedicineBeans);
-           // mListView.setAdapter(prescribedMedicineAdapter);
-
-        }
-
-        protected void populateNotificationRecordList(BaseViewHolder helper, NotificationBean item, int position){
-
-            NotificationRecordBean recordBean = (NotificationRecordBean) notifications.get(position);
-
-            // get rid of the view that are not needed
-            helper.getView(R.id.notification_medicine_list).setVisibility(View.GONE);
-            helper.getView(R.id.notification_msg_title2).setVisibility(View.GONE);
-            helper.getView(R.id.notification_msg_code2).setVisibility(View.GONE);
-
-            // make visible the record title and code fields
-            helper.getView(R.id.notification_msg_title1).setVisibility(View.VISIBLE);
-            helper.getView(R.id.notification_msg_code1).setVisibility(View.VISIBLE);
-
-            // set text
-            helper.setText(R.id.notification_type, recordBean.getType())
-                    .setText(R.id.notification_time, recordBean.getTime())
-                    .setText(R.id.notification_name, recordBean.getTitle())
-                    .setText(R.id.notification_msg_title1, recordBean.getNotice())
-                    .setText(R.id.notification_msg_code1, recordBean.getCode());
-
-
-           /*  mListView.setVisibility(View.GONE); */
-
-
-        }
-
-        protected void populateNotificationMessageList(BaseViewHolder helper, NotificationBean item, int position){
-
-            NotificationMessageBean messageBean = (NotificationMessageBean) notifications.get(position);
-
-            // get rid of the view that are not needed
-            helper.getView(R.id.notification_medicine_list).setVisibility(View.GONE);
-            helper.getView(R.id.notification_msg_code1).setVisibility(View.GONE);
-            helper.getView(R.id.notification_msg_code2).setVisibility(View.GONE);
-
-            // make visible the question and answer fields
-            helper.getView(R.id.notification_msg_title1).setVisibility(View.VISIBLE);
-            helper.getView(R.id.notification_msg_title2).setVisibility(View.VISIBLE);
-
-            // set text
-            helper.setText(R.id.notification_type, messageBean.getType())
-                    .setText(R.id.notification_time, messageBean.getTime())
-                    .setText(R.id.notification_name, messageBean.getTitle())
-                    .setText(R.id.notification_msg_title1, messageBean.getQuestion())
-                    .setText(R.id.notification_msg_title2, "回复我的评论 : " + messageBean.getAnswer());
-        }
-
-    }
-
-
-    // RecyclerView adapter
-    public class PrescribedMedicineAdapter extends BaseQuickAdapter<PrescribedMedicineBean, BaseViewHolder>{
-
-        List<PrescribedMedicineBean> prescribedMedicineList;
-
-        public PrescribedMedicineAdapter(int layoutResId, @Nullable List<PrescribedMedicineBean> data) {
-            super(layoutResId, data);
-
-            prescribedMedicineList = data;
-        }
-
-        @Override
-        protected void convert(BaseViewHolder helper, PrescribedMedicineBean item) {
-
-            int position = helper.getLayoutPosition();
-
-            // get the prescribed medicine and its code
-            PrescribedMedicineBean prescriptionBean = (PrescribedMedicineBean) prescribedMedicineList.get(position);
-
-            helper.setText(R.id.prescribed_medicine_title, prescriptionBean.getMedicine())
-                    .setText(R.id.prescribed_medicine_code, prescriptionBean.getCode());
         }
     }
 
 
-    /** WRITE HERE THE REGULAR ARRAY LIST ADAPTER **/
-   /* public class PrescribedMedicineAdapter extends ArrayAdapter<PrescribedMedicineBean>{
+        // RecyclerView adapter
+        public class NotificationMessagesAdapter extends BaseQuickAdapter<NotificationMessage, BaseViewHolder>{
 
-        List<PrescribedMedicineBean>  prescribedMedicineList;
-        Context mContext;
-        LayoutInflater mLayoutInflater;
+            List<NotificationMessage> notificationMessages;
 
-        public PrescribedMedicineAdapter(@NonNull Context context, int resource, @NonNull List<PrescribedMedicineBean> objects) {
-            super(context, resource, objects);
+            public NotificationMessagesAdapter(int layoutResId, @Nullable List<NotificationMessage> data) {
+                super(layoutResId, data);
 
-            prescribedMedicineList = objects;
-            mContext = context;
-            mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            View view = convertView;
-
-            if (view == null) {
-                view = mLayoutInflater.inflate(R.layout.prescribed_medicine_view, parent, false);
+                notificationMessages = data;
             }
 
+            @Override
+            protected void convert(BaseViewHolder helper, NotificationMessage item) {
 
-            PrescribedMedicineBean prescribedMedicine = prescribedMedicineList.get(position);
-            //Log.e("");
+                int position = helper.getLayoutPosition();
 
-            ((TextView) view.findViewById(R.id.prescribed_medicine_title)).setText(prescribedMedicine.getMedicine());
-            ((TextView) view.findViewById(R.id.prescribed_medicine_code)).setText(prescribedMedicine.getCode());
-
+                // get the prescribed medicine and its code
+                NotificationMessage notificationMessage =  notificationMessages.get(position);
 
 
-            return view;
+                if(!notificationId.equals("3")) {
+                    helper.setText(R.id.notification_std_name, notificationMessage.getStdName())
+                            .setText(R.id.notification_std_code, notificationMessage.getStdCode());
+                }
+                // don't display the code for the notice of type 新的回复消息
+                else {
+                    helper.setText(R.id.notification_std_name, notificationMessage.getStdName() + " " + notificationMessage.getStdCode())
+                            .setText(R.id.notification_std_code, "");
+                }
+            }
         }
-
-        @Override
-        public int getCount() {
-            return prescribedMedicineList.size();
-        }
-
-        @Override
-        public int getPosition(@Nullable PrescribedMedicineBean item) {
-            return super.getPosition(item);
-        }
-    } */
-
 
 
     /** Utility functions **/

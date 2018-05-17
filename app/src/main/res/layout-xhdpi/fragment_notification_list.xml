@@ -7,7 +7,6 @@
     android:background="@color/colorLightMint"
     android:gravity="center_horizontal">
 
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_notifications"
             android:layout_width="match_parent"
