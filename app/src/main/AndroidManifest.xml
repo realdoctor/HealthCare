@@ -122,7 +122,7 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.AddressActivity"
+            android:name=".activity.EditAddressActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
         </activity>
@@ -132,6 +132,10 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.RegistrationActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ProductShowByCategoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
             <intent-filter>
