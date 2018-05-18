@@ -4,9 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
-import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.activity.DocDetailActivity;
-import com.real.doctor.realdoc.adapter.DocDetailAdapter;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;

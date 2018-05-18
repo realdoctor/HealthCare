@@ -1,43 +1,66 @@
 package com.real.doctor.realdoc.model;
 
 public class AddressBean {
-    private static String province;
-    private static String city;
-    private static String district;
+    private  String province;
+    private  String city;
+    private  String district;
 
-    public AddressBean(){
+    private String provinceCityDistrict;
+    private String streetDetails;
 
-    }
+    public AddressBean(){ }
 
-    public AddressBean(String province, String city, String district){
+
+    public AddressBean(String province, String city, String district, String streetDetails){
         this.province = province;
         this. city = city;
+        this.district = district;
+        this.streetDetails = streetDetails;
+    }
+
+
+    public  String getProvince() {
+        return province;
+    }
+
+    public  void setProvince(String province) {
+        this.province = province;
+    }
+
+    public  String getCity() {
+        return city;
+    }
+
+    public  void setCity(String city) {
+        this.city = city;
+    }
+
+    public  String getDistrict() {
+        return district;
+    }
+
+    public  void setDistrict(String district) {
         this.district = district;
     }
 
 
-    public static String getProvince() {
-        return province;
+    public void setProvinceCityDistrict(String provinceCityDistrict){
+        this.provinceCityDistrict = provinceCityDistrict;
     }
 
-    public static void setProvince(String province) {
-        AddressBean.province = province;
+    public String getProvinceCityDistrict(){
+        return provinceCityDistrict;
     }
 
-    public static String getCity() {
-        return city;
+    public String getStreetDetails() {
+        return streetDetails;
     }
 
-    public static void setCity(String city) {
-        AddressBean.city = city;
+    public void setStreetDetails(String streetDetails) {
+        this.streetDetails = streetDetails;
     }
 
-    public static String getDistrict() {
-        return district;
-    }
 
-    public static void setDistrict(String district) {
-        AddressBean.district = district;
-    }
+
 
 }

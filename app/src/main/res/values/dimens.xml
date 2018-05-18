@@ -1,5 +1,21 @@
 <resources>
 
+    <!-- notofication_view -->
+    <dimen name="notification_main_layout_side_padding">25dp</dimen>
+    <dimen name="notification_main_layout_top_bottom_padding">21dp</dimen>
+    <dimen name="notification_prescribed_medicine_listitems_margin_bottom">10dp</dimen>
+
+    <dimen name="notification_titles_bottom_margin">15dp</dimen>
+    <dimen name="notification_regular_text_bottom_margin">10dp</dimen>
+
+    <dimen name="notification_name_fontsize">17sp</dimen>
+    <dimen name="notification_regular_fontsize">14sp</dimen>
+
+    <dimen name="notification_between_blocks_bottom_margin">10dp</dimen>
+
+    <dimen name="notification_end_of_list_divider_margin_top">25dp</dimen>
+    <dimen name="notification_end_of_list_divider_margin_bottom">80dp</dimen>
+
     <!--文字大小-->
     <dimen name="text_special_size">48px</dimen><!--40px以上-->
     <dimen name="text_big_size">36px</dimen><!--32-36-->

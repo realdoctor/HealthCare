@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/notification_main_layout_side_padding"
+    android:paddingRight="@dimen/notification_main_layout_side_padding"
+    android:paddingTop="@dimen/notification_main_layout_top_bottom_padding"
+    android:paddingBottom="@dimen/notification_main_layout_top_bottom_padding"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/notification_type"
+            android:text="就诊用药提醒"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="@dimen/notification_titles_bottom_margin"
+            android:textSize="@dimen/notification_regular_fontsize"
+            android:textColor="@color/regularTextColor"
+            android:fontFamily="@font/pingfang_regular_font"/>
+
+        <TextView
+            android:id="@+id/notification_time"
+            android:text="4:13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="@dimen/notification_regular_fontsize"
+            android:textColor="@color/regularTextColor"
+            android:fontFamily="@font/pingfang_regular_font"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/notification_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/boldTextColor"
+        android:textSize="@dimen/notification_name_fontsize"
+        android:layout_marginBottom="@dimen/notification_titles_bottom_margin"
+        android:fontFamily="@font/pingfang_regular_font"
+        android:textStyle="bold"/>
+
+    <!-- The recycler view inside another recycler view item:
+         displays the list of prescribed medicine -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/notification_data_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:fontFamily="@font/pingfang_regular_font"
+        android:textColor="@color/regularTextColor"/>
+
+</LinearLayout>

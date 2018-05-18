@@ -1,62 +1,18 @@
 package com.real.doctor.realdoc.model;
 
+import java.util.List;
+
 public class RecieverBean {
-    private static String name;
-    private static String phoneNumber;
-    private static String provinceCityDistrict;
-    private static String address_details;
+    List<RecieverAddressListBean> addresses;
 
-    public RecieverBean(){
+    public RecieverBean(){}
 
+    public List<RecieverAddressListBean> getAddresses() {
+        return addresses;
     }
 
-    public RecieverBean(String name, String phoneNumber, String provinceCityDistrict, String address_details){
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.provinceCityDistrict = provinceCityDistrict;
-        this.address_details = address_details;
+    public void setAddresses(List<RecieverAddressListBean> addresses) {
+        this.addresses = addresses;
     }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getProvinceCityDistrict() {
-        return provinceCityDistrict;
-    }
-
-    public void setProvinceCityDistrict(String provinceCityDistrict) {
-        this.provinceCityDistrict = provinceCityDistrict;
-    }
-
-    public String getAddress_details() {
-        return address_details;
-    }
-
-    public void setAddress_details(String address_details) {
-        this.address_details = address_details;
-    }
-
-    public Boolean isNullObject(){
-        if(name == null || name.equals("")){
-            return false;
-        }
-
-        return true;
-    }
-
 
 }

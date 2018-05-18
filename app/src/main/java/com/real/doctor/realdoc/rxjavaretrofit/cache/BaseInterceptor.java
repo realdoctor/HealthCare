@@ -1,5 +1,7 @@
 package com.real.doctor.realdoc.rxjavaretrofit.cache;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -24,12 +26,16 @@ public class BaseInterceptor implements Interceptor {
         Request.Builder builder = chain.request()
                 .newBuilder();
         if (headers != null && headers.size() > 0) {
+
             Set<String> keys = headers.keySet();
             for (String headerKey : keys) {
+
+                Log.e("headerKey", headerKey);
                 builder.addHeader(headerKey, headers.get(headerKey)).build();
             }
         }
-//        builder.addHeader("token", "");
+       builder.addHeader("Authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMzc3Nzg1MDAzNiIsImlhdCI6MTUyNjM3Nzc1MCwic3ViIjoie1wibW9iaWxlUGhvbmVcIjpcIjEzNzc3ODUwMDM2XCIsXCJyZWZyZXNoVG9rZW5cIjpmYWxzZSxcInVzZXJJZFwiOjd9IiwiaXNzIjoiT25saW5lIEpXVCBCdWlsZGVyIiwiYXVkIjoia2FuZ2xpYW4iLCJleHAiOjE1MjY5ODI1NTAsIm5iZiI6MTUyNjM3Nzc1MH0.Ldhx4u-9OGH-2iWua-t403ZpMNsXUdaytVEBMPL2IpQ");
+        builder.addHeader("userId", "7");
         return chain.proceed(builder.build());
 
     }
