@@ -65,7 +65,9 @@ public class PayActivity extends BaseActivity {
     ImageView finishBack;
     @BindView(R.id.lv_products)
     PayShowListView lv_products;
-    private String zhifu_type="";
+    @BindView(R.id.select_address)
+    TextView select_address;
+    private String zhifu_type="0";
     private static final int SDK_PAY_FLAG = 0;
     private IWXAPI api;
     public ArrayList<ProductBean> productBeanArrayList=new ArrayList<ProductBean>();
@@ -125,7 +127,7 @@ public class PayActivity extends BaseActivity {
         return sIsWXAppInstalledAndSupported;
     }
     @Override
-    @OnClick({R.id.bt_pay,R.id.finish_back})
+    @OnClick({R.id.bt_pay,R.id.finish_back,R.id.select_address})
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.bt_pay:
@@ -146,6 +148,9 @@ public class PayActivity extends BaseActivity {
                 break;
             case R.id.finish_back:
                 PayActivity.this.finish();
+                break;
+            case R.id.select_address:
+                ToastUtil.show(PayActivity.this,"收货地址列表待定",Toast.LENGTH_SHORT);
                 break;
         }
     }

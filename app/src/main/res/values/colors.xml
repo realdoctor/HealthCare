@@ -49,7 +49,7 @@
     <color name="TabTextColor">#FFFFFF</color>
     <color name="TabSelectColor">#FAFAFA</color>
     <color name="TabIndicatorColor">#FFFFFF</color>
-
+    <color name="colorBackground">#f1f0f6</color>
     <color name="divider_color">#ffeeeeee</color>
     <color name="search_bgcolor">#ff029cc6</color>
     <color name="appthemecolor">#ff03b5e5</color>
@@ -69,4 +69,9 @@
     <color name="orange_color">#de6838</color>
     <!-- 淡灰色 -->
     <color name="crimson">#dc143c</color>
+    <color name="black_p50">#7f000000</color>
+    <color name="commonColor">#ff8b45</color>
+    <color name="filter_default_tvcl">#5a626d</color>
+    <color name="gray_e7e7e7">#e7e7e7</color>
+    <color name="b_c_fafafa">#fafafa</color>
 </resources>
