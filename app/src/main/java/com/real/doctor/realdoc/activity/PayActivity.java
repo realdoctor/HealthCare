@@ -2,6 +2,7 @@ package com.real.doctor.realdoc.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -17,7 +18,9 @@ import com.alipay.sdk.app.PayTask;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.ProductAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.model.AddressBean;
 import com.real.doctor.realdoc.model.ProductBean;
+import com.real.doctor.realdoc.model.RecieverAddressListBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
@@ -74,6 +77,7 @@ public class PayActivity extends BaseActivity {
     public String totalPrice;
     public ProductAdapter productAdapter;
     public String userId;
+    public final static int ADDRESS_EVENT_REQUEST_CODE = 2;
 
     @Override
     public int getLayoutId() {
@@ -150,11 +154,23 @@ public class PayActivity extends BaseActivity {
                 PayActivity.this.finish();
                 break;
             case R.id.select_address:
-                ToastUtil.show(PayActivity.this,"收货地址列表待定",Toast.LENGTH_SHORT);
+                Intent intent =new Intent(PayActivity.this,AddressListActivity.class);
+                startActivityForResult(intent,ADDRESS_EVENT_REQUEST_CODE);
                 break;
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(resultCode == RESULT_OK&&requestCode==ADDRESS_EVENT_REQUEST_CODE){
+
+            RecieverAddressListBean bean= (RecieverAddressListBean) data.getSerializableExtra("item");
+            AddressBean addressBean=bean.getAddress();
+            select_address.setText(addressBean.getProvince()+addressBean.getCity());
+
+        }
+    }
     @Override
     public void doBusiness(Context mContext) {
 
