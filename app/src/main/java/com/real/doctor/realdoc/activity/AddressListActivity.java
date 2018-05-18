@@ -24,6 +24,7 @@ import com.real.doctor.realdoc.model.AddressBean;
 import com.real.doctor.realdoc.model.RecieverAddressListBean;
 import com.real.doctor.realdoc.model.RecieverBean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +84,16 @@ public class AddressListActivity extends AppCompatActivity {
                 startActivityForResult(intent, ADD_EVENT_REQUEST_CODE);
             }
         });
+        mAddressListAsapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent mIntent = new Intent();
+                mIntent.putExtra("item",(Serializable) mRecieverAddressListBean.get(position));
+                setResult(RESULT_OK,mIntent);
+                // 设置结果，并进行传送
 
+            }
+        });
 
         // Edit and Delete buttons listeners
         mAddressListAsapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
