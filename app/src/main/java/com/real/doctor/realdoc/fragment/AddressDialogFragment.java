@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.activity.AddressActivity;
+import com.real.doctor.realdoc.activity.EditAddressActivity;
 import com.real.doctor.realdoc.model.AddressBean;
 
 import org.json.JSONArray;
@@ -104,6 +104,7 @@ public class AddressDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -146,6 +147,11 @@ public class AddressDialogFragment extends DialogFragment {
 
         return alertDialog;
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -343,9 +349,9 @@ public class AddressDialogFragment extends DialogFragment {
                 v.setSelected(true);
                 addressBean.setDistrict(districts.get(position));
 
-                // set the value of the address from the AddressActivity to the final values: province city district
-                ((AddressActivity)getActivity()).setAddress(addressBean.getProvince() + " " + addressBean.getCity() + " " + addressBean.getDistrict());
-
+                // set the value of the address from the EditAddressActivity to the final values: province city district
+                ((EditAddressActivity)getActivity()).setAddress(addressBean.getProvince() + " " + addressBean.getCity() + " " + addressBean.getDistrict());
+                ((EditAddressActivity) getActivity()).setAddressBean(addressBean);
                 // close the dialog as soon as user selects the district
                 dismiss();
 

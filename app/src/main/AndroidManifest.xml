@@ -24,8 +24,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.android7.fileprovider"
@@ -55,9 +54,6 @@
             android:name=".activity.LoginActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-
-
-
         </activity>
         <activity
             android:name=".activity.RegisterActivity"
@@ -141,7 +137,6 @@
             android:name=".activity.RecordListActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-
         </activity>
         <activity
             android:name=".activity.CheckCompareActivity"
@@ -167,7 +162,7 @@
             android:screenOrientation="behind">
         </activity>
         <activity
-            android:name=".activity.AddressActivity"
+            android:name=".activity.EditAddressActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
         </activity>
@@ -175,7 +170,6 @@
             android:name=".activity.ProductRecieverAddress"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-
         </activity>
 
         <service
@@ -194,7 +188,13 @@
 
         <activity
             android:name=".activity.MainPageActivity"
-            android:theme="@style/AppTheme"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+
+        </activity>
+        <activity
+            android:name=".activity.AddressListActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -202,7 +202,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
     </application>
 

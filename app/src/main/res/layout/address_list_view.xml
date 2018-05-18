@@ -4,24 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="com.real.doctor.realdoc.activity.ProductRecieverAddress"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:background="@color/colorPrimaryDark">
-
-        <TextView
-            android:textColor="#fff"
-            android:text="编辑"
-            android:id="@+id/change_product_reciever_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"/>
-    </LinearLayout>
 
     <RelativeLayout
         android:orientation="horizontal"
@@ -49,5 +36,39 @@
         android:layout_height="wrap_content"
         android:text="address "
         android:padding="8dp"/>
+
+    <View
+        android:background="#ccc"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/delete_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="删除"
+            android:padding="16dp"
+            android:textColor="@color/blue"/>
+
+        <TextView
+            android:id="@+id/change_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/delete_address"
+            android:text="编辑"
+            android:textColor="@color/blue"
+            android:padding="16dp"/>
+
+
+    </RelativeLayout>
 
 </LinearLayout>
