@@ -1,6 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-<merger version="3"><dataSet config="main"><source path="D:\study\demo\RealDoc\datetimepicker\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="D:\study\demo\RealDoc\datetimepicker\src\debug\jniLibs"/></dataSet></merger>
-=======
-<merger version="3"><dataSet config="main"><source path="/Users/Lowlite/Desktop/Work_real_doctor/May10/RealDoc/datetimepicker/src/main/jniLibs"/></dataSet><dataSet config="debug"><source path="/Users/Lowlite/Desktop/Work_real_doctor/May10/RealDoc/datetimepicker/src/debug/jniLibs"/></dataSet></merger>
->>>>>>> 90a22e0832566294fa4f7606b5f530525b071b97
+<merger version="3"><dataSet config="main"><source path="/Users/Lowlite/Desktop/Work_real_doctor/May21/RealDoc/datetimepicker/src/main/jniLibs"/></dataSet><dataSet config="debug"><source path="/Users/Lowlite/Desktop/Work_real_doctor/May21/RealDoc/datetimepicker/src/debug/jniLibs"/></dataSet></merger>

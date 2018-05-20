@@ -122,11 +122,6 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.AddressActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".activity.RecordListActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
@@ -134,11 +129,7 @@
             android:name=".activity.RegistrationActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.CheckCompareActivity"
@@ -163,11 +154,17 @@
             android:exported="false"
             android:screenOrientation="behind">
         </activity>
-        <!--<activity-->
-            <!--android:name=".activity.AddressActivity"-->
-            <!--android:hardwareAccelerated="false"-->
-            <!--android:screenOrientation="portrait">-->
-        <!--</activity>-->
+        <activity android:name=".activity.AddressListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.EditAddressActivity">
+
+        </activity>
+
 
         <service
             android:name=".service.UpdateService"
