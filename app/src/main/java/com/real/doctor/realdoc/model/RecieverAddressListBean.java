@@ -1,6 +1,8 @@
 package com.real.doctor.realdoc.model;
 
-public class RecieverAddressListBean {
+import java.io.Serializable;
+
+public class RecieverAddressListBean implements Serializable {
 
     private String name;
     private String phone;

@@ -72,7 +72,10 @@ public class AddressDialogFragment extends DialogFragment {
 
     String selectedProvince = "";
     String selectedCity= "";
-    int selected_position = -1;
+    int selectedProvincePosition = -1;
+    int selectedCityPosition = -1;
+    int selectedDistrictPosition = -1;
+
 
 
     @OnClick(R.id.close_dialog)
@@ -232,26 +235,21 @@ public class AddressDialogFragment extends DialogFragment {
     }
 
     /** Display data **/
-    public void displayProvince(RecyclerView.ViewHolder holder, final int position){
+    public void displayProvince(final RecyclerView.ViewHolder holder, final int position){
+
+        // reset the selected city
+        selectedCityPosition = -1;
+        address_city.setText("市");
 
         final ProvinceHolder provinceHolder = (ProvinceHolder) holder;
+
+        // display all the provinces
         provinceHolder.address_line_text.setText(provinces.get(position));
 
-        // when the dialog is shown for the first time select the first province as the default value:
-        if(isFirstTimeScreen(isProvinceScreenSelected, firstTimeShowProvinceList)) {
-
-            //select the first province in the list
-            setFirstDefaultItemSelected(provinceHolder, "province");
-
-            // add the cities of the first default province to the list
-            populateCitiesList(provinces.get(0), 0);
-
-            // don't let add the first province anymore
-            firstTimeShowProvinceList = false;
-        }
 
         // select single item
-        singleSelectItem(provinceHolder, position);
+        singleSelectItem(provinceHolder, position, selectedProvincePosition);
+
 
         // set click listener to the whole province row
         ConstraintLayout constraintLayout = (ConstraintLayout) provinceHolder.itemView;
@@ -259,11 +257,16 @@ public class AddressDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                // save the selected province name
+               // v.setSelected(true);
+
+
+                // save the selected province name and set the city name to the header
                 addressBean.setProvince(provinces.get(position));
+                address_province.setText(provinces.get(position));
 
                 // update the selected item position for a single select
-                updateSelectedPosition(provinceHolder);
+                updateSelectedPosition(provinceHolder, position, "province");
+
 
                 // don't display the default cities of the first province anymore
                 firstTimeShowCityList = false;
@@ -274,62 +277,40 @@ public class AddressDialogFragment extends DialogFragment {
         });
     }
 
-    public void displayCity(RecyclerView.ViewHolder holder, final int position){
+    public void displayCity(final RecyclerView.ViewHolder holder, final int position){
 
         final CityHolder cityHolder = (CityHolder) holder;
+
+        // display all the cities of the selected province
         cityHolder.address_line_text.setText(cities.get(position));
 
-        // when the dialog is shown for the first time select the first city as the default value:
-        if(isFirstTimeScreen(isCityScreenSelected, firstTimeShowCityList)){
+        // select single item
+        singleSelectItem(cityHolder, position, selectedCityPosition);
 
-            setFirstDefaultItemSelected(cityHolder, "city");
 
-            // populate the district list according to the default province and city (Beijing, Beijing):
-            populateDistrictList(addressBean.getProvince(), addressBean.getCity(), 0);
+        selectedProvince = addressBean.getProvince();
 
-            // don't let add the first city anymore
-            firstTimeShowCityList = false;
+        // implement click on the city
+        ConstraintLayout cityConstraintLayout = (ConstraintLayout) cityHolder.itemView;
+        cityConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        } else {
+                //v.setSelected(true);
 
-            // select single item
-            singleSelectItem(cityHolder, position);
+                // update the selected item position for a single select
+                updateSelectedPosition(cityHolder, position, "city");
 
-            selectedProvince = addressBean.getProvince();
-
-            // let user choose the city if it is not the only one in the list
-            if (cities.size() > 1) {
-
-                // implement click on the city
-                ConstraintLayout cityConstraintLayout = (ConstraintLayout) cityHolder.itemView;
-                cityConstraintLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        // update the selected item position for a single select
-                        updateSelectedPosition(cityHolder);
-
-                        // save the selected city name
-                        addressBean.setCity(cities.get(position));
-
-                        // populate the district list according to the selected province and city
-                        populateDistrictList(selectedProvince, addressBean.getCity(), position);
-
-                    }
-                });
-            }
-            // auto-select the city if it is the only one in a province
-            else {
-                // select the city
-                setFirstDefaultItemSelected(cityHolder, "city");
 
                 // save the selected city name
-                selectedCity = addressBean.getCity();
+                address_city.setText(cities.get(position));
+                addressBean.setCity(cities.get(position));
 
-                populateDistrictList(selectedProvince, selectedCity, position);
+                // populate the district list according to the selected province and city
+                populateDistrictList(selectedProvince, addressBean.getCity(), position);
 
             }
-        }
+        });
 
     }
 
@@ -346,7 +327,9 @@ public class AddressDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                v.setSelected(true);
+                //v.setSelected(true);
+
+                address_district.setText(districts.get(position));
                 addressBean.setDistrict(districts.get(position));
 
                 // set the value of the address from the EditAddressActivity to the final values: province city district
@@ -400,6 +383,7 @@ public class AddressDialogFragment extends DialogFragment {
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.address_view, parent, false);
 
+
             if(whichScreenSelected() == "province")
                 return new ProvinceHolder(view);
             else if(whichScreenSelected() == "city")
@@ -440,42 +424,28 @@ public class AddressDialogFragment extends DialogFragment {
 
     /** Utility functions **/
 
-    public void setFirstDefaultItemSelected(RecyclerView.ViewHolder holder, String screen){
+    public void  singleSelectItem(RecyclerView.ViewHolder holder, int position, int selectedPosition){
 
-        holder.itemView.setSelected(true);
-
-        switch (screen){
-            case "province": addressBean.setProvince(provinces.get(0));
-                break;
-            case "city": addressBean.setCity(cities.get(0));
-                break;
-            case "district": addressBean.setDistrict(districts.get(0));
-                break;
-        }
-
-    }
-
-    public void  singleSelectItem(RecyclerView.ViewHolder holder, int position){
-
-        if(position == selected_position){
+        if(position == selectedPosition){
             holder.itemView.setSelected(true);
         } else {
             holder.itemView.setSelected(false);
         }
+
+
     }
 
-    public void updateSelectedPosition(RecyclerView.ViewHolder holder){
+    public void updateSelectedPosition(RecyclerView.ViewHolder holder, int position,  String selectedRow){
 
-        selected_position = holder.getAdapterPosition();
+        switch (selectedRow){
+            case "province": selectedProvincePosition = position;
+            break;
+            case "city": selectedCityPosition = position;
+            break;
+            case "district": selectedDistrictPosition = position;
+        }
+
         mAddressDialogAdapter.notifyDataSetChanged();
-    }
-
-    public Boolean isFirstTimeScreen(Boolean selectedScreen, Boolean firstTime){
-
-        if(selectedScreen && firstTime)
-            return true;
-
-        return false;
     }
 
     public String whichScreenSelected(){
