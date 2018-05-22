@@ -160,6 +160,10 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".activity.DeptListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activity.RegistrationActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
