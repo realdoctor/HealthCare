@@ -53,6 +53,14 @@
             android:name=".activity.SplashActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
+<<<<<<< HEAD
+=======
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+>>>>>>> RealDoc-zhujiabin
         </activity>
         <activity
             android:name=".activity.RealDocActivity"
@@ -64,6 +72,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.SaveRecordActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.LoginActivity"
             android:hardwareAccelerated="false"
@@ -148,11 +160,13 @@
             android:name=".activity.SaveDocActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".activity.SaveRecordActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
         </activity>
+
         <activity
             android:name=".activity.RecordListActivity"
             android:hardwareAccelerated="false"
@@ -179,6 +193,7 @@
         <service
             android:name=".service.UpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+			
         <service android:name=".service.RecordingService" />
 
         <activity
