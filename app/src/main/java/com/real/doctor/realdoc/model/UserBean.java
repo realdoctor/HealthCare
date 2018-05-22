@@ -3,16 +3,28 @@ package com.real.doctor.realdoc.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Administrator on 2018/4/19.
  */
 
 public class UserBean implements Parcelable {
+    @SerializedName("userId")
     private String id;
     private String avater;
+    @SerializedName("userName")
     private String name;
     private String pwd;
+    @SerializedName("mobilePhone")
     private String mobile;
+    @SerializedName("realName")
+    private String realname;
+    @SerializedName("lastUpdateDtime")
+    private String lastTime;
+    @SerializedName("sentAddress")
+    private String address;
+    private String email;
 
     protected UserBean(Parcel in) {
         id = in.readString();

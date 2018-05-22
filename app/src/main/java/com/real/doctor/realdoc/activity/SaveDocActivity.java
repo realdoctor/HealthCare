@@ -120,8 +120,8 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
         ImageBean bean = new ImageBean();
         bean.setSpareImage(R.mipmap.add);
         imageList.add(bean);
-        rightTitle.setText("查看");
-        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setText("");
+        rightTitle.setVisibility(View.GONE);
     }
 
     private void initLable() {
@@ -130,6 +130,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
         switch (diseasesList.size()) {
             case 0:
                 illLinear.setVisibility(View.GONE);
+                break;
             case 1:
                 illLinear.setVisibility(View.VISIBLE);
                 labelList.add(new LabelBean(diseasesList.get(0), 1));
@@ -167,6 +168,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
         switch (hospitalsList.size()) {
             case 0:
                 hospitalLinear.setVisibility(View.GONE);
+                break;
             case 1:
                 hospitalLinear.setVisibility(View.VISIBLE);
                 hospitalList.add(new LabelBean(hospitalsList.get(0), 1));

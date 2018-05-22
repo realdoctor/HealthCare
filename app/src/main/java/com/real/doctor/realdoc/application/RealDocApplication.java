@@ -12,11 +12,14 @@ import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 
@@ -52,13 +55,11 @@ public class RealDocApplication extends Application {
 
     private static DaoSession daoSession;
 
-    private SaveDocManager mInstance;
+    private static SaveDocManager mInstance;
     /**
      * 本地数据库中数据条数
      */
-    private int count;
-
-    List<SaveDocBean> recordList = new ArrayList<>();
+    private static int count;
 
     public RealDocApplication getInstance() {
         if (instance == null) {
@@ -113,13 +114,24 @@ public class RealDocApplication extends Application {
         return daoSession;
     }
 
-    private void getRecordListData() {
+    public static void getRecordListData() {
         mInstance = SaveDocManager.getInstance(getContext());
         count = (int) mInstance.getTotalCount();
+        String token = (String) SPUtils.get(getContext(), "token", "");
+        String mobile = (String) SPUtils.get(getContext(), "mobile", "");
+        Map<String, String> header = null;
+        if (EmptyUtils.isNotEmpty(token)) {
+            header = new HashMap<String, String>();
+            header.put("Authorization", token);
+        } else {
+            ToastUtil.showLong(getContext(), "病历数据列表请求失败,请确定您的账户已登录!");
+        }
+
         Map<String, String> map = new HashMap<String, String>();
-        map.put("mobilePhone", "13777850036");
+//        map.put("mobilePhone", "13777850036");
+        map.put("mobilePhone", mobile);
         map.put("clientNum", String.valueOf(count));
-        HttpRequestClient.getInstance(getContext()).createBaseApi().get("patient"
+        HttpRequestClient.getInstance(getContext(), HttpNetUtil.BASE_URL, header).createBaseApi().get("patient"
                 , map, new BaseObserver<ResponseBody>(getContext()) {
 
                     @Override
@@ -131,7 +143,6 @@ public class RealDocApplication extends Application {
                     public void onError(Throwable e) {
                         ToastUtil.showLong(getContext(), "获取病历列表出错!");
                     }
-
 
 
                     @Override

@@ -1,5 +1,7 @@
 package com.real.doctor.realdoc.util;
 
+import java.io.File;
+
 /**
  * Created by Administrator on 2017/8/27.
  */

@@ -57,6 +57,12 @@ public class PhotoPicker {
             }
         }
 
+        public void start(@NonNull Activity activity, int requestCode, Bundle bundle) {
+            if (PermissionsUtils.checkReadStoragePermission(activity)) {
+                activity.startActivityForResult(getIntent(activity), requestCode);
+            }
+        }
+
         /**
          * @param fragment    Fragment to receive result
          * @param requestCode requestCode for result
@@ -132,6 +138,12 @@ public class PhotoPicker {
 
         public PhotoPickerBuilder setPreviewEnabled(boolean previewEnabled) {
             mPickerOptionsBundle.putBoolean(EXTRA_PREVIEW_ENABLED, previewEnabled);
+            return this;
+        }
+
+        public PhotoPickerBuilder setPostion(String groupPos, String pos) {
+            mPickerOptionsBundle.putString("groupPos", groupPos);
+            mPickerOptionsBundle.putString("pos", pos);
             return this;
         }
     }

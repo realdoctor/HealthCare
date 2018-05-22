@@ -40,6 +40,8 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         public final static Property IsSelect = new Property(13, boolean.class, "isSelect", false, "IS_SELECT");
     }
 
+    private DaoSession daoSession;
+
 
     public SaveDocBeanDao(DaoConfig config) {
         super(config);
@@ -47,6 +49,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
     
     public SaveDocBeanDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -215,6 +218,12 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
             stmt.bindString(13, visitWay);
         }
         stmt.bindLong(14, entity.getIsSelect() ? 1L: 0L);
+    }
+
+    @Override
+    protected final void attachEntity(SaveDocBean entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     @Override

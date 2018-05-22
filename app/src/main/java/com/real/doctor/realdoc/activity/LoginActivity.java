@@ -21,6 +21,7 @@ import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.NetworkUtil;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.widget.EditTextPassword;
 import com.sina.weibo.sdk.auth.AccessTokenKeeper;
@@ -41,6 +42,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -144,7 +146,7 @@ public class LoginActivity extends BaseActivity {
                         String mobilePhone = phoneNumber.getText().toString().trim();
                         String pwd = userpassword.getText().toString().trim();
                         login(mobilePhone, pwd);
-                    }else{
+                    } else {
                         ToastUtil.showLong(LoginActivity.this, "请链接互联网!");
                         return;
                     }
@@ -234,14 +236,29 @@ public class LoginActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    ToastUtil.showLong(LoginActivity.this, "用户登录成功!");
+                                    ToastUtil.showLong(RealDocApplication.getContext(), "用户登录成功!");
                                     if (DocUtils.hasValue(object, "data")) {
+                                        //获取用户信息，保存token
+                                        JSONObject jsonObject = object.getJSONObject("data");
+                                        if (DocUtils.hasValue(jsonObject, "token")) {
+                                            String token = jsonObject.getString("token");
+                                            if (EmptyUtils.isNotEmpty(token)) {
+                                                SPUtils.put(LoginActivity.this, "token", token);
+                                            }
+                                            //获取用户信息
+                                            UserBean user = GsonUtil.GsonToBean(jsonObject.getJSONObject("user").toString(), UserBean.class);
+                                            if(EmptyUtils.isNotEmpty(user)){
+                                                SPUtils.put(LoginActivity.this, "mobile", user.getMobile());
+                                            }
+                                        }
+                                        //登录成功,获得列表数据
+                                        RealDocApplication.getRecordListData();
                                         actionStart(LoginActivity.this, RealDocActivity.class);
                                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                         finish();
                                     }
                                 } else {
-                                    ToastUtil.showLong(LoginActivity.this, "用户登录失败!");
+                                    ToastUtil.showLong(RealDocApplication.getContext(), "用户登录失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
