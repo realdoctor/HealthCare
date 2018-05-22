@@ -1,166 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container_iv"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffffff">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
+    <include layout="@layout/title_bar" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
+    <FrameLayout
+        android:id="@+id/container_iv"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <LinearLayout
-            android:id="@+id/save_doc_layout"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:scrollbars="none">
 
-            <include layout="@layout/title_bar" />
-
-            <include layout="@layout/divider_line" />
-
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/save_doc_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ffffffff">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingBottom="20dp">
 
-                <TextView
-                    android:id="@+id/ill_text"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/save_doc_ill"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
+                    android:background="@android:color/white">
 
-                <TextView
-                    android:id="@+id/ill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/ill_text"
-                    android:layout_marginBottom="10.0dip"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/second_function_one_string"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
+                    <TextView
+                        android:id="@+id/ill_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:gravity="center"
+                        android:layout_marginTop="10.0dip"
+                        android:text="@string/save_doc_ill"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
 
-                <TextView
-                    android:id="@+id/hospital_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/ill"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/save_doc_hospital"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
+                    <TextView
+                        android:id="@+id/ill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ill_text"
+                        android:layout_marginBottom="10.0dip"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:text="@string/second_function_one_string"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
 
-                <TextView
-                    android:id="@+id/hospital"
-                    android:layout_width="fill_parent"
-                    android:layout_height="45.0dip"
-                    android:layout_below="@id/hospital_text"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:background="#ffffffff"
-                    android:text=""
-                    android:textColor="@color/text_special_color"
-                    android:textSize="14.0sp"
-                    android:typeface="monospace" />
+                    <TextView
+                        android:id="@+id/hospital_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ill"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:text="@string/save_doc_hospital"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
 
-                <TextView
-                    android:id="@+id/doctor_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/hospital"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/save_doc_doctor"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
+                    <TextView
+                        android:id="@+id/hospital"
+                        android:layout_width="fill_parent"
+                        android:layout_height="45.0dip"
+                        android:layout_below="@id/hospital_text"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:background="@android:color/white"
+                        android:text=""
+                        android:textColor="@color/text_special_color"
+                        android:textSize="14.0sp"
+                        android:typeface="monospace" />
 
-                <TextView
-                    android:id="@+id/doctor"
-                    android:layout_width="fill_parent"
-                    android:layout_height="45.0dip"
-                    android:layout_below="@id/doctor_text"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:background="#ffffffff"
-                    android:text=""
-                    android:textColor="@color/text_special_color"
-                    android:textSize="14.0sp"
-                    android:typeface="monospace" />
+                    <TextView
+                        android:id="@+id/doctor_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/hospital"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:text="@string/save_doc_doctor"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
 
-                <TextView
-                    android:id="@+id/time_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/doctor"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/save_doc_time"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
+                    <TextView
+                        android:id="@+id/doctor"
+                        android:layout_width="fill_parent"
+                        android:layout_height="45.0dip"
+                        android:layout_below="@id/doctor_text"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:background="@android:color/white"
+                        android:text=""
+                        android:textColor="@color/text_special_color"
+                        android:textSize="14.0sp"
+                        android:typeface="monospace" />
 
-                <TextView
-                    android:id="@+id/time"
-                    android:layout_width="fill_parent"
-                    android:layout_height="45.0dip"
-                    android:layout_below="@id/time_text"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:background="#ffffffff"
-                    android:text=""
-                    android:textColor="@color/text_special_color"
-                    android:textSize="14.0sp"
-                    android:typeface="monospace" />
+                    <TextView
+                        android:id="@+id/time_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/doctor"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:text="@string/save_doc_time"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
+
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="fill_parent"
+                        android:layout_height="45.0dip"
+                        android:layout_below="@id/time_text"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:background="@android:color/white"
+                        android:text=""
+                        android:textColor="@color/text_special_color"
+                        android:textSize="14.0sp"
+                        android:typeface="monospace" />
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/doc_grid_view_linear"
+                    android:id="@+id/video_recycle_view_linear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/time"
-                    android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <com.real.doctor.realdoc.view.DocGridView
-                        android:id="@+id/doc_grid_view"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/grid_recycle_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:columnWidth="100dp"
-                        android:gravity="center"
-                        android:horizontalSpacing="5dp"
-                        android:listSelector="@android:color/transparent"
-                        android:numColumns="3"
-                        android:stretchMode="columnWidth"
-                        android:verticalSpacing="5dp" />
+                        android:layout_marginTop="10dp"
+                        android:scrollbars="none"></android.support.v7.widget.RecyclerView>
 
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/audio_recycle_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:scrollbars="none"></android.support.v7.widget.RecyclerView>
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/video_recycle_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:scrollbars="none"></android.support.v7.widget.RecyclerView>
                 </LinearLayout>
-            </RelativeLayout>
-        </LinearLayout>
-    </ScrollView>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/detail_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:contentDescription="用来展示图片的viewpager"
-        android:visibility="invisible" />
-</FrameLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/detail_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:contentDescription="用来展示图片的viewpager"
+            android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

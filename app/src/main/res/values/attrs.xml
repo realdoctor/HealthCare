@@ -83,4 +83,26 @@
         <attr name="wordMargin" format="dimension" />
         <attr name="labelBackground" format="reference" />
     </declare-styleable>
+    <declare-styleable name="CircleBtnView">
+        <attr name="minTime" format="integer"></attr>
+        <attr name="maxTime" format="integer"></attr>
+        <attr name="progressColor" format="color"></attr>
+        <attr name="progressWidth" format="dimension"></attr>
+    </declare-styleable>
+    <!--NineGridImageView-->
+    <declare-styleable name="NineGridImageView">
+        <attr name="singleImgSize" format="dimension" />
+        <attr name="imgGap" format="dimension" />
+        <attr name="maxSize" format="integer" />
+        <attr name="showStyle" format="enum">
+            <enum name="grid" value="0" />
+            <enum name="fill" value="1" />
+        </attr>
+    </declare-styleable>
+    <!--ExcelPanel-->
+    <declare-styleable name="ExcelPanel">
+        <attr name="left_cell_width" format="dimension" />
+        <attr name="top_cell_height" format="dimension" />
+        <attr name="normal_cell_width" format="dimension" />
+    </declare-styleable>
 </resources>
