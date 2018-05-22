@@ -164,6 +164,10 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".activity.OrderExpertActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activity.RegistrationActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
