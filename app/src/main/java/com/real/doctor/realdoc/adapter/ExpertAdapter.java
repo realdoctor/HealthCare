@@ -8,43 +8,49 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.model.ExpertBean;
 import com.real.doctor.realdoc.model.HospitalBean;
 
 import java.util.List;
 
 
-public class ExpertAdapter extends RdBaseAdapter<HospitalBean> {
+public class ExpertAdapter extends RdBaseAdapter<ExpertBean> {
     public ExpertAdapter(Context context, List list) {
         super(context, list);
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        HospitalBean bean = getItem(position);
-        final HospitalHolder holder;
+        ExpertBean bean = getItem(position);
+        final Holder holder;
         if (convertView == null) {
-            holder = new HospitalHolder();
-            convertView = mInflater.inflate(R.layout.hospital_item, parent, false);
-            holder.hospital_detail_img = (ImageView) convertView.findViewById(R.id.hospital_detail_img);
-            holder.hospital_title=(TextView) convertView.findViewById(R.id.hospital_title);
-            holder.hospital_level=(TextView) convertView.findViewById(R.id.hospital_level);
-            holder.hospital_markNum=(TextView) convertView.findViewById(R.id.hospital_markNum);
+            holder = new Holder();
+            convertView = mInflater.inflate(R.layout.expert_item, parent, false);
+            holder.expert_detail_img = (ImageView) convertView.findViewById(R.id.expert_detail_img);
+            holder.expert_title=(TextView) convertView.findViewById(R.id.expert_title);
+            holder.expert_postion=(TextView) convertView.findViewById(R.id.expert_postion);
+            holder.expert_level=(TextView) convertView.findViewById(R.id.expert_level);
+            holder.expert_markNum=(TextView) convertView.findViewById(R.id.expert_markNum);
             holder.good_at=(TextView) convertView.findViewById(R.id.good_at);
+
             convertView.setTag(holder);
         } else {
-            holder = (HospitalHolder) convertView.getTag();
+            holder = (Holder) convertView.getTag();
         }
-        holder.hospital_title.setText(bean.hospitalName);
-        holder.hospital_level.setText(bean.hospitalLevel);
-        holder.hospital_markNum.setText("预约量为："+bean.markNum);
-        Glide.with(mContext).load(bean.hospitalImage).crossFade().into((ImageView) holder.hospital_detail_img);
+        holder.expert_title.setText(bean.doctorName);
+        holder.expert_postion.setText(bean.positional);
+        holder.expert_markNum.setText("接诊量："+bean.receiveNum);
+        holder.good_at.setText(bean.goodAt);
+        Glide.with(mContext).load(bean.expertImage).crossFade().into((ImageView) holder.expert_detail_img);
         return convertView;
     }
 
-    public class HospitalHolder {
-       public ImageView hospital_detail_img;
-       public TextView hospital_title;
-       public TextView hospital_level;
+    public class Holder {
+       public ImageView expert_detail_img;
+       public TextView expert_title;
+       public TextView expert_postion;
        public TextView hospital_markNum;
+       public TextView expert_level;
+       public TextView expert_markNum;
        public TextView good_at;
     }
 }

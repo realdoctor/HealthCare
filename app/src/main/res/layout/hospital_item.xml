@@ -56,13 +56,13 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/good_at"
+            android:id="@+id/order_expert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/centre_rl"
-            android:layout_marginLeft="10dp"
+            android:text="@string/order_expert"
             android:layout_marginTop="10dp"
-            android:textColor="@color/orange"
+            android:textColor="@color/black"
             android:textSize="@dimen/txt_14" />
     </RelativeLayout>
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -67,6 +68,7 @@ public class DeptListActivity extends BaseActivity {
 
     @Override
     public void initData() {
+       final String  hospitalId=getIntent().getStringExtra("hospitalId");
         page_title.setText("预约科室");
         leftAdapter= new LeftAdapter(DeptListActivity.this,arrayList);
         lListView.setAdapter(leftAdapter);
@@ -86,6 +88,10 @@ public class DeptListActivity extends BaseActivity {
                         public void onItemClick(AdapterView<?> arg0, View arg1,
                                                 int position, long arg3) {
                             DeptBean dBean = bean.deptList.get(position);
+                            Intent intent =new Intent(DeptListActivity.this,OrderExpertActivity.class);
+                            intent.putExtra("hospitalId",hospitalId);
+                            intent.putExtra("deptName",dBean.deptName);
+                            startActivity(intent);
 
                         }
                     });

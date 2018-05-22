@@ -27,7 +27,7 @@ public class HospitalAdapter extends RdBaseAdapter<HospitalBean> {
             holder.hospital_title=(TextView) convertView.findViewById(R.id.hospital_title);
             holder.hospital_level=(TextView) convertView.findViewById(R.id.hospital_level);
             holder.hospital_markNum=(TextView) convertView.findViewById(R.id.hospital_markNum);
-            holder.good_at=(TextView) convertView.findViewById(R.id.good_at);
+            holder.order_expert=(TextView) convertView.findViewById(R.id.order_expert);
             convertView.setTag(holder);
         } else {
             holder = (HospitalHolder) convertView.getTag();
@@ -44,6 +44,6 @@ public class HospitalAdapter extends RdBaseAdapter<HospitalBean> {
        public TextView hospital_title;
        public TextView hospital_level;
        public TextView hospital_markNum;
-       public TextView good_at;
+       public TextView order_expert;
     }
 }

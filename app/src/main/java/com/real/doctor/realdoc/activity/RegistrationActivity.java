@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -119,6 +120,15 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         refreshLayout.setOnRefreshListener(this);
         hospitalAdapter=new HospitalAdapter(RegistrationActivity.this,hospitalBeanArrayList);
         lv_list.setAdapter(hospitalAdapter);
+        lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               HospitalBean bean= (HospitalBean) parent.getAdapter().getItem(position);
+               Intent intent =new Intent(RegistrationActivity.this,DeptListActivity.class);
+               intent.putExtra("hospitalId",bean.hospitalId);
+               startActivity(intent);
+            }
+        });
     }
     /**
      * 初始化定位

@@ -8,18 +8,26 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ProductShowActivity;
+import com.real.doctor.realdoc.adapter.ExpertAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
+import com.real.doctor.realdoc.model.DeptBean;
+import com.real.doctor.realdoc.model.ExpertBean;
 import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -36,6 +44,9 @@ public class OrderExpertFragment extends BaseFragment implements AdapterView.OnI
     @BindView(R.id.lv_expert)
     ListView listView;
     private Unbinder unbinder;
+    ArrayList<ExpertBean> arrayList=new ArrayList<ExpertBean>();
+    ExpertAdapter expertAdapter;
+
     public static OrderExpertFragment newInstance(String  hospitalId,String deptName) {
         OrderExpertFragment fragment=new OrderExpertFragment();
         Bundle bundel=new Bundle();
@@ -60,12 +71,13 @@ public class OrderExpertFragment extends BaseFragment implements AdapterView.OnI
         if(getArguments()!=null) {
             String hospitalId =(String)getArguments().get("hospitalId");
             String deptName=(String)getArguments().get("deptName");
-
+            expertAdapter=new ExpertAdapter(getContext(),arrayList);
+            listView.setAdapter(expertAdapter);
             getExpert(hospitalId,deptName);
         }
     }
 
-    private void getExpert(String deptName,String hospitalId){
+    private void getExpert(String hospitalId,String deptName){
         HashMap<String,Object> param=new HashMap<>();
         param.put("hospitalId",hospitalId);
         param.put("deptName",deptName);
@@ -104,6 +116,13 @@ public class OrderExpertFragment extends BaseFragment implements AdapterView.OnI
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
+                                    JSONArray jsonObject=object.getJSONArray("data");
+                                    Gson localGson = new GsonBuilder()
+                                            .create();
+                                    arrayList.addAll((ArrayList<ExpertBean>)localGson.fromJson(jsonObject.toString(),
+                                            new TypeToken<ArrayList<ExpertBean>>() {
+                                            }.getType()));
+                                    expertAdapter.notifyDataSetChanged();
 
                                 } else {
                                 }
