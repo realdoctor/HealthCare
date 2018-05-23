@@ -15,7 +15,6 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ProductShowActivity;
 import com.real.doctor.realdoc.adapter.ExpertAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
-import com.real.doctor.realdoc.model.DeptBean;
 import com.real.doctor.realdoc.model.ExpertBean;
 import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
@@ -40,15 +39,15 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class OrderExpertFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class OrderExpertByNameFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @BindView(R.id.lv_expert)
     ListView listView;
     private Unbinder unbinder;
     ArrayList<ExpertBean> arrayList=new ArrayList<ExpertBean>();
     ExpertAdapter expertAdapter;
 
-    public static OrderExpertFragment newInstance(String  hospitalId,String deptName) {
-        OrderExpertFragment fragment=new OrderExpertFragment();
+    public static OrderExpertByNameFragment newInstance(String hospitalId, String deptName) {
+        OrderExpertByNameFragment fragment=new OrderExpertByNameFragment();
         Bundle bundel=new Bundle();
         bundel.putString("hospitalId",hospitalId);
         bundel.putString("deptName",deptName);

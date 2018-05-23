@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.FragPagerAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
-import com.real.doctor.realdoc.fragment.OrderExpertFragment;
+import com.real.doctor.realdoc.fragment.OrderExpertByDateFragment;
+import com.real.doctor.realdoc.fragment.OrderExpertByNameFragment;
+import com.real.doctor.realdoc.view.CustomViewPager;
 
 import java.util.ArrayList;
 
@@ -32,7 +34,7 @@ public class OrderExpertActivity extends BaseActivity {
     @BindView(R.id.rb_date)
     RadioButton radioButtonDate;
     @BindView(R.id.vp_show)
-    ViewPager viewPager;
+    CustomViewPager viewPager;
     @BindView(R.id.finish_back)
     ImageView finish_back;
     @BindView(R.id.page_title)
@@ -57,14 +59,14 @@ public class OrderExpertActivity extends BaseActivity {
 //        deptName=getIntent().getStringExtra("deptName");
         page_title.setText("预约专家");
         ArrayList<Fragment> list=new ArrayList<Fragment>();
-        OrderExpertFragment orderExpertFragment= OrderExpertFragment.newInstance(hospitalId,deptName);
-        OrderExpertFragment orderExpertFragment2= OrderExpertFragment.newInstance(hospitalId,deptName);
+        OrderExpertByNameFragment orderExpertFragment= OrderExpertByNameFragment.newInstance(hospitalId,deptName);
+        OrderExpertByDateFragment orderExpertFragment2= OrderExpertByDateFragment.newInstance(hospitalId,deptName);
         list.add(orderExpertFragment);
         list.add(orderExpertFragment2);
         adapter=new FragPagerAdapter(getSupportFragmentManager(),list);
+        viewPager.setPagingEnabled(false);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(DEFAULT_OFFSCREEN_PAGES);
-        viewPager.setOnPageChangeListener(new MyOnPageChangeListener());
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -101,20 +103,5 @@ public class OrderExpertActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
-    }
-    public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
-
-        @Override
-        public void onPageSelected(int position) {
-            ((RadioButton) radioGroup.getChildAt(position)).setChecked(true);
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-        }
     }
 }
