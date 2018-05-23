@@ -11,9 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
+import com.real.doctor.realdoc.activity.RegistrationActivity;
 import com.real.doctor.realdoc.activity.SaveDocActivity;
 import com.real.doctor.realdoc.activity.SearchActivity;
+import com.real.doctor.realdoc.activity.ShopCartActivity;
 import com.real.doctor.realdoc.adapter.HomeRecordAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
@@ -80,7 +83,7 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.home_search, R.id.save_doc_linear})
+    @OnClick({R.id.home_search, R.id.save_doc_linear,R.id.base_cure,R.id.doctor_online})
     @Override
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
@@ -96,6 +99,15 @@ public class HomeFragment extends BaseFragment {
                     intent = new Intent(getActivity(), RecordListActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.base_cure:
+                    intent = new Intent(getActivity(), ProductShowByCategoryActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.doctor_online:
+                    intent = new Intent(getActivity(), RegistrationActivity.class);
+                    startActivity(intent);
+                    break;
+
             }
         }
     }
