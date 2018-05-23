@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#ffffffff">
 
-    <ScrollView
+    <include
+        android:id="@+id/title"
+        layout="@layout/title_bar" />
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/title"
         android:scrollbars="none">
 
         <LinearLayout
@@ -16,151 +22,86 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/title_bar" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/divider_color" />
 
-            <include layout="@layout/divider_line" />
-
-            <RelativeLayout
+            <com.real.doctor.realdoc.view.excelpanel.ExcelPanel
+                android:id="@+id/content_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ffffffff">
+                app:left_cell_width="80dp"
+                app:normal_cell_width="80dp"
+                app:top_cell_height="40dp" />
 
-                <TextView
-                    android:id="@+id/ill_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/save_doc_ill"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
 
-                <TextView
-                    android:id="@+id/ill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/ill_text"
-                    android:layout_marginBottom="10.0dip"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/second_function_one_string"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
-
-                <TextView
-                    android:id="@+id/hospital_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/ill"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/save_doc_hospital"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
-
-                <TextView
-                    android:id="@+id/hospital"
-                    android:layout_width="fill_parent"
-                    android:layout_height="45.0dip"
-                    android:layout_below="@id/hospital_text"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:background="#ffffffff"
-                    android:text=""
-                    android:textColor="@color/text_special_color"
-                    android:textSize="14.0sp"
-                    android:typeface="monospace" />
-
-                <TextView
-                    android:id="@+id/doctor_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/hospital"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/save_doc_doctor"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
-
-                <TextView
-                    android:id="@+id/doctor"
-                    android:layout_width="fill_parent"
-                    android:layout_height="45.0dip"
-                    android:layout_below="@id/doctor_text"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:background="#ffffffff"
-                    android:text=""
-                    android:textColor="@color/text_special_color"
-                    android:textSize="14.0sp"
-                    android:typeface="monospace" />
-
-                <TextView
-                    android:id="@+id/time_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/doctor"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:text="@string/save_doc_time"
-                    android:textColor="#ff333333"
-                    android:typeface="monospace" />
-
-                <TextView
-                    android:id="@+id/time"
-                    android:layout_width="fill_parent"
-                    android:layout_height="45.0dip"
-                    android:layout_below="@id/time_text"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:background="#ffffffff"
-                    android:text=""
-                    android:textColor="@color/text_special_color"
-                    android:textSize="14.0sp"
-                    android:typeface="monospace" />
+            <LinearLayout
+                android:id="@+id/doc_grid_view_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/doc_grid_view_linear"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/time"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/image_one"
-                        android:layout_width="0dp"
+                        android:layout_width="120dp"
                         android:layout_height="120dp"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
                         android:layout_weight="1"
+                        android:visibility="visible"
                         android:scaleType="fitXY"
                         android:src="@mipmap/ic_launcher" />
 
+                    <TextView
+                        android:id="@+id/text_one"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        tools:text="描述1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/image_two"
-                        android:layout_width="0dp"
+                        android:layout_width="120dp"
                         android:layout_height="120dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="visible"
                         android:layout_weight="1"
                         android:scaleType="fitXY"
                         android:src="@mipmap/ic_launcher" />
 
+                    <TextView
+                        android:id="@+id/text_two"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        tools:text="描述2" />
                 </LinearLayout>
-            </RelativeLayout>
-
+            </LinearLayout>
         </LinearLayout>
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

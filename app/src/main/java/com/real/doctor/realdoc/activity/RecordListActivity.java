@@ -2,10 +2,15 @@ package com.real.doctor.realdoc.activity;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +43,9 @@ import butterknife.OnClick;
 public class RecordListActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener {
 
     public static final String DATEPICKER_TAG = "datepicker";
+    public static String RECORD_LIST_TEXT = "android.intent.action.record.list";
+    @BindView(R.id.right_title)
+    TextView rightTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
     DocDetailAdapter docDetailAdapter;
@@ -63,6 +71,8 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
     LinearLayout selectDiseaseLinear;
     @BindView(R.id.select_disease_list)
     RecyclerView selectDiseaseList;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
     DatePickerDialog datePickerDialog;
     DiseaseListAdapter diseaseListAdapter;
     private boolean startFlag = false;
@@ -85,6 +95,8 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
 
     @Override
     public void initData() {
+        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setText("新增");
         recordList = new ArrayList<>();
         instance = SaveDocManager.getInstance(RecordListActivity.this);
         if (EmptyUtils.isNotEmpty(instance)) {
@@ -111,6 +123,26 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
 //        selectDiseaseList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         diseaseListAdapter = new DiseaseListAdapter(RecordListActivity.this, R.layout.disease_list_item, diseaseList);
         selectDiseaseList.setAdapter(diseaseListAdapter);
+        localBroadcast();
+
+        // 设置下拉进度的背景颜色，默认就是白色的
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
+        // 设置下拉进度的主题颜色
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                //处理刷新列表逻辑
+                refreshList();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 3000);
+            }
+        });
     }
 
     @Override
@@ -143,10 +175,37 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
                 selectTimeLinearFlag = true;
             }
         });
+        // 下拉时触发SwipeRefreshLayout的下拉动画，动画完毕之后就会回调这个方法
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+                // 加载完数据设置为不刷新状态，将下拉进度收起来
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 3000);
+            }
+        });
+    }
+
+    private void localBroadcast() {
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(RECORD_LIST_TEXT);
+        BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                docDetailAdapter.notifyDataSetChanged();
+            }
+        };
+        broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 
     @Override
-    @OnClick({R.id.select_time_record, R.id.select_disease_record, R.id.add_start_time, R.id.add_end_time, R.id.confirm_btn, R.id.finish_back})
+    @OnClick({R.id.select_time_record, R.id.select_disease_record, R.id.add_start_time, R.id.add_end_time, R.id.confirm_btn, R.id.finish_back, R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.select_time_record:
@@ -154,10 +213,12 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
                     selectTimeLinear.setVisibility(View.VISIBLE);
                     startTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "y年M月d日"));
                     endTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "y年M月d日"));
+                    selectTimeLinear.clearAnimation();
                     selectDiseaseLinear.setVisibility(View.GONE);
                     selectDiseaseLinearFlag = false;
                     selectTimeLinearFlag = true;
                 } else {
+                    selectTimeLinear.clearAnimation();
                     selectTimeLinear.setVisibility(View.GONE);
                     selectTimeLinearFlag = false;
                     selectDiseaseLinearFlag = true;
@@ -171,6 +232,7 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
                     selectTimeLinearFlag = false;
                     selectDiseaseLinearFlag = true;
                 } else {
+                    selectDiseaseLinear.clearAnimation();
                     selectDiseaseLinear.setVisibility(View.GONE);
                     selectDiseaseLinearFlag = false;
                     selectTimeLinearFlag = true;
@@ -202,6 +264,16 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
             case R.id.finish_back:
                 finish();
                 break;
+            case R.id.right_title:
+                actionStart(this, SaveRecordActivity.class);
+                break;
+        }
+    }
+
+    public void refreshList() {
+        if (EmptyUtils.isNotEmpty(instance)) {
+            recordList = instance.querySaveDocList(RecordListActivity.this);
+            docDetailAdapter.notifyDataSetChanged();
         }
     }
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/record_images_margin_top"
+    android:descendantFocusability="afterDescendants">
+
+    <ImageView
+        android:id="@+id/grid_image"
+        android:layout_width="@dimen/record_images_dimens"
+        android:layout_height="@dimen/record_images_dimens"
+        android:scaleType="centerCrop" />
+
+</FrameLayout>

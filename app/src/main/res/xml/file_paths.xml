@@ -21,5 +21,7 @@
     <external-cache-path
         name="external_cache_path"
         path="" />
-
+    <external-path
+        name="RealDoc"
+        path="RealDoc/" />
 </paths>

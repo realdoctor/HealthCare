@@ -3,17 +3,25 @@ package com.real.doctor.realdoc.fragment;
 import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.RecordListActivity;
+import com.real.doctor.realdoc.activity.SaveDocActivity;
 import com.real.doctor.realdoc.activity.SearchActivity;
+import com.real.doctor.realdoc.adapter.HomeRecordAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
+import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.BannerBean;
+import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.DynamicTimeFormat;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
@@ -37,12 +45,15 @@ import cn.bingoogolapple.bgabanner.BGABanner;
 public class HomeFragment extends BaseFragment {
 
     private Unbinder unbinder;
-    private static boolean isFirstEnter = true;
-    private ClassicsHeader mClassicsHeader;
-    @BindView(R.id.refreshLayout)
-    SmartRefreshLayout mRefreshLayout;
     @BindView(R.id.home_search)
     RelativeLayout homeSearch;
+    @BindView(R.id.save_doc_linear)
+    LinearLayout saveDocLinear;
+    @BindView(R.id.recycle_view)
+    RecyclerView recycleView;
+    private HomeRecordAdapter adapter;
+    private SaveDocManager instance = null;
+    private List<SaveDocBean> recordList;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -60,30 +71,30 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void doBusiness(Context mContext) {
-        int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
-        mClassicsHeader = (ClassicsHeader) mRefreshLayout.getRefreshHeader();
-        mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis() - deta));
-        mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
-        mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
-
-        if (isFirstEnter) {
-            isFirstEnter = false;
-            //触发自动刷新
-            mRefreshLayout.autoRefresh();
+        instance = SaveDocManager.getInstance(getActivity());
+        if (EmptyUtils.isNotEmpty(instance)) {
+            recordList = instance.querySaveDocList(getActivity());
+            recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
+            recycleView.setAdapter(adapter);
         }
-
     }
 
-    @OnClick({R.id.home_search})
+    @OnClick({R.id.home_search, R.id.save_doc_linear})
     @Override
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
+            Intent intent;
             switch (v.getId()) {
                 case R.id.home_search:
-                    Intent intent = new Intent(getActivity(), SearchActivity.class);
+                    intent = new Intent(getActivity(), SearchActivity.class);
                     startActivity(intent);
                     getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     getActivity().finish();
+                    break;
+                case R.id.save_doc_linear:
+                    intent = new Intent(getActivity(), RecordListActivity.class);
+                    startActivity(intent);
                     break;
             }
         }

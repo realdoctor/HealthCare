@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/grid_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/img_bg" />
+
+    <ImageView
+        android:id="@+id/recipel_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="fitXY"
+        android:layout_alignRight="@id/grid_image"
+        android:layout_alignTop="@id/grid_image"
+        android:clickable="false"
+        android:src="@mipmap/delete_icon"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/advice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/grid_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="#ff333333"
+        android:typeface="monospace"
+        tools:text="@string/save_doc_text" />
+</RelativeLayout>

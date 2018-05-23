@@ -5,21 +5,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 /**
- *     author: zhujiabin
- *     time  : 2018/1/3
- *     desc  : 打开或关闭软键盘
+ * author: zhujiabin
+ * time  : 2018/1/3
+ * desc  : 打开或关闭软键盘
  */
 
-public class KeyBoardUtils
-{
+public class KeyBoardUtils {
     /**
      * 打开软键盘
      *
      * @param mEditText输入框
      * @param mContext上下文
      */
-    public static void openKeybord(EditText mEditText, Context mContext)
-    {
+    public static void openKeybord(EditText mEditText, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(mEditText, InputMethodManager.RESULT_SHOWN);
@@ -33,11 +31,21 @@ public class KeyBoardUtils
      * @param mEditText输入框
      * @param mContext上下文
      */
-    public static void closeKeybord(EditText mEditText, Context mContext)
-    {
+    public static void closeKeybord(EditText mEditText, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+    }
+
+    /**
+     * 打开或关闭软键盘
+     *
+     * @param mContext上下文
+     */
+    public static void closeOrOpenKeybord(Context mContext) {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
 

@@ -15,8 +15,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.real.doctor.realdoc.activity.DocCompareActivity;
 import com.real.doctor.realdoc.activity.ProgressBarActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
+import com.real.doctor.realdoc.greendao.table.ImageManager;
+import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
@@ -51,18 +54,30 @@ public class UpdateService extends JobService {
 
     public static final String TAG = UpdateService.class.getSimpleName();
     private List<SaveDocBean> mList = new ArrayList<>();
+    private List<String> mImgList = new ArrayList<>();
     private List<Boolean> mFlag = new ArrayList<>();
     private boolean zip = false;
+    //从数据库中获取数据
+    private ImageManager imageInstance;
+    private ImageRecycleManager imageRecycleInstance;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             mFlag.clear();
             for (SaveDocBean bean : mList) {
-                String mImg = bean.getImgs();
-                if (EmptyUtils.isNotEmpty(mImg)) {
-                    mFlag.add(true);
-                    String[] imgs = bean.getImgs().split(";");
+                String mId = bean.getId();
+                if (EmptyUtils.isNotEmpty(mId)) {
+                    List<String> idOneList = imageRecycleInstance.queryIdList(RealDocApplication.getDaoSession(UpdateService.this), mId);
+                    for (int i = 0; i < idOneList.size(); i++) {
+                        List<String> mImageUrlList = imageInstance.queryImageUrlList(RealDocApplication.getDaoSession(UpdateService.this), idOneList.get(i));
+                        mImgList.addAll(mImageUrlList);
+                    }
+                    if (mImgList.size() == 0) {
+                        mFlag.add(false);
+                    }else{
+                        mFlag.add(true);
+                    }
                     if (SDCardUtils.isSDCardEnable()) {
                         //新建doctor文件夹
                         String folderName = SDCardUtils.getSDCardPath() + "doctor" + File.separator;
@@ -71,11 +86,11 @@ public class UpdateService extends JobService {
                             file.mkdir();  //如果不存在则创建
                         boolean isEmptyFolder = FileUtils.deleteAllInDir(SDCardUtils.getSDCardPath() + "doctor");
                         if (isEmptyFolder) {
-                            //复制图片
-                            for (String img : imgs) {
-                                Bitmap bitmap = BitmapFactory.decodeFile("/storage/emulated/0/RealDoc/" + img);//filePath
+                            for (int i = 0; i < mImgList.size(); i++) {
+                                String img = mImgList.get(i);
+                                Bitmap bitmap = BitmapFactory.decodeFile(img);
                                 if (EmptyUtils.isNotEmpty(bitmap)) {
-                                    SDCardUtils.saveToSdCard(folderName, bitmap, img);
+                                    SDCardUtils.saveToSdCard(folderName, bitmap, img.substring(img.lastIndexOf("/") + 1, img.length()));
                                 }
                             }
                             zip = false;
@@ -85,49 +100,30 @@ public class UpdateService extends JobService {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-//                            if (zip) {
-//                                String size = FileUtils.getDirSize(SDCardUtils.getSDCardPath() + "doctor.zip");
-//                                if (!StringUtils.equals(size, "0")) {
-                            //通知Activity病历打包已经完成
-                            //动态注册广播
-//                                    Intent intent = new Intent(ProgressBarActivity.HAVE_IMG);
-//                                    LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
-//                                } else {
-//                                    //删除zip包
-//                                    boolean deleteFile = FileUtils.deleteDir(SDCardUtils.getSDCardPath() + "doctor.zip");
-//                                    if (deleteFile) {
-//                                        //动态注册广播
-//                                        Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
-//                                        LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
-//                                    }
-//                                }
-                            //                       }
                         }
                     }
-                } else {
-                    mFlag.add(false);
                 }
             }
-            if (isSample()) {
+            if (isTrue() && zip) {
                 //动态注册广播
-                Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
-                LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
-            } else if (zip) {
                 Intent intent = new Intent(ProgressBarActivity.HAVE_IMG);
+                LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
+            } else {
+                Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
                 LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
             }
             return true;
         }
 
-        private boolean isSample() {
+        private boolean isTrue() {
             if (mFlag.size() > 0) {
                 for (boolean flag : mFlag) {
                     if (flag) {
-                        return false;
+                        return true;
                     }
                 }
             }
-            return true;
+            return false;
         }
 
         private void uploadData() {
@@ -179,6 +175,8 @@ public class UpdateService extends JobService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        imageInstance = ImageManager.getInstance(UpdateService.this);
+        imageRecycleInstance = ImageRecycleManager.getInstance(UpdateService.this);
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra("mList");
         }

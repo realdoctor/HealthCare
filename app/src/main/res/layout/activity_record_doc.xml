@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/record_doc_relative"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title_bar" />
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/save_doc_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffffff">
+
+                <TextView
+                    android:id="@+id/ill_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="@string/save_doc_ill"
+                    android:textColor="#ff333333"
+                    android:typeface="monospace" />
+
+                <EditText
+                    android:id="@+id/ill"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45.0dip"
+                    android:layout_below="@id/ill_text"
+                    android:background="@android:color/white"
+                    android:hint="@string/save_doc_ill_edit"
+                    android:inputType="text"
+                    android:paddingLeft="10.0dip"
+                    android:textColorHint="#ff999999"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="14.0sp"
+                    android:typeface="monospace" />
+
+                <LinearLayout
+                    android:id="@+id/ill_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ill">
+
+                    <com.real.doctor.realdoc.view.LabelsView
+                        android:id="@+id/ill_labels"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="25dp"
+                        android:padding="5dp"
+                        app:labelBackground="@drawable/label_bg"
+                        app:labelTextColor="@drawable/label_text_color"
+                        app:labelTextPaddingBottom="5dp"
+                        app:labelTextPaddingLeft="10dp"
+                        app:labelTextPaddingRight="10dp"
+                        app:labelTextPaddingTop="5dp"
+                        app:labelTextSize="14sp"
+                        app:lineMargin="10dp"
+                        app:maxSelect="0"
+                        app:selectType="SINGLE"
+                        app:wordMargin="10dp" />
+
+                    <TextView
+                        android:id="@+id/more_ill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:gravity="center"
+                        android:text="@string/more"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/hospital_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ill_linear"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="@string/save_doc_hospital"
+                    android:textColor="#ff333333"
+                    android:typeface="monospace" />
+
+                <EditText
+                    android:id="@+id/hospital"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45.0dip"
+                    android:layout_below="@id/hospital_text"
+                    android:background="#ffffffff"
+                    android:hint="@string/save_doc_hospital_edit"
+                    android:inputType="text"
+                    android:paddingLeft="10.0dip"
+                    android:textColorHint="#ff999999"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="14.0sp"
+                    android:typeface="monospace" />
+
+                <LinearLayout
+                    android:id="@+id/hospital_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hospital">
+
+                    <com.real.doctor.realdoc.view.LabelsView
+                        android:id="@+id/hospital_labels"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="25dp"
+                        android:padding="5dp"
+                        app:labelBackground="@drawable/label_bg"
+                        app:labelTextColor="@drawable/label_text_color"
+                        app:labelTextPaddingBottom="5dp"
+                        app:labelTextPaddingLeft="10dp"
+                        app:labelTextPaddingRight="10dp"
+                        app:labelTextPaddingTop="5dp"
+                        app:labelTextSize="14sp"
+                        app:lineMargin="10dp"
+                        app:maxSelect="0"
+                        app:selectType="SINGLE"
+                        app:wordMargin="10dp" />
+
+                    <TextView
+                        android:id="@+id/more_hospital"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:gravity="center"
+                        android:text="@string/more"
+                        android:textColor="#ff333333"
+                        android:typeface="monospace" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/doctor_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hospital_linear"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="@string/save_doc_doctor"
+                    android:textColor="#ff333333"
+                    android:typeface="monospace" />
+
+                <EditText
+                    android:id="@+id/doctor"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45.0dip"
+                    android:layout_below="@id/doctor_text"
+                    android:background="#ffffffff"
+                    android:hint="@string/save_doc_doctor_edit"
+                    android:inputType="text"
+                    android:paddingLeft="10.0dip"
+                    android:textColorHint="#ff999999"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="14.0sp"
+                    android:typeface="monospace" />
+
+                <LinearLayout
+                    android:id="@+id/doc_grid_view_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/doctor"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/grid_recycle_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none"></android.support.v7.widget.RecyclerView>
+
+                    <ImageView
+                        android:id="@+id/add_icon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10.0dip"
+                        android:src="@mipmap/add" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/audio_recycle_view_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/doc_grid_view_linear"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/audio_recycle_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="none"></android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/video_recycle_view_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/audio_recycle_view_linear"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/video_recycle_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="none"></android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/video_recycle_view_linear"
+                    android:layout_marginBottom="80dp"
+                    android:layout_marginTop="45.0dip">
+
+                    <Button
+                        android:id="@+id/button_save_doc"
+                        android:layout_width="fill_parent"
+                        android:layout_height="43.0dip"
+                        android:layout_marginLeft="18.0dip"
+                        android:layout_marginRight="18.0dip"
+                        android:background="@drawable/button_selector"
+                        android:text="@string/save_doc_save_btn"
+                        android:textColor="#ffffffff"
+                        android:textSize="15.0sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/add_audio_linear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/add_audio"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@mipmap/record_icon" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/divider_color" />
+
+            <LinearLayout
+                android:id="@+id/add_video_linear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/add_video"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@mipmap/video_icon" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

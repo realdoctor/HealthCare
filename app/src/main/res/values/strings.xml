@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">康链</string>
     <!--label-->
-    <item name="tag_key_data" type="id"/>
-    <item name="tag_key_position" type="id"/>
+    <item name="tag_key_data" type="id" />
+    <item name="tag_key_position" type="id" />
     <!--新浪-->
     <string name="weibosdk_demo_toast_auth_success">授权成功</string>
     <string name="weibosdk_demo_toast_auth_failed">授权失败</string>
@@ -35,10 +35,10 @@
     <string name="second_function_five_string">婴幼儿疾病</string>
     <string name="second_function_six_string">妇科疾病</string>
     <string name="second_function_seven_string">口腔疾病</string>
-    <string name="function_four_string">基层首诊</string>
-    <string name="function_one_string">存储病例</string>
-    <string name="function_three_string">在线复诊</string>
-    <string name="function_two_string">同病交友</string>
+    <string name="function_four_string">康链商城</string>
+    <string name="function_one_string">我的病历</string>
+    <string name="function_three_string">预约挂号</string>
+    <string name="function_two_string">复诊记录</string>
     <string name="second_function_eight_string">更多疾病</string>
     <string name="hint_phone_register">请输入手机号</string>
     <string name="hint_verify_register">验证码</string>
@@ -86,6 +86,30 @@
     <string name="address">收货地址</string>
     <string name="input_address">请选择收货地址</string>
     <string name="pay">支付</string>
+    <!-- Record -->
+    <!-- Notifications -->
+    <string name="notification_recording">正在录音...</string>
+    <string name="no_saved_recordings_message">No saved recordings</string>
+    <string name="pause_recording_button">暂停</string>
+    <string name="resume_recording_button">继续</string>
+    <string name="default_file_name">My Recording</string>
+    <string name="record_prompt">点击按钮开始录音</string>
+    <string name="record_in_progress">正在录音</string>
+    <!-- Toasts -->
+    <string name="toast_recording_finish">Recording saved to</string>
+    <string name="toast_file_delete">%1$s successfully deleted</string>
+    <string name="toast_file_exists">The file %1$s already exists. Please choose a different file name.</string>
+    <!--RecordImagesActivity-->
+    <string name="glide_plus_icon_string">android.resource://</string>
+    <string name="post_delete_tv_d">拖动到此处，进行删除</string>
+    <string name="post_delete_tv_s"> 放开手指，进行删除</string>
+    <string name="record_image_edit">请输入您所要表达的信息</string>
+    <string name="image_card_replace_image">替换图片</string>
+    <string name="image_card_delete_recipel">删除处方</string>
+    <string name="image_card_add_advice">添加/更改嘱咐</string>
+    <string name="record_images_label">添加标签</string>
+    <string name="information_icon">消息</string>
+    <string name="scan_icon">扫一扫</string>
     <string name="location">定位</string>
     <string name="notifyTitle">提示</string>
     <string name="notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>

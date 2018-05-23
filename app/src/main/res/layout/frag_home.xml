@@ -1,214 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appbgcolor"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <RelativeLayout
-            android:id="@+id/home_search"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/home_search_height"
-            android:background="#ff03b5e5"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/search_text"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/home_searchText_height"
-                android:layout_marginLeft="10.0dip"
-                android:layout_marginRight="10.0dip"
-                android:background="@drawable/search_background"
-                android:drawableLeft="@mipmap/icon_search_white"
-                android:drawablePadding="10.0dip"
-                android:gravity="center_vertical"
-                android:hint="@string/search_hint"
-                android:paddingLeft="10.0dip"
-                android:textColorHint="#b3ffffff" />
-        </RelativeLayout>
+        android:layout_width="match_parent"
+        android:layout_height="170dp">
 
         <LinearLayout
-            android:id="@+id/function_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/home_search"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/home_search_height"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/search_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:background="@drawable/search_background"
+                    android:drawableLeft="@mipmap/icon_search_white"
+                    android:drawablePadding="10.0dip"
+                    android:gravity="center_vertical"
+                    android:hint="@string/search_hint"
+                    android:paddingLeft="10.0dip"
+                    android:textColorHint="@android:color/darker_gray" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/scan_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/scan_btn_bg"
+                android:text="@string/scan_icon"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/scan_btn_bg"
+                android:text="@string/information_icon"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <cn.bingoogolapple.bgabanner.BGABanner
+            android:id="@+id/bga_banner"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            app:banner_pageChangeDuration="1000"
+            app:banner_pointAutoPlayAble="false"
+            app:banner_pointContainerBackground="@android:color/transparent"
+            app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
+            app:banner_pointTopBottomMargin="15dp"
+            app:banner_transitionEffect="alpha" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/main_function_layout"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/home_search_height"
-            android:alpha="0.0"
+            android:layout_height="@dimen/home_base_height"
             android:background="@color/appthemecolor"
-            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/save_doc_linear"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.real.doctor.realdoc.view.CircleImageView
+                    android:layout_width="@dimen/main_funciton_image_size"
+                    android:layout_height="@dimen/main_funciton_image_size"
+                    android:src="@mipmap/icon_upload_data"
+                    app:border_circle_color="@color/white"
+                    app:border_circle_width="2.0dip" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14.0dip"
+                    android:text="@string/function_one_string"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/case_comunicate"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.real.doctor.realdoc.view.CircleImageView
+                    android:layout_width="@dimen/main_funciton_image_size"
+                    android:layout_height="@dimen/main_funciton_image_size"
+                    android:src="@mipmap/icon_case_communicate"
+                    app:border_circle_color="@color/white"
+                    app:border_circle_width="2.0dip" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14.0dip"
+                    android:text="@string/function_two_string"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/doctor_online"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.real.doctor.realdoc.view.CircleImageView
+                    android:layout_width="@dimen/main_funciton_image_size"
+                    android:layout_height="@dimen/main_funciton_image_size"
+                    android:src="@mipmap/icon_doctor_online"
+                    app:border_circle_color="@color/white"
+                    app:border_circle_width="2.0dip" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14.0dip"
+                    android:text="@string/function_three_string"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/base_cure"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.real.doctor.realdoc.view.CircleImageView
+                    android:layout_width="@dimen/main_funciton_image_size"
+                    android:layout_height="@dimen/main_funciton_image_size"
+                    android:src="@mipmap/icon_base_cure"
+                    app:border_circle_color="@color/white"
+                    app:border_circle_width="2.0dip" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14.0dip"
+                    android:text="@string/function_four_string"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/title_search"
-                android:layout_width="@dimen/function_image_size"
-                android:layout_height="@dimen/function_image_size"
-                android:layout_marginLeft="30.0dip"
-                android:background="@mipmap/title_fun_one" />
-
-            <ImageView
-                android:id="@+id/title_uplaod"
-                android:layout_width="@dimen/function_image_size"
-                android:layout_height="@dimen/function_image_size"
-                android:layout_marginLeft="34.0dip"
-                android:background="@mipmap/title_fun_two" />
-
-            <ImageView
-                android:id="@+id/title_communicate"
-                android:layout_width="@dimen/function_image_size"
-                android:layout_height="@dimen/function_image_size"
-                android:layout_marginLeft="34.0dip"
-                android:background="@mipmap/title_fun_three" />
-
-            <ImageView
-                android:id="@+id/title_doctor_online"
-                android:layout_width="@dimen/function_image_size"
-                android:layout_height="@dimen/function_image_size"
-                android:layout_marginLeft="34.0dip"
-                android:background="@mipmap/title_fun_four" />
-
-            <ImageView
-                android:id="@+id/title_base_cure"
-                android:layout_width="@dimen/function_image_size"
-                android:layout_height="@dimen/function_image_size"
-                android:layout_marginLeft="34.0dip"
-                android:background="@mipmap/title_fun_five" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        app:srlAccentColor="@android:color/darker_gray"
-        app:srlEnableLoadmore="true"
-        app:srlEnablePreviewInEditMode="true"
-        app:srlPrimaryColor="@android:color/white">
-        <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
-        <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
-        <com.scwang.smartrefresh.layout.header.ClassicsHeader
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srlClassicsSpinnerStyle="FixedBehind"
-            app:srlDrawableArrowSize="20dp"
-            app:srlDrawableMarginRight="20dp"
-            app:srlDrawableProgressSize="20dp"
-            app:srlEnableLastTime="true"
-            app:srlFinishDuration="500"
-            app:srlTextSizeTime="10dp"
-            app:srlTextSizeTitle="16sp"
-            app:srlTextTimeMarginTop="2dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:src="@mipmap/ic_launcher" />
 
             <LinearLayout
-                android:id="@+id/main_function_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/home_base_height"
-                android:background="@color/appthemecolor"
-                android:orientation="horizontal">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/upload_data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1.0"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="@dimen/main_funciton_image_size"
-                        android:layout_height="@dimen/main_funciton_image_size"
-                        android:background="@mipmap/icon_upload_data" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14.0dip"
-                        android:text="@string/function_one_string"
-                        android:textColor="@android:color/white" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/case_comunicate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1.0"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="@dimen/main_funciton_image_size"
-                        android:layout_height="@dimen/main_funciton_image_size"
-                        android:background="@mipmap/icon_case_communicate" />
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/text_special_color"
+                        android:text="有人回复了你的评论" />
 
                     <TextView
+                        android:id="@+id/comment_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14.0dip"
-                        android:text="@string/function_two_string"
-                        android:textColor="@android:color/white" />
-                </LinearLayout>
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/text_special_color"
+                        android:text="2018年5月22日" />
+                </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/doctor_online"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1.0"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="@dimen/main_funciton_image_size"
-                        android:layout_height="@dimen/main_funciton_image_size"
-                        android:background="@mipmap/icon_doctor_online" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
 
                     <TextView
+                        android:id="@+id/content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14.0dip"
-                        android:text="@string/function_three_string"
-                        android:textColor="@android:color/white" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/base_cure"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1.0"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="@dimen/main_funciton_image_size"
-                        android:layout_height="@dimen/main_funciton_image_size"
-                        android:background="@mipmap/icon_base_cure" />
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/text_special_color"
+                        android:text="就诊结束，病历更新了" />
 
                     <TextView
+                        android:id="@+id/connect_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14.0dip"
-                        android:text="@string/function_four_string"
-                        android:textColor="@android:color/white" />
-                </LinearLayout>
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/text_special_color"
+                        android:text="2018年5月22日" />
+                </RelativeLayout>
             </LinearLayout>
 
-            <include layout="@layout/function_two_layout" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/arrow_more" />
 
-            <ListView
-                android:id="@+id/listview"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:divider="@null" />
         </LinearLayout>
 
-        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:scrollbars="none"></android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+
 </LinearLayout>

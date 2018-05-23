@@ -15,6 +15,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.impl.RetrofitService;
 import com.real.doctor.realdoc.rxjavaretrofit.manager.HttpCookieManager;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -49,8 +50,10 @@ public class HttpRequestClient {
 
     private static Context mContext = null;
 
-    private static final String mBaseUrl = HttpNetUtil.BASE_URL;
-    ;
+    private static String mBaseUrl = HttpNetUtil.BASE_URL;
+
+    private static Map<String, String> mHeader = new HashMap<String, String>();
+
     /**
      * 链接建立的超时时间
      */
@@ -127,6 +130,10 @@ public class HttpRequestClient {
         private static HttpRequestClient INSTANCE = new HttpRequestClient(mContext);
     }
 
+    private static class HttpSingletonWithHeaderHeader {
+        private static HttpRequestClient INSTANCEWITHHEADER = new HttpRequestClient(mContext, mBaseUrl, mHeader);
+    }
+
     /**
      * 获取HttpRequestClient单例
      */
@@ -153,8 +160,10 @@ public class HttpRequestClient {
     public static HttpRequestClient getInstance(Context context, String url, Map<String, String> headers) {
         if (context != null) {
             mContext = context;
+            mBaseUrl = url;
+            mHeader = headers;
         }
-        return new HttpRequestClient(context, url, headers);
+        return HttpSingletonWithHeaderHeader.INSTANCEWITHHEADER;
     }
 
     /**
@@ -219,6 +228,7 @@ public class HttpRequestClient {
                 .compose(schedulersTransformer())
                 .subscribe(subscriber);
     }
+
     /**
      * json请求获取数据
      */
@@ -251,7 +261,7 @@ public class HttpRequestClient {
      * 上传文件,并上传json数据
      */
     public void uploadJsonFile(String url, RequestBody jsonStr, MultipartBody.Part file, BaseObserver<ResponseBody> subscriber) {
-                              retrofitService.upLoadjsonFile(url, jsonStr, file)
+        retrofitService.upLoadjsonFile(url, jsonStr, file)
                 .compose(schedulersTransformer())
                 .subscribe(subscriber);
     }

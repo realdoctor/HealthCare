@@ -1,6 +1,11 @@
 package com.real.doctor.realdoc.util;
 
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.support.annotation.NonNull;
+
+import com.real.doctor.realdoc.application.RealDocApplication;
 
 import org.json.JSONObject;
 
@@ -25,6 +30,7 @@ public class DocUtils {
     // 两次点击按钮之间的点击间隔不能少于1000毫秒
     private static final int MIN_CLICK_DELAY_TIME = 1000;
     private static long lastClickTime;
+
     /**
      * <p/>
      * private static boolean canRelease = false;
@@ -95,6 +101,7 @@ public class DocUtils {
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
         return MultipartBody.Part.createFormData("file", file.getName(), requestFile);
     }
+
     public static boolean isFastClick() {
         boolean flag = false;
         long curClickTime = System.currentTimeMillis();
@@ -103,5 +110,22 @@ public class DocUtils {
         }
         lastClickTime = curClickTime;
         return flag;
+    }
+
+    public static Bitmap getVideoThumbnail(String videoPath) {
+        MediaMetadataRetriever media = new MediaMetadataRetriever();
+        media.setDataSource(videoPath);
+        Bitmap bitmap = media.getFrameAtTime();
+        return bitmap;
+    }
+
+    /**
+     * 获取dimens定义的大小
+     *
+     * @param dimensionId
+     * @return
+     */
+    public static int getPixelById(int dimensionId) {
+        return RealDocApplication.getContext().getResources().getDimensionPixelSize(dimensionId);
     }
 }

@@ -78,4 +78,9 @@
     <dimen name="txt_24">24sp</dimen>
     <dimen name="txt_26">26sp</dimen>
     <dimen name="txt_28">28sp</dimen>
+    <!---RecordImages-->
+    <dimen name="record_images_edit">150dp</dimen>
+    <dimen name="record_images_delete">50dp</dimen>
+    <dimen name="record_images_margin_top">10dp</dimen>
+    <dimen name="record_images_dimens">70dp</dimen>
 </resources>

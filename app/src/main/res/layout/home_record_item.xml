@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="15dp"
+    android:paddingTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/disease_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/save_doc_ill"
+            android:textColor="@color/text_special_color"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/disease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/disease_txt"
+            android:text="@string/second_function_one_string"
+            android:textColor="@color/text_special_color"
+            android:textSize="@dimen/sp_14" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/hospital_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/save_doc_hospital"
+            android:textColor="@color/text_special_color"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/hospital"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/hospital_txt"
+            android:text="@string/second_function_one_string"
+            android:textColor="@color/text_special_color"
+            android:textSize="@dimen/sp_14" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/doctor_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/save_doc_doctor"
+            android:textColor="@color/text_special_color"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/doctor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/doctor_txt"
+            android:text="邵逸夫医院"
+            android:textColor="@color/text_special_color"
+            android:textSize="@dimen/sp_14" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/time_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/save_doc_time"
+            android:textColor="@color/text_special_color"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/time_txt"
+            android:text="2018年5月22日"
+            android:textColor="@color/text_special_color"
+            android:textSize="@dimen/sp_14" />
+    </RelativeLayout>
+
+</LinearLayout>
