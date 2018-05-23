@@ -52,11 +52,11 @@
         </RadioGroup>
 
     </LinearLayout>
-    <android.support.v4.view.ViewPager
+    <com.real.doctor.realdoc.view.CustomViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/vp_show"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
-    </android.support.v4.view.ViewPager>
+    </com.real.doctor.realdoc.view.CustomViewPager>
 </LinearLayout>
