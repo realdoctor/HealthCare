@@ -70,7 +70,8 @@
                 android:resource="@xml/__picker_provider_paths"/>
         </provider>
 
-        <activity android:name=".activity.SplashActivity"android:hardwareAccelerated="false"
+        <activity android:name=".activity.SplashActivity"
+            android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -226,7 +227,8 @@
            <service android:name=".service.RecordingService" />
 
         <activity
-            android:name=".activity.RecordActivity"android:hardwareAccelerated="false"
+            android:name=".activity.RecordActivity"
+            android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.VideoActivity"
