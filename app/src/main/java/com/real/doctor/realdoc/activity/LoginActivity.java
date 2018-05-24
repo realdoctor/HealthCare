@@ -249,6 +249,7 @@ public class LoginActivity extends BaseActivity {
                                             UserBean user = GsonUtil.GsonToBean(jsonObject.getJSONObject("user").toString(), UserBean.class);
                                             if(EmptyUtils.isNotEmpty(user)){
                                                 SPUtils.put(LoginActivity.this, "mobile", user.getMobile());
+                                                SPUtils.put(LoginActivity.this,Constants.USER_KEY,user.getId());
                                             }
                                         }
                                         //登录成功,获得列表数据

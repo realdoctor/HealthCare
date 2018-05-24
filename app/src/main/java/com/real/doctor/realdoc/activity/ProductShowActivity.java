@@ -11,9 +11,11 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.youth.banner.Banner;
@@ -23,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,7 +76,7 @@ public class ProductShowActivity extends BaseActivity  {
     @Override
     public void initData() {
 
-        userId=(String)SPUtils.get(ProductShowActivity.this, Constants.USER_KEY,"7");
+        userId=(String)SPUtils.get(ProductShowActivity.this, Constants.USER_KEY,"");
         bean=(ProductBean) getIntent().getSerializableExtra("model");
         banner.setBannerStyle(Banner.CIRCLE_INDICATOR_TITLE);
         banner.setIndicatorGravity(Banner.CENTER);
@@ -127,9 +131,18 @@ public class ProductShowActivity extends BaseActivity  {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        String token = (String) SPUtils.get(ProductShowActivity.this, "token", "");
+        Map<String, String> header = null;
+        if (EmptyUtils.isNotEmpty(token)) {
+            header = new HashMap<String, String>();
+            header.put("Authorization", token);
+        } else {
+            ToastUtil.showLong(ProductShowActivity.this, "请确定您的账户已登录!");
+            return;
+        }
+       HttpRequestClient client= HttpRequestClient.getInstance(ProductShowActivity.this,HttpNetUtil.BASE_URL,header);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
-        HttpRequestClient.getInstance(ProductShowActivity.this).createBaseApi().json("cart/addCartItem/"
+        client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ProductShowActivity.this) {
                     @Override
                     public void onSubscribe(Disposable d) {

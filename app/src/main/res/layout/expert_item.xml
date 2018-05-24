@@ -43,10 +43,13 @@
 
             <TextView
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/tv_order_expert"
                 android:layout_alignParentRight="true"
-                android:text="@string/order_expert"
-                android:layout_centerVertical="true"
-                android:layout_height="wrap_content" />
+                android:background="@drawable/order_bg"
+                android:layout_alignTop="@+id/expert_postion"
+                android:text="@string/order_expert" />
         </RelativeLayout>
 
 

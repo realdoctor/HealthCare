@@ -1,10 +1,13 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.ProductAdapter;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -39,6 +43,10 @@ public class ProductShowByCategoryActivity extends BaseActivity {
     TabLayout tb_category;
     @BindView(R.id.vp_show)
     ViewPager viewPager;
+    @BindView(R.id.finish_back)
+    ImageView finish_back;
+    @BindView(R.id.home_search)
+    RelativeLayout relativeLayout;
     public ProductPagerAdapter productPagerAdapter;
     public ArrayList<CategoryBean> categoryBeanArrayList=new ArrayList<CategoryBean>();
     @Override
@@ -77,8 +85,19 @@ public class ProductShowByCategoryActivity extends BaseActivity {
     }
 
     @Override
+    @OnClick({R.id.finish_back,R.id.home_search})
     public void widgetClick(View v) {
+        switch (v.getId()){
+            case R.id.finish_back:
+                ProductShowByCategoryActivity.this.finish();
+                break;
+            case R.id.home_search:
+                Intent intent =new Intent(ProductShowByCategoryActivity.this,SearchActivity.class);
+                startActivity(intent);
+                break;
 
+
+        }
     }
 
     @Override

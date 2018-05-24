@@ -94,6 +94,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
     //定位相关类
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
+    public final static int REGISTRATION_EVENT_REQUEST_CODE = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,10 +243,31 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
                 RegistrationActivity.this.finish();
                 break;
             case R.id.home_search:
-                startActivity(new Intent(RegistrationActivity.this,SearchActivity.class));
+                Intent intent = new Intent(RegistrationActivity.this, SearchHistoryActivity.class);
+                // get the current data and send it to the edit address screen
+                intent.putExtra("requestCode", REGISTRATION_EVENT_REQUEST_CODE);;
+                startActivityForResult(intent, REGISTRATION_EVENT_REQUEST_CODE);
                 break;
 
         }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK){
+            String name = data.getStringExtra("searchKey");
+
+            if(requestCode == REGISTRATION_EVENT_REQUEST_CODE) {
+                // 搜索
+
+            }
+        }
+
+
+
+
+
     }
 /**
  * 显示
@@ -382,4 +404,67 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
                 });
     }
 
+    private void searchHospital() {
+        HashMap<String,Object> params=new HashMap<String,Object>();
+        params.put("hospitalLevel",hospitalLevel);
+        params.put("sortstr",sortstr);
+        params.put("cityName",cityName);
+        params.put("positional",null);
+        params.put("searchstr",searchstr);
+        HttpRequestClient.getInstance(RegistrationActivity.this).createBaseApi().get("guahao/search"
+                , params, new BaseObserver<ResponseBody>(RegistrationActivity.this) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(RegistrationActivity.this, e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    Gson localGson = new GsonBuilder()
+                                            .create();
+                                    baseModel = localGson.fromJson(jsonObject.toString(),
+                                            new TypeToken<PageModel<HospitalBean>>() {
+                                            }.getType());
+                                    hospitalBeanArrayList.addAll(baseModel.list);
+                                    hospitalAdapter.notifyDataSetChanged();
+                                } else {
+                                    ToastUtil.showLong(RegistrationActivity.this, msg.toString().trim());
+                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    finish();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
 }

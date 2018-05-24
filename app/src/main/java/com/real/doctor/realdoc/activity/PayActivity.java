@@ -91,7 +91,7 @@ public class PayActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        userId= (String) SPUtils.get(PayActivity.this, Constants.USER_KEY,"7");
+        userId= (String) SPUtils.get(PayActivity.this, Constants.USER_KEY,"");
         api = WXAPIFactory.createWXAPI(this, Constants.WX_APP_ID);
         api.registerApp(Constants.WX_APP_ID);
         pageTitle.setText("支付");

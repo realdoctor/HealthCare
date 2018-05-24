@@ -92,7 +92,7 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     public void initData() {
         pageTitle.setText("购物车");
         context = this;
-        userId= (String)SPUtils.get(ShopCartActivity.this, Constants.USER_KEY,"7");
+        userId= (String)SPUtils.get(ShopCartActivity.this, Constants.USER_KEY,"");
         groups.add(new GroupInfo(gourpId,"自营店铺"));
        // virtualData();
     }

@@ -30,12 +30,12 @@ public class BaseInterceptor implements Interceptor {
             Set<String> keys = headers.keySet();
             for (String headerKey : keys) {
 
-                Log.e("headerKey", headerKey);
+                Log.e("headerKey", headerKey+""+headers.get(headerKey));
                 builder.addHeader(headerKey, headers.get(headerKey)).build();
             }
         }
-       builder.addHeader("Authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMzc3Nzg1MDAzNiIsImlhdCI6MTUyNjM3Nzc1MCwic3ViIjoie1wibW9iaWxlUGhvbmVcIjpcIjEzNzc3ODUwMDM2XCIsXCJyZWZyZXNoVG9rZW5cIjpmYWxzZSxcInVzZXJJZFwiOjd9IiwiaXNzIjoiT25saW5lIEpXVCBCdWlsZGVyIiwiYXVkIjoia2FuZ2xpYW4iLCJleHAiOjE1MjY5ODI1NTAsIm5iZiI6MTUyNjM3Nzc1MH0.Ldhx4u-9OGH-2iWua-t403ZpMNsXUdaytVEBMPL2IpQ");
-        builder.addHeader("userId", "7");
+      builder.addHeader("Authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxNTk2NTEyOTEzOCIsImlhdCI6MTUyNzA0NDA3NSwic3ViIjoie1wibW9iaWxlUGhvbmVcIjpcIjE1OTY1MTI5MTM4XCIsXCJyZWFsTmFtZVwiOlwiODg4OFwiLFwidXNlcklkXCI6NX0iLCJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJhdWQiOiJrYW5nbGlhbiIsImV4cCI6MTUyNzY0ODg3NSwibmJmIjoxNTI3MDQ0MDc1fQ.-OCAE-3SaDjgJ68DYaCnOcErYaZzJVtT-SFC-mpnPFc");
+//        builder.addHeader("userId", "7");
         return chain.proceed(builder.build());
 
     }

@@ -52,7 +52,7 @@ public class HttpRequestClient {
 
     private static String mBaseUrl = HttpNetUtil.BASE_URL;
 
-    private static Map<String, String> mHeader = new HashMap<String, String>();
+    public  static Map<String, String> mHeader = new HashMap<String, String>();
 
     /**
      * 链接建立的超时时间
