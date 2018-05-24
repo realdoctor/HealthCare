@@ -151,6 +151,7 @@ public class RecordingService extends Service {
             RecordBean bean = new RecordBean();
             bean.setFileName(mFileName);
             bean.setFilePath(mFilePath);
+            bean.setDate(String.valueOf(mStartingTimeMillis));
             bean.setElapsedMillis(String.valueOf(mElapsedMillis));
             bean.setFolder(mFolder);
             instance.insertRecord(this, bean);

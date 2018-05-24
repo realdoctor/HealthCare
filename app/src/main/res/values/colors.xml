@@ -71,4 +71,5 @@
     <color name="crimson">#dc143c</color>
     <color name="holo_red_light">#ffff4444</color>
     <color name="holo_red_dark">#ffcc0000</color>
+    <color name="dialog_bg">#bc000000</color>
 </resources>

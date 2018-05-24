@@ -198,7 +198,14 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                docDetailAdapter.notifyDataSetChanged();
+                if (EmptyUtils.isNotEmpty(instance)) {
+                    recordList = instance.querySaveDocList(RecordListActivity.this);
+                    //docDetailAdapter.notifyDataSetChanged();不好使
+                    docDetailAdapter = new DocDetailAdapter(RecordListActivity.this, R.layout.doc_detail_item, recordList);
+                    //给RecyclerView设置适配器
+                    recordListlRecycleView.setAdapter(docDetailAdapter);
+                    initEvent();
+                }
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
@@ -273,7 +280,11 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
     public void refreshList() {
         if (EmptyUtils.isNotEmpty(instance)) {
             recordList = instance.querySaveDocList(RecordListActivity.this);
-            docDetailAdapter.notifyDataSetChanged();
+            //docDetailAdapter.notifyDataSetChanged();不好使
+            docDetailAdapter = new DocDetailAdapter(RecordListActivity.this, R.layout.doc_detail_item, recordList);
+            //给RecyclerView设置适配器
+            recordListlRecycleView.setAdapter(docDetailAdapter);
+            initEvent();
         }
     }
 

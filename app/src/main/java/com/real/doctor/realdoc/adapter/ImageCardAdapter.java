@@ -3,12 +3,15 @@ package com.real.doctor.realdoc.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +25,10 @@ import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.ImageListBean;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.ImageCardDialog;
 import com.real.doctor.realdoc.view.SpaceItemDecoration;
+import com.real.doctor.realdoc.widget.ZoomTutorial;
 
 import java.util.List;
 
@@ -38,14 +43,26 @@ public class ImageCardAdapter extends BaseQuickAdapter<ImageListBean, BaseViewHo
     private View mView;
     private BaseQuickAdapter mAdapter;
     private List<ImageListBean> data;
+    private Bitmap[] newImgs;
+    private List<String> mImgPaths;
     private boolean flag = false;
+    private boolean isContent = false;
 
     public ImageCardAdapter(Context context, int layoutResId, @Nullable List<ImageListBean> data) {
         super(layoutResId, data);
         this.context = context;
         this.data = data;
+        this.isContent = false;
     }
 
+    public ImageCardAdapter(Context context, int layoutResId, @Nullable List<ImageListBean> data, Bitmap[] newImgs, List<String> mImgPaths, boolean isContent) {
+        super(layoutResId, data);
+        this.context = context;
+        this.data = data;
+        this.isContent = isContent;
+        this.newImgs = newImgs;
+        this.mImgPaths = mImgPaths;
+    }
 
     @Override
     protected void convert(BaseViewHolder viewHolder, ImageListBean item) {
@@ -76,41 +93,50 @@ public class ImageCardAdapter extends BaseQuickAdapter<ImageListBean, BaseViewHo
         imageGridAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(final BaseQuickAdapter adapter, final View view, final int position) {
-                //弹出框界面
-                dialog = new ImageCardDialog(context).builder()
-                        .setCancelable(false)
-                        .setCanceledOnTouchOutside(true)
-                        .setClickBtn(new ImageCardDialog.ReplaceListener() {
-                            @Override
-                            public void onReplaceListener() {
-                                mAdapter = adapter;
-                                //点击替换图片按钮
-                                PhotoPicker.builder()
-                                        .setPhotoCount(1)
-                                        .setShowCamera(false)
-                                        .setShowGif(false)
-                                        .setPreviewEnabled(true)//是否可以预览
-                                        .setPostion(String.valueOf(groupPos), String.valueOf(position))
-                                        .start((Activity) mContext, REQUEST_CODE_REPLACE_IMAGE);
-                            }
-                        }).setAdviceClickBtn(new ImageCardDialog.AdviceListener() {
-                            @Override
-                            public void onAdviceClick() {
-                                mView = view;
-                                mAdapter = adapter;
-                                ImageBean bean = (ImageBean) adapter.getItem(position);
-                                //进入医院标签页
-                                Intent intent = new Intent(context, AddAdviceActivity.class);
-                                intent.putExtra("pos", String.valueOf(position));
-                                intent.putExtra("change", bean.getAdvice());
-                                ((Activity) context).startActivityForResult(intent, 0x1000);
-                            }
-                        }).show();
+                if (isContent) {
+                    //图片放大
+                    ImageBean bean = (ImageBean) adapter.getItem(position);
+                    //获得路径值,通过值获得数组的下标
+                    int current = mImgPaths.indexOf(bean.getImgUrl());
+                    //当前drawable的res的id
+                    setViewPagerAndZoom(view, current);
+                } else {
+                    //弹出框界面
+                    dialog = new ImageCardDialog(context).builder()
+                            .setCancelable(false)
+                            .setCanceledOnTouchOutside(true)
+                            .setClickBtn(new ImageCardDialog.ReplaceListener() {
+                                @Override
+                                public void onReplaceListener() {
+                                    mAdapter = adapter;
+                                    //点击替换图片按钮
+                                    PhotoPicker.builder()
+                                            .setPhotoCount(1)
+                                            .setShowCamera(false)
+                                            .setShowGif(false)
+                                            .setPreviewEnabled(true)//是否可以预览
+                                            .setPostion(String.valueOf(groupPos), String.valueOf(position))
+                                            .start((Activity) mContext, REQUEST_CODE_REPLACE_IMAGE);
+                                }
+                            }).setAdviceClickBtn(new ImageCardDialog.AdviceListener() {
+                                @Override
+                                public void onAdviceClick() {
+                                    mView = view;
+                                    mAdapter = adapter;
+                                    ImageBean bean = (ImageBean) adapter.getItem(position);
+                                    //进入医院标签页
+                                    Intent intent = new Intent(context, AddAdviceActivity.class);
+                                    intent.putExtra("pos", String.valueOf(position));
+                                    intent.putExtra("change", bean.getAdvice());
+                                    ((Activity) context).startActivityForResult(intent, 0x1000);
+                                }
+                            }).show();
 
+                }
             }
         });
         TextView textView = viewHolder.getView(R.id.advice);
-        if (textView.getVisibility() == View.VISIBLE) {
+        if (textView.getVisibility() == View.VISIBLE && !isContent) {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -123,6 +149,11 @@ public class ImageCardAdapter extends BaseQuickAdapter<ImageListBean, BaseViewHo
             });
         }
         ImageView imageView = viewHolder.getView(R.id.delete_icon);
+        if(isContent){
+            imageView.setVisibility(View.GONE);
+        }else {
+            imageView.setVisibility(View.VISIBLE);
+        }
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,5 +211,38 @@ public class ImageCardAdapter extends BaseQuickAdapter<ImageListBean, BaseViewHo
 
     public void replaceImg(boolean flag) {
         this.flag = flag;
+    }
+
+    public void setViewPagerAndZoom(View v, int position) {
+        //得到要放大展示的视图界面
+        final ViewPager expandedView = (ViewPager) ((Activity) mContext).findViewById(R.id.detail_view);
+        //最外层的容器，用来计算
+        View containerView = (FrameLayout) ((Activity) mContext).findViewById(R.id.container_iv);
+        //实现放大缩小类，传入当前的容器和要放大展示的对象
+        ZoomTutorial mZoomTutorial = new ZoomTutorial(containerView, expandedView);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(mContext,
+                newImgs, mZoomTutorial);
+        expandedView.setAdapter(adapter);
+        expandedView.setCurrentItem(position);
+
+        // 通过传入Id来从小图片扩展到大图，开始执行动画
+        mZoomTutorial.zoomImageFromThumb(v);
+        mZoomTutorial.setOnZoomListener(new ZoomTutorial.OnZoomListener() {
+
+            @Override
+            public void onThumbed() {
+                // TODO 自动生成的方法存根
+                System.out.println("现在是-------------------> 小图状态");
+                expandedView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onExpanded() {
+                // TODO 自动生成的方法存根
+                expandedView.setVisibility(View.VISIBLE);
+                System.out.println("现在是-------------------> 大图状态");
+            }
+        });
     }
 }

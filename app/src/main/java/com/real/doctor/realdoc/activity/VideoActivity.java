@@ -52,6 +52,7 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
     private String mFolder;
     private int text = 0;
     private VideoManager instance = null;
+    private String mStartingTimeMillis;
 
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
@@ -94,7 +95,7 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
             @Override
             public void onLongClick() {
                 ToastUtil.showLong(VideoActivity.this, "开始录制视频!");
-
+                mStartingTimeMillis = DateUtil.timeStamp();
                 if (!startedFlg) {
                     handler.postDelayed(runnable, 1000);
                     if (EmptyUtils.isEmpty(recorder)) {
@@ -177,6 +178,7 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
                 VideoBean bean = new VideoBean();
                 bean.setFileName(name);
                 bean.setFilePath(path);
+                bean.setDate(mStartingTimeMillis);
                 bean.setElapsedMillis(String.valueOf(time.getText()));
                 bean.setFolder(mFolder);
                 instance.insertVideo(VideoActivity.this, bean);

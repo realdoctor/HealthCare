@@ -35,4 +35,14 @@
         android:textColor="@android:color/white"
         android:textSize="14.0sp"
         android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/right_icon"
+        android:layout_width="20.0dip"
+        android:layout_height="20.0dip"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10.0dip"
+        android:background="@mipmap/right_icon"
+        android:clickable="true"
+        android:visibility="gone" />
 </RelativeLayout>
