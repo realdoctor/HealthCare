@@ -68,6 +68,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bingoogolapple.bgabanner.BGABannerUtil;
 
 /**
  * Created by Administrator on 2018/4/23.

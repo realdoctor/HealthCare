@@ -3,6 +3,8 @@ import android.util.Log;
 
 import com.real.doctor.realdoc.BuildConfig;
 
+import java.io.IOException;
+
 /**
  *     author: zhujiabin
  *     time  : 2018/1/3
@@ -37,7 +39,7 @@ public class LogUtils {
     }
 
 
-    public static void e(String message){
+    public static void e(String message, IOException e){
         if (!isDebuggable())
             return;
 

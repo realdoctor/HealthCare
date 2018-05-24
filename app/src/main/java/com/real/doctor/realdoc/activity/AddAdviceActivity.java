@@ -45,7 +45,8 @@ public class AddAdviceActivity extends BaseActivity {
             changeAdvice = intent.getStringExtra("change");
         }
         if (EmptyUtils.isNotEmpty(changeAdvice)) {
-            advice.setHint("更改嘱咐");
+            advice.setText(changeAdvice);
+            advice.setSelection(advice.getText().length());
             //更改title
         } else {
             advice.setHint("添加嘱咐");
