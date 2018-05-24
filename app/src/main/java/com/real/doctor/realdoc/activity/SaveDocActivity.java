@@ -77,6 +77,10 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     TextView moreIll;
     @BindView(R.id.more_hospital)
     TextView moreHospital;
+    @BindView(R.id.ill_linear)
+    LinearLayout illLinear;
+    @BindView(R.id.hospital_linear)
+    LinearLayout hospitalLinear;
     private List<ImageBean> imageList;
     private GridAdapter adapter;
     //底部弹出菜单
@@ -85,6 +89,9 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
     private String mAdvice = null;
     private SaveDialogActivity dialog;
     private boolean flag = false;
+    private SaveDocManager instance = null;
+    private List<String> diseasesList;
+    private List<String> hospitalsList;
     //拍照
     private static final int REQUEST_CODE_TAKE_PHOTO = 0x110;
     //疾病标签
@@ -104,6 +111,7 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
 
     @Override
     public void initData() {
+        instance = SaveDocManager.getInstance(SaveDocActivity.this);
         initLable();
         imageList = new ArrayList<>();
         adapter = new GridAdapter(this, imageList);
@@ -112,27 +120,88 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
         ImageBean bean = new ImageBean();
         bean.setSpareImage(R.mipmap.add);
         imageList.add(bean);
-        rightTitle.setText("查看");
-        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setText("");
+        rightTitle.setVisibility(View.GONE);
     }
 
     private void initLable() {
-        labelList.add(new LabelBean("心脏病", 1));
-        labelList.add(new LabelBean("呼吸系统疾病", 2));
-        illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
-            @Override
-            public CharSequence getLabelText(TextView label, int position, LabelBean data) {
-                return data.getName();
-            }
-        });
-        hospitalList.add(new LabelBean("杭州仁和医院", 1));
-        hospitalList.add(new LabelBean("杭州第一人民医院", 2));
-        hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
-            @Override
-            public CharSequence getLabelText(TextView label, int position, LabelBean data) {
-                return data.getName();
-            }
-        });
+        //疾病列表
+        diseasesList = instance.queryDiseaseList(RealDocApplication.getDaoSession(SaveDocActivity.this));
+        switch (diseasesList.size()) {
+            case 0:
+                illLinear.setVisibility(View.GONE);
+                break;
+            case 1:
+                illLinear.setVisibility(View.VISIBLE);
+                labelList.add(new LabelBean(diseasesList.get(0), 1));
+                illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+            case 2:
+                illLinear.setVisibility(View.VISIBLE);
+                labelList.add(new LabelBean(diseasesList.get(0), 1));
+                labelList.add(new LabelBean(diseasesList.get(1), 2));
+                illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+            default:
+                illLinear.setVisibility(View.VISIBLE);
+                labelList.add(new LabelBean(diseasesList.get(0), 1));
+                labelList.add(new LabelBean(diseasesList.get(1), 2));
+                illLabels.setLabels(labelList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+        }
+        hospitalsList = instance.queryHospitalList(RealDocApplication.getDaoSession(SaveDocActivity.this));
+        switch (hospitalsList.size()) {
+            case 0:
+                hospitalLinear.setVisibility(View.GONE);
+                break;
+            case 1:
+                hospitalLinear.setVisibility(View.VISIBLE);
+                hospitalList.add(new LabelBean(hospitalsList.get(0), 1));
+                hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+            case 2:
+                hospitalLinear.setVisibility(View.VISIBLE);
+                hospitalList.add(new LabelBean(hospitalsList.get(0), 1));
+                hospitalList.add(new LabelBean(hospitalsList.get(1), 2));
+                hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+            default:
+                hospitalLinear.setVisibility(View.VISIBLE);
+                hospitalList.add(new LabelBean(hospitalsList.get(0), 1));
+                hospitalList.add(new LabelBean(hospitalsList.get(1), 2));
+                hospitalLabels.setLabels(hospitalList, new LabelsView.LabelTextProvider<LabelBean>() {
+                    @Override
+                    public CharSequence getLabelText(TextView label, int position, LabelBean data) {
+                        return data.getName();
+                    }
+                });
+                break;
+        }
     }
 
     @Override
@@ -222,7 +291,6 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
                 bean.setTime(time);
                 bean.setImgs(sb.toString());
                 bean.setAdvice(ad.toString());
-                SaveDocManager instance = SaveDocManager.getInstance(SaveDocActivity.this);
                 if (EmptyUtils.isNotEmpty(instance)) {
                     instance.insertSaveDoc(SaveDocActivity.this, bean);
                     ToastUtil.showLong(RealDocApplication.getContext(), "病历数据保存成功!");
@@ -242,12 +310,12 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
             case R.id.more_ill:
                 //进入疾病标签页
                 intent = new Intent(this, IllLabelActivity.class);
-                startActivityForResult(intent, 0x100);
+                startActivityForResult(intent, 100);
                 break;
             case R.id.more_hospital:
                 //进入医院标签页
                 intent = new Intent(this, HospitalLabelActivity.class);
-                startActivityForResult(intent, 0x110);
+                startActivityForResult(intent, 110);
                 break;
         }
     }
@@ -359,16 +427,22 @@ public class SaveDocActivity extends BaseActivity implements AdapterView.OnItemC
             imageBean.setImgUrl(path);
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
-        } else if (resultCode == 0 && !flag) {
+        } else if (resultCode == 0 && !flag && requestCode != 100 && requestCode != 110) {
             ImageBean imageBean = new ImageBean();
             imageBean.setSpareImage(R.mipmap.add);
             imageBean.setImgUrl("");
             imageList.add(imageBean);
             adapter.notifyDataSetChanged();
-        } else if (requestCode == RESULT_OK && requestCode == 0x100) {
-            illLabels.refreshDrawableState();
-        } else if (requestCode == RESULT_OK && requestCode == 0x110) {
-            hospitalLabels.refreshDrawableState();
+        } else if (resultCode == RESULT_OK && requestCode == 100) {
+            illLabels.clearAllSelect();
+            String disease = data.getStringExtra("disease");
+            ill.setText(disease);
+            ill.setSelection(ill.getText().length());
+        } else if (resultCode == RESULT_OK && requestCode == 110) {
+            hospitalLabels.clearAllSelect();
+            String hospitalLabel = data.getStringExtra("hospital");
+            hospital.setText(hospitalLabel);
+            hospital.setSelection(hospital.getText().length());
         }
     }
 

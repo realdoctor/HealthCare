@@ -140,7 +140,7 @@ public class SaveDocManager {
         return list;
     }
 
-    private static final String SQL_DISTINCT_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Ill.columnName + " FROM " + SaveDocBeanDao.TABLENAME;
+    private static final String SQL_DISTINCT_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Ill.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
 
     /**
      * 查询病历一列列表
@@ -148,6 +148,25 @@ public class SaveDocManager {
     public static List<String> queryDiseaseList(DaoSession session) {
         ArrayList<String> result = new ArrayList<String>();
         Cursor c = session.getDatabase().rawQuery(SQL_DISTINCT_ILL, null);
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    result.add(c.getString(0));
+                } while (c.moveToNext());
+            }
+        } finally {
+            c.close();
+        }
+        return result;
+    }
+    private static final String SQL_HOSPITAL_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Hospital.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
+
+    /**
+     * 查询病历一列列表
+     */
+    public static List<String> queryHospitalList(DaoSession session) {
+        ArrayList<String> result = new ArrayList<String>();
+        Cursor c = session.getDatabase().rawQuery(SQL_HOSPITAL_ILL, null);
         try {
             if (c.moveToFirst()) {
                 do {
@@ -170,5 +189,16 @@ public class SaveDocManager {
         List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.like("%" + disease + "%")).list();
         return list;
     }
+
+    /**
+     * 查询病历list列表总共条数
+     */
+    public long getTotalCount() {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        return qb.buildCount().count();
+    }
+
 }
 

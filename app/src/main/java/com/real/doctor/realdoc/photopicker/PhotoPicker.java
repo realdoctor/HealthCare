@@ -22,6 +22,7 @@ public class PhotoPicker {
     public final static int DEFAULT_COLUMN_NUMBER = 3;
 
     public final static String KEY_SELECTED_PHOTOS = "SELECTED_PHOTOS";
+    public final static String KEY_SELECTED_INDEXS = "SELECTED_INDEXS";
 
     public final static String EXTRA_MAX_COUNT = "MAX_COUNT";
     public final static String EXTRA_SHOW_CAMERA = "SHOW_CAMERA";
@@ -51,6 +52,12 @@ public class PhotoPicker {
          * @param requestCode requestCode for result
          */
         public void start(@NonNull Activity activity, int requestCode) {
+            if (PermissionsUtils.checkReadStoragePermission(activity)) {
+                activity.startActivityForResult(getIntent(activity), requestCode);
+            }
+        }
+
+        public void start(@NonNull Activity activity, int requestCode, Bundle bundle) {
             if (PermissionsUtils.checkReadStoragePermission(activity)) {
                 activity.startActivityForResult(getIntent(activity), requestCode);
             }
@@ -131,6 +138,12 @@ public class PhotoPicker {
 
         public PhotoPickerBuilder setPreviewEnabled(boolean previewEnabled) {
             mPickerOptionsBundle.putBoolean(EXTRA_PREVIEW_ENABLED, previewEnabled);
+            return this;
+        }
+
+        public PhotoPickerBuilder setPostion(String groupPos, String pos) {
+            mPickerOptionsBundle.putString("groupPos", groupPos);
+            mPickerOptionsBundle.putString("pos", pos);
             return this;
         }
     }

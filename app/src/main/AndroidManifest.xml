@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.real.doctor.realdoc">
+    package="com.real.doctor.realdoc">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!--添加WiFi以及访问网络的权限-->
@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!--视频播放-->
+<!--视频播放-->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -71,9 +71,8 @@
         </provider>
 
         <activity android:name=".activity.SplashActivity"
-                  android:hardwareAccelerated="false"
-                  android:screenOrientation="portrait">
-
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.RealDocActivity"
@@ -187,7 +186,7 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
         </activity>
-        <activity
+         <activity
             android:name=".activity.CheckCompareActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
@@ -211,16 +210,16 @@
             android:screenOrientation="behind">
         </activity>
         <!--<activity-->
-        <!--android:name=".activity.AddressActivity"-->
-        <!--android:hardwareAccelerated="false"-->
-        <!--android:screenOrientation="portrait">-->
+            <!--android:name=".activity.AddressActivity"-->
+            <!--android:hardwareAccelerated="false"-->
+            <!--android:screenOrientation="portrait">-->
         <!--</activity>-->
 
         <service
             android:name=".service.UpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <service android:name=".service.RecordingService" />
+           <service android:name=".service.RecordingService" />
 
         <activity
             android:name=".activity.RecordActivity"

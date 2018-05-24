@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <include layout="@layout/title_bar"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/rg"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_72"
+            android:paddingRight="@dimen/dp_72"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:id="@+id/rb_expert"
+                android:paddingTop="@dimen/dp_4"
+                android:paddingBottom="@dimen/dp_4"
+                android:checked="true"
+                android:text="@string/order_by_name"
+                android:background="@drawable/radio_button_bg"
+                android:textColor="@color/radio_button_color"
+                android:textSize="@dimen/sp_16"
+                android:gravity="center" />
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/rb_date"
+                android:button="@null"
+                android:text="@string/order_by_date"
+                android:paddingTop="@dimen/dp_4"
+                android:paddingBottom="@dimen/dp_4"
+                android:textSize="@dimen/sp_16"
+                android:background="@drawable/radio_button_bg"
+                android:textColor="@color/radio_button_color"
+                android:gravity="center" />
+        </RadioGroup>
+
+    </LinearLayout>
+    <com.real.doctor.realdoc.view.CustomViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/vp_show"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </com.real.doctor.realdoc.view.CustomViewPager>
+</LinearLayout>

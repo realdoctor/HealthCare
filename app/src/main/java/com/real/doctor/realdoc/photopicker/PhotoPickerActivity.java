@@ -30,6 +30,7 @@ import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_DIR_PHOTOS;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_SHOW_CAMERA;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.EXTRA_SHOW_GIF;
+import static com.real.doctor.realdoc.photopicker.PhotoPicker.KEY_SELECTED_INDEXS;
 import static com.real.doctor.realdoc.photopicker.PhotoPicker.KEY_SELECTED_PHOTOS;
 
 public class PhotoPickerActivity extends AppCompatActivity {
@@ -49,6 +50,9 @@ public class PhotoPickerActivity extends AppCompatActivity {
     private int columnNumber = DEFAULT_COLUMN_NUMBER;
     private ArrayList<String> originalPhotos = null;
     private ArrayList<String> dir = null;
+
+    private String groupPos;
+    private String pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +82,8 @@ public class PhotoPickerActivity extends AppCompatActivity {
         columnNumber = getIntent().getIntExtra(EXTRA_GRID_COLUMN, DEFAULT_COLUMN_NUMBER);
         originalPhotos = getIntent().getStringArrayListExtra(EXTRA_ORIGINAL_PHOTOS);
         dir = getIntent().getStringArrayListExtra(EXTRA_DIR_PHOTOS);
-
+        groupPos = getIntent().getStringExtra("groupPos");
+        pos = getIntent().getStringExtra("pos");
         if (EmptyUtils.isNotEmpty(dir) && dir.size() > 0) {
             setTitle("病历图片替换");
         }
@@ -180,7 +185,13 @@ public class PhotoPickerActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.done) {
             Intent intent = new Intent();
             ArrayList<String> selectedPhotos = pickerFragment.getPhotoGridAdapter().getSelectedPhotoPaths();
+            ArrayList<String> selectedIndexs = pickerFragment.getPhotoGridAdapter().getSelectIndex();
+            if (EmptyUtils.isNotEmpty(groupPos) && EmptyUtils.isNotEmpty(pos)) {
+                intent.putExtra("groupPos", groupPos);
+                intent.putExtra("pos", pos);
+            }
             intent.putStringArrayListExtra(KEY_SELECTED_PHOTOS, selectedPhotos);
+            intent.putStringArrayListExtra(KEY_SELECTED_INDEXS, selectedIndexs);
             setResult(RESULT_OK, intent);
             finish();
             return true;

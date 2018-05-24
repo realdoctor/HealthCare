@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/record_doc_relative"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title_bar" />
+
+    <EditText
+        android:id="@+id/advice"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/audio_item_bg"
+        android:hint="@string/image_card_add_advice"
+        android:inputType="textMultiLine"
+        android:gravity="left|top"
+        android:minLines="6"
+        android:paddingLeft="10.0dip"
+        android:textColorHint="#ff999999"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="14.0sp"
+        android:typeface="monospace" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/advice"
+        android:layout_marginBottom="80dp"
+        android:layout_marginTop="45.0dip">
+
+        <Button
+            android:id="@+id/button_confirm"
+            android:layout_width="fill_parent"
+            android:layout_height="43.0dip"
+            android:layout_marginLeft="18.0dip"
+            android:layout_marginRight="18.0dip"
+            android:background="@drawable/button_selector"
+            android:text="@string/confirm_btn"
+            android:textColor="#ffffffff"
+            android:textSize="15.0sp" />
+    </RelativeLayout>
+</RelativeLayout>

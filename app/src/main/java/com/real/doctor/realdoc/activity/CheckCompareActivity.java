@@ -74,6 +74,12 @@ public class CheckCompareActivity extends BaseActivity implements CheckCompareAd
         mRecyclerview.setAdapter(mCheckDocAdapter);
         SaveDocManager instance = SaveDocManager.getInstance(CheckCompareActivity.this);
         mList = instance.querySaveDocList(CheckCompareActivity.this);
+        //将所有已选中去除
+        for (int i = 0; i < mList.size(); i++) {
+            if (mList.get(i).getIsSelect()) {
+                mList.get(i).setIsSelect(false);
+            }
+        }
         mCheckDocAdapter.notifyAdapter(mList, false);
     }
 
