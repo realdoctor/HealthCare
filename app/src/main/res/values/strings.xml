@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">康链</string>
     <!--label-->
-    <item name="tag_key_data" type="id" />
-    <item name="tag_key_position" type="id" />
+    <item name="tag_key_data" type="id"/>
+    <item name="tag_key_position" type="id"/>
     <!--新浪-->
     <string name="weibosdk_demo_toast_auth_success">授权成功</string>
     <string name="weibosdk_demo_toast_auth_failed">授权失败</string>
