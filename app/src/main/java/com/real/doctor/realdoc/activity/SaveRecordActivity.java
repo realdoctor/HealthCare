@@ -244,13 +244,13 @@ public class SaveRecordActivity extends BaseActivity {
                 if (EmptyUtils.isNotEmpty(label)) {
                     name = label.getName();
                 }
-                if (StringUtils.equals(name, "处方标签")) {
+                if (StringUtils.equals(name, "处方")) {
                     spare = 1;
-                } else if (StringUtils.equals(name, "医嘱标签")) {
+                } else if (StringUtils.equals(name, "医嘱")) {
                     spare = 2;
-                } else if (StringUtils.equals(name, "体征标签")) {
+                } else if (StringUtils.equals(name, "体征")) {
                     spare = 3;
-                } else if (StringUtils.equals(name, "报告检查标签")) {
+                } else if (StringUtils.equals(name, "报告检查")) {
                     spare = 4;
                 } else {
                     spare = 0;

@@ -112,7 +112,6 @@
     <string name="record_images_label">添加标签</string>
     <string name="information_icon">消息</string>
     <string name="scan_icon">扫一扫</string>
-<<<<<<< Updated upstream
     <string name="location">定位</string>
     <string name="notifyTitle">提示</string>
     <string name="notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>
@@ -123,7 +122,6 @@
     <string name="order_by_date">按日期预约</string>
     <string name="hospital">医院</string>
     <string name="expert">医生</string>
-=======
     <string name="advice_info">处方信息:</string>
     <string name="record_one">第一份病历</string>
     <string name="record_two">第二份病历</string>
