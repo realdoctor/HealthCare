@@ -188,7 +188,7 @@ public class ImageCardAdapter extends BaseQuickAdapter<ImageListBean, BaseViewHo
             } else if (spare == 3) {
                 labelText.setVisibility(View.VISIBLE);
                 labelIcon.setVisibility(View.VISIBLE);
-                labelText.setText("检查标签");
+                labelText.setText("体征标签");
                 Uri uri = Uri.parse(path + R.mipmap.avatar_bg);
                 Glide.with(mContext).load(uri).crossFade().into(labelIcon);
             } else if (spare == 4) {
