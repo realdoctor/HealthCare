@@ -112,11 +112,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         filterBean.setSortList(DataUtil.sortBeans);
         filterBean.setHospitalLevelBeans(DataUtil.hospitalLevelBeans);
         initFilterDropDownView();
-        int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
         mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis() - deta));
-        mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
-        mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
         ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
@@ -270,6 +266,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
                 pageNum=1;
                 hospitalBeanArrayList.clear();
                 getData();
+                refreshLayout.finishRefresh();
             }
         }
 
@@ -303,6 +300,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
                 hospitalBeanArrayList.clear();
                 pageNum=1;
                 getData();
+                refreshLayout.finishRefresh();
             }
         });
         //等级回调
@@ -319,6 +317,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
                 hospitalBeanArrayList.clear();
                 pageNum=1;
                 getData();
+                refreshLayout.finishRefresh();
             }
         });
 

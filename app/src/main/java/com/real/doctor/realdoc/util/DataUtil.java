@@ -41,6 +41,7 @@ public class DataUtil {
         hospitalLevelBeans.add(hBean3);
         ExpertPostionalBean ebean0=new ExpertPostionalBean();
         ebean0.postional="不限";
+        expertPostionalBeans.add(ebean0);
         ExpertPostionalBean ebean=new ExpertPostionalBean();
         ebean.postional="主任";
         expertPostionalBeans.add(ebean);
