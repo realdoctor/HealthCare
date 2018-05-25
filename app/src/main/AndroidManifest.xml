@@ -2,25 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.real.doctor.realdoc">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- 添加WiFi以及访问网络的权限 -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--添加WiFi以及访问网络的权限-->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- 视频播放 -->
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <!-- 操作外部存储设备文件 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/> <!-- 高德需要的权限 -->
+<!--视频播放-->
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!--操作外部存储设备文件-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /><!-- 高德需要的权限 -->
     <!-- Normal Permissions 不需要运行时注册 -->
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
     <!-- 需要运行时注册的权限 -->
@@ -79,6 +77,10 @@
             android:name=".activity.SplashActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.RealDocActivity"
@@ -253,10 +255,14 @@
             android:name=".activity.SearchHistoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.AppointmentAddressActivity">
-
-        </activity>
-
+        <activity
+            android:name=".activity.AppointmentAddressActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.SearchResultActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
         <meta-data
             android:name="WEIBO_APPKEY"
             android:value=""/>
