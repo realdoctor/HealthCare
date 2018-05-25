@@ -192,7 +192,7 @@ public class ImageCardAdapter extends BaseQuickAdapter<ImageListBean, BaseViewHo
                 Uri uri = Uri.parse(path + R.mipmap.avatar_bg);
                 Glide.with(mContext).load(uri).crossFade().into(labelIcon);
             } else if (spare == 4) {
-                labelText.setText("您选择了处方标签");
+                labelText.setText("您选择了报告检查标签");
                 Uri uri = Uri.parse(path + R.mipmap.arrow_white);
                 Glide.with(mContext).load(uri).crossFade().into(labelIcon);
             }

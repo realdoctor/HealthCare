@@ -50,6 +50,7 @@ import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileProvider7;
+import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.KeyBoardUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.StringUtils;
@@ -118,6 +119,7 @@ public class SaveRecordActivity extends BaseActivity {
     RelativeLayout recordDocRelative;
     //随机数,做为病历的Id
     private String mRecordId;
+    private String mModifyId;
     //底部弹出菜单
     private SelectPopupWindow mPopup;
     private String mCurrentPhotoPath;
@@ -135,6 +137,8 @@ public class SaveRecordActivity extends BaseActivity {
     private List<RecordBean> audioList;
     private List<VideoBean> videoList;
     private List<ImageListBean> imageBeanList;
+    //修改过程中为0的状态
+    private List<ImageListBean> imageBeanZeroList;
     //拍照
     private static final int REQUEST_CODE_TAKE_PHOTO = 0x110;
     //疾病标签
@@ -143,6 +147,8 @@ public class SaveRecordActivity extends BaseActivity {
     ArrayList<LabelBean> hospitalList = new ArrayList<>();
 
     public static String RECORD_IMAGES_TEXT = "android.intent.action.record.images.text";
+
+    public boolean isModify = false;
 
     @Override
     public int getLayoutId() {
@@ -176,6 +182,51 @@ public class SaveRecordActivity extends BaseActivity {
         rightTitle.setText("");
         rightTitle.setVisibility(View.GONE);
         localBroadcast();
+        modifyRecord();
+    }
+
+    private void modifyRecord() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getBundleExtra("data");
+            if (EmptyUtils.isNotEmpty(bundle)) {
+                SaveDocBean saveDocBean = bundle.getParcelable("saveDocBean");
+                mModifyId = saveDocBean.getId();
+                folder = saveDocBean.getFolder();
+                imageBeanList = bundle.getParcelableArrayList("imageOriganList");
+                videoList = bundle.getParcelableArrayList("videoList");
+                audioList = bundle.getParcelableArrayList("audioList");
+                isModify = bundle.getBoolean("modify");
+                ill.setText(saveDocBean.getIll());
+                ill.setSelection(ill.getText().length());
+                hospital.setText(saveDocBean.getHospital());
+                hospital.setSelection(hospital.getText().length());
+                doctor.setText(saveDocBean.getDoctor());
+                imageBeanZeroList = new ArrayList<>();
+                imageBeanZeroList.addAll(imageBeanList);
+                //图片的地址传不过过来，所以此处只能对数据库再一次进行查询
+                int imageListLength = imageBeanList.size();
+                for (int i = 0; i < imageListLength; i++) {
+                    String id = imageBeanList.get(i).getId();
+                    List<ImageBean> list = imageInstance.queryImageByImageId(this, id);
+                    if (list.size() > 0) {
+                        imageBeanList.get(i).setmImgUrlList(list);
+                    }
+                }
+                //添加进recycleview，并将"+"按钮放在recycleview下面
+                gridRecycleView.setLayoutManager(new LinearLayoutManager(SaveRecordActivity.this, LinearLayoutManager.VERTICAL, false));
+                imageCardAdapter = new ImageCardAdapter(SaveRecordActivity.this, R.layout.image_card_item, imageBeanList);
+                //给RecyclerView设置适配器
+                gridRecycleView.setAdapter(imageCardAdapter);
+                audioRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                audioAdapter = new AudioAdapter(R.layout.audio_item, audioList);
+                audioRecycleView.setAdapter(audioAdapter);
+                videoRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                videoAdapter = new VideoAdapter(R.layout.video_item, videoList);
+                videoRecycleView.setAdapter(videoAdapter);
+            }
+        }
+
     }
 
     private void localBroadcast() {
@@ -482,52 +533,132 @@ public class SaveRecordActivity extends BaseActivity {
             case R.id.button_save_doc:
                 if (DocUtils.isFastClick()) {
                     //保存文字,图片，录音，录像信息
-                    SaveDocBean bean = new SaveDocBean();
-                    mRecordId = String.valueOf(Math.random());
-                    bean.setId(mRecordId);
-                    int videoLength = videoList.size();
-                    for (int i = 0; i < videoLength; i++) {
-                        videoList.get(i).setRecordId(mRecordId);
-                    }
-                    videoInstance.insertVideoList(this, videoList);
-                    int audioLength = audioList.size();
-                    for (int j = 0; j < audioLength; j++) {
-                        audioList.get(j).setRecordId(mRecordId);
-                    }
-                    recordInstance.insertRecordList(this, audioList);
-                    int imageListLength = imageBeanList.size();
-                    for (int k = 0; k < imageListLength; k++) {
-                        imageBeanList.get(k).setRecordId(mRecordId);
-                        String random = String.valueOf(Math.random());
-                        imageBeanList.get(k).setId(random);
-                        List<ImageBean> imageBean = imageBeanList.get(k).getmImgUrlList();
-                        int imageBeanLength = imageBean.size();
-                        for (int x = 0; x < imageBeanLength; x++) {
-                            imageBean.get(x).setImageId(random);
-                            imageBean.get(x).setId(String.valueOf(Math.random()));
+                    if (isModify) {
+                        SaveDocBean bean = new SaveDocBean();
+                        bean.setId(mModifyId);
+                        String illness = ill.getText().toString().trim();
+                        bean.setIll(illness);
+                        String hospitaName = hospital.getText().toString().trim();
+                        if (EmptyUtils.isEmpty(hospitaName)) {
+                            ToastUtil.showLong(this, "请填写就诊医院名称!");
+                            return;
                         }
-                        imageInstance.insertImageList(this, imageBean);
+                        bean.setHospital(hospitaName);
+                        String doctorName = doctor.getText().toString().trim();
+                        if (EmptyUtils.isEmpty(doctorName)) {
+                            ToastUtil.showLong(this, "请填写就诊医生!");
+                            return;
+                        }
+                        bean.setDoctor(doctorName);
+                        bean.setFolder(folder);
+                        bean.setTime(DateUtil.timeStamp());
+                        instance.insertSaveDoc(this, bean);
+                        //先删除，后插入
+                        videoInstance.deleteVideosByRecordId(mModifyId);
+                        recordInstance.deleteRecordsByRecordId(mModifyId);
+                        int audioLength = audioList.size();
+                        for (int j = 0; j < audioLength; j++) {
+                            audioList.get(j).setRecordId(mModifyId);
+                            audioList.get(j).setFolder(folder);
+                        }
+                        recordInstance.insertRecordList(this, audioList);
+                        int videoLength = videoList.size();
+                        for (int i = 0; i < videoLength; i++) {
+                            videoList.get(i).setRecordId(mRecordId);
+                            videoList.get(i).setFolder(folder);
+                        }
+                        videoInstance.insertVideoList(this, videoList);
+                        //删除原先的item
+                        int imageListLength = imageBeanZeroList.size();
+                        for (int i = 0; i < imageListLength; i++) {
+                            String id = imageBeanZeroList.get(i).getId();
+                            if (EmptyUtils.isNotEmpty(id)) {
+                                List<ImageListBean> mList = imageRecycleInstance.queryImageListByKey(this, id);
+                                if (mList.size() > 0) {
+                                    //删除该条数据,删除数据库中的图片路径，删除文件夹中图片
+                                    imageRecycleInstance.deleteImageListById(id);
+                                    //查询出路径，删除图片
+                                    List<String> imagesUrl = imageInstance.queryImageUrlList(RealDocApplication.getDaoSession(SaveRecordActivity.this), id);
+                                    for (int j = 0; j < imagesUrl.size(); j++) {
+                                        String file = imagesUrl.get(j);
+                                        if (FileUtils.isFile(file)) {
+                                            FileUtils.deleteDir(file);
+                                        }
+                                    }
+                                    imageInstance.deleteImagesByImageId(id);
+                                }
+                            }
+                        }
+                        int imageLength = imageBeanList.size();
+                        for (int k = 0; k < imageLength; k++) {
+                            imageBeanList.get(k).setRecordId(mModifyId);
+                            String random = String.valueOf(Math.random());
+                            imageBeanList.get(k).setId(random);
+                            List<ImageBean> imageBean = imageBeanList.get(k).getmImgUrlList();
+                            int imageBeanLength = imageBean.size();
+                            for (int x = 0; x < imageBeanLength; x++) {
+                                imageBean.get(x).setImageId(random);
+                                imageBean.get(x).setId(String.valueOf(Math.random()));
+                            }
+                            try {
+                                imageInstance.insertImageList(this, imageBean);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        imageRecycleInstance.insertImageListList(this, imageBeanList);
+                        //病历详情回调
+                        intent = new Intent();
+                        setResult(RESULT_OK, intent);
+                    } else {
+                        SaveDocBean bean = new SaveDocBean();
+                        mRecordId = String.valueOf(Math.random());
+                        bean.setId(mRecordId);
+                        int videoLength = videoList.size();
+                        for (int i = 0; i < videoLength; i++) {
+                            videoList.get(i).setRecordId(mRecordId);
+                        }
+                        videoInstance.insertVideoList(this, videoList);
+                        int audioLength = audioList.size();
+                        for (int j = 0; j < audioLength; j++) {
+                            audioList.get(j).setRecordId(mRecordId);
+                        }
+                        recordInstance.insertRecordList(this, audioList);
+                        int imageListLength = imageBeanList.size();
+                        for (int k = 0; k < imageListLength; k++) {
+                            imageBeanList.get(k).setRecordId(mRecordId);
+                            String random = String.valueOf(Math.random());
+                            imageBeanList.get(k).setId(random);
+                            List<ImageBean> imageBean = imageBeanList.get(k).getmImgUrlList();
+                            int imageBeanLength = imageBean.size();
+                            for (int x = 0; x < imageBeanLength; x++) {
+                                imageBean.get(x).setImageId(random);
+                                imageBean.get(x).setId(String.valueOf(Math.random()));
+                            }
+                            imageInstance.insertImageList(this, imageBean);
+                        }
+                        imageRecycleInstance.insertImageListList(this, imageBeanList);
+                        String illness = ill.getText().toString().trim();
+                        bean.setIll(illness);
+                        String hospitaName = hospital.getText().toString().trim();
+                        if (EmptyUtils.isEmpty(hospitaName)) {
+                            ToastUtil.showLong(this, "请填写就诊医院名称!");
+                            return;
+                        }
+                        bean.setHospital(hospitaName);
+                        String doctorName = doctor.getText().toString().trim();
+                        if (EmptyUtils.isEmpty(doctorName)) {
+                            ToastUtil.showLong(this, "请填写就诊医生!");
+                            return;
+                        }
+                        bean.setDoctor(doctorName);
+                        bean.setFolder(folder);
+                        bean.setTime(DateUtil.timeStamp());
+                        //保存到病历表中
+                        instance.insertSaveDoc(this, bean);
+                        ToastUtil.showLong(this, "数据保存成功");
+
                     }
-                    imageRecycleInstance.insertImageListList(this, imageBeanList);
-                    String illness = ill.getText().toString().trim();
-                    bean.setIll(illness);
-                    String hospitaName = hospital.getText().toString().trim();
-                    if (EmptyUtils.isEmpty(hospitaName)) {
-                        ToastUtil.showLong(this, "请填写就诊医院名称!");
-                        return;
-                    }
-                    bean.setHospital(hospitaName);
-                    String doctorName = doctor.getText().toString().trim();
-                    if (EmptyUtils.isEmpty(doctorName)) {
-                        ToastUtil.showLong(this, "请填写就诊医生!");
-                        return;
-                    }
-                    bean.setDoctor(doctorName);
-                    bean.setFolder(folder);
-                    bean.setTime(DateUtil.timeStamp());
-                    //保存到病历表中
-                    instance.insertSaveDoc(this, bean);
-                    ToastUtil.showLong(this, "数据保存成功");
                     //广播通知刷新列表
                     intent = new Intent(RecordListActivity.RECORD_LIST_TEXT);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

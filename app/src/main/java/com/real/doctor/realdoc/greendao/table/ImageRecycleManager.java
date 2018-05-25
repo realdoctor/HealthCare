@@ -92,7 +92,16 @@ public class ImageRecycleManager {
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         imageBeanListDao.insertOrReplaceInTx(beanList);
     }
-
+    /**
+     * 通过id查询列表list
+     */
+    public List<ImageListBean> queryImageListByKey(Context context, String id) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        QueryBuilder<ImageListBean> qb = imageBeanListDao.queryBuilder();
+        List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.Id.eq(id)).list();
+        return list;
+    }
     /**
      * 通过id查询列表list
      */
@@ -123,5 +132,21 @@ public class ImageRecycleManager {
             c.close();
         }
         return result;
+    }
+    /**
+     * 根据Id删除数据
+     */
+    public void deleteImageListById(String id) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        imageBeanListDao.deleteByKey(id);
+    }
+    /**
+     * 批量更新item
+     * */
+    public void updateImageList(List<ImageListBean> bean) throws Exception {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        imageBeanListDao.updateInTx(bean);
     }
 }

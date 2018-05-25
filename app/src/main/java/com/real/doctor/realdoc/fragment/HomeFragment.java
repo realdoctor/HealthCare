@@ -1,8 +1,8 @@
 package com.real.doctor.realdoc.fragment;
 
-import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
+import com.real.doctor.realdoc.activity.DocContentActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
 import com.real.doctor.realdoc.activity.RegistrationActivity;
 import com.real.doctor.realdoc.activity.SaveDocActivity;
@@ -101,6 +103,23 @@ public class HomeFragment extends BaseFragment {
             adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
             recycleView.setAdapter(adapter);
         }
+        initEvent();
+    }
+
+    private void initEvent() {
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //点击item事件
+                SaveDocBean bean = (SaveDocBean) adapter.getItem(position);
+                Intent intent = new Intent(getActivity(), DocContentActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putParcelable("SaveDocBean", bean);
+                intent.putExtras(mBundle);
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
     }
 
     @OnClick({R.id.home_search, R.id.save_doc_linear,R.id.base_cure,R.id.doctor_online})

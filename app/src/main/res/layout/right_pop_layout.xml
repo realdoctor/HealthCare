@@ -15,7 +15,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#88FF88"
+        android:background="@color/appthemecolor"
         android:divider="@drawable/disease_divider"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -29,7 +29,7 @@
             android:layout_marginRight="50dp"
             android:gravity="center"
             android:text="@string/modify"
-            android:textColor="@color/text_special_color"
+            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_marginRight="50dp"
             android:gravity="center"
             android:text="@string/compare"
-            android:textColor="@color/text_special_color"
+            android:textColor="@android:color/white"
             android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
+import com.real.doctor.realdoc.greendao.RecordBeanDao;
 import com.real.doctor.realdoc.greendao.VideoBeanDao;
+import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.util.EmptyUtils;
 
@@ -102,12 +104,28 @@ public class VideoManager {
 
     /**
      * 删除一条记录
-     *
-     * @param bean
      */
     public void deleteVideoByName(Context context, String name) {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         videoBeanDao.deleteByKey(name);
+    }
+
+    /**
+     * 根据recordId删除数据
+     */
+    public void deleteVideosByRecordId(String recordId) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        videoBeanDao.queryBuilder().where(VideoBeanDao.Properties.RecordId.eq(recordId)).buildDelete().executeDeleteWithoutDetachingEntities();
+    }
+
+    /**
+     * 批量更新视频文件
+     */
+    public void updateVideo(List<VideoBean> bean) throws Exception {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        videoBeanDao.updateInTx(bean);
     }
 }

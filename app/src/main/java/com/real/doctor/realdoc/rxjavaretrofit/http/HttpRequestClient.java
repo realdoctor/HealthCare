@@ -104,7 +104,7 @@ public class HttpRequestClient {
                         new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .cookieJar(new HttpCookieManager(context))
                 .cache(cache)
-                .addInterceptor(new BaseInterceptor(headers))
+                .addInterceptor(new BaseInterceptor(context,headers))
                 .addInterceptor(new CacheInterceptor(context))
                 .addNetworkInterceptor(new CacheInterceptor(context))
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
