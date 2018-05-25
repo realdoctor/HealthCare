@@ -61,7 +61,7 @@ public class SaveDocBean implements Parcelable{
             @JoinProperty(name = "id", referencedName = "recordId")
     })
     private List<VideoBean> videoList;
-    //医嘱(每张病历图片一个医嘱)
+    //处方
     private String advice;
     //机构编码
     private String orgCode;

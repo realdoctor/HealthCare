@@ -8,7 +8,9 @@ import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.ImageBeanDao;
+import com.real.doctor.realdoc.greendao.ImageListBeanDao;
 import com.real.doctor.realdoc.model.ImageBean;
+import com.real.doctor.realdoc.model.ImageListBean;
 import com.real.doctor.realdoc.util.EmptyUtils;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -134,6 +136,23 @@ public class ImageManager {
         return result;
     }
 
+    /**
+     * 批量更新图片文件
+     */
+    public void updateImageUrlList(List<ImageBean> bean) throws Exception {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
+        imageBeanDao.updateInTx(bean);
+    }
+
+    /**
+     * 根据recordId删除数据
+     */
+    public void deleteImagesByImageId(String imageId) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
+        imageBeanDao.queryBuilder().where( ImageBeanDao.Properties.ImageId.eq(imageId)).buildDelete().executeDeleteWithoutDetachingEntities();
+    }
     /**
      * 删除一条记录
      *

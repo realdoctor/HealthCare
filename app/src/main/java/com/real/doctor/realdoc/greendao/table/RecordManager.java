@@ -120,5 +120,22 @@ public class RecordManager {
         recordBeanDao.deleteByKey(name);
     }
 
+    /**
+     * 批量更新音频文件
+     */
+    public void updateRecord(List<RecordBean> bean) throws Exception {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
+        recordBeanDao.updateInTx(bean);
+    }
+
+    /**
+     * 根据recordId删除数据
+     */
+    public void deleteRecordsByRecordId(String recordId) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
+        recordBeanDao.queryBuilder().where(RecordBeanDao.Properties.RecordId.eq(recordId)).buildDelete().executeDeleteWithoutDetachingEntities();
+    }
 }
 

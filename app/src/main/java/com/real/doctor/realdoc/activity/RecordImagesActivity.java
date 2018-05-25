@@ -138,6 +138,8 @@ public class RecordImagesActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_title:
+                //隐藏键盘
+                KeyBoardUtils.closeOrOpenKeybord(this);
                 //回调信息(我用广播代替)
                 dragImages.remove(dragImages.size() - 1);
                 //动态注册广播
@@ -150,8 +152,6 @@ public class RecordImagesActivity extends BaseActivity {
                     intent.putExtra("label", addLabelBean);
                 }
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-                //隐藏键盘
-                KeyBoardUtils.closeOrOpenKeybord(this);
                 finish();
                 break;
             case R.id.add_label_btn:

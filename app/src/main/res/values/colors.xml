@@ -84,6 +84,9 @@
     <color name="crimson">#dc143c</color>
     <color name="holo_red_light">#ffff4444</color>
     <color name="holo_red_dark">#ffcc0000</color>
+<<<<<<< HEAD
+    <color name="dialog_bg">#bc000000</color>
+=======
     <color name="black_p50">#7f000000</color>
     <color name="commonColor">#ff8b45</color>
     <color name="filter_default_tvcl">#5a626d</color>
@@ -91,4 +94,5 @@
     <color name="b_c_fafafa">#fafafa</color>
     <color name="check_color">#ff03b5e5</color>
 
+>>>>>>> 2059d5cae57732e912530c5ea5522803bbb18806
 </resources>

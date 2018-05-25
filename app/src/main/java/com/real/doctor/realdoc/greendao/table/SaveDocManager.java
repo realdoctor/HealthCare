@@ -107,6 +107,37 @@ public class SaveDocManager {
         List<SaveDocBean> list = qb.orderDesc(SaveDocBeanDao.Properties.Time).list();
         return list;
     }
+    /**
+     * 查询病历list列表其中一条病历
+     */
+    public List<SaveDocBean> querySaveDocList(Context context,String id) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Id.notEq(id)).orderDesc(SaveDocBeanDao.Properties.Time).list();
+        return list;
+    }
+    /**
+     * 通过id查询一份病历
+     */
+    public List<SaveDocBean> queryRecordId(Context context, String id) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Id.eq(id)).list();
+        return list;
+    }
+    /**
+     * 更新一条记录
+     *
+     * @param
+     */
+    public void updateRecord(SaveDocBean bean) {
+        DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        saveDocDao.update(bean);
+    }
 
     /**
      * 删除一条记录
@@ -159,6 +190,7 @@ public class SaveDocManager {
         }
         return result;
     }
+
     private static final String SQL_HOSPITAL_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Hospital.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
 
     /**

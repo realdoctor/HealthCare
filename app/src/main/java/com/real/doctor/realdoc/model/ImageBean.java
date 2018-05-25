@@ -1,5 +1,8 @@
 package com.real.doctor.realdoc.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
@@ -13,7 +16,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * @email zhujiabindragon@163.com
  */
 @Entity
-public class ImageBean {
+public class ImageBean implements Parcelable {
     @Id
     private String id;
     private String imgUrl = "";
@@ -32,6 +35,27 @@ public class ImageBean {
     @Generated(hash = 645668394)
     public ImageBean() {
     }
+
+    protected ImageBean(Parcel in) {
+        id = in.readString();
+        imgUrl = in.readString();
+        spareImage = in.readInt();
+        advice = in.readString();
+        imageId = in.readString();
+    }
+
+    public static final Creator<ImageBean> CREATOR = new Creator<ImageBean>() {
+        @Override
+        public ImageBean createFromParcel(Parcel in) {
+            return new ImageBean(in);
+        }
+
+        @Override
+        public ImageBean[] newArray(int size) {
+            return new ImageBean[size];
+        }
+    };
+
     public String getId() {
         return this.id;
     }
@@ -64,4 +88,17 @@ public class ImageBean {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(imgUrl);
+        dest.writeInt(spareImage);
+        dest.writeString(advice);
+        dest.writeString(imageId);
+    }
 }

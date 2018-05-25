@@ -1,5 +1,8 @@
 package com.real.doctor.realdoc.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.JoinProperty;
@@ -16,7 +19,7 @@ import com.real.doctor.realdoc.greendao.ImageBeanDao;
 import com.real.doctor.realdoc.greendao.ImageListBeanDao;
 
 @Entity
-public class ImageListBean {
+public class ImageListBean implements Parcelable {
     //item生成日期(在数据库中作为外键)
     @Id
     private String id;
@@ -43,6 +46,26 @@ public class ImageListBean {
     @Generated(hash = 1158683224)
     public ImageListBean() {
     }
+
+    protected ImageListBean(Parcel in) {
+        id = in.readString();
+        date = in.readString();
+        content = in.readString();
+        recordId = in.readString();
+    }
+
+    public static final Creator<ImageListBean> CREATOR = new Creator<ImageListBean>() {
+        @Override
+        public ImageListBean createFromParcel(Parcel in) {
+            return new ImageListBean(in);
+        }
+
+        @Override
+        public ImageListBean[] newArray(int size) {
+            return new ImageListBean[size];
+        }
+    };
+
     public String getId() {
         return this.id;
     }
@@ -156,5 +179,18 @@ public class ImageListBean {
 
     public void setMyDao(ImageListBeanDao myDao) {
         this.myDao = myDao;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(date);
+        dest.writeString(content);
+        dest.writeString(recordId);
     }
 }

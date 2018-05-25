@@ -23,14 +23,6 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
-        <ImageView
-            android:id="@+id/radio_img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher" />
-
         <LinearLayout
             android:id="@+id/text_linear"
             android:layout_width="match_parent"

@@ -30,44 +30,27 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/4/27.
  */
 
-public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapter.ViewHolder> {
+public class SingleCompareAdapter extends RecyclerView.Adapter<SingleCompareAdapter.ViewHolder> {
 
     private RecyclerView mRv;//实现单选方法三： RecyclerView另一种定向刷新方法：
     private static final int saveDocBean_MODE_CHECK = 0;
     int mEditMode = saveDocBean_MODE_CHECK;
     private Context context;
     private List<SaveDocBean> mSaveDocBean;
-    //    private OnItemClickListener mOnItemClickListener;
-    private List<Integer> selectedList;
+    private OnItemClickListener mOnItemClickListener;
     private int mSelectedPos = -1;
 
-    public CheckCompareAdapter(Context context, RecyclerView rv) {
+    public SingleCompareAdapter(Context context, RecyclerView rv, List<SaveDocBean> saveDocBeanList) {
         this.context = context;
         mRv = rv;
-    }
-
-    public List<Integer> getSelectedList() {
-        return selectedList;
-    }
-
-    public void setSelectedList(List<Integer> selectedList) {
-        this.selectedList = selectedList;
-    }
-
-    public void notifyAdapter(List<SaveDocBean> saveDocBeanList, boolean isAdd) {
-        if (!isAdd) {
-            this.mSaveDocBean = saveDocBeanList;
-        } else {
-            this.mSaveDocBean.addAll(saveDocBeanList);
-        }
-        selectedList = new ArrayList<>();
-        //实现单选方法二： 设置数据集时，找到默认选中的pos
+        mSaveDocBean = saveDocBeanList;
+        mSaveDocBean.get(0).setIsSelect(true);
         for (int i = 0; i < mSaveDocBean.size(); i++) {
             if (mSaveDocBean.get(i).getIsSelect()) {
                 mSelectedPos = i;
             }
         }
-        notifyDataSetChanged();
+
     }
 
     @Override
@@ -93,26 +76,20 @@ public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapte
         holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //CouponVH couponVH = (CouponVH) mRv.findViewHolderForLayoutPosition(mSelectedPos);
-                int removed = -1;
-                int selectedItemPosition = holder.getLayoutPosition();
-                if (mSaveDocBean.get(selectedItemPosition).getIsSelect()) {
-                    mSaveDocBean.get(selectedItemPosition).setIsSelect(false);
-                    holder.mCheckBox.setSelected(false);
-                    int index = selectedList.indexOf(selectedItemPosition);
-                    selectedList.remove(index);
+                ViewHolder viewHolder = (ViewHolder) mRv.findViewHolderForLayoutPosition(mSelectedPos);
+                if (viewHolder != null) {//还在屏幕里
+                    viewHolder.mCheckBox.setSelected(false);
                 } else {
-                    if (selectedList.size() == 2) {
-                        removed = selectedList.remove(0);
-                        mSaveDocBean.get(removed).setIsSelect(false);
-                        holder.mCheckBox.setSelected(false);
-                    }
-
-                    mSaveDocBean.get(selectedItemPosition).setIsSelect(true);
-                    holder.mCheckBox.setSelected(true);
-                    selectedList.add(selectedItemPosition);
+                    //add by 2016 11 22 for 一些极端情况，holder被缓存在Recycler的cacheView里，
+                    //此时拿不到ViewHolder，但是也不会回调onBindViewHolder方法。所以add一个异常处理
+                    notifyItemChanged(mSelectedPos);
                 }
-                notifyDataSetChanged();
+                mSaveDocBean.get(mSelectedPos).setIsSelect(false);//不管在不在屏幕里 都需要改变数据
+                //设置新Item的勾选状态
+                mSelectedPos = position;
+                mSaveDocBean.get(mSelectedPos).setIsSelect(true);
+                holder.mCheckBox.setSelected(true);
+                mOnItemClickListener.onItemClickListener(mSelectedPos);
             }
         });
 
@@ -121,34 +98,15 @@ public class CheckCompareAdapter extends RecyclerView.Adapter<CheckCompareAdapte
         } else {
             holder.mCheckBox.setVisibility(View.VISIBLE);
         }
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {         //实现单选方法三： RecyclerView另一种定向刷新方法：不会有白光一闪动画 也不会重复onBindVIewHolder
-//                mOnItemClickListener.onItemClickListener(holder.getAdapterPosition(), mSaveDocBean);
-//            }
-//        });
     }
 
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position, List<Object> payloads) {
 
-        Log.d("TAG", "onBindViewHolder() called with: holder = [" + holder + "], position = [" + position + "], payloads = [" + payloads + "]");
-        if (payloads.isEmpty()) {
-            onBindViewHolder(holder, position);
-        } else {
-            Bundle payload = (Bundle) payloads.get(0);
-            if (payload.containsKey("KEY_BOOLEAN")) {
-                boolean aBoolean = payload.getBoolean("KEY_BOOLEAN");
-                holder.mCheckBox.setSelected(aBoolean);
-            }
-        }
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
     }
-//    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-//        this.mOnItemClickListener = onItemClickListener;
-//    }
 
     public interface OnItemClickListener {
-        void onItemClickListener(int pos, List<SaveDocBean> saveDocBeanList);
+        void onItemClickListener(int pos);
     }
 
     public void setEditMode(int editMode) {
