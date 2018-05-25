@@ -259,6 +259,14 @@
             android:name=".activity.SearchResultActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.SingleCompareActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.RecordCompareActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
         <meta-data
             android:name="WEIBO_APPKEY"
             android:value=""/>

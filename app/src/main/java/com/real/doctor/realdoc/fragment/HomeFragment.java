@@ -1,8 +1,11 @@
 package com.real.doctor.realdoc.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.DocContentActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
@@ -103,7 +107,28 @@ public class HomeFragment extends BaseFragment {
             adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
             recycleView.setAdapter(adapter);
         }
+        localBroadcast();
         initEvent();
+    }
+
+    private void localBroadcast() {
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LoginActivity.RECORD_LIST_HOME);
+        BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (EmptyUtils.isNotEmpty(instance)) {
+                    recordList = instance.querySaveDocList(getActivity());
+                    recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                    //添加Android自带的分割线
+                    recycleView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+                    adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
+                    recycleView.setAdapter(adapter);
+                }
+            }
+        };
+        broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 
     private void initEvent() {

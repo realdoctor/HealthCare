@@ -2,6 +2,7 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -58,6 +59,7 @@ import okhttp3.ResponseBody;
 
 public class LoginActivity extends BaseActivity {
 
+    public static String RECORD_LIST_HOME = "android.intent.action.home.list";
     @BindView(R.id.user_register)
     TextView userRegister;
     @BindView(R.id.phone_number)
@@ -255,6 +257,10 @@ public class LoginActivity extends BaseActivity {
                                         //登录成功,获得列表数据
                                         RealDocApplication.getRecordListData();
                                         actionStart(LoginActivity.this, RealDocActivity.class);
+                                        //通知首页刷新界面
+                                        //广播通知刷新列表
+                                       Intent intent = new Intent(RECORD_LIST_HOME);
+                                        LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(intent);
                                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                         finish();
                                     }
