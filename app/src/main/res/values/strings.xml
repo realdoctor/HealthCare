@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">康链</string>
     <!--label-->
-    <item name="tag_key_data" type="id" />
-    <item name="tag_key_position" type="id" />
+    <item name="tag_key_data" type="id"/>
+    <item name="tag_key_position" type="id"/>
     <!--新浪-->
     <string name="weibosdk_demo_toast_auth_success">授权成功</string>
     <string name="weibosdk_demo_toast_auth_failed">授权失败</string>
@@ -75,14 +75,18 @@
     <string name="inshopcart">加入购物车</string>
     <string name="productname">商品名称</string>
     <string name="company">供应商</string>
+    <string name="description">详情</string>
     <string name="price">价格</string>
-    <string name="property">规格</string>
+    <string name="property">属性</string>
     <string name="shop_title">购物车(%s)</string>
     <string name="count_money">合计：￥%s</string>
     <string name="count_goods">结算（%s）</string>
     <string name="edit">编辑</string>
     <string name="pay_result_tip">微信</string>
     <string name="pay_price">支付总额</string>
+    <string name="pay_product">商品列表</string>
+    <string name="address">收货地址</string>
+    <string name="input_address">请选择收货地址</string>
     <string name="pay">支付</string>
     <!-- Record -->
     <!-- Notifications -->
@@ -108,4 +112,14 @@
     <string name="record_images_label">添加标签</string>
     <string name="information_icon">消息</string>
     <string name="scan_icon">扫一扫</string>
+    <string name="location">定位</string>
+    <string name="notifyTitle">提示</string>
+    <string name="notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>
+    <string name="setting">设置</string>
+    <string name="cancel">取消</string>
+    <string name="order_expert">预约</string>
+    <string name="order_by_name">按专家预约</string>
+    <string name="order_by_date">按日期预约</string>
+    <string name="hospital">医院</string>
+    <string name="expert">医生</string>
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/ll_bg"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/tv_week"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:gravity="center"
+        android:textSize="@dimen/sp_16"
+        android:textColor="@color/gray"
+        android:layout_height="match_parent" />
+</LinearLayout>

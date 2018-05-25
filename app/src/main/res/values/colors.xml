@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2395FF</color>
+   <!-- <color name="colorPrimary">#2395FF</color> -->
+    <color name="colorPrimary">#E2EEE9</color>
+    <color name="colorLightMint">#F8FCFA</color>
+
+   <color name="contentBackground">#F8FCFA</color>
+    <color name="lightGreyText">#C8C8C8</color>
+
     <color name="colorPrimaryDark">#1189F8</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Notifications -->
+    <color name="regularTextColor">#969696</color>
+    <color name="boldTextColor">#646464</color>
+    <color name="faintTextColor">#C8C8C8</color>
+
 
 
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="gray">#5000</color>
+    <color name="graytransparent">#80BFBFBF</color>
     <color name="line">#e7e7e7</color>
     <color name="transparent">#0000</color>
     <color name="main">#2395FF</color>
@@ -18,7 +31,7 @@
     <color name="purple">#A577FB</color>
 
     <color name="black_transparent">#8000</color>
-
+    <color name="yellow">#FFA500</color>
     <color name="text0">#464646</color>
     <color name="text1">#7e7e7e</color>
     <color name="text2">#969696</color>
@@ -48,7 +61,7 @@
     <color name="TabTextColor">#FFFFFF</color>
     <color name="TabSelectColor">#FAFAFA</color>
     <color name="TabIndicatorColor">#FFFFFF</color>
-
+    <color name="colorBackground">#f1f0f6</color>
     <color name="divider_color">#ffeeeeee</color>
     <color name="search_bgcolor">#ff029cc6</color>
     <color name="appthemecolor">#ff03b5e5</color>
@@ -71,5 +84,15 @@
     <color name="crimson">#dc143c</color>
     <color name="holo_red_light">#ffff4444</color>
     <color name="holo_red_dark">#ffcc0000</color>
+<<<<<<< HEAD
     <color name="dialog_bg">#bc000000</color>
+=======
+    <color name="black_p50">#7f000000</color>
+    <color name="commonColor">#ff8b45</color>
+    <color name="filter_default_tvcl">#5a626d</color>
+    <color name="gray_e7e7e7">#e7e7e7</color>
+    <color name="b_c_fafafa">#fafafa</color>
+    <color name="check_color">#ff03b5e5</color>
+
+>>>>>>> 2059d5cae57732e912530c5ea5522803bbb18806
 </resources>

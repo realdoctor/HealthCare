@@ -6,11 +6,11 @@
     android:padding="5dp">
     <ImageView
         android:id="@+id/product_detail_img"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:padding="10dp" />
+        />
     <RelativeLayout
         android:id="@+id/product_detail_relative"
         android:layout_toRightOf="@+id/product_detail_img"
@@ -23,9 +23,10 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="标题"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textColor="@color/text_primary_color"
-            android:textSize="20sp" />
+            android:textSize="@dimen/txt_14" />
 
         <TextView
             android:id="@+id/product_detail_content"
@@ -34,8 +35,10 @@
             android:layout_below="@+id/product_detail_title"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="内容"
-            android:textColor="@color/text_secondary_color" />
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="@dimen/txt_14"
+            android:textColor="@color/gray" />
         <TextView
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
@@ -43,7 +46,7 @@
             android:layout_below="@+id/product_detail_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="内容"
+            android:textSize="@dimen/txt_14"
             android:textColor="@color/orange" />
     </RelativeLayout>
 </RelativeLayout>

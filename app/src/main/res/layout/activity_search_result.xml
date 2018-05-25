@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <include layout="@layout/title_bar"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/rg"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:button="@null"
+                android:id="@+id/rb_hospital"
+                android:checked="true"
+                android:text="@string/hospital"
+                android:background="@drawable/radio_bg"
+                android:textSize="@dimen/sp_16"
+                android:gravity="center" />
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:id="@+id/rb_expert"
+                android:button="@null"
+                android:text="@string/expert"
+                android:textSize="@dimen/sp_16"
+                android:background="@drawable/radio_bg"
+                android:gravity="center" />
+        </RadioGroup>
+
+    </LinearLayout>
+    <com.real.doctor.realdoc.view.DropDownMenuForResult
+        android:id="@+id/dropMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/ll_contain"
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/hosptial_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ListView>
+            <ListView
+                android:id="@+id/expert_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ListView>
+        </LinearLayout>
+    </com.real.doctor.realdoc.view.DropDownMenuForResult>
+</LinearLayout>

@@ -5,7 +5,20 @@
         <attr name="border_circle_width" format="dimension" />
         <attr name="border_circle_color" format="color" />
     </declare-styleable>
-
+    <declare-styleable name="Search_View">
+        <attr name="textSizeSearch" format="dimension"  />
+        <attr name="textColorSearch" format="color" />
+        <attr name="textHintSearch" format="string" />
+        <attr name="searchBlockHeight" format="integer" />
+        <attr name="searchBlockColor" format="color" />
+    </declare-styleable>
+    <!-- Defines the custom XML attributes supported for a HorizontalListView -->
+    <declare-styleable name="HorizontalListView">
+        <attr name="dividerWidth" format="dimension" />
+        <attr name="android:divider" />
+        <attr name="android:requiresFadingEdge" />
+        <attr name="android:fadingEdgeLength" />
+    </declare-styleable>
     <declare-styleable name="RoundImageView">
         <!-- 描边宽度-->
         <attr name="border_width" format="dimension" />

@@ -146,7 +146,7 @@ public class LoginActivity extends BaseActivity {
                         String mobilePhone = phoneNumber.getText().toString().trim();
                         String pwd = userpassword.getText().toString().trim();
                         login(mobilePhone, pwd);
-                    } else {
+                    }else{
                         ToastUtil.showLong(LoginActivity.this, "请链接互联网!");
                         return;
                     }
@@ -249,6 +249,7 @@ public class LoginActivity extends BaseActivity {
                                             UserBean user = GsonUtil.GsonToBean(jsonObject.getJSONObject("user").toString(), UserBean.class);
                                             if(EmptyUtils.isNotEmpty(user)){
                                                 SPUtils.put(LoginActivity.this, "mobile", user.getMobile());
+                                                SPUtils.put(LoginActivity.this,Constants.USER_KEY,user.getId());
                                             }
                                         }
                                         //登录成功,获得列表数据
@@ -258,7 +259,7 @@ public class LoginActivity extends BaseActivity {
                                         finish();
                                     }
                                 } else {
-                                    ToastUtil.showLong(RealDocApplication.getContext(), "用户登录失败!");
+                                    ToastUtil.showLong(LoginActivity.this, "用户登录失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
