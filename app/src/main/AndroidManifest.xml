@@ -248,10 +248,6 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.PlayVideoActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.SearchHistoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
