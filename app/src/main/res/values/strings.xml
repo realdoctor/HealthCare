@@ -118,4 +118,6 @@
     <string name="order_expert">预约</string>
     <string name="order_by_name">按专家预约</string>
     <string name="order_by_date">按日期预约</string>
+    <string name="hospital">医院</string>
+    <string name="expert">医生</string>
 </resources>

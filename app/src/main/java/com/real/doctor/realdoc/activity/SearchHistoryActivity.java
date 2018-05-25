@@ -125,10 +125,10 @@ public class SearchHistoryActivity extends Activity {
 
 	public void setBackValue(String value){
 		if(requestCode==RegistrationActivity.REGISTRATION_EVENT_REQUEST_CODE){
-			Intent resultIntent = new Intent();
-			resultIntent.putExtra("searchKey", value);
-			setResult(RESULT_OK, resultIntent);
-			finish();
+			Intent intent=new Intent(SearchHistoryActivity.this,SearchResultActivity.class);
+			intent.putExtra("searchKey", value);
+			startActivity(intent);
+			SearchHistoryActivity.this.finish();
 		}
 	}
 

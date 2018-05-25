@@ -95,6 +95,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
     public final static int REGISTRATION_EVENT_REQUEST_CODE = 2;
+    public final static int REGISTRATION_AREA_EVENT_REQUEST_CODE = 4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -236,7 +237,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
     }
     public void initEvents(){
     }
-    @OnClick({R.id.finish_back,R.id.home_search})
+    @OnClick({R.id.finish_back,R.id.home_search,R.id.right_title})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.finish_back:
@@ -244,11 +245,14 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
                 break;
             case R.id.home_search:
                 Intent intent = new Intent(RegistrationActivity.this, SearchHistoryActivity.class);
-                // get the current data and send it to the edit address screen
                 intent.putExtra("requestCode", REGISTRATION_EVENT_REQUEST_CODE);;
-                startActivityForResult(intent, REGISTRATION_EVENT_REQUEST_CODE);
+                startActivity(intent);
                 break;
-
+            case R.id.right_title:
+                Intent intentArea = new Intent(RegistrationActivity.this, AppointmentAddressActivity.class);
+                intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);;
+                startActivityForResult(intentArea,REGISTRATION_AREA_EVENT_REQUEST_CODE);
+                break;
         }
     }
     @Override
@@ -256,11 +260,15 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK){
-            String name = data.getStringExtra("searchKey");
+            String province = data.getStringExtra("province");
+            String city= data.getStringExtra("city");
 
             if(requestCode == REGISTRATION_EVENT_REQUEST_CODE) {
-                // 搜索
-
+                // 地区回传
+                cityName=city;
+                pageNum=1;
+                hospitalBeanArrayList.clear();
+                getData();
             }
         }
 
@@ -404,67 +412,5 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
                 });
     }
 
-    private void searchHospital() {
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("hospitalLevel",hospitalLevel);
-        params.put("sortstr",sortstr);
-        params.put("cityName",cityName);
-        params.put("positional",null);
-        params.put("searchstr",searchstr);
-        HttpRequestClient.getInstance(RegistrationActivity.this).createBaseApi().get("guahao/search"
-                , params, new BaseObserver<ResponseBody>(RegistrationActivity.this) {
-                    @Override
-                    public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ToastUtil.showLong(RegistrationActivity.this, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    protected void onHandleSuccess(ResponseBody responseBody) {
-                        String data = null;
-                        String msg = null;
-                        String code = null;
-                        try {
-                            data = responseBody.string().toString();
-                            try {
-                                JSONObject object = new JSONObject(data);
-                                if (DocUtils.hasValue(object, "msg")) {
-                                    msg = object.getString("msg");
-                                }
-                                if (DocUtils.hasValue(object, "code")) {
-                                    code = object.getString("code");
-                                }
-                                if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
-                                    Gson localGson = new GsonBuilder()
-                                            .create();
-                                    baseModel = localGson.fromJson(jsonObject.toString(),
-                                            new TypeToken<PageModel<HospitalBean>>() {
-                                            }.getType());
-                                    hospitalBeanArrayList.addAll(baseModel.list);
-                                    hospitalAdapter.notifyDataSetChanged();
-                                } else {
-                                    ToastUtil.showLong(RegistrationActivity.this, msg.toString().trim());
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                    finish();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                });
-    }
 }

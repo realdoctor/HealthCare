@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class FilterBean implements Serializable {
     public ArrayList<SortBean> sortList;
     public ArrayList<HospitalLevelBean> hospitalLevelBeans;
+    public ArrayList<ExpertPostionalBean> expertPostionalBeans;
 
     public ArrayList<SortBean> getSortList() {
         return sortList;
@@ -25,5 +26,13 @@ public class FilterBean implements Serializable {
 
     public void setHospitalLevelBeans(ArrayList<HospitalLevelBean> hospitalLevelBeans) {
         this.hospitalLevelBeans = hospitalLevelBeans;
+    }
+
+    public ArrayList<ExpertPostionalBean> getExpertPostionalBeans() {
+        return expertPostionalBeans;
+    }
+
+    public void setExpertPostionalBeans(ArrayList<ExpertPostionalBean> expertPostionalBeans) {
+        this.expertPostionalBeans = expertPostionalBeans;
     }
 }

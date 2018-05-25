@@ -38,7 +38,7 @@
                 android:gravity="center_vertical"
                 android:hint="@string/search_hint"
                 android:paddingLeft="10.0dip"
-                android:textColorHint="#b3ffffff" />
+                android:textColorHint="@color/gray" />
         </RelativeLayout>
 
         <TextView

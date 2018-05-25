@@ -8,4 +8,15 @@ import java.io.Serializable;
 
 public class HospitalLevelBean implements Serializable {
     public  String LevelName;
+    public int hospitalLevelId;
+    //本地的选中标记
+    boolean isSelect;
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
 }
