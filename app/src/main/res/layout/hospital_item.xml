@@ -16,6 +16,7 @@
         android:id="@+id/hospital_detail_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_4"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/hospital_detail_img"
         >
@@ -57,11 +58,13 @@
 
         <TextView
             android:id="@+id/order_expert"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_72"
             android:layout_height="wrap_content"
             android:layout_below="@+id/centre_rl"
+            android:background="@drawable/order_bg"
             android:text="@string/order_expert"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
             android:textColor="@color/black"
             android:textSize="@dimen/txt_14" />
     </RelativeLayout>

@@ -218,7 +218,7 @@ public class DropMenuAdapterForResult implements MenuAdapter {
             if (tabPosition == 0) {
                 onFilterDoneListener.onFilterDone(0, FilterUtils.instance().sortTitle, "");
             } else if (tabPosition == 1) {
-                onFilterDoneListener.onFilterDone(1, "篩選", "");
+                onFilterDoneListener.onFilterDone(1, "筛选", "");
             }else {
                 onFilterDoneListener.onFilterDone(tabPosition, "代码错误", "");
             }

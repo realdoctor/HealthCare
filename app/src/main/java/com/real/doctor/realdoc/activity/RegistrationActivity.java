@@ -112,11 +112,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         filterBean.setSortList(DataUtil.sortBeans);
         filterBean.setHospitalLevelBeans(DataUtil.hospitalLevelBeans);
         initFilterDropDownView();
-        int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
         mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis() - deta));
-        mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
-        mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
         ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
@@ -263,12 +259,14 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
             String province = data.getStringExtra("province");
             String city= data.getStringExtra("city");
 
-            if(requestCode == REGISTRATION_EVENT_REQUEST_CODE) {
+            if(requestCode == REGISTRATION_AREA_EVENT_REQUEST_CODE) {
                 // 地区回传
                 cityName=city;
+                right_title.setText(cityName);
                 pageNum=1;
                 hospitalBeanArrayList.clear();
                 getData();
+                refreshLayout.finishRefresh();
             }
         }
 
@@ -292,20 +290,34 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         dropMenuAdapter.setOnSortCallbackListener(new DropMenuAdapter.OnSortCallbackListener() {
             @Override
             public void onSortCallbackListener(SortBean item) {
-                sortstr=item.SortId;
+                if(item==null||item.sortName.equals("不限"))
+                {
+                    sortstr="";
+                }else
+                {
+                    sortstr=item.SortId;
+                }
                 hospitalBeanArrayList.clear();
                 pageNum=1;
                 getData();
+                refreshLayout.finishRefresh();
             }
         });
         //等级回调
         dropMenuAdapter.setOnLevelCallbackListener(new DropMenuAdapter.OnLevelCallbackListener() {
             @Override
             public void onLevelCallbackListener(HospitalLevelBean item) {
-                hospitalLevel=item.LevelName;
+                if(item==null||item.LevelName.equals("不限"))
+                {
+                    hospitalLevel="";
+                }else
+                {
+                    hospitalLevel=item.LevelName;
+                }
                 hospitalBeanArrayList.clear();
                 pageNum=1;
                 getData();
+                refreshLayout.finishRefresh();
             }
         });
 
