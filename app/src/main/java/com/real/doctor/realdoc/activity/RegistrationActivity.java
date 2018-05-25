@@ -292,7 +292,13 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         dropMenuAdapter.setOnSortCallbackListener(new DropMenuAdapter.OnSortCallbackListener() {
             @Override
             public void onSortCallbackListener(SortBean item) {
-                sortstr=item.SortId;
+                if(item==null||item.sortName.equals("不限"))
+                {
+                    sortstr="";
+                }else
+                {
+                    sortstr=item.SortId;
+                }
                 hospitalBeanArrayList.clear();
                 pageNum=1;
                 getData();
@@ -302,7 +308,13 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         dropMenuAdapter.setOnLevelCallbackListener(new DropMenuAdapter.OnLevelCallbackListener() {
             @Override
             public void onLevelCallbackListener(HospitalLevelBean item) {
-                hospitalLevel=item.LevelName;
+                if(item==null||item.LevelName.equals("不限"))
+                {
+                    hospitalLevel="";
+                }else
+                {
+                    hospitalLevel=item.LevelName;
+                }
                 hospitalBeanArrayList.clear();
                 pageNum=1;
                 getData();
