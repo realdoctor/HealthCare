@@ -2,6 +2,7 @@ package com.real.doctor.realdoc.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -100,7 +101,10 @@ public class SearchResultActivity extends Activity implements OnFilterDoneListen
         initData();
         searchHospital();
     }
-
+    @OnClick(R.id.finish_back)
+    void back(){
+        finish();
+    }
     public void initData() {
         page_title.setText("搜索结果");
         titleList = new String[]{"排序","筛选"};
@@ -130,7 +134,6 @@ public class SearchResultActivity extends Activity implements OnFilterDoneListen
         hosptial_list.setAdapter(adapter);
         expertAdapter=new ExpertAdapter(SearchResultActivity.this,expertBeans,this);
         expert_list.setAdapter(expertAdapter);
-
     }
 /**
  * 显示

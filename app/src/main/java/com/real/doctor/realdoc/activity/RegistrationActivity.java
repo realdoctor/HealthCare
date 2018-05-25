@@ -263,9 +263,10 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
             String province = data.getStringExtra("province");
             String city= data.getStringExtra("city");
 
-            if(requestCode == REGISTRATION_EVENT_REQUEST_CODE) {
+            if(requestCode == REGISTRATION_AREA_EVENT_REQUEST_CODE) {
                 // 地区回传
                 cityName=city;
+                right_title.setText(cityName);
                 pageNum=1;
                 hospitalBeanArrayList.clear();
                 getData();
