@@ -87,6 +87,10 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.RegistrationActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.LoginActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
