@@ -3,7 +3,9 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,6 +31,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 
@@ -39,6 +42,10 @@ import okhttp3.ResponseBody;
 public class MyRegistrationActivity extends BaseActivity {
     @BindView(R.id.lv_registration)
     ListView lv_registration;
+    @BindView(R.id.finish_back)
+    ImageView finishBack;
+    @BindView(R.id.page_title)
+    TextView page_title;
     RegistrationAdapter registrationAdapter;
     ArrayList<RegistrationModel> registrationModelArrayList=new ArrayList<RegistrationModel>();
     public String userid;
@@ -54,6 +61,7 @@ public class MyRegistrationActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        page_title.setText("我的预约");
         userid= (String)SPUtils.get(MyRegistrationActivity.this, Constants.USER_KEY,"");
         registrationAdapter=new RegistrationAdapter(MyRegistrationActivity.this,registrationModelArrayList);
         lv_registration.setAdapter(registrationAdapter);
@@ -65,7 +73,13 @@ public class MyRegistrationActivity extends BaseActivity {
     }
 
     @Override
+    @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
+        switch (v.getId()){
+            case R.id.finish_back:
+                MyRegistrationActivity.this.finish();
+                break;
+        }
 
     }
 

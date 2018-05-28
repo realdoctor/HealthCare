@@ -3,10 +3,13 @@ package com.real.doctor.realdoc.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.LoginActivity;
+import com.real.doctor.realdoc.activity.MyRegistrationActivity;
+import com.real.doctor.realdoc.activity.RegistrationActivity;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.util.DocUtils;
 
@@ -25,6 +28,8 @@ public class UserFragment extends BaseFragment {
     private Unbinder unbinder;
     @BindView(R.id.user_name)
     TextView userName;
+    @BindView(R.id.user_function_three)
+    LinearLayout myOrder;
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -46,13 +51,17 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.user_name})
+    @OnClick({R.id.user_name,R.id.user_function_three})
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
             switch (v.getId()) {
                 case R.id.user_name:
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
+                    break;
+                case R.id.user_function_three:
+                    Intent intentRegistration = new Intent(getActivity(), MyRegistrationActivity.class);
+                    startActivity(intentRegistration);
                     break;
             }
         }

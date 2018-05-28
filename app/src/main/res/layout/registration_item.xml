@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_4"
-                android:layout_toRightOf="@+id/doctol_name"
+                android:layout_toRightOf="@+id/doctor_name"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/txt_12" />
             <TextView

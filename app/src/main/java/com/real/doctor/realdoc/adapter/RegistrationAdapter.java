@@ -27,7 +27,7 @@ public class RegistrationAdapter extends RdBaseAdapter<RegistrationModel>{
             holder.hospital_detail_img = (ImageView) convertView.findViewById(R.id.hospital_detail_img);
             holder.hospital_title=(TextView) convertView.findViewById(R.id.hospital_title);
             holder.hospital_level=(TextView) convertView.findViewById(R.id.hospital_level);
-            holder.expert_level=(TextView) convertView.findViewById(R.id.expert_level);
+            holder.expert_level=(TextView) convertView.findViewById(R.id.doctor_position);
             holder.registration_time=(TextView) convertView.findViewById(R.id.registration_time);
             holder.doctor_name=(TextView) convertView.findViewById(R.id.doctor_name);
             holder.good_at=(TextView) convertView.findViewById(R.id.good_at);
