@@ -241,7 +241,7 @@ public class DocContentActivity extends BaseActivity {
     private void getPatientDiag(String patientDiagId) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("patientDiagId", patientDiagId);
-        HttpRequestClient.getInstance(DocContentActivity.this).createBaseApi().get("drug"
+        HttpRequestClient.getInstance(DocContentActivity.this).createBaseApi().get("patient/drug"
                 , map, new BaseObserver<ResponseBody>(DocContentActivity.this) {
 
                     @Override

@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:text="收到人: "
+                android:text="收货姓名: "
                 android:layout_marginRight="9dp"/>
 
             <EditText

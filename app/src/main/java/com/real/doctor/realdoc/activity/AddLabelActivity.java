@@ -44,19 +44,19 @@ public class AddLabelActivity extends BaseActivity {
         labelList = new ArrayList<>();
         String path = "android.resource://" + getApplicationContext().getPackageName() + "/";
         AddLabelBean bean1 = new AddLabelBean();
-        bean1.setName("处方标签");
+        bean1.setName("处方");
         bean1.setIcon(path + R.mipmap.add);
         labelList.add(bean1);
         AddLabelBean bean2 = new AddLabelBean();
-        bean2.setName("医嘱标签");
+        bean2.setName("医嘱");
         bean2.setIcon(path + R.mipmap.bg_healthy);
         labelList.add(bean2);
         AddLabelBean bean3 = new AddLabelBean();
-        bean3.setName("体征标签");
+        bean3.setName("体征");
         bean3.setIcon(path + R.mipmap.avatar_bg);
         labelList.add(bean3);
         AddLabelBean bean4 = new AddLabelBean();
-        bean4.setName("报告检查标签");
+        bean4.setName("报告检查");
         bean4.setIcon(path + R.mipmap.arrow_white);
         labelList.add(bean4);
         addLabelAdapter = new AddLabelAdapter(R.layout.add_label_item, labelList);        //创建布局管理

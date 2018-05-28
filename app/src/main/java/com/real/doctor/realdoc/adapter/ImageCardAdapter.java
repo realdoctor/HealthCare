@@ -176,23 +176,23 @@ public class ImageCardAdapter extends BaseQuickAdapter<ImageListBean, BaseViewHo
             } else if (spare == 1) {
                 labelText.setVisibility(View.VISIBLE);
                 labelIcon.setVisibility(View.VISIBLE);
-                labelText.setText("您选择了处方标签");
+                labelText.setText("处方标签");
                 Uri uri = Uri.parse(path + R.mipmap.add);
                 Glide.with(mContext).load(uri).crossFade().into(labelIcon);
             } else if (spare == 2) {
                 labelText.setVisibility(View.VISIBLE);
                 labelIcon.setVisibility(View.VISIBLE);
-                labelText.setText("您选择了医嘱标签");
+                labelText.setText("医嘱标签");
                 Uri uri = Uri.parse(path + R.mipmap.bg_healthy);
                 Glide.with(mContext).load(uri).crossFade().into(labelIcon);
             } else if (spare == 3) {
                 labelText.setVisibility(View.VISIBLE);
                 labelIcon.setVisibility(View.VISIBLE);
-                labelText.setText("您选择了报告检查标签");
+                labelText.setText("体征标签");
                 Uri uri = Uri.parse(path + R.mipmap.avatar_bg);
                 Glide.with(mContext).load(uri).crossFade().into(labelIcon);
             } else if (spare == 4) {
-                labelText.setText("您选择了报告检查标签");
+                labelText.setText("报告检查标签");
                 Uri uri = Uri.parse(path + R.mipmap.arrow_white);
                 Glide.with(mContext).load(uri).crossFade().into(labelIcon);
             }

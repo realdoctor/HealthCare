@@ -254,7 +254,7 @@ public class RecordImagesActivity extends BaseActivity {
             //添加标签
             labelTextRelative.setVisibility(View.VISIBLE);
             addLabelBean = data.getParcelableExtra("addLabelBean");
-            labelText.setText("您选择了"+addLabelBean.getName());
+            labelText.setText(addLabelBean.getName());
             String icon = addLabelBean.getIcon();
             if (EmptyUtils.isNotEmpty(icon)) {
                 Glide.with(mContext).load(icon).crossFade().into((ImageView) labelIcon);

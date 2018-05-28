@@ -252,10 +252,6 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.PlayVideoActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.SearchHistoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
@@ -265,6 +261,14 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.SearchResultActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.SingleCompareActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.RecordCompareActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <meta-data
