@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,9 +101,8 @@ public class ProductShowActivity extends BaseActivity  {
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.tv_buy:
-                Intent intent =new Intent(ProductShowActivity.this,PayActivity.class);
-                startActivity(intent);
-                ProductShowActivity.this.finish();
+//
+                payCart(goodId,num);
                 break;
             case R.id.tv_incart:
                 addToCart(goodId,num);
@@ -177,6 +177,76 @@ public class ProductShowActivity extends BaseActivity  {
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(ProductShowActivity.this, "加入购物车成功!");
+                                } else {
+                                    ToastUtil.showLong(ProductShowActivity.this, "加入购物车失败!");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
+    //立即购买
+    public void payCart(String goodsId,int num){
+        JSONObject object=new JSONObject();
+        try {
+            object.put("goodsId",goodsId);
+            object.put("num",num);
+            object.put("userId",userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String token = (String) SPUtils.get(ProductShowActivity.this, "token", "");
+        Map<String, String> header = null;
+        if (EmptyUtils.isNotEmpty(token)) {
+            header = new HashMap<String, String>();
+            header.put("Authorization", token);
+        } else {
+            ToastUtil.showLong(ProductShowActivity.this, "请确定您的账户已登录!");
+            return;
+        }
+        HttpRequestClient client= HttpRequestClient.getInstance(ProductShowActivity.this,HttpNetUtil.BASE_URL,header);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
+        client.createBaseApi().json("cart/addCartItem/"
+                , body, new BaseObserver<ResponseBody>(ProductShowActivity.this) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+//                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
+                        ToastUtil.showLong(ProductShowActivity.this, "加入购物车失败!");
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    Intent intent =new Intent(ProductShowActivity.this,ShopCartActivity.class);
+                                    startActivity(intent);
                                 } else {
                                     ToastUtil.showLong(ProductShowActivity.this, "加入购物车失败!");
                                 }
