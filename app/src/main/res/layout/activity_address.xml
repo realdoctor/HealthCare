@@ -47,7 +47,6 @@
                 android:id="@+id/reciever"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="no"
                 android:layout_weight="1"/>
 
         </LinearLayout>
@@ -68,7 +67,6 @@
                 android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="1222"
                 android:inputType="phone"
                 android:layout_weight="1"/>
         </LinearLayout>
@@ -105,17 +103,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:hint="Street 16, 122"/>
-
-
+        android:hint="地址"/>
 
 
     <FrameLayout
         android:id="@+id/address_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="match_parent">
     </FrameLayout>
-
-
 </LinearLayout>

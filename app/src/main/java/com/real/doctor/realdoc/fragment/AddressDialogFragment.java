@@ -2,6 +2,9 @@ package com.real.doctor.realdoc.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +20,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
@@ -85,18 +90,33 @@ public class AddressDialogFragment extends DialogFragment {
 
     @OnClick(R.id.province)
     void showProvinceList(){
+        // set background to province, reset background on the rest
+        address_province.setBackgroundColor(Color.parseColor("#BDE8D6"));
+        address_city.setBackgroundColor(Color.parseColor("#E2EEE9"));
+        address_district.setBackgroundColor(Color.parseColor("#E2EEE9"));
+
         // args: province, city, district
         screenSwitch(true, false, false);
     }
 
     @OnClick(R.id.city)
     void showCityList(){
+        // set background to city, reset background on the rest
+        address_city.setBackgroundColor(Color.parseColor("#BDE8D6"));
+        address_province.setBackgroundColor(Color.parseColor("#E2EEE9"));
+        address_district.setBackgroundColor(Color.parseColor("#E2EEE9"));
+
         // args: province, city, district
         screenSwitch(false, true, false);
     }
 
     @OnClick(R.id.district)
     void showDistrictList(){
+        // set background to district, reset background on the rest
+        address_district.setBackgroundColor(Color.parseColor("#BDE8D6"));
+        address_city.setBackgroundColor(Color.parseColor("#E2EEE9"));
+        address_province.setBackgroundColor(Color.parseColor("#E2EEE9"));
+
         // args: province, city, district
         screenSwitch(false, false, true);
     }
@@ -141,12 +161,16 @@ public class AddressDialogFragment extends DialogFragment {
         populateProvinceList();
 
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).setView(view).create();
+
         // dialog properties
         Window window = alertDialog.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
+
         wlp.gravity = Gravity.BOTTOM;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+
         window.setAttributes(wlp);
+
 
         return alertDialog;
 
@@ -236,6 +260,8 @@ public class AddressDialogFragment extends DialogFragment {
 
     /** Display data **/
     public void displayProvince(final RecyclerView.ViewHolder holder, final int position){
+        address_province.setBackgroundColor(Color.parseColor("#BDE8D6"));
+
 
         // reset the selected city
         selectedCityPosition = -1;
@@ -252,13 +278,14 @@ public class AddressDialogFragment extends DialogFragment {
 
 
         // set click listener to the whole province row
-        ConstraintLayout constraintLayout = (ConstraintLayout) provinceHolder.itemView;
+        RelativeLayout constraintLayout = (RelativeLayout) provinceHolder.itemView;
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               // v.setSelected(true);
-
+               // reset cities and district lists:
+                cities.clear();
+                districts.clear();
 
                 // save the selected province name and set the city name to the header
                 addressBean.setProvince(provinces.get(position));
@@ -269,9 +296,10 @@ public class AddressDialogFragment extends DialogFragment {
 
 
                 // don't display the default cities of the first province anymore
-                firstTimeShowCityList = false;
+                //firstTimeShowCityList = false;
 
                 populateCitiesList(addressBean.getProvince(), position);
+
 
             }
         });
@@ -291,12 +319,12 @@ public class AddressDialogFragment extends DialogFragment {
         selectedProvince = addressBean.getProvince();
 
         // implement click on the city
-        ConstraintLayout cityConstraintLayout = (ConstraintLayout) cityHolder.itemView;
+        RelativeLayout cityConstraintLayout = (RelativeLayout) cityHolder.itemView;
         cityConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //v.setSelected(true);
+                // reset district list
+                districts.clear();
 
                 // update the selected item position for a single select
                 updateSelectedPosition(cityHolder, position, "city");
@@ -308,6 +336,7 @@ public class AddressDialogFragment extends DialogFragment {
 
                 // populate the district list according to the selected province and city
                 populateDistrictList(selectedProvince, addressBean.getCity(), position);
+
 
             }
         });
@@ -322,7 +351,7 @@ public class AddressDialogFragment extends DialogFragment {
         // don't set the default value - user will have to choose it by himself
         addressBean.setDistrict("");
 
-        ConstraintLayout cityConstraintLayout = (ConstraintLayout) districtHolder.itemView;
+        RelativeLayout cityConstraintLayout = (RelativeLayout) districtHolder.itemView;
         cityConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -384,12 +413,15 @@ public class AddressDialogFragment extends DialogFragment {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.address_view, parent, false);
 
 
-            if(whichScreenSelected() == "province")
-                return new ProvinceHolder(view);
-            else if(whichScreenSelected() == "city")
+            if(whichScreenSelected() == "province"){
+                return new ProvinceHolder(view);}
+
+            else if(whichScreenSelected() == "city"){
                 return new CityHolder(view);
-            else
+            }
+            else {
                 return new DistrictHolder(view);
+            }
 
         }
 
@@ -466,6 +498,7 @@ public class AddressDialogFragment extends DialogFragment {
         isProvinceScreenSelected = provinceScreen;
         isCityScreenSelected = cityScreen;
         isDistrictScreenSelected = districtScreen;
+
 
         // show the list according to the clicked screen: province, city or district
         addresses_rv.setLayoutManager(new LinearLayoutManager(getActivity()));
