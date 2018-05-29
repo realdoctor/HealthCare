@@ -98,10 +98,6 @@
             android:name=".activity.RegisterActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.NewDetailActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -140,6 +136,11 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".activity.DocDetailActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.NewDetailActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
         </activity>

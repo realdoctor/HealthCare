@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import com.real.doctor.realdoc.util.DocUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,7 +29,7 @@ import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 
 /**
- * Created by Administrator on 2018/4/23.
+ * Created by Administrator on 2018/4/20.
  */
 
 public class NewDetailActivity extends BaseActivity {
@@ -35,20 +37,14 @@ public class NewDetailActivity extends BaseActivity {
     ImageView finish_back;
     @BindView(R.id.page_title)
     TextView page_title;
-    @BindView(R.id.autor_name)
-    TextView autor_name;
-    @BindView(R.id.autor_profer)
-    TextView autor_profer;
-    @BindView(R.id.new_createtime)
-    TextView new_createtime;
-    @BindView(R.id.new_type)
-    TextView new_type;
+    @BindView(R.id.sc_id)
+    ScrollView scrollView;
     @BindView(R.id.new_detail)
     TextView new_detail;
     public String newsId;
     @Override
     public int getLayoutId() {
-        return R.layout.activity_new_detail;
+        return R.layout.activity_article_detail;
     }
 
     @Override
@@ -119,12 +115,8 @@ public class NewDetailActivity extends BaseActivity {
                                     JSONObject jsonObject=object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    NewModel  model=(NewModel)localGson.fromJson(jsonObject.toString(), NewModel.class);
-                                   // page_title.setText(model.newsName);
-                                    autor_name.setText(model.newsAuthor);
-                                    autor_profer.setText(model.authorProfer);
-                                    new_createtime.setText(model.createDate);
-                                    new_type.setText(model.newsType);
+                                    NewModel model=(NewModel)localGson.fromJson(jsonObject.toString(), NewModel.class);
+                                    page_title.setText(model.newsName);
                                     new_detail.setText(model.article);
 
 
