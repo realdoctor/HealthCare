@@ -1,19 +1,14 @@
 package com.real.doctor.realdoc.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.activity.NewDetailActivity;
-import com.real.doctor.realdoc.activity.RegistrationActivity;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.model.NewModel;
@@ -22,7 +17,6 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
-import com.real.doctor.realdoc.widget.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
@@ -47,22 +41,19 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener,AdapterView.OnItemClickListener {
-
+public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener {
     @BindView(R.id.lv_news)
     ListView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.page_title)
-    TextView page_title;
     public NewsAdapter newsAdapter;
     private Unbinder unbinder;
     public ArrayList<NewModel> newModels=new ArrayList<NewModel>();
     private PageModel<NewModel> baseModel = new PageModel<NewModel>();
     public int pageNum=1;
     public int pageSize=10;
-    public static ReadFragment newInstance() {
-        return new ReadFragment();
+    public static ArticleFragment newInstance() {
+        return new ArticleFragment();
     }
 
     @Override
@@ -77,10 +68,8 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
 
     @Override
     public void doBusiness(Context mContext) {
-        page_title.setText("资讯");
         newsAdapter= new NewsAdapter(getContext(),newModels);
         listView.setAdapter(newsAdapter);
-        listView.setOnItemClickListener(this);
         ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
         ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
@@ -173,13 +162,5 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
         newModels.clear();
         getData();
         refreshLayout.finishRefresh();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-         NewModel model=   (NewModel)parent.getAdapter().getItem(position);
-         Intent intent =new Intent(getContext(), NewDetailActivity.class);
-         intent.putExtra("newsId",model.newsId);
-         startActivity(intent);
     }
 }

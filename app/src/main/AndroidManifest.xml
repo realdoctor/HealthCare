@@ -99,6 +99,11 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.NewDetailActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true">
