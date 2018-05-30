@@ -13,7 +13,9 @@ import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 /**
@@ -39,9 +42,21 @@ public class NewDetailActivity extends BaseActivity {
     TextView page_title;
     @BindView(R.id.sc_id)
     ScrollView scrollView;
+    @BindView(R.id.tv_autor)
+    TextView tv_autor;
+    @BindView(R.id.tv_profer)
+    TextView tv_profer;
+    @BindView(R.id.tv_time)
+    TextView tv_time;
+    @BindView(R.id.tv_type)
+    TextView tv_type;
+    @BindView(R.id.tv_focus)
+    TextView tv_focus;
     @BindView(R.id.new_detail)
     TextView new_detail;
     public String newsId;
+    public String userId;
+    public boolean flag;
     @Override
     public int getLayoutId() {
         return R.layout.activity_article_detail;
@@ -54,6 +69,7 @@ public class NewDetailActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        userId= (String)SPUtils.get(NewDetailActivity.this, Constants.USER_KEY,"");
         newsId= getIntent().getStringExtra("newsId");
         getData();
     }
@@ -64,11 +80,18 @@ public class NewDetailActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back})
+    @OnClick({R.id.finish_back,R.id.tv_focus})
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.finish_back:
                 NewDetailActivity.this.finish();
+                break;
+            case R.id.tv_focus:
+                if(!flag){
+                    postFocus();
+                }else{
+                    postUnFocus();
+                }
                 break;
         }
     }
@@ -118,7 +141,126 @@ public class NewDetailActivity extends BaseActivity {
                                     NewModel model=(NewModel)localGson.fromJson(jsonObject.toString(), NewModel.class);
                                     page_title.setText(model.newsName);
                                     new_detail.setText(model.article);
+                                    tv_autor.setText(model.newsAuthor);
+                                    tv_profer.setText(model.authorProfer);
+                                    tv_time.setText(model.createDate);
+                                    tv_type.setText(model.newsType);
 
+                                } else {
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
+    private void postFocus() {
+        JSONObject json=new JSONObject();
+        try {
+            json.put("newsId",newsId);
+            json.put("userId",userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        HttpRequestClient.getInstance(NewDetailActivity.this).createBaseApi().json("healthnews/focus/"
+                , body, new BaseObserver<ResponseBody>(NewDetailActivity.this) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    flag=true;
+                                    tv_focus.setText("取消关注");
+
+                                } else {
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
+    private void postUnFocus() {
+        JSONObject json=new JSONObject();
+        try {
+            json.put("newsId",newsId);
+            json.put("userId",userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        HttpRequestClient.getInstance(NewDetailActivity.this).createBaseApi().json("healthnews/focus/off/"
+                , body, new BaseObserver<ResponseBody>(NewDetailActivity.this) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    flag=false;
+                                    tv_focus.setText("关注");
 
                                 } else {
 

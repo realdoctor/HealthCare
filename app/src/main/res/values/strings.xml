@@ -125,4 +125,6 @@
     <string name="advice_info">处方信息:</string>
     <string name="record_one">第一份病历</string>
     <string name="record_two">第二份病历</string>
+    <string name="focus">关注</string>
+    <string name="un_focus">取消关注</string>
 </resources>

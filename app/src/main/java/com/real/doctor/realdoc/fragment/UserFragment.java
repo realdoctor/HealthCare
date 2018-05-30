@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.LoginActivity;
+import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
 import com.real.doctor.realdoc.activity.RegistrationActivity;
 import com.real.doctor.realdoc.base.BaseFragment;
@@ -51,7 +52,7 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.user_name,R.id.user_function_three})
+    @OnClick({R.id.user_name,R.id.user_function_three,R.id.user_function_four})
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
             switch (v.getId()) {
@@ -63,9 +64,13 @@ public class UserFragment extends BaseFragment {
                     Intent intentRegistration = new Intent(getActivity(), MyRegistrationActivity.class);
                     startActivity(intentRegistration);
                     break;
+                case R.id.user_function_four:
+                    Intent intentFollow = new Intent(getActivity(), MyFollowNewsActivity.class);
+                    startActivity(intentFollow);
+                    break;
+            }
             }
         }
-    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

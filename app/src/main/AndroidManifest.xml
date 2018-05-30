@@ -149,6 +149,11 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.MyFollowNewsActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".activity.ProgressBarActivity"
             android:hardwareAccelerated="false"
             android:launchMode="singleInstance"
