@@ -68,9 +68,9 @@ public class ProgressBarActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (StringUtils.equals(action, HAVE_IMG)) {
-                    ToastUtil.showLong(ProgressBarActivity.this, "病历图片打包成功!");
+                    ToastUtil.showLong(ProgressBarActivity.this, "病历资源打包成功!");
                 }else if(StringUtils.equals(action, HAVE_NOTHING)){
-                    ToastUtil.showLong(ProgressBarActivity.this, "没有病历图片可打包!");
+                    ToastUtil.showLong(ProgressBarActivity.this, "没有病历资源可打包!");
                 }
                 finish();
             }

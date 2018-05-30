@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -15,9 +16,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -30,6 +33,8 @@ import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -44,6 +49,10 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
 
     public static final String DATEPICKER_TAG = "datepicker";
     public static String RECORD_LIST_TEXT = "android.intent.action.record.list";
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.right_title)
     TextView rightTitle;
     @BindView(R.id.finish_back)
@@ -91,10 +100,18 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(RecordListActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override
     public void initData() {
+        pageTitle.setText("病历列表");
         rightTitle.setVisibility(View.VISIBLE);
         rightTitle.setText("新增");
         recordList = new ArrayList<>();
@@ -104,8 +121,10 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
         }
         //创建布局管理
         recordListlRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        //添加Android自带的分割线
-        recordListlRecycleView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        //添加自定义分割线
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.disease_divider));
+        recordListlRecycleView.addItemDecoration(divider);
         docDetailAdapter = new DocDetailAdapter(RecordListActivity.this, R.layout.doc_detail_item, recordList);
         //给RecyclerView设置适配器
         recordListlRecycleView.setAdapter(docDetailAdapter);
@@ -115,12 +134,17 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
         diseaseList = instance.queryDiseaseList(RealDocApplication.getDaoSession(RecordListActivity.this));
         //创建布局管理
         selectDiseaseList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        //添加Android自带的分割线
         //添加自定义分割线
-        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+//        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.disease_divider));
         selectDiseaseList.addItemDecoration(divider);
-//        selectDiseaseList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        ViewGroup.LayoutParams lp = selectDiseaseList.getLayoutParams();
+        if (diseaseList.size() > 4) {
+            lp.height = SizeUtils.dip2px(this, 30 * 8);
+        } else {
+            lp.height = SizeUtils.dip2px(this, 30 * diseaseList.size());
+        }
+        selectDiseaseList.setLayoutParams(lp);
         diseaseListAdapter = new DiseaseListAdapter(RecordListActivity.this, R.layout.disease_list_item, diseaseList);
         selectDiseaseList.setAdapter(diseaseListAdapter);
         localBroadcast();

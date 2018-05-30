@@ -53,7 +53,6 @@
                         android:layout_marginLeft="10.0dip"
                         android:layout_marginRight="10.0dip"
                         android:layout_marginTop="10.0dip"
-                        android:text="@string/second_function_one_string"
                         android:textColor="#ff333333"
                         android:typeface="monospace" />
 
@@ -78,7 +77,6 @@
                         android:layout_marginRight="10.0dip"
                         android:layout_marginTop="10.0dip"
                         android:background="@android:color/white"
-                        android:text=""
                         android:textColor="@color/text_special_color"
                         android:textSize="14.0sp"
                         android:typeface="monospace" />
@@ -104,7 +102,6 @@
                         android:layout_marginRight="10.0dip"
                         android:layout_marginTop="10.0dip"
                         android:background="@android:color/white"
-                        android:text=""
                         android:textColor="@color/text_special_color"
                         android:textSize="14.0sp"
                         android:typeface="monospace" />
@@ -130,7 +127,6 @@
                         android:layout_marginRight="10.0dip"
                         android:layout_marginTop="10.0dip"
                         android:background="@android:color/white"
-                        android:text=""
                         android:textColor="@color/text_special_color"
                         android:textSize="14.0sp"
                         android:typeface="monospace" />
@@ -156,7 +152,6 @@
                         android:layout_marginLeft="10.0dip"
                         android:layout_marginRight="10.0dip"
                         android:layout_marginTop="10.0dip"
-                        android:text=""
                         android:textColor="@color/text_special_color"
                         android:textSize="14.0sp"
                         android:typeface="monospace"

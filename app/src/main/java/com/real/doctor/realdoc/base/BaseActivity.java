@@ -12,14 +12,17 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.StatusBarUtil;
 
 import java.util.ArrayList;
@@ -71,7 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 steepStatusBar();
             } else {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);//显示状态栏
-                StatusBarUtil. setStatusBarColor(this, R.color.appthemecolor);
+                StatusBarUtil.transparencyBar(this);
             }
             if (!isAllowScreenRoate) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
@@ -53,6 +54,7 @@ import com.real.doctor.realdoc.util.FileProvider7;
 import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.KeyBoardUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.LabelsView;
@@ -77,6 +79,10 @@ import cn.bingoogolapple.bgabanner.BGABannerUtil;
 
 public class SaveRecordActivity extends BaseActivity {
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.ill)
     EditText ill;
     @BindView(R.id.hospital)
@@ -158,6 +164,13 @@ public class SaveRecordActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(SaveRecordActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override
@@ -183,6 +196,11 @@ public class SaveRecordActivity extends BaseActivity {
         rightTitle.setVisibility(View.GONE);
         localBroadcast();
         modifyRecord();
+        if (isModify) {
+            pageTitle.setText("修改病历");
+        } else {
+            pageTitle.setText("新增病历");
+        }
     }
 
     private void modifyRecord() {

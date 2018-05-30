@@ -9,12 +9,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp">
+        android:layout_height="200dp">
 
         <cn.bingoogolapple.bgabanner.BGABanner
             android:id="@+id/bga_banner"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="200dp"
             app:banner_pageChangeDuration="1000"
             app:banner_pointAutoPlayAble="true"
             app:banner_pointContainerBackground="@android:color/transparent"
@@ -23,6 +23,7 @@
             app:banner_transitionEffect="alpha" />
 
         <LinearLayout
+            android:id="@+id/title_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">

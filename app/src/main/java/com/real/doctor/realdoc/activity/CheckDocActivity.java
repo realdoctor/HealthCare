@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
@@ -18,6 +20,7 @@ import com.real.doctor.realdoc.adapter.CheckDocAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,8 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     private static final int mSaveDocBean_MODE_CHECK = 0;
     private static final int mSaveDocBean_MODE_EDIT = 1;
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
     @BindView(R.id.tv_select_num)
@@ -133,6 +138,13 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(CheckDocActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override

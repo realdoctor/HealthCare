@@ -15,7 +15,7 @@ public class RecordComparedAdapter extends BaseMultiItemQuickAdapter<RecordTable
         //必须绑定type和layout的关系
         addItemType(RecordTableBean.HEADER_TYPE, R.layout.record_compare_item_header);
         addItemType(RecordTableBean.CONTENT_TYPE, R.layout.record_compare_item_content);
-
+        addItemType(RecordTableBean.ADVICE_TYPE, R.layout.record_compare_item_advice);
     }
 
     @Override
@@ -24,6 +24,11 @@ public class RecordComparedAdapter extends BaseMultiItemQuickAdapter<RecordTable
             case RecordTableBean.HEADER_TYPE:
                 break;
             case RecordTableBean.CONTENT_TYPE:
+                helper.setText(R.id.content, item.getContent())
+                        .setText(R.id.record_one, item.getFristContent())
+                        .setText(R.id.record_two, item.getSecondContent());
+                break;
+            case RecordTableBean.ADVICE_TYPE:
                 helper.setText(R.id.content, item.getContent())
                         .setText(R.id.record_one, item.getFristContent())
                         .setText(R.id.record_two, item.getSecondContent());

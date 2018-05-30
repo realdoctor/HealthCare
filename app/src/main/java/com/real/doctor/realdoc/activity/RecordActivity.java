@@ -29,7 +29,8 @@ import butterknife.OnClick;
 
 public class RecordActivity extends BaseActivity {
 
-
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
     //Recording controls
@@ -62,6 +63,7 @@ public class RecordActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        pageTitle.setText("音频");
         Intent intent = getIntent();
         if (intent != null) {
             mFolder = intent.getStringExtra("folder");

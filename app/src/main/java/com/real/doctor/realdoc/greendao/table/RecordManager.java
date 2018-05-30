@@ -85,7 +85,7 @@ public class RecordManager {
     }
 
     /**
-     * 插入病历list
+     * 插入音频list
      *
      * @param beanList
      */
@@ -94,6 +94,19 @@ public class RecordManager {
             return;
         }
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
+        recordBeanDao.insertOrReplaceInTx(beanList);
+    }
+    /**
+     * 插入每一个病人上传病历时的音频list
+     *
+     * @param beanList
+     */
+    public void insertPatientRecordList(Context context, List<RecordBean> beanList,String time  ,String  folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context,time, folderName);
         RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
         recordBeanDao.insertOrReplaceInTx(beanList);
     }
@@ -108,7 +121,16 @@ public class RecordManager {
         List<RecordBean> list = qb.where(RecordBeanDao.Properties.Folder.eq(folder)).orderDesc(RecordBeanDao.Properties.ElapsedMillis).list();
         return list;
     }
-
+    /**
+     * 为每一个病人上传病历时查询音频list列表
+     */
+    public List<RecordBean> queryPatientRecordWithFolder(Context context, String folder, String time, String folderName) {
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
+        QueryBuilder<RecordBean> qb = recordBeanDao.queryBuilder();
+        List<RecordBean> list = qb.where(RecordBeanDao.Properties.Folder.eq(folder)).orderDesc(RecordBeanDao.Properties.ElapsedMillis).list();
+        return list;
+    }
     /**
      * 删除一条记录
      *

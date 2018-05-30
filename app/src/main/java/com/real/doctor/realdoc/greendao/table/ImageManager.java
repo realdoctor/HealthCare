@@ -94,6 +94,15 @@ public class ImageManager {
         imageBeanDao.insertOrReplaceInTx(beanList);
     }
 
+    public void insertPatientImageList(Context context, List<ImageBean> beanList,String time ,String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context,time,folderName);
+        ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
+        imageBeanDao.insertOrReplaceInTx(beanList);
+    }
+
     /**
      * 查询图片list列表
      */
@@ -110,6 +119,16 @@ public class ImageManager {
      */
     public List<ImageBean> queryImageByImageId(Context context, String imageListId) {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
+        QueryBuilder<ImageBean> qb = imageBeanDao.queryBuilder();
+        List<ImageBean> list = qb.where(ImageBeanDao.Properties.ImageId.eq(imageListId)).list();
+        return list;
+    }
+    /**
+     * 为每一个病人上传病历时查询Imagelist列表
+     */
+    public List<ImageBean> queryPatientImageByImageId(Context context, String imageListId, String time, String folderName) {
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
         ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
         QueryBuilder<ImageBean> qb = imageBeanDao.queryBuilder();
         List<ImageBean> list = qb.where(ImageBeanDao.Properties.ImageId.eq(imageListId)).list();
@@ -152,6 +171,17 @@ public class ImageManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
         imageBeanDao.queryBuilder().where( ImageBeanDao.Properties.ImageId.eq(imageId)).buildDelete().executeDeleteWithoutDetachingEntities();
+    }
+
+    /**
+     * 通过imageurl查询对应的医嘱
+     */
+    public List<ImageBean> queryAdviceByImageUrl(Context context, String imageUrl) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
+        QueryBuilder<ImageBean> qb = imageBeanDao.queryBuilder();
+        List<ImageBean> list = qb.where(ImageBeanDao.Properties.ImgUrl.eq(imageUrl)).list();
+        return list;
     }
     /**
      * 删除一条记录

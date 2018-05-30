@@ -27,6 +27,8 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
     private static final int mSaveDocBean_MODE_CHECK = 0;
     private static final int mSaveDocBean_MODE_EDIT = 1;
 
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
     @BindView(R.id.btn_editor)
@@ -53,6 +55,7 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
 
     @Override
     public void initData() {
+        pageTitle.setText("选择病历");
         mSaveList = new ArrayList<>();
         Intent intent = getIntent();
         SaveDocBean saveDocBean = null;

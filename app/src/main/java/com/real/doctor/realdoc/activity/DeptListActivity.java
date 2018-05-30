@@ -2,10 +2,12 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 
 import org.json.JSONArray;
@@ -42,6 +45,9 @@ import okhttp3.ResponseBody;
  */
 
 public class DeptListActivity extends BaseActivity {
+
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @BindView(R.id.lv_left)
     ListView lListView;
     @BindView(R.id.lv_right)
@@ -52,7 +58,7 @@ public class DeptListActivity extends BaseActivity {
     TextView page_title;
 
 
-    ArrayList<DeptBean> arrayList=new ArrayList<DeptBean>();
+    ArrayList<DeptBean> arrayList = new ArrayList<DeptBean>();
     LeftAdapter leftAdapter;
     RightAdapter rightAdapter;
 
@@ -64,40 +70,47 @@ public class DeptListActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(DeptListActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override
     public void initData() {
-       final String  hospitalId=getIntent().getStringExtra("hospitalId");
+        final String hospitalId = getIntent().getStringExtra("hospitalId");
         page_title.setText("预约科室");
-        leftAdapter= new LeftAdapter(DeptListActivity.this,arrayList);
+        leftAdapter = new LeftAdapter(DeptListActivity.this, arrayList);
         lListView.setAdapter(leftAdapter);
         lListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-                                        long arg3) {
-                    // TODO Auto-generated method stub
-                    final int location = position;
-                    leftAdapter.setSelectedPosition(position);
-                    leftAdapter.notifyDataSetInvalidated();
-                    final DeptBean bean = (DeptBean) leftAdapter.getItem(position);
-                    rightAdapter = new RightAdapter(DeptListActivity.this, bean.deptList);
-                    rListView.setAdapter(rightAdapter);
-                    rListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> arg0, View arg1,
-                                                int position, long arg3) {
-                            DeptBean dBean = bean.deptList.get(position);
-                            Intent intent =new Intent(DeptListActivity.this,OrderExpertActivity.class);
-                            intent.putExtra("hospitalId",hospitalId);
-                            intent.putExtra("deptName",dBean.deptName);
-                            startActivity(intent);
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+                                    long arg3) {
+                // TODO Auto-generated method stub
+                final int location = position;
+                leftAdapter.setSelectedPosition(position);
+                leftAdapter.notifyDataSetInvalidated();
+                final DeptBean bean = (DeptBean) leftAdapter.getItem(position);
+                rightAdapter = new RightAdapter(DeptListActivity.this, bean.deptList);
+                rListView.setAdapter(rightAdapter);
+                rListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1,
+                                            int position, long arg3) {
+                        DeptBean dBean = bean.deptList.get(position);
+                        Intent intent = new Intent(DeptListActivity.this, OrderExpertActivity.class);
+                        intent.putExtra("hospitalId", hospitalId);
+                        intent.putExtra("deptName", dBean.deptName);
+                        startActivity(intent);
 
-                        }
-                    });
+                    }
+                });
 
-                }
-            });
+            }
+        });
     }
 
     @Override
@@ -108,8 +121,8 @@ public class DeptListActivity extends BaseActivity {
     @Override
     @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
-        switch (v.getId()){
-            case  R.id.finish_back:
+        switch (v.getId()) {
+            case R.id.finish_back:
                 finish();
                 break;
         }
@@ -119,8 +132,9 @@ public class DeptListActivity extends BaseActivity {
     public void doBusiness(Context mContext) {
         getData();
     }
-    public void getData(){
-        HashMap<String,String> param=new HashMap<String,String>();
+
+    public void getData() {
+        HashMap<String, String> param = new HashMap<String, String>();
         HttpRequestClient.getInstance(DeptListActivity.this).createBaseApi().get("guahao/hospital/deptCategory/"
                 , param, new BaseObserver<ResponseBody>(DeptListActivity.this) {
 
@@ -154,10 +168,10 @@ public class DeptListActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONArray jsonObject=object.getJSONArray("data");
+                                    JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    arrayList.addAll((ArrayList<DeptBean>)localGson.fromJson(jsonObject.toString(),
+                                    arrayList.addAll((ArrayList<DeptBean>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<DeptBean>>() {
                                             }.getType()));
                                     leftAdapter.notifyDataSetChanged();

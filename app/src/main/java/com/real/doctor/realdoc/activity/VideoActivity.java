@@ -33,6 +33,8 @@ import butterknife.OnClick;
 public class VideoActivity extends BaseActivity implements SurfaceHolder.Callback {
 
     private static final String TAG = "VideoActivity";
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
     //@BindView(R.id.surface_view)
@@ -76,6 +78,7 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
 
     @Override
     public void initData() {
+        pageTitle.setText("视频");
         Intent intent = getIntent();
         if (intent != null) {
             mFolder = intent.getStringExtra("folder");
@@ -126,7 +129,7 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
                         recorder.setMaxDuration(30 * 1000);
                         recorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 
-                        path = SDCardUtils.getPictureDir();
+                        path = SDCardUtils.getGlobalDir();
                         if (path != null) {
                             File file = new File(path + File.separator + mFolder + File.separator + "movie" + File.separator);
                             if (!file.exists()) {

@@ -1,24 +1,30 @@
 package com.real.doctor.realdoc.application;
 
 import android.app.Application;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.StrictMode;
+import android.support.v4.content.LocalBroadcastManager;
 
-import com.google.gson.JsonObject;
-import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.activity.DocDetailActivity;
-import com.real.doctor.realdoc.adapter.DocDetailAdapter;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
+import com.real.doctor.realdoc.greendao.GreenDaoContext;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
-import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.service.PatientListService;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
+import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -46,14 +52,18 @@ import okhttp3.ResponseBody;
 
 public class RealDocApplication extends Application {
     private static final String TAG = "RealDocApplication";
-
+    public static String HAVE_PATIENT_LIST = "android.intent.action.have.patient.list";
     private RealDocApplication instance;
 
     private static Context mContext;
 
     private static DaoMaster daoMaster;
 
+    private static DaoMaster daoPatientMaster;
+
     private static DaoSession daoSession;
+
+    private static DaoSession daoPatientSession;
 
     private static SaveDocManager mInstance;
     /**
@@ -77,6 +87,11 @@ public class RealDocApplication extends Application {
         StrictMode.setVmPolicy(new
                 StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
         getRecordListData();
+        //建立全局文件夹
+        SDCardUtils.creatSDDir("RealDoc");
+        //医生端下载病历文件后处理
+//        onGetPatientList();
+//        localBroadcast();
     }
 
     /**
@@ -86,14 +101,14 @@ public class RealDocApplication extends Application {
      * @return
      */
     public static DaoMaster getDaoMaster(Context context) {
-        if (daoMaster == null) {
-            try {
-                DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(context, SaveDocManager.dbName + ".db", null);
-                daoMaster = new DaoMaster(helper.getWritableDatabase()); //获取未加密的数据库
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//        if (daoMaster == null) {
+        try {
+            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(context, SaveDocManager.dbName + ".db", null);
+            daoMaster = new DaoMaster(helper.getWritableDatabase()); //获取未加密的数据库
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+//        }
         return daoMaster;
     }
 
@@ -104,13 +119,11 @@ public class RealDocApplication extends Application {
      * @return
      */
     public static DaoSession getDaoSession(Context context) {
-
-        if (daoSession == null) {
-            if (daoMaster == null) {
-                getDaoMaster(context);
-            }
-            daoSession = daoMaster.newSession();
-        }
+//        if (daoSession == null) {
+        //为了数据库与打包文件不冲突,条件必须去掉,否则数据库将出现问题
+        getDaoMaster(context);
+        daoSession = daoMaster.newSession();
+//        }
         return daoSession;
     }
 
@@ -173,7 +186,21 @@ public class RealDocApplication extends Application {
                                                 List<SaveDocBean> list = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), SaveDocBean.class);
                                                 if (EmptyUtils.isNotEmpty(list) && list.size() > 0) {
                                                     if (EmptyUtils.isNotEmpty(mInstance)) {
-                                                        mInstance.insertSaveDoc(getContext(), list);
+                                                        List<SaveDocBean> mList = new ArrayList<>();
+                                                        //因为没有病历id,所以我们只能当前时间下病历是唯一的
+                                                        List<String> time = mInstance.queryTimeList(getDaoSession(getContext()));
+                                                        //因为后台传过来的数据没有病历id,所以我们给他添加一个
+                                                        for (int i = 0; i < list.size(); i++) {
+                                                            //该时间下无病历
+                                                            if (!time.contains(list.get(i).getTime())) {
+                                                                list.get(i).setId(String.valueOf(Math.random()));
+                                                                //插入一条病历
+                                                                mList.add(list.get(i));
+                                                            }
+                                                        }
+                                                        if (mList.size() > 0) {
+                                                            mInstance.insertSaveDoc(getContext(), mList);
+                                                        }
                                                         ToastUtil.showLong(getContext(), "获取病历数据列表成功!");
                                                     }
                                                 }
@@ -195,8 +222,73 @@ public class RealDocApplication extends Application {
                 });
     }
 
+    /**
+     * 为每一个病人上传病历时创建一个数据库
+     * */
+    /**
+     * 获取DaoMaster
+     *
+     * @param context
+     * @return
+     */
+    public static DaoMaster getPatientDaoMaster(Context context, String time, String folderName) {
+//        if (daoPatientMaster == null) {
+        try {
+            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(new GreenDaoContext(folderName), SaveDocManager.dbPatient + time + ".db", null);
+            daoPatientMaster = new DaoMaster(helper.getWritableDatabase()); //获取未加密的数据库
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        }
+        return daoPatientMaster;
+    }
+
+    /**
+     * 获取DaoSession对象
+     *
+     * @param context
+     * @return
+     */
+    public static DaoSession getPatientDaoSession(Context context, String time, String folderName) {
+//        if (daoPatientSession == null) {
+        //为了数据库与打包文件不冲突,条件必须去掉,否则数据库将出现问题
+        getPatientDaoMaster(context, time, folderName);
+        daoPatientSession = daoPatientMaster.newSession();
+//        }
+        return daoPatientSession;
+    }
 
     public static Context getContext() {
         return mContext;
+    }
+
+    //医生端下载病历文件后处理
+    public void onGetPatientList() {
+        //开个Sevice处理接下来的任务
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            Intent startServiceIntent = new Intent(this, PatientListService.class);
+            startService(startServiceIntent);
+            JobInfo jobInfo = new JobInfo.Builder(1, new ComponentName(getPackageName(), PatientListService.class.getName()))
+                    .setPeriodic(2000)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .build();
+            jobScheduler.schedule(jobInfo);
+        }
+
+    }
+
+    private void localBroadcast() {
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(HAVE_PATIENT_LIST);
+        BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ToastUtil.showLong(getContext(), "病人病历数据加载完成!");
+            }
+        };
+        broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 }

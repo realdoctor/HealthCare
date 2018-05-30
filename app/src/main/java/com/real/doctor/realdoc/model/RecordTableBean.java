@@ -5,6 +5,7 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 public class RecordTableBean implements MultiItemEntity {
     public static final int HEADER_TYPE = 1;
     public static final int CONTENT_TYPE = 2;
+    public static final int ADVICE_TYPE = 3;
     private int itemType;
 
     private String content;
