@@ -83,7 +83,10 @@ import okhttp3.ResponseBody;
 public class DocContentActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_TAKE_MODIFY = 0x110;
-
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.title)
     RelativeLayout title;
     @BindView(R.id.right_icon)
@@ -136,10 +139,18 @@ public class DocContentActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(DocContentActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override
     public void initData() {
+        pageTitle.setText("病历详情");
         rightIcon.setVisibility(View.VISIBLE);
         imageOriganList = new ArrayList<>();
         imageOriganBean = new ArrayList<>();
@@ -155,13 +166,22 @@ public class DocContentActivity extends BaseActivity {
         imageRecycleInstance = ImageRecycleManager.getInstance(DocContentActivity.this);
         saveDocBean = (SaveDocBean) getIntent().getParcelableExtra("SaveDocBean");
         if (EmptyUtils.isNotEmpty(saveDocBean)) {
-            String mIll = saveDocBean.getIll().toString().trim();
-            String mDoctor = saveDocBean.getDoctor().toString().trim();
-            String mHospital = saveDocBean.getHospital().toString().trim();
+            String mIll = null;
+            String mDoctor = null;
+            String mHospital = null;
             String mTime = null;
             String patientDiagId = saveDocBean.getPatientDiagId();
             if (EmptyUtils.isNotEmpty(patientDiagId)) {
                 getPatientDiag(patientDiagId);
+            }
+            if (saveDocBean.getIll() != null) {
+                mIll = saveDocBean.getIll().toString().trim();
+            }
+            if (saveDocBean.getDoctor() != null) {
+                mDoctor = saveDocBean.getDoctor().toString().trim();
+            }
+            if (saveDocBean.getHospital() != null) {
+                mHospital = saveDocBean.getHospital().toString().trim();
             }
             if (saveDocBean.getTime() != null) {
                 mTime = saveDocBean.getTime().toString().trim();
@@ -494,7 +514,10 @@ public class DocContentActivity extends BaseActivity {
                     //获取视频的列表
                     videoList.addAll(videoInstance.queryVideoWithFolder(this, mFolder));
                 }
-                imageCardAdapter.notifyDataSetChanged();
+                //此处不能用notifycation,因为图片放大的顺序要重新分配过
+                imageCardAdapter = new ImageCardAdapter(this, R.layout.image_card_item, imageOriganList, newImgs, mImgPaths, true);
+                //给RecyclerView设置适配器
+                gridRecycleView.setAdapter(imageCardAdapter);
                 audioAdapter = new AudioAdapter(R.layout.audio_item, audioList);
                 audioRecycleView.setAdapter(audioAdapter);
                 videoAdapter = new VideoAdapter(R.layout.video_item, videoList);

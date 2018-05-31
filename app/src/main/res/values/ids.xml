@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 列表筛选-->
-    <item name="fixedTabIndicator" type="id"/>
-    <item name="mFilterRecyclerView" type="id"/><!-- 筛选器内部recyclerView的id-->
+    <item name="fixedTabIndicator" type="id" />
+    <item name="mFilterRecyclerView" type="id" /><!-- 筛选器内部recyclerView的id-->
     <!-- ExcelPanel IDs-->
-    <item type="id" name="lib_excel_panel_tag_key"/>
+    <item name="lib_excel_panel_tag_key" type="id" />
+    <!--二维码扫描-->
+    <item name="auto_focus" type="id" />
+    <item name="decode" type="id" />
+    <item name="decode_failed" type="id" />
+    <item name="decode_succeeded" type="id" />
+    <item name="encode_failed" type="id" />
+    <item name="encode_succeeded" type="id" />
+    <item name="quit" type="id" />
+    <item name="restart_preview" type="id" />
 </resources>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -17,8 +18,17 @@
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
             android:text="编辑"
-            android:textColor="#ffffff"
+            android:textColor="@android:color/white"
             android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/page_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/btn_compare"
@@ -29,7 +39,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
             android:text="对照"
-            android:textColor="#ffffff"
+            android:textColor="@android:color/white"
             android:textSize="15sp" />
     </RelativeLayout>
 

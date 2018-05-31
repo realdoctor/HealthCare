@@ -86,7 +86,7 @@ public class CheckDocAdapter extends RecyclerView.Adapter<CheckDocAdapter.ViewHo
         if (EmptyUtils.isNotEmpty(mImgs)) {
             holder.mRadioImg.setVisibility(View.VISIBLE);
             String[] imgs = mImgs.split(";");
-            GlideUtils.loadImageViewLoding(context, SDCardUtils.getPictureDir() + folder + File.separator + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+            GlideUtils.loadImageViewLoding(context, SDCardUtils.getGlobalDir() + folder + File.separator + imgs[0], holder.mRadioImg, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
         } else {
             holder.mRadioImg.setVisibility(View.GONE);
         }

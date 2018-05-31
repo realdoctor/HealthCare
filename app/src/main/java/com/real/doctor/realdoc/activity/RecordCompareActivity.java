@@ -17,8 +17,13 @@ import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.ImageManager;
 import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
+import com.real.doctor.realdoc.greendao.table.RecordManager;
+import com.real.doctor.realdoc.greendao.table.VideoManager;
+import com.real.doctor.realdoc.model.ImageBean;
+import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.RecordTableBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.photopicker.PhotoPreview;
 import com.real.doctor.realdoc.util.DateUtil;
@@ -39,6 +44,8 @@ import butterknife.OnClick;
 
 public class RecordCompareActivity extends BaseActivity {
 
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.right_title)
     TextView rightTitle;
     @BindView(R.id.image_one)
@@ -49,14 +56,24 @@ public class RecordCompareActivity extends BaseActivity {
     ImageView finishBack;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
+    @BindView(R.id.text_one)
+    TextView textOne;
+    @BindView(R.id.text_two)
+    TextView textTwo;
     private List<SaveDocBean> mList;
     private List<String> mListOne;
     private List<String> mListTwo;
+    private List<RecordBean> audioOneList;
+    private List<VideoBean> videoOneList;
+    private List<RecordBean> audioTwoList;
+    private List<VideoBean> videoTwoList;
     private List<RecordTableBean> tableBean;
     private boolean mOneFlag = false;
     private boolean mTwoFlag = false;
     private ImageManager imageInstance;
     private ImageRecycleManager imageRecycleInstance;
+    private RecordManager recordInstance;
+    private VideoManager videoInstance;
     private RecordComparedAdapter recordComparedAdapter;
 
     @Override
@@ -71,8 +88,15 @@ public class RecordCompareActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        pageTitle.setText("病历对照");
+        audioOneList = new ArrayList<>();
+        videoOneList = new ArrayList<>();
+        audioTwoList = new ArrayList<>();
+        videoTwoList = new ArrayList<>();
         imageInstance = ImageManager.getInstance(RecordCompareActivity.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(RecordCompareActivity.this);
+        recordInstance = RecordManager.getInstance(RecordCompareActivity.this);
+        videoInstance = VideoManager.getInstance(RecordCompareActivity.this);
         Intent intent = getIntent();
         if (intent != null) {
             mList = getIntent().getParcelableArrayListExtra("mSaveList");
@@ -99,6 +123,11 @@ public class RecordCompareActivity extends BaseActivity {
             //图片展示
             if (FileUtils.isFile(mListOne.get(0))) {
                 Glide.with(RecordCompareActivity.this).load(mListOne.get(0)).crossFade().into(imageOne);
+                //通过图片路径获取病历医嘱
+                List<ImageBean> list = imageInstance.queryAdviceByImageUrl(this, mListOne.get(0));
+                if (list.size() == 1) {
+                    textOne.setText(list.get(0).getAdvice());
+                }
             }
         } else {
             imageOne.setVisibility(View.GONE);
@@ -107,9 +136,24 @@ public class RecordCompareActivity extends BaseActivity {
             //图片展示
             if (FileUtils.isFile(mListTwo.get(0))) {
                 Glide.with(RecordCompareActivity.this).load(mListTwo.get(0)).into(imageTwo);
+                //通过图片路径获取病历医嘱
+                List<ImageBean> list = imageInstance.queryAdviceByImageUrl(this, mListTwo.get(0));
+                if (list.size() == 1) {
+                    textTwo.setText(list.get(0).getAdvice());
+                }
             }
         } else {
             imageTwo.setVisibility(View.GONE);
+        }
+        String oneFolder = mList.get(0).getFolder();
+        if (EmptyUtils.isNotEmpty(oneFolder)) {
+            audioOneList = recordInstance.queryRecordWithFolder(this, oneFolder);
+            videoOneList = videoInstance.queryVideoWithFolder(this, oneFolder);
+        }
+        String twoFolder = mList.get(1).getFolder();
+        if (EmptyUtils.isNotEmpty(twoFolder)) {
+            audioTwoList = recordInstance.queryRecordWithFolder(this, twoFolder);
+            videoTwoList = videoInstance.queryVideoWithFolder(this, twoFolder);
         }
         initTable();
     }
@@ -149,10 +193,70 @@ public class RecordCompareActivity extends BaseActivity {
         if (EmptyUtils.isNotEmpty(advice1) || EmptyUtils.isNotEmpty(advice2)) {
             RecordTableBean bean4 = new RecordTableBean();
             bean4.setContent("处方");
-            bean4.setItemType(2);
+            bean4.setItemType(3);
             bean4.setFristContent(advice1);
             bean4.setSecondContent(advice2);
             tableBean.add(bean4);
+        }
+        int audioOneLength = audioOneList.size();
+        StringBuffer sbOne = new StringBuffer();
+        for (int i = 0; i < audioOneLength; i++) {
+            sbOne.append(audioOneList.get(i).getFileName());
+            sbOne.append(";");
+            sbOne.append("\n");
+        }
+        String sbOneStr = sbOne.toString();
+        if (EmptyUtils.isNotEmpty(sbOneStr)) {
+            sbOneStr = sbOneStr.substring(0, sbOneStr.length() - 1);
+        }
+        int audioTwoLength = audioTwoList.size();
+        StringBuffer sbTwo = new StringBuffer();
+        for (int j = 0; j < audioTwoLength; j++) {
+            sbTwo.append(audioTwoList.get(j).getFileName());
+            sbTwo.append(";");
+            sbTwo.append("\n");
+        }
+        String sbTwoStr = sbTwo.toString();
+        if (EmptyUtils.isNotEmpty(sbTwoStr)) {
+            sbTwoStr = sbTwoStr.substring(0, sbTwoStr.length() - 1);
+        }
+        if (audioOneLength > 0 || audioTwoLength > 0) {
+            RecordTableBean bean5 = new RecordTableBean();
+            bean5.setContent("音频");
+            bean5.setItemType(2);
+            bean5.setFristContent(sbOneStr);
+            bean5.setSecondContent(sbTwoStr);
+            tableBean.add(bean5);
+        }
+        StringBuffer sbThree = new StringBuffer();
+        int videoOneLength = videoOneList.size();
+        for (int i = 0; i < videoOneLength; i++) {
+            sbThree.append(videoOneList.get(i).getFileName());
+            sbThree.append(";");
+            sbThree.append("\n");
+        }
+        String sbThreeStr = sbThree.toString();
+        if (EmptyUtils.isNotEmpty(sbThreeStr)) {
+            sbThreeStr = sbThreeStr.substring(0, sbThreeStr.length() - 1);
+        }
+        StringBuffer sbFour = new StringBuffer();
+        int videoTwoLength = videoTwoList.size();
+        for (int j = 0; j < videoTwoLength; j++) {
+            sbFour.append(videoTwoList.get(j).getFileName());
+            sbFour.append(";");
+            sbFour.append("\n");
+        }
+        String sbFourStr = sbFour.toString();
+        if (EmptyUtils.isNotEmpty(sbFourStr)) {
+            sbFourStr = sbFourStr.substring(0, sbFourStr.length() - 1);
+        }
+        if (videoOneLength > 0 || videoTwoLength > 0) {
+            RecordTableBean bean6 = new RecordTableBean();
+            bean6.setContent("视频");
+            bean6.setItemType(2);
+            bean6.setFristContent(sbThreeStr);
+            bean6.setSecondContent(sbFourStr);
+            tableBean.add(bean6);
         }
         //创建布局管理
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -164,7 +268,6 @@ public class RecordCompareActivity extends BaseActivity {
         recordComparedAdapter = new RecordComparedAdapter(tableBean);
         //给RecyclerView设置适配器
         recycleView.setAdapter(recordComparedAdapter);
-
     }
 
 
@@ -241,10 +344,20 @@ public class RecordCompareActivity extends BaseActivity {
             }
             if (mOneFlag == true && mTwoFlag == false) {
                 GlideUtils.loadImageViewLoding(RecordCompareActivity.this, photos.get(0), imageOne, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+                //通过图片路径获取病历医嘱
+                List<ImageBean> list = imageInstance.queryAdviceByImageUrl(this, photos.get(0));
+                if (list.size() == 1) {
+                    textOne.setText(list.get(0).getAdvice());
+                }
                 mOneFlag = false;
                 mTwoFlag = false;
             } else if (mOneFlag == false && mTwoFlag == true) {
                 GlideUtils.loadImageViewLoding(RecordCompareActivity.this, photos.get(0), imageTwo, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+                //通过图片路径获取病历医嘱
+                List<ImageBean> list = imageInstance.queryAdviceByImageUrl(this, photos.get(0));
+                if (list.size() == 1) {
+                    textTwo.setText(list.get(0).getAdvice());
+                }
                 mOneFlag = false;
                 mTwoFlag = false;
             }

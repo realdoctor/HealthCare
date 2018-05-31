@@ -4,7 +4,7 @@ apply plugin: 'org.greenrobot.greendao' // apply plugin
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "doctor.real.com.realdoc"
+        applicationId "com.real.doctor.realdoc"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
@@ -46,10 +46,13 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.android.support:design:26.1.0'
+
     //轮播图库
     compile 'cn.bingoogolapple:bga-banner:2.1.7@aar'
+
     //multidex
     compile 'com.android.support:multidex:1.0.1'
+
     //搭建基于retrofit和rxjava2的mvp框架
     compile 'io.reactivex.rxjava2:rxjava:2.1.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
@@ -58,42 +61,63 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
+
     //配合rxjava2
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+
     //拦截器
+
     //SmartRefreshLayout
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
+
     //没有使用特殊Header，可以不加这行
+
     //微信
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+
     //QQ
     compile files('libs/open_sdk_r5793.jar')
+
     //新浪
     compile(name: 'openDefault-4.1.0-openDefaultRelease', ext: 'aar')
+
     //Eventbus
     compile 'org.greenrobot:eventbus:3.0.0'
+
     //BaseRecyclerViewAdapterHelper
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.5.3'
+
     //Glide
     compile 'com.nineoldandroids:library:2.4.0'
+
     //Greendao
     implementation 'org.greenrobot:greendao:3.2.2'
+
     // add library
+
     //BaseRecyclerViewAdapterHelper
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
     //加载动画
     compile 'com.wang.avi:library:2.1.3'
+
     //轮播
     compile 'com.youth.banner:banner:1.1.5'
     implementation files('libs/alipaySdk-20160516.jar')
+
     //微信支付
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     implementation project(':datetimepicker')
     compile 'com.melnykov:floatingactionbutton:1.1.0'
+
     //luban 图片压缩
     compile 'top.zibin:Luban:1.1.1'
     implementation 'com.android.support:cardview-v7:27.1.0'
     implementation files('libs/AMap_Location_V4.0.1_20180426.jar')
+
+    //图片识别
+    compile 'com.rmtheis:tess-two:8.0.0'
+    implementation project(':zxing')
 }

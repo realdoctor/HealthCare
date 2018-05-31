@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffffff">
+    android:background="@android:color/white">
 
     <include
         android:id="@+id/title"
@@ -38,8 +38,8 @@
                 android:id="@+id/doc_grid_view_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginTop="20dp"
+                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -66,7 +66,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/text_special_color"
+                        android:textSize="@dimen/txt_16"
                         tools:text="描述1" />
                 </LinearLayout>
 
@@ -95,7 +97,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/text_special_color"
+                        android:textSize="@dimen/txt_16"
                         tools:text="描述2" />
                 </LinearLayout>
             </LinearLayout>

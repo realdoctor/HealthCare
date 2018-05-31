@@ -78,7 +78,7 @@ public class VideoManager {
     }
 
     /**
-     * 插入病历list
+     * 插入视频list
      *
      * @param beanList
      */
@@ -92,10 +92,35 @@ public class VideoManager {
     }
 
     /**
+     * 插入每一个病人上传病历时的视频list
+     *
+     * @param beanList
+     */
+    public void insertPatientVideoList(Context context, List<VideoBean> beanList, String time, String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        videoBeanDao.insertOrReplaceInTx(beanList);
+    }
+
+    /**
      * 查询视频list列表
      */
     public List<VideoBean> queryVideoWithFolder(Context context, String folder) {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
+        List<VideoBean> list = qb.where(VideoBeanDao.Properties.Folder.eq(folder)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
+        return list;
+    }
+
+    /**
+     * 为每一个病人上传病历时查询视频list列表
+     */
+    public List<VideoBean> queryPatientVideoWithFolder(Context context, String folder, String time, String folderName) {
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
         List<VideoBean> list = qb.where(VideoBeanDao.Properties.Folder.eq(folder)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();

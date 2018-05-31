@@ -107,7 +107,7 @@ public class SDCardUtils {
      *
      * @return
      */
-    public static String getPictureDir() {
+    public static String getGlobalDir() {
         String imageCacheUrl = getSDCardPath() + "RealDoc" + File.separator;
         File file = new File(imageCacheUrl);
         if (!file.exists())
@@ -141,7 +141,7 @@ public class SDCardUtils {
         //若该文件存在
         if (file.exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(path);
-            String imageCacheUrl = getPictureDir() + folder;
+            String imageCacheUrl = getGlobalDir() + folder;
             if (EmptyUtils.isNotEmpty(imageCacheUrl)) {
                 //截图图片名称,保存到sdcard中
                 String fileName = path.substring(path.lastIndexOf("/") + 1, path.length());

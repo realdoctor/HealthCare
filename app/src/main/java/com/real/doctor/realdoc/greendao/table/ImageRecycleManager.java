@@ -80,7 +80,7 @@ public class ImageRecycleManager {
     }
 
     /**
-     * 插入病历list
+     * 插入图片item的list
      *
      * @param beanList
      */
@@ -92,6 +92,21 @@ public class ImageRecycleManager {
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         imageBeanListDao.insertOrReplaceInTx(beanList);
     }
+
+    /**
+     * 插入每一个病人上传病历时的图片item的list
+     *
+     * @param beanList
+     */
+    public void insertPatientImageListList(Context context, List<ImageListBean> beanList, String time, String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        imageBeanListDao.insertOrReplaceInTx(beanList);
+    }
+
     /**
      * 通过id查询列表list
      */
@@ -102,6 +117,7 @@ public class ImageRecycleManager {
         List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.Id.eq(id)).list();
         return list;
     }
+
     /**
      * 通过id查询列表list
      */
@@ -113,6 +129,16 @@ public class ImageRecycleManager {
         return list;
     }
 
+    /**
+     * 为每一个病人上传病历时通过id查询列表list
+     */
+    public List<ImageListBean> queryPatientImageListById(Context context, String recordId, String time, String folderName) {
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        QueryBuilder<ImageListBean> qb = imageBeanListDao.queryBuilder();
+        List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.RecordId.eq(recordId)).list();
+        return list;
+    }
 
     private static final String SQL_ID_LIST = "SELECT DISTINCT " + ImageListBeanDao.Properties.Id.columnName + " FROM " + ImageListBeanDao.TABLENAME + " WHERE " + ImageListBeanDao.Properties.RecordId.columnName + "=?";
 
@@ -133,6 +159,7 @@ public class ImageRecycleManager {
         }
         return result;
     }
+
     /**
      * 根据Id删除数据
      */
@@ -141,9 +168,10 @@ public class ImageRecycleManager {
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         imageBeanListDao.deleteByKey(id);
     }
+
     /**
      * 批量更新item
-     * */
+     */
     public void updateImageList(List<ImageListBean> bean) throws Exception {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();

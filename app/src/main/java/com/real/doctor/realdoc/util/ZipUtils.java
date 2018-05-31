@@ -1,7 +1,5 @@
 package com.real.doctor.realdoc.util;
 
-import com.real.doctor.realdoc.util.CloseUtils;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;

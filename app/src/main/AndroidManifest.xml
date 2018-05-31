@@ -98,7 +98,6 @@
             android:name=".activity.RegisterActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -282,6 +281,17 @@
             android:name=".activity.RecordCompareActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ScannerActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity
+            android:name=".activity.PlayLocalVideoActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
         <meta-data
             android:name="WEIBO_APPKEY"
             android:value=""/>
