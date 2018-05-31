@@ -187,6 +187,18 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.RegistrationsActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.SearchHistoryListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.SearchResultListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.ProductShowByCategoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
@@ -196,10 +208,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.OrderExpertActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.RegistrationActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
@@ -262,15 +270,7 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.SearchHistoryActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.AppointmentAddressActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".activity.SearchResultActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity

@@ -1,12 +1,14 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
@@ -14,6 +16,7 @@ import com.real.doctor.realdoc.adapter.FragPagerAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.OrderExpertByDateFragment;
 import com.real.doctor.realdoc.fragment.OrderExpertByNameFragment;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.view.CustomViewPager;
 
 import java.util.ArrayList;
@@ -39,6 +42,8 @@ public class OrderExpertActivity extends BaseActivity {
     ImageView finish_back;
     @BindView(R.id.page_title)
     TextView page_title;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     public String hospitalId="1";
     public String deptName="呼吸内科";
     public FragPagerAdapter adapter;
@@ -57,6 +62,12 @@ public class OrderExpertActivity extends BaseActivity {
     public void initData() {
 //        hospitalId=getIntent().getStringExtra("hospitalId");
 //        deptName=getIntent().getStringExtra("deptName");
+        int statusHeight = ScreenUtil.getStatusHeight(OrderExpertActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
         page_title.setText("预约专家");
         ArrayList<Fragment> list=new ArrayList<Fragment>();
         OrderExpertByNameFragment orderExpertFragment= OrderExpertByNameFragment.newInstance(hospitalId,deptName);

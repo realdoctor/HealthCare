@@ -10,7 +10,6 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
-import com.real.doctor.realdoc.activity.RegistrationActivity;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.util.DocUtils;
 

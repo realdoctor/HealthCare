@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.PayResult;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.PayShowListView;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -70,6 +73,8 @@ public class PayActivity extends BaseActivity {
     PayShowListView lv_products;
     @BindView(R.id.select_address)
     TextView select_address;
+    @BindView(R.id.title_bar)
+    RelativeLayout topTitle;
     private String zhifu_type="0";
     private static final int SDK_PAY_FLAG = 0;
     private IWXAPI api;
@@ -91,6 +96,13 @@ public class PayActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(PayActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) topTitle.getLayoutParams();
+            lp.topMargin = statusHeight;
+            topTitle.setLayoutParams(lp);
+        }
         userId= (String) SPUtils.get(PayActivity.this, Constants.USER_KEY,"");
         api = WXAPIFactory.createWXAPI(this, Constants.WX_APP_ID);
         api.registerApp(Constants.WX_APP_ID);

@@ -22,31 +22,20 @@ import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.DocContentActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
-import com.real.doctor.realdoc.activity.RegistrationActivity;
-import com.real.doctor.realdoc.activity.SaveDocActivity;
+import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.activity.ScannerActivity;
 import com.real.doctor.realdoc.activity.SearchActivity;
-import com.real.doctor.realdoc.activity.ShopCartActivity;
 import com.real.doctor.realdoc.adapter.HomeRecordAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
-import com.real.doctor.realdoc.model.BannerBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.DocUtils;
-import com.real.doctor.realdoc.util.DynamicTimeFormat;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -184,7 +173,7 @@ public class HomeFragment extends BaseFragment {
                     startActivity(intent);
                     break;
                 case R.id.doctor_online:
-                    intent = new Intent(getActivity(), RegistrationActivity.class);
+                    intent = new Intent(getActivity(), RegistrationsActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.scan_icon:

@@ -1,8 +1,10 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +60,8 @@ public class NewDetailActivity extends BaseActivity {
     public String newsId;
     public String userId;
     public boolean flag;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @Override
     public int getLayoutId() {
         return R.layout.activity_article_detail;
@@ -69,6 +74,13 @@ public class NewDetailActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(NewDetailActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
         userId= (String)SPUtils.get(NewDetailActivity.this, Constants.USER_KEY,"");
         newsId= getIntent().getStringExtra("newsId");
         getData();

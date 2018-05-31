@@ -1,13 +1,14 @@
 package com.real.doctor.realdoc.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,14 +26,13 @@ import com.real.doctor.realdoc.model.FilterBean;
 import com.real.doctor.realdoc.model.HospitalBean;
 import com.real.doctor.realdoc.model.HospitalLevelBean;
 import com.real.doctor.realdoc.model.PageModel;
-import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.model.SortBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DataUtil;
 import com.real.doctor.realdoc.util.DocUtils;
-import com.real.doctor.realdoc.util.DynamicTimeFormat;
 import com.real.doctor.realdoc.util.OnFilterDoneListener;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.DropDownMenu;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -46,13 +46,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,18 +59,20 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/20.
  */
 
-public class RegistrationActivity extends CheckPermissionsActivity  implements OnFilterDoneListener,OnLoadmoreListener,OnRefreshListener {
+public class RegistrationsActivity extends CheckPermissionsActivity  implements OnFilterDoneListener,OnLoadmoreListener,OnRefreshListener {
 
     @BindView(R.id.right_title)
     TextView right_title;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.dropMenu)
+    //@BindView(R.id.dropMenu)
     DropDownMenu dropDownMenu;
     @BindView(R.id.lv_list)
     ListView lv_list;
     @BindView(R.id.finish_back)
     ImageView finish_back;
+    @BindView(R.id.top_bar)
+    RelativeLayout titleBar;
     public FilterBean filterBean;
     private DropMenuAdapter dropMenuAdapter;
     private ClassicsHeader mClassicsHeader;
@@ -96,17 +93,49 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
     private AMapLocationClientOption locationOption = null;
     public final static int REGISTRATION_EVENT_REQUEST_CODE = 2;
     public final static int REGISTRATION_AREA_EVENT_REQUEST_CODE = 4;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+    public int getLayoutId() {
+        return R.layout.activity_registration;
+    }
+
+    @Override
+    public void initView() {
         ButterKnife.bind(this);
-        initData();
+    }
+
+    @Override
+    public void initData() {
+        dropDownMenu=(DropDownMenu) this.findViewById(R.id.dropMenu);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(RegistrationsActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
+        init();
         initLocation();
         startLocation();
-        //getData();
     }
-    public void initData(){
+
+    @Override
+    public void initEvent() {
+
+    }
+
+    @Override
+    public void widgetClick(View v) {
+
+    }
+
+    @Override
+    public void doBusiness(Context mContext) {
+
+    }
+
+    public void init(){
         titleList = new String[]{"默认排序","医院等级"};
         filterBean=new FilterBean();
         filterBean.setSortList(DataUtil.sortBeans);
@@ -116,15 +145,15 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
-        hospitalAdapter=new HospitalAdapter(RegistrationActivity.this,hospitalBeanArrayList);
+        hospitalAdapter=new HospitalAdapter(RegistrationsActivity.this,hospitalBeanArrayList);
         lv_list.setAdapter(hospitalAdapter);
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               HospitalBean bean= (HospitalBean) parent.getAdapter().getItem(position);
-               Intent intent =new Intent(RegistrationActivity.this,DeptListActivity.class);
-               intent.putExtra("hospitalId",bean.hospitalId);
-               startActivity(intent);
+                HospitalBean bean= (HospitalBean) parent.getAdapter().getItem(position);
+                Intent intent =new Intent(RegistrationsActivity.this,DeptListActivity.class);
+                intent.putExtra("hospitalId",bean.hospitalId);
+                startActivity(intent);
             }
         });
     }
@@ -237,15 +266,15 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
     public void onClick(View view){
         switch (view.getId()){
             case R.id.finish_back:
-                RegistrationActivity.this.finish();
+                RegistrationsActivity.this.finish();
                 break;
             case R.id.home_search:
-                Intent intent = new Intent(RegistrationActivity.this, SearchHistoryActivity.class);
+                Intent intent = new Intent(RegistrationsActivity.this, SearchHistoryListActivity.class);
                 intent.putExtra("requestCode", REGISTRATION_EVENT_REQUEST_CODE);;
                 startActivity(intent);
                 break;
             case R.id.right_title:
-                Intent intentArea = new Intent(RegistrationActivity.this, AppointmentAddressActivity.class);
+                Intent intentArea = new Intent(RegistrationsActivity.this, AppointmentAddressActivity.class);
                 intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);;
                 startActivityForResult(intentArea,REGISTRATION_AREA_EVENT_REQUEST_CODE);
                 break;
@@ -343,7 +372,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
         if(pageSize*pageNum>hospitalBeanArrayList.size()){
-            ToastUtil.show(RegistrationActivity.this,"已经是最后一页", Toast.LENGTH_SHORT);
+            ToastUtil.show(RegistrationsActivity.this,"已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
             return;
         }
@@ -367,8 +396,8 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
         params.put("sortstr",sortstr);
         params.put("cityName",cityName);
         params.put("searchstr",searchstr);
-        HttpRequestClient.getInstance(RegistrationActivity.this).createBaseApi().get("guahao/hospital"
-                , params, new BaseObserver<ResponseBody>(RegistrationActivity.this) {
+        HttpRequestClient.getInstance(RegistrationsActivity.this).createBaseApi().get("guahao/hospital"
+                , params, new BaseObserver<ResponseBody>(RegistrationsActivity.this) {
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -376,7 +405,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
 
                     @Override
                     public void onError(Throwable e) {
-                       ToastUtil.showLong(RegistrationActivity.this, e.getMessage());
+                        ToastUtil.showLong(RegistrationsActivity.this, e.getMessage());
                     }
 
                     @Override
@@ -409,7 +438,7 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
                                     hospitalBeanArrayList.addAll(baseModel.list);
                                     hospitalAdapter.notifyDataSetChanged();
                                 } else {
-                                    ToastUtil.showLong(RegistrationActivity.this, msg.toString().trim());
+                                    ToastUtil.showLong(RegistrationsActivity.this, msg.toString().trim());
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();
                                 }
@@ -423,6 +452,5 @@ public class RegistrationActivity extends CheckPermissionsActivity  implements O
 
                 });
     }
-
 
 }

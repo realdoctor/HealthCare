@@ -4,12 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 
 import org.json.JSONArray;
@@ -65,6 +68,8 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    @BindView(R.id.title_bar)
+    RelativeLayout topTitle;
 
     private Context context;
     private double totalPrice = 0.00;// 购买的商品总价
@@ -90,6 +95,13 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     }
     @Override
     public void initData() {
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(ShopCartActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) topTitle.getLayoutParams();
+            lp.topMargin = statusHeight;
+            topTitle.setLayoutParams(lp);
+        }
         pageTitle.setText("购物车");
         context = this;
         userId= (String)SPUtils.get(ShopCartActivity.this, Constants.USER_KEY,"");

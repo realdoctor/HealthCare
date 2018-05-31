@@ -2,47 +2,38 @@ package com.real.doctor.realdoc.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.real.doctor.realdoc.API.NotificationsPOJO.Data;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.adapter.DropMenuAdapter;
 import com.real.doctor.realdoc.adapter.DropMenuAdapterForResult;
 import com.real.doctor.realdoc.adapter.ExpertAdapter;
-import com.real.doctor.realdoc.adapter.FragPagerAdapter;
 import com.real.doctor.realdoc.adapter.HospitalAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
-import com.real.doctor.realdoc.fragment.OrderExpertByDateFragment;
-import com.real.doctor.realdoc.fragment.OrderExpertByNameFragment;
 import com.real.doctor.realdoc.model.ExpertBean;
 import com.real.doctor.realdoc.model.ExpertPostionalBean;
 import com.real.doctor.realdoc.model.FilterBean;
 import com.real.doctor.realdoc.model.HospitalBean;
 import com.real.doctor.realdoc.model.HospitalLevelBean;
-import com.real.doctor.realdoc.model.PageModel;
 import com.real.doctor.realdoc.model.SortBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DataUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.OnFilterDoneListener;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
-import com.real.doctor.realdoc.view.CustomViewPager;
-import com.real.doctor.realdoc.view.DropDownMenu;
 import com.real.doctor.realdoc.view.DropDownMenuForResult;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +52,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/23.
  */
 
-public class SearchResultActivity extends Activity implements OnFilterDoneListener,ExpertAdapter.MyClickListener {
+public class SearchResultListActivity extends BaseActivity implements OnFilterDoneListener,ExpertAdapter.MyClickListener{
     @BindView(R.id.rg)
     RadioGroup radioGroup;
     @BindView(R.id.rb_hospital)
@@ -76,7 +67,9 @@ public class SearchResultActivity extends Activity implements OnFilterDoneListen
     ListView hosptial_list;
     @BindView(R.id.expert_list)
     ListView expert_list;
-    @BindView(R.id.dropMenu)
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    //@BindView(R.id.dropMenu)
     DropDownMenuForResult dropDownMenu;
     public String hospitalLevel="";
     public String sortstr="";
@@ -93,19 +86,50 @@ public class SearchResultActivity extends Activity implements OnFilterDoneListen
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_result);
+    public int getLayoutId() {
+        return R.layout.activity_search_result;
+    }
+
+    @Override
+    public void initView() {
         ButterKnife.bind(this);
+    }
+
+    @Override
+    public void initData() {
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(SearchResultListActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
+        dropDownMenu=findViewById(R.id.dropMenu);
         searchstr= getIntent().getStringExtra("searchKey");
-        initData();
+        init();
         searchHospital();
     }
-    @OnClick(R.id.finish_back)
-    void back(){
-        finish();
+
+    @Override
+    public void initEvent() {
+
     }
-    public void initData() {
+
+    @Override
+    @OnClick({R.id.finish_back})
+    public void widgetClick(View v) {
+        switch (v.getId()){
+            case R.id.finish_back:
+                SearchResultListActivity.this.finish();
+                break;
+        }
+    }
+
+    @Override
+    public void doBusiness(Context mContext) {
+
+    }
+    public void init() {
         page_title.setText("搜索结果");
         titleList = new String[]{"排序","筛选"};
         filterBean=new FilterBean();
@@ -130,9 +154,9 @@ public class SearchResultActivity extends Activity implements OnFilterDoneListen
                 }
             }
         });
-        adapter=new HospitalAdapter(SearchResultActivity.this,hospitalBeans);
+        adapter=new HospitalAdapter(SearchResultListActivity.this,hospitalBeans);
         hosptial_list.setAdapter(adapter);
-        expertAdapter=new ExpertAdapter(SearchResultActivity.this,expertBeans,this);
+        expertAdapter=new ExpertAdapter(SearchResultListActivity.this,expertBeans,this);
         expert_list.setAdapter(expertAdapter);
     }
 /**
@@ -188,8 +212,8 @@ public class SearchResultActivity extends Activity implements OnFilterDoneListen
         params.put("cityName",cityName);
         params.put("positional",positional);
         params.put("searchstr",searchstr);
-        HttpRequestClient.getInstance(SearchResultActivity.this).createBaseApi().get("guahao/search"
-                , params, new BaseObserver<ResponseBody>(SearchResultActivity.this) {
+        HttpRequestClient.getInstance(SearchResultListActivity.this).createBaseApi().get("guahao/search"
+                , params, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -197,7 +221,7 @@ public class SearchResultActivity extends Activity implements OnFilterDoneListen
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(SearchResultActivity.this, e.getMessage());
+                        ToastUtil.showLong(SearchResultListActivity.this, e.getMessage());
                     }
 
                     @Override

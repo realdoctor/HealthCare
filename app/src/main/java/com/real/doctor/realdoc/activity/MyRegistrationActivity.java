@@ -1,10 +1,12 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -20,6 +22,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +49,8 @@ public class MyRegistrationActivity extends BaseActivity {
     ImageView finishBack;
     @BindView(R.id.page_title)
     TextView page_title;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     RegistrationAdapter registrationAdapter;
     ArrayList<RegistrationModel> registrationModelArrayList=new ArrayList<RegistrationModel>();
     public String userid;
@@ -61,6 +66,13 @@ public class MyRegistrationActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(MyRegistrationActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
         page_title.setText("我的预约");
         userid= (String)SPUtils.get(MyRegistrationActivity.this, Constants.USER_KEY,"");
         registrationAdapter=new RegistrationAdapter(MyRegistrationActivity.this,registrationModelArrayList);

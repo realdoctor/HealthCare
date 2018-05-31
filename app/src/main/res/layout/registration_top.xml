@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:background="@color/appthemecolor"
+    android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48.0dip"
+            android:id="@+id/top_bar"
+            android:gravity="center_vertical"
+            >
+            <ImageView
+                android:id="@+id/finish_back"
+                android:layout_width="55.0dip"
+                android:layout_height="20.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:background="@drawable/finish_back_white_selector"
+                android:clickable="true" />
+            <RelativeLayout
+                android:id="@+id/home_search"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/home_search_height"
+                android:background="#ff03b5e5"
+                android:layout_toRightOf="@+id/finish_back"
+                android:layout_toLeftOf="@+id/right_title"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/search_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/home_searchText_height"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginRight="10.0dip"
+                    android:background="@drawable/search_background"
+                    android:drawableLeft="@mipmap/icon_search_gray"
+                    android:drawablePadding="10.0dip"
+                    android:gravity="center_vertical"
+                    android:hint="@string/search_hint"
+                    android:paddingLeft="10.0dip"
+                    android:textColorHint="@color/gray" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/right_title"
+                android:layout_width="@dimen/dp_72"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10.0dip"
+                android:textColor="@android:color/white"
+                android:textSize="14.0sp"
+                android:singleLine="true"
+                android:gravity="center"
+                android:text="@string/location"
+                />
+        </RelativeLayout>
+</RelativeLayout>

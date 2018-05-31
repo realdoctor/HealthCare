@@ -2,9 +2,11 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -53,12 +56,15 @@ public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreList
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.page_title)
     TextView page_title;
+
     public NewsAdapter newsAdapter;
     public ArrayList<NewModel> newModels=new ArrayList<NewModel>();
     private PageModel<NewModel> baseModel = new PageModel<NewModel>();
     public int pageNum=1;
     public int pageSize=10;
     public String userId;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
 
     @Override
     public int getLayoutId() {
@@ -72,6 +78,13 @@ public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreList
 
     @Override
     public void initData() {
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(MyFollowNewsActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
         userId= (String)SPUtils.get(MyFollowNewsActivity.this, Constants.USER_KEY,"");
         page_title.setText("我的关注");
         newsAdapter= new NewsAdapter(MyFollowNewsActivity.this,newModels);

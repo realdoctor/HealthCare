@@ -1,13 +1,12 @@
 package com.real.doctor.realdoc.activity;
 
-import java.util.Date;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,32 +19,62 @@ import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.util.RecordSQLiteOpenHelper;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.view.MyListView;
 
-public class SearchHistoryActivity extends Activity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-	private EditText et_search;
-	private TextView tv_tip;
-	private MyListView listView;
-	private TextView tv_clear;
+public class SearchHistoryListActivity extends BaseActivity {
+
+	@BindView(R.id.et_search)
+	EditText et_search;
+	@BindView(R.id.tv_tip)
+	TextView tv_tip;
+	@BindView(R.id.listView)
+	MyListView listView;
+    @BindView(R.id.tv_clear)
+	TextView tv_clear;
+	@BindView(R.id.back)
+	ImageView back;
+	@BindView(R.id.search_top)
+	LinearLayout search_top;
 	private RecordSQLiteOpenHelper helper = new RecordSQLiteOpenHelper(this);;
 	private SQLiteDatabase db;
 	private BaseAdapter adapter;
-	private ImageView back;
+
 	private int requestCode;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_search_history);
 
+	@Override
+	public int getLayoutId() {
+		return R.layout.activity_search_history;
+	}
+
+	@Override
+	public void initView() {
+		ButterKnife.bind(this);
+	}
+
+	@Override
+	public void initData() {
+		//加上沉浸式状态栏高度
+		int statusHeight = ScreenUtil.getStatusHeight(SearchHistoryListActivity.this);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) search_top.getLayoutParams();
+			lp.topMargin = statusHeight;
+			search_top.setLayoutParams(lp);
+		}
 		Intent intent = getIntent();
 		requestCode = intent.getIntExtra("requestCode", 0);
 		// 初始化控件
@@ -75,7 +104,7 @@ public class SearchHistoryActivity extends Activity {
 						queryData("");
 					}
 					// TODO 根据输入的内容模糊查询商品，并跳转到另一个界面，由你自己去实现
-					Toast.makeText(SearchHistoryActivity.this, et_search.getText().toString(), Toast.LENGTH_SHORT).show();
+					Toast.makeText(SearchHistoryListActivity.this, et_search.getText().toString(), Toast.LENGTH_SHORT).show();
 					String value=et_search.getText().toString();
 					setBackValue(value);
 				}
@@ -123,12 +152,31 @@ public class SearchHistoryActivity extends Activity {
 		queryData("");
 	}
 
+	@Override
+	public void initEvent() {
+
+	}
+
+	@Override
+	@OnClick({R.id.back})
+	public void widgetClick(View v) {
+		switch (v.getId()){
+			case R.id.back:
+				SearchHistoryListActivity.this.finish();
+				break;
+		}
+	}
+
+	@Override
+	public void doBusiness(Context mContext) {
+
+	}
 	public void setBackValue(String value){
-		if(requestCode==RegistrationActivity.REGISTRATION_EVENT_REQUEST_CODE){
-			Intent intent=new Intent(SearchHistoryActivity.this,SearchResultActivity.class);
+		if(requestCode==RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE){
+			Intent intent=new Intent(SearchHistoryListActivity.this,SearchResultListActivity.class);
 			intent.putExtra("searchKey", value);
 			startActivity(intent);
-			SearchHistoryActivity.this.finish();
+			SearchHistoryListActivity.this.finish();
 		}
 	}
 
@@ -171,24 +219,5 @@ public class SearchHistoryActivity extends Activity {
 		db = helper.getWritableDatabase();
 		db.execSQL("delete from records");
 		db.close();
-	}
-
-	private void initView() {
-		back=(ImageView)findViewById(R.id.back);
-		et_search = (EditText) findViewById(R.id.et_search);
-		tv_tip = (TextView) findViewById(R.id.tv_tip);
-		listView = (MyListView) findViewById(R.id.listView);
-		tv_clear = (TextView) findViewById(R.id.tv_clear);
-		back.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				SearchHistoryActivity.this.finish();
-			}
-		});
-
-		// 调整EditText左边的搜索按钮的大小
-		Drawable drawable = getResources().getDrawable(R.drawable.search);
-		drawable.setBounds(0, 0, 60, 60);// 第一0是距左边距离，第二0是距上边距离，60分别是长宽
-		et_search.setCompoundDrawables(drawable, null, null, null);// 只放左边
 	}
 }
