@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.util;
 import com.real.doctor.realdoc.model.ExpertBean;
 import com.real.doctor.realdoc.model.ExpertPostionalBean;
 import com.real.doctor.realdoc.model.HospitalLevelBean;
+import com.real.doctor.realdoc.model.OrderStatusModel;
 import com.real.doctor.realdoc.model.SortBean;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class DataUtil {
     public static ArrayList<SortBean> sortBeans=new ArrayList<SortBean>();
     public static ArrayList<HospitalLevelBean> hospitalLevelBeans=new ArrayList<HospitalLevelBean>();
     public static ArrayList<ExpertPostionalBean> expertPostionalBeans=new ArrayList<ExpertPostionalBean>();
+    public static ArrayList<OrderStatusModel> orderStatusModels=new ArrayList<OrderStatusModel>();
     static {
         SortBean bean0=new SortBean();
         bean0.SortId="0";
@@ -48,7 +50,18 @@ public class DataUtil {
         ExpertPostionalBean ebean2=new ExpertPostionalBean();
         ebean2.postional="副主任";
         expertPostionalBeans.add(ebean2);
-
+        OrderStatusModel model=new OrderStatusModel();
+        model.orderstatus="1";
+        model.order_desc="未支付";
+        OrderStatusModel model1=new OrderStatusModel();
+        model1.orderstatus="2";
+        model1.order_desc="已支付";
+        OrderStatusModel model2=new OrderStatusModel();
+        model2.orderstatus="3";
+        model2.order_desc="交易关闭";
+        orderStatusModels.add(model);
+        orderStatusModels.add(model1);
+        orderStatusModels.add(model2);
 
     }
 }

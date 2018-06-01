@@ -10,6 +10,7 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
+import com.real.doctor.realdoc.activity.OrderListActivity;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.util.DocUtils;
 
@@ -51,7 +52,7 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.user_name,R.id.user_function_three,R.id.user_function_four})
+    @OnClick({R.id.user_name,R.id.user_function_three,R.id.user_function_four,R.id.user_function_five})
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
             switch (v.getId()) {
@@ -66,6 +67,10 @@ public class UserFragment extends BaseFragment {
                 case R.id.user_function_four:
                     Intent intentFollow = new Intent(getActivity(), MyFollowNewsActivity.class);
                     startActivity(intentFollow);
+                    break;
+                case R.id.user_function_five:
+                    Intent intentOrder = new Intent(getActivity(), OrderListActivity.class);
+                    startActivity(intentOrder);
                     break;
             }
             }
