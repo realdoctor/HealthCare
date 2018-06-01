@@ -82,9 +82,7 @@
         <activity
             android:name=".activity.SplashActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.RealDocActivity"
             android:hardwareAccelerated="false"
@@ -283,6 +281,16 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity
+            android:name=".activity.DoctorsListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait">
+            <!--    <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>-->
+        </activity>
 
         <meta-data
             android:name="WEIBO_APPKEY"
@@ -290,14 +298,5 @@
         <meta-data
             android:name="WEIBO_CHANNEL"
             android:value="weibo" />
-
-        <activity android:name=".activity.DoctorsListActivity">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN"/>-->
-
-            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        </activity>
     </application>
-
 </manifest>

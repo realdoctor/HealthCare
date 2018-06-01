@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +23,7 @@ import com.google.zxing.Result;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.view.scanner.ScannerFinderView;
 import com.real.doctor.realdoc.view.scanner.camera.CameraManager;
 import com.real.doctor.realdoc.view.scanner.decode.CaptureActivityHandler;
@@ -35,6 +38,8 @@ import butterknife.OnClick;
 
 public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callback {
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     private CaptureActivityHandler captureActivityHandler;
     private boolean hasSurface;
     private InactivityTimer inactivityTimer;
@@ -59,6 +64,13 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(ScannerActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override

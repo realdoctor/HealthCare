@@ -53,7 +53,7 @@
     <dimen name="main_item_title_size">38px</dimen>
     <dimen name="topbar_big_icon_size">66px</dimen>
 
-    <dimen name="home_search_height">48.0dip</dimen>
+    <dimen name="home_search_height">30.0dp</dimen>
     <dimen name="home_searchText_height">33.0dip</dimen>
     <dimen name="function_image_size">30.0dip</dimen>
     <dimen name="home_base_height">114.0dip</dimen>

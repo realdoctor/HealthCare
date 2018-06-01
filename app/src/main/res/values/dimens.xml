@@ -61,7 +61,7 @@
     <dimen name="home_search_height">48.0dip</dimen>
     <dimen name="home_searchText_height">33.0dip</dimen>
     <dimen name="function_image_size">30.0dip</dimen>
-    <dimen name="home_base_height">114.0dip</dimen>
+    <dimen name="home_base_height">110.0dip</dimen>
     <dimen name="main_funciton_image_size">38.0dip</dimen>
     <dimen name="text_size_12sp">12.0sp</dimen>
     <dimen name="text_size_14sp">14.0sp</dimen>

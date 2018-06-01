@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.PayResult;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.PayShowListView;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -52,6 +55,9 @@ import okhttp3.ResponseBody;
  */
 
 public class PayActivity extends BaseActivity {
+
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @BindView(R.id.pay_type)
     RadioGroup rgPayType;
     @BindView(R.id.zhifubao)
@@ -70,10 +76,10 @@ public class PayActivity extends BaseActivity {
     PayShowListView lv_products;
     @BindView(R.id.select_address)
     TextView select_address;
-    private String zhifu_type="0";
+    private String zhifu_type = "0";
     private static final int SDK_PAY_FLAG = 0;
     private IWXAPI api;
-    public ArrayList<ProductBean> productBeanArrayList=new ArrayList<ProductBean>();
+    public ArrayList<ProductBean> productBeanArrayList = new ArrayList<ProductBean>();
     public String totalPrice;
     public ProductAdapter productAdapter;
     public String userId;
@@ -87,18 +93,25 @@ public class PayActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(PayActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override
     public void initData() {
-        userId= (String) SPUtils.get(PayActivity.this, Constants.USER_KEY,"");
+        userId = (String) SPUtils.get(PayActivity.this, Constants.USER_KEY, "");
         api = WXAPIFactory.createWXAPI(this, Constants.WX_APP_ID);
         api.registerApp(Constants.WX_APP_ID);
         pageTitle.setText("支付");
-        productBeanArrayList=(ArrayList<ProductBean>)getIntent().getSerializableExtra("goodsList");
-        totalPrice=getIntent().getStringExtra("totalPrice");
+        productBeanArrayList = (ArrayList<ProductBean>) getIntent().getSerializableExtra("goodsList");
+        totalPrice = getIntent().getStringExtra("totalPrice");
         tvCountprice.setText(totalPrice);
-        productAdapter=new ProductAdapter(PayActivity.this,productBeanArrayList);
+        productAdapter = new ProductAdapter(PayActivity.this, productBeanArrayList);
         lv_products.setAdapter(productAdapter);
         productAdapter.notifyDataSetChanged();
     }
@@ -110,90 +123,90 @@ public class PayActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // TODO Auto-generated method stub
-                if(checkedId== rbAlipay.getId())
-                {
-                    zhifu_type="1";
-                }else if(checkedId== rbWechat.getId())
-                {
-                    zhifu_type="0";
+                if (checkedId == rbAlipay.getId()) {
+                    zhifu_type = "1";
+                } else if (checkedId == rbWechat.getId()) {
+                    zhifu_type = "0";
                 }
             }
         });
     }
-    private  boolean isWXAppInstalledAndSupported(Context context,
-                                                  IWXAPI api) {
+
+    private boolean isWXAppInstalledAndSupported(Context context,
+                                                 IWXAPI api) {
         // LogOutput.d(TAG, "isWXAppInstalledAndSupported");
-        boolean	sIsWXAppInstalledAndSupported = api.isWXAppInstalled()
+        boolean sIsWXAppInstalledAndSupported = api.isWXAppInstalled()
                 && api.isWXAppSupportAPI();
         if (!sIsWXAppInstalledAndSupported) {
             Toast.makeText(context, "尚未安装微信客户端或者微信版本不支持", Toast.LENGTH_SHORT).show();
         }
         return sIsWXAppInstalledAndSupported;
     }
+
     @Override
-    @OnClick({R.id.bt_pay,R.id.finish_back,R.id.select_address})
+    @OnClick({R.id.bt_pay, R.id.finish_back, R.id.select_address})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bt_pay:
-                   if(zhifu_type.length()==0){
-                       ToastUtil.show(PayActivity.this,"请选择支付方式",Toast.LENGTH_SHORT);
-                       return;
-                   }else{
-                       if(zhifu_type.equals("1")){
-                           payOrderByAlipay();
-                       }else if(zhifu_type.equals("0"))
-                       {
-                           if(isWXAppInstalledAndSupported(PayActivity.this,api))
-                           {
-                               payOrderByWechat();
-                           }
-                       }
-                   }
+                if (zhifu_type.length() == 0) {
+                    ToastUtil.show(PayActivity.this, "请选择支付方式", Toast.LENGTH_SHORT);
+                    return;
+                } else {
+                    if (zhifu_type.equals("1")) {
+                        payOrderByAlipay();
+                    } else if (zhifu_type.equals("0")) {
+                        if (isWXAppInstalledAndSupported(PayActivity.this, api)) {
+                            payOrderByWechat();
+                        }
+                    }
+                }
                 break;
             case R.id.finish_back:
                 PayActivity.this.finish();
                 break;
             case R.id.select_address:
-                Intent intent =new Intent(PayActivity.this,AddressListActivity.class);
-                startActivityForResult(intent,ADDRESS_EVENT_REQUEST_CODE);
+                Intent intent = new Intent(PayActivity.this, AddressListActivity.class);
+                startActivityForResult(intent, ADDRESS_EVENT_REQUEST_CODE);
                 break;
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK&&requestCode==ADDRESS_EVENT_REQUEST_CODE){
+        if (resultCode == RESULT_OK && requestCode == ADDRESS_EVENT_REQUEST_CODE) {
 
-            RecieverAddressListBean bean= (RecieverAddressListBean) data.getSerializableExtra("item");
-            AddressBean addressBean=bean.getAddress();
-            select_address.setText(addressBean.getProvince()+addressBean.getCity());
+            RecieverAddressListBean bean = (RecieverAddressListBean) data.getSerializableExtra("item");
+            AddressBean addressBean = bean.getAddress();
+            select_address.setText(addressBean.getProvince() + addressBean.getCity());
 
         }
     }
+
     @Override
     public void doBusiness(Context mContext) {
 
     }
-    public void payOrderByAlipay(){
-        JSONArray array=new JSONArray();
+
+    public void payOrderByAlipay() {
+        JSONArray array = new JSONArray();
         try {
-        for(ProductBean bean:productBeanArrayList)
-        {
-            JSONObject item=new JSONObject();
-            item.put("goodsId",bean.getGoodsId());
-            item.put("goodsNum",bean.getNum());
-            item.put("goodsPrice",bean.getCost());
-            array.put(item);
-        }
+            for (ProductBean bean : productBeanArrayList) {
+                JSONObject item = new JSONObject();
+                item.put("goodsId", bean.getGoodsId());
+                item.put("goodsNum", bean.getNum());
+                item.put("goodsPrice", bean.getCost());
+                array.put(item);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         JSONObject json = new JSONObject();
         try {
-            json.put("totalAmount",totalPrice);
-            json.put("userId",userId);
-            json.put("goodsList",array);
+            json.put("totalAmount", totalPrice);
+            json.put("userId", userId);
+            json.put("goodsList", array);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -232,8 +245,8 @@ public class PayActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject orderObject=object.getJSONObject("data");
-                                    final String orderInfo= orderObject.getString("orderString");
+                                    JSONObject orderObject = object.getJSONObject("data");
+                                    final String orderInfo = orderObject.getString("orderString");
 
                                     Runnable payRunnable = new Runnable() {
 
@@ -267,11 +280,12 @@ public class PayActivity extends BaseActivity {
 
                 });
     }
-    public void payOrderByWechat(){
+
+    public void payOrderByWechat() {
 
         JSONObject json = new JSONObject();
         try {
-            json.put("name","ddd");
+            json.put("name", "ddd");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -310,16 +324,16 @@ public class PayActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    String pay_str=	object.getString("rs");
+                                    String pay_str = object.getString("rs");
 
-                                    JSONObject ob=new JSONObject(pay_str);
+                                    JSONObject ob = new JSONObject(pay_str);
 
-                                    String prepayId=ob.getString("prepayid");
-                                    String nonceStr=ob.getString("noncestr");
-                                    String timeStamp=ob.getString("timestamp");
-                                    String packageValue=ob.getString("package");
-                                    String sign        =ob.getString("sign");
-                                    String partnerId	=ob.getString("partnerid");
+                                    String prepayId = ob.getString("prepayid");
+                                    String nonceStr = ob.getString("noncestr");
+                                    String timeStamp = ob.getString("timestamp");
+                                    String packageValue = ob.getString("package");
+                                    String sign = ob.getString("sign");
+                                    String partnerId = ob.getString("partnerid");
 
 
                                     PayReq req = new PayReq();
@@ -332,9 +346,8 @@ public class PayActivity extends BaseActivity {
                                     req.sign = sign;
 
                                     // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-                                    boolean flag=	api.sendReq(req);
-                                    if(flag)
-                                    {
+                                    boolean flag = api.sendReq(req);
+                                    if (flag) {
                                         PayActivity.this.finish();
                                     }
                                 } else {
@@ -386,7 +399,9 @@ public class PayActivity extends BaseActivity {
                 default:
                     break;
             }
-        };
+        }
+
+        ;
     };
 
 }
