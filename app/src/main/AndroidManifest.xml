@@ -207,6 +207,11 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.OrderListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".activity.OrderExpertActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"/>

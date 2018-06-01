@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:text="我的收藏"
+                android:text="我的预约"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>
@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:text="我的医票"
+                android:text="我的关注"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:text="我的医币"
+                android:text="我的订单"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>
