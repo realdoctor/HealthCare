@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
@@ -20,6 +22,7 @@ import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CircleBtnView;
 
@@ -33,6 +36,8 @@ import butterknife.OnClick;
 public class VideoActivity extends BaseActivity implements SurfaceHolder.Callback {
 
     private static final String TAG = "VideoActivity";
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @BindView(R.id.page_title)
     TextView pageTitle;
     @BindView(R.id.finish_back)
@@ -73,6 +78,13 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(VideoActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
         surfaceView = findViewById(R.id.surface_view);
     }
 

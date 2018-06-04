@@ -30,6 +30,9 @@ import butterknife.OnClick;
  */
 
 public class OrderExpertActivity extends BaseActivity {
+
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @BindView(R.id.rg)
     RadioGroup radioGroup;
     @BindView(R.id.rb_expert)
@@ -56,6 +59,13 @@ public class OrderExpertActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(OrderExpertActivity .this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override

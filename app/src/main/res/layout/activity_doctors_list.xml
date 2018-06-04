@@ -1,15 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.real.doctor.realdoc.activity.DoctorsListActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/select_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_linear_background"
+                android:paddingBottom="0.5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0.5dp"
+                android:paddingTop="0dp">
+
+                <TextView
+                    android:id="@+id/select_time_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/my_tab_background"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/comprehensive_ranking"
+                    android:textColor="@color/text_gray_color" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_linear_background"
+                android:paddingBottom="0.5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0.5dp"
+                android:paddingTop="0dp">
+
+                <TextView
+                    android:id="@+id/select_disease_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/my_tab_background"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@string/screen"
+                    android:textColor="@color/text_gray_color" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/doctors_list_rv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

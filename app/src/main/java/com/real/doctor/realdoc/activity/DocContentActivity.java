@@ -373,10 +373,15 @@ public class DocContentActivity extends BaseActivity {
         compare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DocContentActivity.this,
-                        SingleCompareActivity.class);
-                intent.putExtra("saveDocBean", saveDocBean);
-                startActivity(intent);
+                List<SaveDocBean> mList = instance.querySaveDocList(DocContentActivity.this);
+                if (mList.size() >= 2) {
+                    Intent intent = new Intent(DocContentActivity.this,
+                            SingleCompareActivity.class);
+                    intent.putExtra("saveDocBean", saveDocBean);
+                    startActivity(intent);
+                } else {
+                    ToastUtil.showLong(DocContentActivity.this,"病历列表中至少有两个病历,方可进行对照!");
+                }
                 mRightPop.dismiss();
             }
         });
