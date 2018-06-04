@@ -55,8 +55,6 @@ import okhttp3.ResponseBody;
 
 public class ShopCartActivity extends BaseActivity  implements ShopcartExpandableListViewAdapter.CheckInterface, ShopcartExpandableListViewAdapter.ModifyCountInterface, View.OnClickListener {
 
-    @BindView(R.id.title_bar)
-    RelativeLayout titleBar;
     @BindView(R.id.exListView)
     ExpandableListView exListView;
     @BindView(R.id.all_chekbox)
@@ -98,9 +96,9 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(ShopCartActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) topTitle.getLayoutParams();
             lp.topMargin = statusHeight;
-            titleBar.setLayoutParams(lp);
+            topTitle.setLayoutParams(lp);
         }
     }
     @Override
