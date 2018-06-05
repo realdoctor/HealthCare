@@ -54,6 +54,14 @@
                 android:layout_toRightOf="@+id/hospital_level"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/txt_12" />
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/gray"
+                android:id="@+id/tv_distance"
+                android:textSize="@dimen/txt_12"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                ></TextView>
         </RelativeLayout>
 
         <TextView

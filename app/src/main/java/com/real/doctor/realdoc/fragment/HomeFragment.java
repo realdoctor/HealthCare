@@ -26,6 +26,7 @@ import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.activity.SaveDocActivity;
 import com.real.doctor.realdoc.activity.ScannerActivity;
 import com.real.doctor.realdoc.activity.SearchActivity;
+import com.real.doctor.realdoc.activity.SearchHistoryListActivity;
 import com.real.doctor.realdoc.activity.ShopCartActivity;
 import com.real.doctor.realdoc.adapter.HomeRecordAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
@@ -72,7 +73,7 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.bga_banner)
     BGABanner bgaBanner;
     @BindView(R.id.scan_icon)
-    TextView scanIcon;
+    ImageView scanIcon;
     @BindView(R.id.title_linear)
     LinearLayout titleLinear;
     private HomeRecordAdapter adapter;
@@ -170,10 +171,9 @@ public class HomeFragment extends BaseFragment {
             Intent intent;
             switch (v.getId()) {
                 case R.id.home_search:
-                    intent = new Intent(getActivity(), SearchActivity.class);
+                    intent = new Intent(getActivity(), SearchHistoryListActivity.class);
+                    intent.putExtra("requestCode", RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE);;
                     startActivity(intent);
-                    getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    getActivity().finish();
                     break;
                 case R.id.save_doc_linear:
                     intent = new Intent(getActivity(), RecordListActivity.class);

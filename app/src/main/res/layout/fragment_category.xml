@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical">
 	<com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -18,15 +18,7 @@
 		<com.scwang.smartrefresh.layout.header.ClassicsHeader
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:srlClassicsSpinnerStyle="FixedBehind"
-			app:srlDrawableArrowSize="20dp"
-			app:srlDrawableMarginRight="20dp"
-			app:srlDrawableProgressSize="20dp"
-			app:srlEnableLastTime="true"
-			app:srlFinishDuration="500"
-			app:srlTextSizeTime="10dp"
-			app:srlTextSizeTitle="16sp"
-			app:srlTextTimeMarginTop="2dp" />
+			 />
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -47,8 +39,8 @@
     		</com.real.doctor.realdoc.view.BrandListView>
        		 <ListView
        		    android:id="@+id/lv_products"
-       		    android:layout_width="wrap_content"
-    		    android:layout_height="wrap_content" 
+       		    android:layout_width="match_parent"
+    		    android:layout_height="match_parent"
     		    android:verticalSpacing="10dp"
     		    android:layout_weight="1"
     		    android:scrollbars="none"

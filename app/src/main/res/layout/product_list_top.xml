@@ -25,6 +25,7 @@
             android:layout_height="@dimen/home_search_height"
             android:layout_toRightOf="@+id/finish_back"
             android:background="#ff03b5e5"
+            android:layout_centerVertical="true"
             android:gravity="center">
 
             <TextView

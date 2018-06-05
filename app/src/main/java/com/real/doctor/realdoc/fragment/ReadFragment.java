@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -58,6 +59,8 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
     TextView page_title;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
+    @BindView(R.id.finish_back)
+    ImageView finish_back;
     public NewsAdapter newsAdapter;
     private Unbinder unbinder;
     public ArrayList<NewModel> newModels=new ArrayList<NewModel>();
@@ -89,6 +92,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
             titleBar.setLayoutParams(lp);
         }
         page_title.setText("资讯");
+        finish_back.setVisibility(View.GONE);
         newsAdapter= new NewsAdapter(getContext(),newModels);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);

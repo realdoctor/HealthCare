@@ -74,6 +74,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
     public int pageNum=1;
     public int pageSize=10;
     public boolean isFirstEnter=true;
+    public String searchKey="";
     private PageModel<ProductBean> baseModel = new PageModel<ProductBean>();
     public ArrayList<ProductBean> productList=new ArrayList<ProductBean>();
     public static ProductShowFragment newInstance(CategoryBean bean) {
@@ -130,9 +131,6 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
 //            selectDefault();
             int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
             mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-            mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis() - deta));
-            mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
-            mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
             ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
             refreshLayout.setOnLoadmoreListener(this);
             refreshLayout.setOnRefreshListener(this);
@@ -143,11 +141,12 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
         }
     }
 
-    private void getRefreshProducts(){
+    public  void getRefreshProducts(){
         HashMap<String,Object> param=new HashMap<>();
         param.put("categoryId",bean.categoryId);
         param.put("pageNum",pageNum);
         param.put("pageSize",pageSize);
+        param.put("searchstr",searchKey);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get(" goods/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
 
@@ -205,11 +204,12 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
 
                 });
     }
-    private void getLoadProducts(){
+    public void getLoadProducts(){
         HashMap<String,Object> param=new HashMap<>();
         param.put("categoryId",bean.categoryId);
         param.put("pageNum",pageNum);
         param.put("pageSize",pageSize);
+        param.put("searchstr",searchKey);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get("goods/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
 
@@ -311,6 +311,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
             pageNum=1;
+            searchKey="";
             getRefreshProducts();
     }
 

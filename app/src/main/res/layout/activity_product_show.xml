@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+<include layout="@layout/title_bar"></include>
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <ScrollView
         android:id="@+id/sc_id"
         android:layout_above="@+id/rl_bottom"
@@ -83,22 +87,6 @@
 
     </ScrollView>
     <LinearLayout
-        android:layout_height="40dp"
-        android:layout_width="40dp"
-        android:background="@drawable/circle_back"
-        android:id="@+id/finish_back"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:clickable="true" >
-        <ImageView
-            android:layout_width="20dp"
-            android:background="@drawable/arraw_right"
-            android:layout_gravity="center"
-            android:layout_height="20dp" />
-    </LinearLayout>
-    <LinearLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
@@ -141,3 +129,4 @@
     </LinearLayout>
 
 </RelativeLayout>
+</LinearLayout>
