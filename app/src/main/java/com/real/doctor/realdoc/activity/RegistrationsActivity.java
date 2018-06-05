@@ -86,8 +86,8 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
     public String sortstr="";
     public String cityName="";
     public String searchstr="";
-    public double latitude;
-    public double longitude;
+    public static double latitude;
+    public static double longitude;
     //定位相关类
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
@@ -208,7 +208,9 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                 if (location.getErrorCode() == 0) {
                     latitude=location.getLatitude();
                     longitude=location.getLongitude();
-                    right_title.setText(location.getProvince());
+                    String city=location.getCity();
+                    right_title.setText(city);
+
                 } else {
 
                 }

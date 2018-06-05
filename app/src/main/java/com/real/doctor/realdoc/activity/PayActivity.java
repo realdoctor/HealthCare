@@ -179,7 +179,7 @@ public class PayActivity extends BaseActivity {
 
             RecieverAddressListBean bean= (RecieverAddressListBean) data.getSerializableExtra("item");
             AddressBean addressBean=bean.getAddress();
-            select_address.setText(addressBean.getProvince()+addressBean.getCity());
+            select_address.setText(addressBean.getProvinceCityDistrict()+addressBean.getStreetDetails());
 
         }
     }

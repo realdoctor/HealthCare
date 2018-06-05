@@ -2,9 +2,12 @@ package com.real.doctor.realdoc.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -27,10 +30,14 @@ import com.real.doctor.realdoc.model.HospitalBean;
 import com.real.doctor.realdoc.model.HospitalLevelBean;
 import com.real.doctor.realdoc.model.SortBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DataUtil;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.OnFilterDoneListener;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.DropDownMenuForResult;
@@ -41,11 +48,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 /**
@@ -77,6 +86,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     public String positional="";
     public String searchstr="";
     public FilterBean filterBean;
+    public String userId;
     private String[] titleList;//标题
     private DropMenuAdapterForResult dropMenuAdapter;
     public ArrayList<HospitalBean> hospitalBeans=new ArrayList<HospitalBean>();
@@ -97,6 +107,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
     @Override
     public void initData() {
+        userId=(String) SPUtils.get(SearchResultListActivity.this, Constants.USER_KEY,"");
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(SearchResultListActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -156,6 +167,15 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         });
         adapter=new HospitalAdapter(SearchResultListActivity.this,hospitalBeans);
         hosptial_list.setAdapter(adapter);
+        hosptial_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                HospitalBean bean= (HospitalBean) adapterView.getAdapter().getItem(i);
+                Intent intent =new Intent(SearchResultListActivity.this,DeptListActivity.class);
+                intent.putExtra("hospitalId",bean.hospitalId);
+                startActivity(intent);
+            }
+        });
         expertAdapter=new ExpertAdapter(SearchResultListActivity.this,expertBeans,this);
         expert_list.setAdapter(expertAdapter);
     }
@@ -295,6 +315,77 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
     @Override
     public void clickListener(View v) {
+        ExpertBean bean= (ExpertBean)v.getTag();
+        orderExpert(bean);
+    }
+    public void orderExpert(ExpertBean bean){
+        JSONObject object=new JSONObject();
+        try {
+            object.put("deptId",bean.deptId);
+            object.put("doctorCode",bean.doctorCode);
+            object.put("hospitalDoctorDutyId",bean.hospitalDoctorDutyId);
+            object.put("hospitalId",bean.hospitalId);
+            object.put("orderDay",bean.dutyDtime);
+            object.put("userId",userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String token = (String) SPUtils.get(SearchResultListActivity.this, "token", "");
+        Map<String, String> header = null;
+        if (EmptyUtils.isNotEmpty(token)) {
+            header = new HashMap<String, String>();
+            header.put("Authorization", token);
+        } else {
+            ToastUtil.showLong(SearchResultListActivity.this, "请确定您的账户已登录!");
+            return;
+        }
+        HttpRequestClient client= HttpRequestClient.getInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL,header);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
+        client.createBaseApi().json("guahao/fastorder/"
+                , body, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    ToastUtil.showLong(SearchResultListActivity.this, "预约成功!");
+                                } else {
+                                    ToastUtil.showLong(SearchResultListActivity.this, "预约失败!");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
 
     }
 }

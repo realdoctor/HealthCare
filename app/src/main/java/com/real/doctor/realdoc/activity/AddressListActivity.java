@@ -90,6 +90,7 @@ public class AddressListActivity extends AppCompatActivity {
                 Intent mIntent = new Intent();
                 mIntent.putExtra("item",(Serializable) mRecieverAddressListBean.get(position));
                 setResult(RESULT_OK,mIntent);
+                AddressListActivity.this.finish();
                 // 设置结果，并进行传送
 
             }

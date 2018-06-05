@@ -31,8 +31,6 @@ import butterknife.OnClick;
 
 public class OrderExpertActivity extends BaseActivity {
 
-    @BindView(R.id.title_bar)
-    RelativeLayout titleBar;
     @BindView(R.id.rg)
     RadioGroup radioGroup;
     @BindView(R.id.rb_expert)

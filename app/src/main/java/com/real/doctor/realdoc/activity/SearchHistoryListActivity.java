@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.fragment.ShoppintMallFragment;
 import com.real.doctor.realdoc.util.RecordSQLiteOpenHelper;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.view.MyListView;
@@ -104,7 +105,6 @@ public class SearchHistoryListActivity extends BaseActivity {
 						queryData("");
 					}
 					// TODO 根据输入的内容模糊查询商品，并跳转到另一个界面，由你自己去实现
-					Toast.makeText(SearchHistoryListActivity.this, et_search.getText().toString(), Toast.LENGTH_SHORT).show();
 					String value=et_search.getText().toString();
 					setBackValue(value);
 				}
@@ -177,6 +177,11 @@ public class SearchHistoryListActivity extends BaseActivity {
 			intent.putExtra("searchKey", value);
 			startActivity(intent);
 			SearchHistoryListActivity.this.finish();
+		}else if(requestCode== ShoppintMallFragment.SHOPPING_EVENT_REQUEST_CODE){
+			Intent resultIntent = new Intent();
+			resultIntent.putExtra("searchKey", value);
+			setResult(RESULT_OK, resultIntent);
+			finish();
 		}
 	}
 

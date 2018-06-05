@@ -2,10 +2,14 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
@@ -17,6 +21,7 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.youth.banner.Banner;
 //import com.youth.banner.Banner;
@@ -59,7 +64,11 @@ public class ProductShowActivity extends BaseActivity  {
     @BindView(R.id.tv_description)
     TextView description;
     @BindView(R.id.finish_back)
-    LinearLayout finish_back;
+    ImageView finish_back;
+    @BindView(R.id.title_bar)
+    RelativeLayout topTitle;
+    @BindView(R.id.page_title)
+    TextView page_title;
     private ProductBean bean;
     private String  userId;
     String goodId;
@@ -76,9 +85,17 @@ public class ProductShowActivity extends BaseActivity  {
 
     @Override
     public void initData() {
-
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(ProductShowActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) topTitle.getLayoutParams();
+            lp.topMargin = statusHeight;
+            topTitle.setLayoutParams(lp);
+        }
+        page_title.setText("商品详情");
         userId=(String)SPUtils.get(ProductShowActivity.this, Constants.USER_KEY,"");
         bean=(ProductBean) getIntent().getSerializableExtra("model");
+        bean.setNum(1);
         banner.setBannerStyle(Banner.CIRCLE_INDICATOR_TITLE);
         banner.setIndicatorGravity(Banner.CENTER);
         banner.isAutoPlay(false) ;
@@ -101,13 +118,29 @@ public class ProductShowActivity extends BaseActivity  {
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.tv_buy:
-//
-                payCart(goodId,num);
+                if(userId==null||userId.length()==0){
+                Toast.makeText(ProductShowActivity.this,"请登录",Toast.LENGTH_SHORT).show();
+                return;
+                }
+                Intent intent =new Intent(ProductShowActivity.this,PayActivity.class);
+                intent.putExtra("totalPrice",String.valueOf(bean.getCost()));
+                ArrayList<ProductBean> list=new ArrayList<ProductBean>();
+                list.add(bean);
+                intent.putExtra("goodsList",list);
+                startActivity(intent);
                 break;
             case R.id.tv_incart:
+                if(userId==null||userId.length()==0){
+                    Toast.makeText(ProductShowActivity.this,"请登录",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 addToCart(goodId,num);
                 break;
             case R.id.tv_cart:
+                if(userId==null||userId.length()==0){
+                    Toast.makeText(ProductShowActivity.this,"请登录",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intentCart =new Intent(ProductShowActivity.this,ShopCartActivity.class);
                 startActivity(intentCart);
                 break;
