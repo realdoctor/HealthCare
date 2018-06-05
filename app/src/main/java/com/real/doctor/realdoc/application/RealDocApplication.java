@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.real.doctor.realdoc.greendao.DaoMaster;
@@ -50,7 +52,7 @@ import okhttp3.ResponseBody;
  * @email zhujiabindragon@163.com
  */
 
-public class RealDocApplication extends Application {
+public class RealDocApplication extends MultiDexApplication {
     private static final String TAG = "RealDocApplication";
     public static String HAVE_PATIENT_LIST = "android.intent.action.have.patient.list";
     private RealDocApplication instance;
@@ -82,6 +84,7 @@ public class RealDocApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = this;
+        MultiDex.install(this);
         StrictMode.setThreadPolicy(new
                 StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
         StrictMode.setVmPolicy(new

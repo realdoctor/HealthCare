@@ -8,16 +8,19 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +28,8 @@ import butterknife.OnClick;
 
 public class PlayLocalVideoActivity extends BaseActivity implements SurfaceHolder.Callback {
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @BindView(R.id.finish_back)
     ImageView finishBack;
     @BindView(R.id.center_start)
@@ -61,6 +66,13 @@ public class PlayLocalVideoActivity extends BaseActivity implements SurfaceHolde
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(PlayLocalVideoActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override

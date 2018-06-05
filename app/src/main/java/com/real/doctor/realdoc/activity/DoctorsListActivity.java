@@ -1,78 +1,170 @@
 package com.real.doctor.realdoc.activity;
 
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.model.DoctorVisitsBean;
+import com.real.doctor.realdoc.adapter.DoctorsAdapter;
+import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.model.DoctorBean;
+import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.GsonUtil;
+import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.ToastUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
+import okhttp3.ResponseBody;
 
-public class DoctorsListActivity extends AppCompatActivity {
+public class DoctorsListActivity extends BaseActivity {
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.finish_back)
+    ImageView finish_back;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.doctors_list_rv)
-    RecyclerView doctors_list_rv;
-
-    DoctorListAdapter mDoctorListAdapter;
-    List<DoctorVisitsBean> visits;
+    RecyclerView doctorsRv;
+    @BindView(R.id.right_icon)
+    ImageView rightIcon;
+    DoctorsAdapter doctorsAdapter;
+    List<DoctorBean> doctors;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_doctors_list);
+    public int getLayoutId() {
+        return R.layout.activity_doctors_list;
+    }
+
+    @Override
+    public void initView() {
         ButterKnife.bind(this);
-
-        visits = new ArrayList<>();
-        initData();
-
-
-        doctors_list_rv.setLayoutManager(new LinearLayoutManager(this));
-        mDoctorListAdapter = new DoctorListAdapter(R.layout.doctors_list_item_view, visits);
-        doctors_list_rv.setAdapter(mDoctorListAdapter);
-
-
-    }
-
-    public void initData(){
-
-        for(int i = 0; i < 10; i ++){
-            DoctorVisitsBean bean = new DoctorVisitsBean();
-            bean.setDoctorName("Name" + i);
-            bean.setHospitalName("Hospital name " + i);
-            bean.setDeseaseName("Desease name " + i);
-
-            Date date = new Date();
-            date.getTime();
-            bean.setVisitTime(date);
-
-            visits.add(bean);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(DoctorsListActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
+        pageTitle.setText("在线复诊");
+        rightIcon.setVisibility(View.VISIBLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            rightIcon.setBackground(getResources().getDrawable(R.mipmap.map_icon, null));
         }
     }
 
+    public void initData() {
+        doctors = new ArrayList<>();
+        doctorsRv.setLayoutManager(new LinearLayoutManager(this));
+        doctorsAdapter = new DoctorsAdapter(R.layout.doctors_list_item_view, doctors);
+        doctorsRv.setAdapter(doctorsAdapter);
+        //获得医生数据
+        getDoctorsData("1");
+    }
 
+    private void getDoctorsData(String pageNum) {
+        Map<String, String> map = new HashMap<String, String>();
+        String mobile = (String) SPUtils.get(this, "mobile", "");
+        map.put("mobilePhone", mobile);
+        map.put("pageNum", pageNum);
+        HttpRequestClient.getInstance(DoctorsListActivity.this).createBaseApi().get("patient/revisit"
+                , map, new BaseObserver<ResponseBody>(DoctorsListActivity.this) {
 
-    public class DoctorListAdapter extends BaseQuickAdapter<DoctorVisitsBean, BaseViewHolder>{
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        public DoctorListAdapter(int layoutResId, @Nullable List<DoctorVisitsBean> data) {
-            super(layoutResId, data);
-        }
+                    }
 
-        @Override
-        protected void convert(BaseViewHolder helper, DoctorVisitsBean item) {
-                helper.setText(R.id.doctor_name, item.getDoctorName())
-                        .setText(R.id.hospital_name, item.getHospitalName())
-                        .setText(R.id.desease_name, item.getDeseaseName())
-                        .setText(R.id.visit_date, item.getVisitTime().toString());
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(DoctorsListActivity.this, "获取医生列表失败!");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONObject obj = object.getJSONObject("data");
+                                    if (DocUtils.hasValue(obj, "list")) {
+                                        doctors = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), DoctorBean.class);
+                                        if (doctors.size() > 0) {
+                                            doctorsAdapter = new DoctorsAdapter(R.layout.doctors_list_item_view, doctors);
+                                            doctorsRv.setAdapter(doctorsAdapter);
+//                                            doctorsAdapter.notifyDataSetChanged();
+                                        } else {
+
+                                            ToastUtil.showLong(DoctorsListActivity.this, "医生列表为空!");
+                                        }
+                                    }
+                                } else {
+                                    ToastUtil.showLong(DoctorsListActivity.this, msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void initEvent() {
+
+    }
+
+    @Override
+    @OnClick({R.id.finish_back})
+    public void widgetClick(View v) {
+        switch (v.getId()) {
+            case R.id.finish_back:
+                finish();
+                break;
         }
     }
+
+    @Override
+    public void doBusiness(Context mContext) {
+
+    }
+
+
 }

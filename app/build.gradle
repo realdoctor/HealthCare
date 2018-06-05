@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.real.doctor.realdoc"
         minSdkVersion 15
@@ -12,6 +12,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -120,4 +121,9 @@ dependencies {
     //图片识别
     compile 'com.rmtheis:tess-two:8.0.0'
     implementation project(':zxing')
+    //环信
+    implementation project(':easeui')
+    compile 'com.parse:parse-android:1.13.1'
+    //multidex
+    compile 'com.android.support:multidex:1.0.3'
 }

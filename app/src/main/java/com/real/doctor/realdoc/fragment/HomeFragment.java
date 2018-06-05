@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.DocContentActivity;
@@ -67,12 +68,18 @@ public class HomeFragment extends BaseFragment {
     RelativeLayout homeSearch;
     @BindView(R.id.save_doc_linear)
     LinearLayout saveDocLinear;
+    @BindView(R.id.appoint_icon)
+    LinearLayout appointIconLinear;
+    @BindView(R.id.doctor_online)
+    LinearLayout doctorOnline;
+    @BindView(R.id.search_text)
+    TextView searchText;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
     @BindView(R.id.bga_banner)
     BGABanner bgaBanner;
     @BindView(R.id.scan_icon)
-    TextView scanIcon;
+    ImageView scanIcon;
     @BindView(R.id.title_linear)
     LinearLayout titleLinear;
     private HomeRecordAdapter adapter;
@@ -98,6 +105,7 @@ public class HomeFragment extends BaseFragment {
             lp.topMargin = statusHeight;
             titleLinear.setLayoutParams(lp);
         }
+        searchText.getBackground().setAlpha(180);
     }
 
     @Override
@@ -163,7 +171,7 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
-    @OnClick({R.id.home_search, R.id.save_doc_linear, R.id.base_cure, R.id.doctor_online, R.id.scan_icon})
+    @OnClick({R.id.home_search, R.id.save_doc_linear, R.id.base_cure, R.id.doctor_online, R.id.scan_icon, R.id.appoint_icon})
     @Override
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
@@ -184,6 +192,11 @@ public class HomeFragment extends BaseFragment {
                     startActivity(intent);
                     break;
                 case R.id.doctor_online:
+                    //在线复诊
+                    intent = new Intent(getActivity(), DoctorsListActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.appoint_icon:
                     intent = new Intent(getActivity(), RegistrationActivity.class);
                     startActivity(intent);
                     break;

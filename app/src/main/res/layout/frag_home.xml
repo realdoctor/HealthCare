@@ -9,12 +9,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="170dp">
 
         <cn.bingoogolapple.bgabanner.BGABanner
             android:id="@+id/bga_banner"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="170dp"
             app:banner_pageChangeDuration="1000"
             app:banner_pointAutoPlayAble="true"
             app:banner_pointContainerBackground="@android:color/transparent"
@@ -39,7 +39,7 @@
                 <TextView
                     android:id="@+id/search_text"
                     android:layout_width="match_parent"
-                    android:layout_height="37dp"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="10.0dip"
                     android:layout_marginRight="10.0dip"
                     android:background="@drawable/search_background"
@@ -51,40 +51,36 @@
                     android:textColorHint="@android:color/darker_gray" />
             </RelativeLayout>
 
-            <TextView
+            <ImageView
                 android:id="@+id/scan_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/scan_btn_bg"
-                android:text="@string/scan_icon"
-                android:textColor="@color/white" />
+                android:layout_marginLeft="10dp"
+                android:background="@mipmap/scanner_icon" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/info_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/scan_btn_bg"
-                android:text="@string/information_icon"
-                android:textColor="@color/white" />
+                android:background="@mipmap/info_icon" />
         </LinearLayout>
 
     </RelativeLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <LinearLayout
             android:id="@+id/main_function_layout"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/home_base_height"
-            android:background="@color/appthemecolor"
+            android:background="@android:color/white"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -95,42 +91,38 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.real.doctor.realdoc.view.CircleImageView
-                    android:layout_width="@dimen/main_funciton_image_size"
-                    android:layout_height="@dimen/main_funciton_image_size"
-                    android:src="@mipmap/icon_upload_data"
-                    app:border_circle_color="@color/white"
-                    app:border_circle_width="2.0dip" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/record_filing_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14.0dip"
                     android:text="@string/function_one_string"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/text_gray_color" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/case_comunicate"
+                android:id="@+id/appoint_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1.0"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.real.doctor.realdoc.view.CircleImageView
-                    android:layout_width="@dimen/main_funciton_image_size"
-                    android:layout_height="@dimen/main_funciton_image_size"
-                    android:src="@mipmap/icon_case_communicate"
-                    app:border_circle_color="@color/white"
-                    app:border_circle_width="2.0dip" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/appoint_doc_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14.0dip"
                     android:text="@string/function_two_string"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/text_gray_color" />
             </LinearLayout>
 
             <LinearLayout
@@ -141,19 +133,17 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.real.doctor.realdoc.view.CircleImageView
-                    android:layout_width="@dimen/main_funciton_image_size"
-                    android:layout_height="@dimen/main_funciton_image_size"
-                    android:src="@mipmap/icon_doctor_online"
-                    app:border_circle_color="@color/white"
-                    app:border_circle_width="2.0dip" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/online_review_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14.0dip"
                     android:text="@string/function_three_string"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/text_gray_color" />
             </LinearLayout>
 
             <LinearLayout
@@ -164,35 +154,33 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.real.doctor.realdoc.view.CircleImageView
-                    android:layout_width="@dimen/main_funciton_image_size"
-                    android:layout_height="@dimen/main_funciton_image_size"
-                    android:src="@mipmap/icon_base_cure"
-                    app:border_circle_color="@color/white"
-                    app:border_circle_width="2.0dip" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/communicateion_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14.0dip"
                     android:text="@string/function_four_string"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/text_gray_color" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="80dp"
+            android:layout_height="65dp"
             android:layout_marginTop="10dp"
             android:background="@android:color/white"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="15dp"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/banner_bg_icon" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -211,15 +199,27 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="有人回复了你的评论"
-                        android:textColor="@color/text_special_color" />
+                        android:textColor="@color/text_gray_color"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/comment_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_marginRight="25dp"
                         android:text="2018年5月22日"
-                        android:textColor="@color/text_special_color" />
+                        android:textColor="@color/time_color"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="8.5dp"
+                        android:layout_height="8.5dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="15dp"
+                        android:src="@mipmap/arrow_more" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -233,35 +233,60 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="就诊结束，病历更新了"
-                        android:textColor="@color/text_special_color" />
+                        android:textColor="@color/text_gray_color"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/connect_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_marginRight="25dp"
                         android:text="2018年5月22日"
-                        android:textColor="@color/text_special_color" />
+                        android:textColor="@color/time_color"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="8.5dp"
+                        android:layout_height="8.5dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="15dp"
+                        android:src="@mipmap/arrow_more" />
                 </RelativeLayout>
             </LinearLayout>
+        </LinearLayout>
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="15dp"
-                android:src="@mipmap/arrow_more" />
+                android:layout_marginLeft="15dp"
+                android:background="@color/black"
+                android:orientation="vertical" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/history_record"
+                android:textColor="@color/text_black_color"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycle_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:scrollbars="none"></android.support.v7.widget.RecyclerView>
-
     </LinearLayout>
-
-
 </LinearLayout>

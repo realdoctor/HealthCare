@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <!-- <color name="colorPrimary">#2395FF</color> -->
+    <!-- <color name="colorPrimary">#2395FF</color> -->
     <color name="colorPrimary">#E2EEE9</color>
     <color name="colorLightMint">#F8FCFA</color>
 
-   <color name="contentBackground">#F8FCFA</color>
+    <color name="contentBackground">#F8FCFA</color>
     <color name="lightGreyText">#C8C8C8</color>
 
     <color name="colorPrimaryDark">#1189F8</color>
@@ -14,8 +14,6 @@
     <color name="regularTextColor">#969696</color>
     <color name="boldTextColor">#646464</color>
     <color name="faintTextColor">#C8C8C8</color>
-
-
 
     <color name="white">#fff</color>
     <color name="black">#000</color>
@@ -54,8 +52,8 @@
     <color name="__picker_item_photo_border_selected">#ff03b5e5</color>
     <color name="__picker_item_photo_border_n">#33ffffff</color>
 
-    <color name="tab_nor_color">#969696</color>
-    <color name="tab_sel_color">#ff03b5e5</color>
+    <color name="tab_nor_color">#FF488AF1</color>
+    <color name="tab_sel_color">#FF488AF1</color>
 
     <!--TabLayout-->
     <color name="TabTextColor">#FFFFFF</color>
@@ -68,6 +66,8 @@
     <color name="appbgcolor">#f2f2f2</color>
     <color name="text_special_color">#ff333333</color>
     <color name="text_primary_color">#ff666666</color>
+    <color name="text_black_color">#FF4B4B4B</color>
+    <color name="text_gray_color">#FF646464</color>
     <color name="text_secondary_color">#ff999999</color>
     <color name="background_color">#fff5f5f5</color>
     <color name="text_black">#000000</color>
@@ -91,5 +91,5 @@
     <color name="gray_e7e7e7">#e7e7e7</color>
     <color name="b_c_fafafa">#fafafa</color>
     <color name="check_color">#ff03b5e5</color>
-
+    <color name="time_color">#C0C0C0</color>
 </resources>

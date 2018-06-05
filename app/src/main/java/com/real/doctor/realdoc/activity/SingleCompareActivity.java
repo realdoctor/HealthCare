@@ -2,11 +2,13 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
@@ -14,6 +16,7 @@ import com.real.doctor.realdoc.adapter.SingleCompareAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,8 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
     private static final int mSaveDocBean_MODE_CHECK = 0;
     private static final int mSaveDocBean_MODE_EDIT = 1;
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @BindView(R.id.page_title)
     TextView pageTitle;
     @BindView(R.id.recyclerview)
@@ -51,6 +56,13 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(SingleCompareActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override
@@ -65,8 +77,8 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
         }
         mRecyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         SaveDocManager instance = SaveDocManager.getInstance(SingleCompareActivity.this);
-        mList = instance.querySaveDocList(SingleCompareActivity.this,saveDocBean.getId());
-        for(int i= 0;i<mList.size();i++){
+        mList = instance.querySaveDocList(SingleCompareActivity.this, saveDocBean.getId());
+        for (int i = 0; i < mList.size(); i++) {
             mList.get(i).setIsSelect(false);
         }
         mSaveList.add(mList.get(0));

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/appbgcolor"
+    android:id="@+id/account_linear"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <com.real.doctor.realdoc.view.CircleImageView
+        android:id="@+id/user_avator"
+        android:layout_width="@dimen/user_avatar_height"
+        android:layout_height="@dimen/user_avatar_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/ease_default_avatar"
+        app:border_circle_color="#ffffffff"
+        app:border_circle_width="2.0dip" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:text="@string/change_icon"
+        android:textColor="@color/text_gray_color"
+        android:textSize="@dimen/text_size_14sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/account"
+            android:textColor="@color/text_gray_color"
+            android:textSize="@dimen/text_size_14sp" />
+
+
+        <TextView
+            android:id="@+id/mobile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:paddingLeft="10.0dip"
+            android:textColor="@color/text_gray_color"
+            android:textSize="14.0sp"
+            android:typeface="monospace"
+            tools:text="18158428608" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:id="@+id/identify"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/identify"
+            android:textColor="@color/text_gray_color"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <ImageView
+            android:layout_width="15.0dip"
+            android:layout_height="20.0dip"
+            android:layout_marginRight="15.0dp"
+            android:background="@mipmap/arrow_more" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:id="@+id/change_pwd"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/change_pwd"
+            android:textColor="@color/text_gray_color"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <ImageView
+            android:layout_width="15.0dip"
+            android:layout_height="20.0dip"
+            android:layout_marginRight="15.0dp"
+            android:background="@mipmap/arrow_more" />
+    </LinearLayout>
+</LinearLayout>

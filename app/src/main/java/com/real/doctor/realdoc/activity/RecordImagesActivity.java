@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -38,6 +39,7 @@ import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.InitCacheFileUtils;
 import com.real.doctor.realdoc.util.KeyBoardUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.SelectPopupWindow;
@@ -62,6 +64,8 @@ public class RecordImagesActivity extends BaseActivity {
     public static final String FILE_IMG_NAME = "images";//放置图片缓存
     public static final int IMAGE_SIZE = 9;//可添加图片最大数
     private static final int REQUEST_IMAGE = 0x100;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     @BindView(R.id.finish_back)
     ImageView finishBack;
     @BindView(R.id.right_title)
@@ -105,6 +109,13 @@ public class RecordImagesActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(RecordImagesActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override

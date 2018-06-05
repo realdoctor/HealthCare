@@ -1,198 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#fff5f5f5">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:background="@color/appbgcolor">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/user_backgroud_height"
-            android:layout_gravity="center_horizontal"
-            android:background="@mipmap/useravator_bg">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/user_backgroud_height"
+                android:layout_gravity="center_horizontal"
+                android:background="@mipmap/useravator_bg">
+
+                <include
+                    android:id="@+id/title"
+                    layout="@layout/title_bar" />
+
+                <LinearLayout
+                    android:id="@+id/user_info"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="38.0dip"
+                    android:layout_marginTop="65.0dip"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="73.0dip"
+                        android:layout_height="73.0dip"
+                        android:background="@mipmap/avatar_bg"
+                        android:gravity="center">
+
+                        <com.real.doctor.realdoc.view.CircleImageView
+                            android:id="@+id/user_avator"
+                            android:layout_width="@dimen/user_avatar_height"
+                            android:layout_height="@dimen/user_avatar_height"
+                            android:src="@mipmap/ease_default_avatar"
+                            app:border_circle_color="#ffffffff"
+                            app:border_circle_width="2.0dip" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12.0dip"
+                        android:layout_weight="1.0"
+                        android:text="点击登录"
+                        android:textColor="#ffffffff"
+                        android:textSize="@dimen/text_size_primary" />
+
+                    <ImageView
+                        android:layout_width="22.0dip"
+                        android:layout_height="22.0dip"
+                        android:layout_marginRight="38.0dip"
+                        android:background="@mipmap/arrow_white" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/margin_8dp"
+                android:background="@color/background_color" />
+
+            <include layout="@layout/user_function" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/margin_8dp"
+                android:background="@color/background_color" />
 
             <LinearLayout
-                android:id="@+id/user_info"
+                android:id="@+id/sign_doctor"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="38.0dip"
-                android:layout_marginTop="65.0dip"
+                android:layout_height="@dimen/linearLayout_height"
+                android:background="#ffffffff"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="73.0dip"
-                    android:layout_height="73.0dip"
-                    android:background="@mipmap/avatar_bg"
-                    android:gravity="center">
-
-                    <com.real.doctor.realdoc.view.CircleImageView
-                        android:id="@+id/user_avator"
-                        android:layout_width="@dimen/user_avatar_height"
-                        android:layout_height="@dimen/user_avatar_height"
-                        android:src="@mipmap/ease_default_avatar"
-                        app:border_circle_color="#ffffffff"
-                        app:border_circle_width="2.0dip" />
-                </LinearLayout>
+                <ImageView
+                    android:layout_width="25.0dip"
+                    android:layout_height="25.0dip"
+                    android:layout_marginLeft="16.0dip"
+                    android:background="@mipmap/sign_doctor" />
 
                 <TextView
-                    android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12.0dip"
-                    android:layout_weight="1.0"
-                    android:text="点击登录"
-                    android:textColor="#ffffffff"
-                    android:textSize="@dimen/text_size_primary" />
+                    android:layout_marginLeft="8.0dip"
+                    android:text="签约医生"
+                    android:textColor="@color/text_primary_color"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/invite_friend"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/linearLayout_height"
+                android:background="#ffffffff"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="22.0dip"
-                    android:layout_height="22.0dip"
-                    android:layout_marginRight="38.0dip"
-                    android:background="@mipmap/arrow_white" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16.0dip"
+                    android:src="@mipmap/invite_friend" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8.0dip"
+                    android:text="邀请好友"
+                    android:textColor="@color/text_primary_color"
+                    android:textSize="@dimen/text_size_14sp" />
             </LinearLayout>
-        </RelativeLayout>
 
-        <include layout="@layout/user_function" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/margin_8dp"
+                android:background="@color/background_color" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/margin_8dp"
-            android:background="@color/background_color" />
+            <LinearLayout
+                android:id="@+id/about_us"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/linearLayout_height"
+                android:background="#ffffffff"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/sign_doctor"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/linearLayout_height"
-            android:background="#ffffffff"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16.0dip"
+                    android:src="@mipmap/about_us" />
 
-            <ImageView
-                android:layout_width="25.0dip"
-                android:layout_height="25.0dip"
-                android:layout_marginLeft="16.0dip"
-                android:background="@mipmap/sign_doctor" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_8dp"
+                    android:text="关于我们"
+                    android:textColor="@color/text_primary_color"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8.0dip"
-                android:text="签约医生"
-                android:textColor="@color/text_primary_color"
-                android:textSize="@dimen/text_size_14sp" />
+            <LinearLayout
+                android:id="@+id/suggest_submit"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/linearLayout_height"
+                android:background="#ffffffff"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16.0dip"
+                    android:src="@mipmap/suggestion" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_8dp"
+                    android:text="意见反馈"
+                    android:textColor="@color/text_primary_color"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/margin_8dp"
+                android:background="@color/background_color" />
+
+            <LinearLayout
+                android:id="@+id/user_setting"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/linearLayout_height"
+                android:background="#ffffffff"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:src="@mipmap/icon_settiong" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8.0dip"
+                    android:text="设置"
+                    android:textColor="@color/text_primary_color"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/margin_8dp"
+                android:background="@color/background_color" />
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/invite_friend"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/linearLayout_height"
-            android:background="#ffffffff"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16.0dip"
-                android:src="@mipmap/invite_friend" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8.0dip"
-                android:text="邀请好友"
-                android:textColor="@color/text_primary_color"
-                android:textSize="@dimen/text_size_14sp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/margin_8dp"
-            android:background="@color/background_color" />
-
-        <LinearLayout
-            android:id="@+id/about_us"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/linearLayout_height"
-            android:background="#ffffffff"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16.0dip"
-                android:src="@mipmap/about_us" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_8dp"
-                android:text="关于我们"
-                android:textColor="@color/text_primary_color"
-                android:textSize="@dimen/text_size_14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/suggest_submit"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/linearLayout_height"
-            android:background="#ffffffff"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16.0dip"
-                android:src="@mipmap/suggestion" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_8dp"
-                android:text="意见反馈"
-                android:textColor="@color/text_primary_color"
-                android:textSize="@dimen/text_size_14sp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/margin_8dp"
-            android:background="@color/background_color" />
-
-        <LinearLayout
-            android:id="@+id/user_setting"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/linearLayout_height"
-            android:background="#ffffffff"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10.0dip"
-                android:src="@mipmap/icon_settiong" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8.0dip"
-                android:text="设置"
-                android:textColor="@color/text_primary_color"
-                android:textSize="@dimen/text_size_14sp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/margin_8dp"
-            android:background="@color/background_color" />
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

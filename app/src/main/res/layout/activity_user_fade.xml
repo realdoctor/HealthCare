@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_linear"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/appbgcolor"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <EditText
+        android:id="@+id/qq"
+        android:layout_width="fill_parent"
+        android:layout_height="45.0dip"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/change_pwd_bg"
+        android:hint="@string/qq_num"
+        android:inputType="text"
+        android:maxLength="16"
+        android:paddingLeft="15dp"
+        android:textColorHint="#ff999999"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="14.0sp"
+        android:typeface="monospace" />
+
+    <EditText
+        android:id="@+id/mobile"
+        android:layout_width="fill_parent"
+        android:layout_height="45.0dip"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/change_pwd_bg"
+        android:hint="@string/phone_num"
+        android:inputType="phone"
+        android:paddingLeft="15dp"
+        android:textColorHint="#ff999999"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="14.0sp"
+        android:typeface="monospace" />
+
+    <EditText
+        android:id="@+id/user_fade"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/change_pwd_bg"
+        android:gravity="top|left"
+        android:hint="@string/user_fade_txt"
+        android:inputType="textMultiLine"
+        android:minLines="8"
+        android:paddingLeft="15dp"
+        android:textColorHint="#ff999999"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="14.0sp"
+        android:typeface="monospace" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30.0dip"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="fill_parent"
+            android:layout_height="43.0dip"
+            android:layout_marginLeft="18.0dip"
+            android:layout_marginRight="18.0dip"
+            android:background="@drawable/button_selector"
+            android:text="@string/submit"
+            android:textColor="#ffffffff"
+            android:textSize="15.0sp" />
+    </RelativeLayout>
+</LinearLayout>
