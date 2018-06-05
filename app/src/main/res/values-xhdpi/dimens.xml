@@ -16,6 +16,7 @@
     <dimen name="notification_end_of_list_divider_margin_top">25dp</dimen>
     <dimen name="notification_end_of_list_divider_margin_bottom">80dp</dimen>
 
+
     <!--文字大小-->
     <dimen name="text_special_size">48px</dimen><!--40px以上-->
     <dimen name="text_big_size">36px</dimen><!--32-36-->

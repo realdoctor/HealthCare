@@ -13,6 +13,7 @@ import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.HomeFragment;
 import com.real.doctor.realdoc.fragment.MessageFragment;
 import com.real.doctor.realdoc.fragment.ReadFragment;
+import com.real.doctor.realdoc.fragment.ShoppintMallFragment;
 import com.real.doctor.realdoc.fragment.UserFragment;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class RealDocActivity extends BaseActivity {
     private ArrayList<Fragment> fragments;
     private HomeFragment homeFragment;
     private ReadFragment readFragment;
-    private MessageFragment messageFragment;
+    private ShoppintMallFragment shoppintMallFragment;
     private UserFragment userFragment;
     private FragmentTransaction transaction;
     private Fragment tempFragment;
@@ -59,12 +60,12 @@ public class RealDocActivity extends BaseActivity {
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
         readFragment = new  ReadFragment();
-        messageFragment  = new  MessageFragment();
+        shoppintMallFragment = ShoppintMallFragment.newInstance();
         userFragment  = new  UserFragment();
 
         fragments.add(homeFragment);
         fragments.add(readFragment);
-        fragments.add(messageFragment);
+        fragments.add(shoppintMallFragment);
         fragments.add(userFragment);
         tempFragment = homeFragment;
         FragmentTransaction trans = getSupportFragmentManager().beginTransaction();

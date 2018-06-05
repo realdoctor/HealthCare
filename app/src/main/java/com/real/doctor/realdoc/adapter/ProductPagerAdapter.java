@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import com.real.doctor.realdoc.fragment.ProductShowFragment;
 import com.real.doctor.realdoc.model.CategoryBean;
@@ -34,6 +35,13 @@ public class ProductPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return categoryBeanArrayList.get(position).categoryName;
+    }
+    public ProductShowFragment currentFragment;
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+    currentFragment = (ProductShowFragment) object;
+    super.setPrimaryItem(container, position, object);
     }
 
 }

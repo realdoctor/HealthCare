@@ -2,6 +2,7 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.real.doctor.realdoc.model.ProductInfo;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 
 import org.json.JSONException;
@@ -47,6 +49,8 @@ public class ProductShowByCategoryActivity extends BaseActivity {
     ImageView finish_back;
     @BindView(R.id.home_search)
     RelativeLayout relativeLayout;
+    @BindView(R.id.top_title)
+    RelativeLayout topTitle;
     public ProductPagerAdapter productPagerAdapter;
     public ArrayList<CategoryBean> categoryBeanArrayList=new ArrayList<CategoryBean>();
     @Override
@@ -61,6 +65,13 @@ public class ProductShowByCategoryActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(ProductShowByCategoryActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) topTitle.getLayoutParams();
+            lp.topMargin = statusHeight;
+            topTitle.setLayoutParams(lp);
+        }
         virtulData();
         for(CategoryBean bean:categoryBeanArrayList){
             tb_category.addTab(tb_category.newTab().setText(bean.categoryName).setText(bean.categoryId));

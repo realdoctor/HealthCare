@@ -90,6 +90,7 @@ public class AddressListActivity extends AppCompatActivity {
                 Intent mIntent = new Intent();
                 mIntent.putExtra("item",(Serializable) mRecieverAddressListBean.get(position));
                 setResult(RESULT_OK,mIntent);
+                AddressListActivity.this.finish();
                 // 设置结果，并进行传送
 
             }
@@ -129,7 +130,7 @@ public class AddressListActivity extends AppCompatActivity {
 
         mRecieverAddressListBean = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             mAddressBean = new AddressBean();
             mAddressBean.setProvinceCityDistrict("Province City District" + i);
             mAddressBean.setStreetDetails("Street details" + i);
@@ -137,7 +138,7 @@ public class AddressListActivity extends AppCompatActivity {
 
             RecieverAddressListBean bean = new RecieverAddressListBean();
             bean.setName("Name " + i);
-            bean.setPhone("Phone " + i);
+            bean.setPhone("1234567" + i);
             bean.setAddress(mAddressBean);
 
             mRecieverAddressListBean.add(bean);

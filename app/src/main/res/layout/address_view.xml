@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:background="@color/colorPrimary"
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <TextView
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_alignParentLeft="true"
         android:text="Hangzhou"
         android:id="@+id/address_line_text"
         android:layout_width="wrap_content"
@@ -16,7 +19,9 @@
         android:padding="8dp"
         android:duplicateParentState="true"
         android:clickable="false"
-        android:focusable="false"/>
+        android:focusable="false"
+        android:textColor="@color/boldTextColor"
+        android:textSize="14dp"/>
 
 
  <!--   <TextView
@@ -31,12 +36,14 @@
 
    <ImageView
         android:id="@+id/address_line_selected"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_toRightOf="@id/address_line_text"
+        android:layout_centerVertical="true"
         android:src="@drawable/address_selected_background"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:padding="8dp"
         android:duplicateParentState="true"
         android:clickable="false"
-        android:focusable="false"/>
-</android.support.constraint.ConstraintLayout>
+        android:focusable="false"
+      />
+</RelativeLayout>

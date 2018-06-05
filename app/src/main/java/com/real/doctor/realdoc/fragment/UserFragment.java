@@ -17,6 +17,8 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
+import com.real.doctor.realdoc.activity.MyRegistrationActivity;
+import com.real.doctor.realdoc.activity.OrderListActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
 import com.real.doctor.realdoc.activity.SettingActivity;
 import com.real.doctor.realdoc.activity.VerifyActivity;
@@ -276,8 +278,8 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.user_function_one:
-//                    intent = new Intent(getActivity(),  myregistration.class);
-//                    startActivity(intent);
+                intent = new Intent(getActivity(), MyRegistrationActivity.class);
+                startActivity(intent);
                 break;
             case R.id.user_function_two:
                 intent = new Intent(getActivity(), RecordListActivity.class);
@@ -288,8 +290,8 @@ public class UserFragment extends BaseFragment {
                 startActivity(intent);
                 break;
             case R.id.user_function_four:
-//                    intent = new Intent(getActivity(), orderlistactivity.class);
-//                    startActivity(intent);
+                intent = new Intent(getActivity(), OrderListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.right_icon:
                 //跳转到设置页面`

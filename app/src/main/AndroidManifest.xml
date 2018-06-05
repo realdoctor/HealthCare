@@ -15,11 +15,6 @@
     <!--视频播放-->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature
-        android:name="android.hardware.camera.flash"
-        android:required="false" />
-
-    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -42,8 +37,9 @@
 
     <!-- 3.2.0版本增加 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!-- 3.2.0版本增加 -->
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
+
     <!--环信 -->
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -89,16 +85,20 @@
         <activity
             android:name=".activity.SplashActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".activity.RealDocActivity"
-            android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.RealDocActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyRegistrationActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LoginActivity"
             android:hardwareAccelerated="false"
@@ -147,9 +147,18 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".activity.NewDetailActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activity.DocContentActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyFollowNewsActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.ProgressBarActivity"
             android:hardwareAccelerated="false"
@@ -184,6 +193,18 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.RegistrationsActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchHistoryListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchResultListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.ProductShowByCategoryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
@@ -192,11 +213,12 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.OrderExpertActivity"
+            android:name=".activity.OrderListActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
+
         <activity
-            android:name=".activity.RegistrationActivity"
+            android:name=".activity.OrderExpertActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
@@ -233,9 +255,6 @@
         <service
             android:name=".service.UpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".service.PatientListService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service android:name=".service.RecordingService" />
 
         <activity
@@ -259,15 +278,7 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SearchHistoryActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.AppointmentAddressActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".activity.SearchResultActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
@@ -319,7 +330,6 @@
         <activity android:name=".activity.ContextMenuActivity" />
         <!--    <intent-filter>
                          <action android:name="android.intent.action.MAIN" />
-
                          <category android:name="android.intent.category.LAUNCHER" />
                      </intent-filter>-->
         <!-- 设置环信应用的appkey -->

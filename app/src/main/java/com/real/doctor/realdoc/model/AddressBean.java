@@ -1,6 +1,8 @@
 package com.real.doctor.realdoc.model;
 
-public class AddressBean {
+import java.io.Serializable;
+
+public class AddressBean implements Serializable{
     private  String province;
     private  String city;
     private  String district;

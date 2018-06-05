@@ -176,11 +176,9 @@ public class PayActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && requestCode == ADDRESS_EVENT_REQUEST_CODE) {
-
             RecieverAddressListBean bean = (RecieverAddressListBean) data.getSerializableExtra("item");
             AddressBean addressBean = bean.getAddress();
             select_address.setText(addressBean.getProvince() + addressBean.getCity());
-
         }
     }
 
