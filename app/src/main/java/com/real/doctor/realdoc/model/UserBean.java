@@ -4,12 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.hyphenate.chat.EMContact;
+
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by Administrator on 2018/4/19.
  */
-
-public class UserBean implements Parcelable {
+@Entity
+public class UserBean extends EMContact implements Parcelable {
+    @Id
     @SerializedName("userId")
     private String id;
     private String avater;
@@ -32,6 +38,25 @@ public class UserBean implements Parcelable {
         name = in.readString();
         pwd = in.readString();
         mobile = in.readString();
+    }
+
+    @Generated(hash = 1912825958)
+    public UserBean(String id, String avater, String name, String pwd,
+            String mobile, String realname, String lastTime, String address,
+            String email) {
+        this.id = id;
+        this.avater = avater;
+        this.name = name;
+        this.pwd = pwd;
+        this.mobile = mobile;
+        this.realname = realname;
+        this.lastTime = lastTime;
+        this.address = address;
+        this.email = email;
+    }
+
+    @Generated(hash = 1203313951)
+    public UserBean() {
     }
 
     public static final Creator<UserBean> CREATOR = new Creator<UserBean>() {
@@ -94,5 +119,37 @@ public class UserBean implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
 
+    }
+
+    public String getRealname() {
+        return this.realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    public String getLastTime() {
+        return this.lastTime;
+    }
+
+    public void setLastTime(String lastTime) {
+        this.lastTime = lastTime;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

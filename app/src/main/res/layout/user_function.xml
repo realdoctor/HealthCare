@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:text="病例档案"
+                android:text="@string/my_point"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:text="体检档案"
+                android:text="@string/my_record"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>
@@ -81,12 +81,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:src="@mipmap/function_three" />
+                android:src="@mipmap/function_three" />e
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
+<<<<<<< Updated upstream
                 android:text="我的预约"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
@@ -125,6 +126,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
                 android:text="我的关注"
+=======
+                android:text="@string/my_orders"
+>>>>>>> Stashed changes
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>
@@ -132,6 +136,7 @@
         <View
             android:layout_width="0.5dip"
             android:layout_height="fill_parent"
+<<<<<<< Updated upstream
             android:layout_marginBottom="12.0dip"
             android:background="@color/divider_color" />
 
@@ -162,10 +167,13 @@
             android:layout_width="0.5dip"
             android:layout_height="fill_parent"
             android:layout_marginBottom="12.0dip"
+=======
+            android:layout_marginTop="12.0dip"
+>>>>>>> Stashed changes
             android:background="@color/divider_color" />
 
         <LinearLayout
-            android:id="@+id/user_function_six"
+            android:id="@+id/user_function_four"
             android:layout_width="0.0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
@@ -176,13 +184,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:src="@mipmap/function_six" />
+                android:src="@mipmap/function_four" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:text="处方记录"
+                android:text="@string/my_orders"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>
@@ -191,5 +199,8 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="0.5dip"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
         android:background="@color/divider_color" />
+
 </LinearLayout>
