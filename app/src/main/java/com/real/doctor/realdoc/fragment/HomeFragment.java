@@ -137,6 +137,7 @@ public class HomeFragment extends BaseFragment {
                     recycleView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
                     adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
                     recycleView.setAdapter(adapter);
+                    initEvent();
                 }
             }
         };
