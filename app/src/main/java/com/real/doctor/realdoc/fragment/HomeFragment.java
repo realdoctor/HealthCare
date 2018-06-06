@@ -119,8 +119,8 @@ public class HomeFragment extends BaseFragment {
             adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
             recycleView.setAdapter(adapter);
         }
-        localBroadcast();
         initEvent();
+        localBroadcast();
     }
 
     private void localBroadcast() {

@@ -2,9 +2,11 @@ package com.real.doctor.realdoc.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.hyphenate.EMConferenceListener;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
@@ -25,6 +27,7 @@ import com.real.doctor.realdoc.greendao.table.RobotManager;
 import com.real.doctor.realdoc.greendao.table.UserManager;
 import com.real.doctor.realdoc.model.RobotUser;
 import com.real.doctor.realdoc.parse.UserProfileManager;
+import com.real.doctor.realdoc.receiver.HeadsetReceiver;
 import com.real.doctor.realdoc.util.PreferenceManager;
 import com.real.doctor.realdoc.view.EmojiconExampleGroupData;
 
@@ -135,7 +138,7 @@ public class HuanXinHelper {
     public void init(Context context) {
         userInstance = UserManager.getInstance(context);
         prefInstance = PrefManager.getInstance(context);
-        robotInstance= RobotManager.getInstance(context);
+        robotInstance = RobotManager.getInstance(context);
         EMOptions options = initChatOptions();
 //        options.setRestServer("118.193.28.212:31080");
 //        options.setIMServer("118.193.28.212");
@@ -151,12 +154,12 @@ public class HuanXinHelper {
             easeUI = EaseUI.getInstance();
             //to set user's profile and avatar
             setEaseUIProviders();
-//            //initialize preference manager
-//            PreferenceManager.init(context);
-//            //initialize profile manager
-//            getUserProfileManager().init(context);
-//            //set Call options
-//            setCallOptions();
+            //initialize preference manager
+            PreferenceManager.init(context);
+            //initialize profile manager
+            getUserProfileManager().init(context);
+            //set Call options
+            setCallOptions();
 //
 //            setGlobalListeners();
 //            broadcastManager = LocalBroadcastManager.getInstance(appContext);
@@ -412,5 +415,70 @@ public class HuanXinHelper {
     public boolean isLoggedIn() {
         return EMClient.getInstance().isLoggedInBefore();
     }
+    private void setCallOptions() {
+        HeadsetReceiver headsetReceiver = new HeadsetReceiver();
+        IntentFilter headsetFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        appContext.registerReceiver(headsetReceiver, headsetFilter);
 
+        // min video kbps
+        int minBitRate = PreferenceManager.getInstance().getCallMinVideoKbps();
+        if (minBitRate != -1) {
+            EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(minBitRate);
+        }
+
+        // max video kbps
+        int maxBitRate = PreferenceManager.getInstance().getCallMaxVideoKbps();
+        if (maxBitRate != -1) {
+            EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(maxBitRate);
+        }
+
+        // max frame rate
+        int maxFrameRate = PreferenceManager.getInstance().getCallMaxFrameRate();
+        if (maxFrameRate != -1) {
+            EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(maxFrameRate);
+        }
+
+        // audio sample rate
+        int audioSampleRate = PreferenceManager.getInstance().getCallAudioSampleRate();
+        if (audioSampleRate != -1) {
+            EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(audioSampleRate);
+        }
+
+        /**
+         * This function is only meaningful when your app need recording
+         * If not, remove it.
+         * This function need be called before the video stream started, so we set it in onCreate function.
+         * This method will set the preferred video record encoding codec.
+         * Using default encoding format, recorded file may not be played by mobile player.
+         */
+        //EMClient.getInstance().callManager().getVideoCallHelper().setPreferMovFormatEnable(true);
+
+        // resolution
+        String resolution = PreferenceManager.getInstance().getCallBackCameraResolution();
+        if (resolution.equals("")) {
+            resolution = PreferenceManager.getInstance().getCallFrontCameraResolution();
+        }
+        String[] wh = resolution.split("x");
+        if (wh.length == 2) {
+            try {
+                EMClient.getInstance().callManager().getCallOptions().setVideoResolution(new Integer(wh[0]).intValue(), new Integer(wh[1]).intValue());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // enabled fixed sample rate
+        boolean enableFixSampleRate = PreferenceManager.getInstance().isCallFixedVideoResolution();
+        EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(enableFixSampleRate);
+
+        // Offline call push
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(userInstance.isPushCall());
+
+        // 设置会议模式
+        if (PreferenceManager.getInstance().isLargeConferenceMode()) {
+            EMClient.getInstance().conferenceManager().setConferenceMode(EMConferenceListener.ConferenceMode.LARGE);
+        }else{
+            EMClient.getInstance().conferenceManager().setConferenceMode(EMConferenceListener.ConferenceMode.NORMAL);
+        }
+    }
 }

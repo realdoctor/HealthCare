@@ -256,11 +256,8 @@ public class LoginActivity extends BaseActivity {
                                         }
                                         //登录成功,获得列表数据
                                         RealDocApplication.getRecordListData();
-                                        actionStart(LoginActivity.this, RealDocActivity.class);
                                         //通知首页刷新界面
-                                        //广播通知刷新列表
-                                        Intent intent = new Intent(RECORD_LIST_HOME);
-                                        LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(intent);
+                                        actionStart(LoginActivity.this, RealDocActivity.class);
                                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                         finish();
                                     }

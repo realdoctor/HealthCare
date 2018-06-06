@@ -14,6 +14,8 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.real.doctor.realdoc.activity.LoginActivity;
+import com.real.doctor.realdoc.fragment.HomeFragment;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.GreenDaoContext;
@@ -205,6 +207,9 @@ public class RealDocApplication extends MultiDexApplication {
                                                             mInstance.insertSaveDoc(getContext(), mList);
                                                         }
                                                         ToastUtil.showLong(getContext(), "获取病历数据列表成功!");
+                                                        //广播通知刷新列表
+                                                        Intent intent = new Intent(LoginActivity.RECORD_LIST_HOME);
+                                                        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                                                     }
                                                 }
                                             }

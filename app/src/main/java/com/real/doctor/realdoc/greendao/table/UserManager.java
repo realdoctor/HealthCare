@@ -247,6 +247,9 @@ public class UserManager {
         return (Boolean) (val != null ? val : true);
     }
 
+    public boolean isPushCall() {
+        return PreferenceManager.getInstance().isPushCall();
+    }
 
     enum Key {
         VibrateAndPlayToneOn,

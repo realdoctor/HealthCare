@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.StatusBarUtil;
+import com.real.doctor.realdoc.view.AndroidBugWorkAround;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
             setContentView(getLayoutId());
+            AndroidBugWorkAround.assistActivity(findViewById(android.R.id.content));
         } catch (Exception e) {
             e.printStackTrace();
         }
