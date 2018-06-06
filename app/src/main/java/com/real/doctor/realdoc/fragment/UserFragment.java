@@ -80,6 +80,7 @@ public class UserFragment extends BaseFragment {
     @BindView(R.id.page_title)
     TextView pageTitle;
     public static String VERIFY_TEXT = "android.intent.action.record.verify.text";
+    private String originalImageUrl = "";
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -126,8 +127,8 @@ public class UserFragment extends BaseFragment {
                 if (action.equals(VERIFY_TEXT)) {
                     getUserInfo();
                 } else if (action.equals(AccountActivity.CHANGE_AVATOR)) {
-                    String avator = (String) intent.getExtras().get("avator");
-                    GlideUtils.loadImageView(getContext(), avator, userAvator);
+                    originalImageUrl = (String) intent.getExtras().get("avator");
+                    GlideUtils.loadImageView(getContext(), originalImageUrl, userAvator);
                 }
             }
         };
@@ -237,7 +238,7 @@ public class UserFragment extends BaseFragment {
                                         }
                                     }
                                     if (DocUtils.hasValue(obj, "originalImageUrl")) {
-                                        String originalImageUrl = obj.getString("originalImageUrl");
+                                        originalImageUrl = obj.getString("originalImageUrl");
                                         GlideUtils.loadImageView(getContext(), originalImageUrl, userAvator);
                                     }
                                 } else {
@@ -296,6 +297,7 @@ public class UserFragment extends BaseFragment {
             case R.id.right_icon:
                 //跳转到设置页面`
                 intent = new Intent(getActivity(), SettingActivity.class);
+                intent.putExtra("imgUrl", originalImageUrl);
                 startActivity(intent);
                 break;
         }

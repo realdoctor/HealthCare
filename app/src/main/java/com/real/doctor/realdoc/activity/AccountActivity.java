@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.UserFragment;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
@@ -81,6 +82,7 @@ public class AccountActivity extends BaseActivity {
     private String mMobile;
     private String verifyFlag;
     private String mCurrentPhotoPath;
+    private String avator;
     //拍照
     private static final int REQUEST_CODE_TAKE_PHOTO = 0x110;
     //更新头像广播
@@ -111,6 +113,12 @@ public class AccountActivity extends BaseActivity {
         mobile.setText(mMobile);
         //实名认证
         checkName();
+        //获取头像
+        Intent intent = getIntent();
+        avator = intent.getExtras().getString("avator");
+        if (EmptyUtils.isNotEmpty(avator)) {
+            GlideUtils.loadImageView(AccountActivity.this, avator, userAvator);
+        }
     }
 
     @Override
@@ -251,10 +259,23 @@ public class AccountActivity extends BaseActivity {
                 protected void onHandleSuccess(ResponseBody responseBody) {
                     //上传文件成功
                     String data = null;
+                    String msg = null;
+                    String code = null;
                     try {
                         data = responseBody.string().toString();
                         try {
                             JSONObject object = new JSONObject(data);
+                            if (DocUtils.hasValue(object, "msg")) {
+                                msg = object.getString("msg");
+                            }
+                            if (DocUtils.hasValue(object, "code")) {
+                                code = object.getString("code");
+                            }
+                            if (msg.equals("ok") && code.equals("0")) {
+                                ToastUtil.showLong(RealDocApplication.getContext(), "图片上传成功!");
+                            } else {
+                                ToastUtil.showLong(RealDocApplication.getContext(), "图片上传失败!");
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

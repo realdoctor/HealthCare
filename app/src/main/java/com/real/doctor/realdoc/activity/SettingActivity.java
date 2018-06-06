@@ -14,9 +14,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.baidu.platform.comapi.map.E;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
@@ -69,6 +71,7 @@ public class SettingActivity extends BaseActivity {
     TextView cache;
 
     private CommonDialog dialog;
+    private String avator;
 
     @Override
     public int getLayoutId() {
@@ -97,6 +100,12 @@ public class SettingActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //获取头像
+        Intent intent = getIntent();
+        avator = intent.getExtras().getString("imgUrl");
+        if (EmptyUtils.isNotEmpty(avator)) {
+            GlideUtils.loadImageView(SettingActivity.this, avator, icon);
+        }
     }
 
     @Override
@@ -111,7 +120,7 @@ public class SettingActivity extends BaseActivity {
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String avator = (String) intent.getExtras().get("avator");
+                avator = (String) intent.getExtras().get("avator");
                 GlideUtils.loadImageView(SettingActivity.this, avator, icon);
             }
         };
@@ -149,6 +158,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.account_set:
                 //账号设置
                 intent = new Intent(SettingActivity.this, AccountActivity.class);
+                intent.putExtra("avator", avator);
                 startActivity(intent);
                 break;
             case R.id.address_set:
