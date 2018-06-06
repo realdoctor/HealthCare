@@ -128,7 +128,7 @@ public class UserFragment extends BaseFragment {
                     getUserInfo();
                 } else if (action.equals(AccountActivity.CHANGE_AVATOR)) {
                     originalImageUrl = (String) intent.getExtras().get("avator");
-                    GlideUtils.loadImageView(getContext(), originalImageUrl, userAvator);
+                    GlideUtils.loadImageViewLoding(getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
                 }
             }
         };
@@ -239,7 +239,7 @@ public class UserFragment extends BaseFragment {
                                     }
                                     if (DocUtils.hasValue(obj, "originalImageUrl")) {
                                         originalImageUrl = obj.getString("originalImageUrl");
-                                        GlideUtils.loadImageView(getContext(), originalImageUrl, userAvator);
+                                        GlideUtils.loadImageViewLoding(getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
                                     }
                                 } else {
                                     ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");

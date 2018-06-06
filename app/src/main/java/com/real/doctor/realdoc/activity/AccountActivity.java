@@ -117,7 +117,7 @@ public class AccountActivity extends BaseActivity {
         Intent intent = getIntent();
         avator = intent.getExtras().getString("avator");
         if (EmptyUtils.isNotEmpty(avator)) {
-            GlideUtils.loadImageView(AccountActivity.this, avator, userAvator);
+            GlideUtils.loadImageViewLoding(AccountActivity.this, avator, userAvator,R.mipmap.ease_default_avatar,R.mipmap.ease_default_avatar);
         }
     }
 
@@ -221,7 +221,7 @@ public class AccountActivity extends BaseActivity {
             if (data != null) {
                 photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
             }
-            GlideUtils.loadImageView(this, photos.get(0), userAvator);
+            GlideUtils.loadImageViewLoding(this, photos.get(0), userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
             //刷新需要刷新头像的界面
             Intent intent = new Intent(CHANGE_AVATOR);
             intent.putExtra("avator", photos.get(0));
@@ -229,7 +229,7 @@ public class AccountActivity extends BaseActivity {
             //通知后台头像已改
             uploadIcon(photos.get(0));
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_TAKE_PHOTO) {
-            GlideUtils.loadImageView(this, mCurrentPhotoPath, userAvator);
+            GlideUtils.loadImageViewLoding(this, mCurrentPhotoPath, userAvator,R.mipmap.ease_default_avatar,R.mipmap.ease_default_avatar);
             //刷新需要刷新头像的界面
             Intent intent = new Intent(CHANGE_AVATOR);
             intent.putExtra("avator", mCurrentPhotoPath);

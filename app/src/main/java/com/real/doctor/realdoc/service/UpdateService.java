@@ -93,26 +93,28 @@ public class UpdateService extends JobService {
                 //数据库处理
                 //将该条数据插入到patient数据库中
                 instance.insertPatientSaveDoc(UpdateService.this, bean, time, folderName);
-                //从数据库中获得音频列表,装入patient数据库中
-                audioList = recordInstance.queryRecordWithFolder(UpdateService.this, mFolder);
-                //将该音频数据插入到patient数据库中
-                int audioLength = audioList.size();
-                for (int i = 0; i < audioLength; i++) {
-                    //更换文件路径
-                    audioList.get(i).setFilePath(SDCardUtils.getGlobalDir() + "doctor" + time + File.separator + "music" + File.separator + audioList.get(i).getFileName());
+                if (EmptyUtils.isNotEmpty(mFolder)) {
+                    //从数据库中获得音频列表,装入patient数据库中
+                    audioList = recordInstance.queryRecordWithFolder(UpdateService.this, mFolder);
+                    //将该音频数据插入到patient数据库中
+                    int audioLength = audioList.size();
+                    for (int i = 0; i < audioLength; i++) {
+                        //更换文件路径
+                        audioList.get(i).setFilePath(SDCardUtils.getGlobalDir() + "doctor" + time + File.separator + "music" + File.separator + audioList.get(i).getFileName());
 //                    audioList.get(i).setFilePath(SDCardUtils.getGlobalDir() + "patient" + File.separator + "doctor" + time + File.separator + "music" + File.separator + audioList.get(i).getFileName());
-                }
-                recordInstance.insertPatientRecordList(UpdateService.this, audioList, time, folderName);
-                //从数据库获得视频列表,装入patient数据库中
-                videoList = videoInstance.queryVideoWithFolder(UpdateService.this, mFolder);
-                //将该视频数据插入到patient数据库中
-                int videoLength = videoList.size();
-                for (int i = 0; i < videoLength; i++) {
-                    //更换文件路径
-                    videoList.get(i).setFilePath(SDCardUtils.getGlobalDir() + "doctor" + time + File.separator + "movie" + File.separator + videoList.get(i).getFileName());
+                    }
+                    recordInstance.insertPatientRecordList(UpdateService.this, audioList, time, folderName);
+                    //从数据库获得视频列表,装入patient数据库中
+                    videoList = videoInstance.queryVideoWithFolder(UpdateService.this, mFolder);
+                    //将该视频数据插入到patient数据库中
+                    int videoLength = videoList.size();
+                    for (int i = 0; i < videoLength; i++) {
+                        //更换文件路径
+                        videoList.get(i).setFilePath(SDCardUtils.getGlobalDir() + "doctor" + time + File.separator + "movie" + File.separator + videoList.get(i).getFileName());
 //                    videoList.get(i).setFilePath(SDCardUtils.getGlobalDir() + "patient" + File.separator + "doctor" + time + File.separator + "movie" + File.separator + videoList.get(i).getFileName());
+                    }
+                    videoInstance.insertPatientVideoList(UpdateService.this, videoList, time, folderName);
                 }
-                videoInstance.insertPatientVideoList(UpdateService.this, videoList, time, folderName);
                 List<ImageListBean> imageRecycleList = imageRecycleInstance.queryImageListById(UpdateService.this, mId);
                 //该张表不需要处理,直接插入即可
                 imageRecycleInstance.insertPatientImageListList(UpdateService.this, imageRecycleList, time, folderName);

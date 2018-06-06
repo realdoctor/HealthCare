@@ -104,7 +104,7 @@ public class SettingActivity extends BaseActivity {
         Intent intent = getIntent();
         avator = intent.getExtras().getString("imgUrl");
         if (EmptyUtils.isNotEmpty(avator)) {
-            GlideUtils.loadImageView(SettingActivity.this, avator, icon);
+            GlideUtils.loadImageViewLoding(SettingActivity.this, avator, icon, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
         }
     }
 
@@ -121,7 +121,7 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 avator = (String) intent.getExtras().get("avator");
-                GlideUtils.loadImageView(SettingActivity.this, avator, icon);
+                GlideUtils.loadImageViewLoding(SettingActivity.this, avator, icon,R.mipmap.ease_default_avatar,R.mipmap.ease_default_avatar);
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
