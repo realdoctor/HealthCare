@@ -23,8 +23,12 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(Database db, boolean ifNotExists) {
         ImageBeanDao.createTable(db, ifNotExists);
         ImageListBeanDao.createTable(db, ifNotExists);
+        MessageBeanDao.createTable(db, ifNotExists);
+        PrefBeanDao.createTable(db, ifNotExists);
         RecordBeanDao.createTable(db, ifNotExists);
+        RobotBeanDao.createTable(db, ifNotExists);
         SaveDocBeanDao.createTable(db, ifNotExists);
+        UserBeanDao.createTable(db, ifNotExists);
         VideoBeanDao.createTable(db, ifNotExists);
     }
 
@@ -32,8 +36,12 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void dropAllTables(Database db, boolean ifExists) {
         ImageBeanDao.dropTable(db, ifExists);
         ImageListBeanDao.dropTable(db, ifExists);
+        MessageBeanDao.dropTable(db, ifExists);
+        PrefBeanDao.dropTable(db, ifExists);
         RecordBeanDao.dropTable(db, ifExists);
+        RobotBeanDao.dropTable(db, ifExists);
         SaveDocBeanDao.dropTable(db, ifExists);
+        UserBeanDao.dropTable(db, ifExists);
         VideoBeanDao.dropTable(db, ifExists);
     }
 
@@ -55,8 +63,12 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(ImageBeanDao.class);
         registerDaoClass(ImageListBeanDao.class);
+        registerDaoClass(MessageBeanDao.class);
+        registerDaoClass(PrefBeanDao.class);
         registerDaoClass(RecordBeanDao.class);
+        registerDaoClass(RobotBeanDao.class);
         registerDaoClass(SaveDocBeanDao.class);
+        registerDaoClass(UserBeanDao.class);
         registerDaoClass(VideoBeanDao.class);
     }
 

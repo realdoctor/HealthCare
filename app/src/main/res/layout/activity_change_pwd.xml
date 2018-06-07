@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_linear"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/appbgcolor"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="35dp"
+        android:text="@string/pwd_txt"
+        android:textColor="@color/text_gray_color"
+        android:textSize="@dimen/text_size_14sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/pwd"
+            android:textColor="@color/text_gray_color"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <com.real.doctor.realdoc.widget.EditTextPassword
+            android:id="@+id/pwd"
+            android:layout_width="fill_parent"
+            android:layout_height="45.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="10.0dip"
+            android:background="@drawable/change_pwd_bg"
+            android:hint="@string/letter_or_num"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:textColorHint="#ff999999"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="14.0sp"
+            android:typeface="monospace"
+            app:hidePasswordIcon="@mipmap/hide_password"
+            app:showPasswordIcon="@mipmap/show_password" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/new_pwd"
+            android:textColor="@color/text_gray_color"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <com.real.doctor.realdoc.widget.EditTextPassword
+            android:id="@+id/pwd_confirm"
+            android:layout_width="fill_parent"
+            android:layout_height="45.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="10.0dip"
+            android:background="@drawable/change_pwd_bg"
+            android:hint="@string/letter_or_num"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:textColorHint="#ff999999"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="14.0sp"
+            android:typeface="monospace"
+            app:hidePasswordIcon="@mipmap/hide_password"
+            app:showPasswordIcon="@mipmap/show_password" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30.0dip"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="fill_parent"
+            android:layout_height="43.0dip"
+            android:layout_marginLeft="18.0dip"
+            android:layout_marginRight="18.0dip"
+            android:background="@drawable/button_selector"
+            android:text="@string/confirm_btn"
+            android:textColor="#ffffffff"
+            android:textSize="15.0sp" />
+    </RelativeLayout>
+</LinearLayout>

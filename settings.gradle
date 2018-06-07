@@ -1,1 +1,1 @@
-include ':app', ':datetimepicker', ':zxing'
+include ':app', ':datetimepicker', ':zxing', ':easeui'

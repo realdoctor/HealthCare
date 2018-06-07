@@ -148,7 +148,7 @@ public class LoginActivity extends BaseActivity {
                         String mobilePhone = phoneNumber.getText().toString().trim();
                         String pwd = userpassword.getText().toString().trim();
                         login(mobilePhone, pwd);
-                    }else{
+                    } else {
                         ToastUtil.showLong(LoginActivity.this, "请链接互联网!");
                         return;
                     }
@@ -249,18 +249,15 @@ public class LoginActivity extends BaseActivity {
                                             }
                                             //获取用户信息
                                             UserBean user = GsonUtil.GsonToBean(jsonObject.getJSONObject("user").toString(), UserBean.class);
-                                            if(EmptyUtils.isNotEmpty(user)){
+                                            if (EmptyUtils.isNotEmpty(user)) {
                                                 SPUtils.put(LoginActivity.this, "mobile", user.getMobile());
-                                                SPUtils.put(LoginActivity.this,Constants.USER_KEY,user.getId());
+                                                SPUtils.put(LoginActivity.this, Constants.USER_KEY, user.getId());
                                             }
                                         }
                                         //登录成功,获得列表数据
                                         RealDocApplication.getRecordListData();
-                                        actionStart(LoginActivity.this, RealDocActivity.class);
                                         //通知首页刷新界面
-                                        //广播通知刷新列表
-                                       Intent intent = new Intent(RECORD_LIST_HOME);
-                                        LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(intent);
+                                        actionStart(LoginActivity.this, RealDocActivity.class);
                                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                         finish();
                                     }

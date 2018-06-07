@@ -10,8 +10,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.real.doctor.realdoc.activity.LoginActivity;
+import com.real.doctor.realdoc.fragment.HomeFragment;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.GreenDaoContext;
@@ -50,7 +54,7 @@ import okhttp3.ResponseBody;
  * @email zhujiabindragon@163.com
  */
 
-public class RealDocApplication extends Application {
+public class RealDocApplication extends MultiDexApplication {
     private static final String TAG = "RealDocApplication";
     public static String HAVE_PATIENT_LIST = "android.intent.action.have.patient.list";
     private RealDocApplication instance;
@@ -82,6 +86,7 @@ public class RealDocApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = this;
+        MultiDex.install(this);
         StrictMode.setThreadPolicy(new
                 StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
         StrictMode.setVmPolicy(new
@@ -202,6 +207,9 @@ public class RealDocApplication extends Application {
                                                             mInstance.insertSaveDoc(getContext(), mList);
                                                         }
                                                         ToastUtil.showLong(getContext(), "获取病历数据列表成功!");
+                                                        //广播通知刷新列表
+                                                        Intent intent = new Intent(LoginActivity.RECORD_LIST_HOME);
+                                                        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                                                     }
                                                 }
                                             }

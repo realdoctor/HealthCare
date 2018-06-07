@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">康链</string>
+    <string name="name">康链(REAL_DOCTOR)</string>
     <!--label-->
     <item name="tag_key_data" type="id" />
     <item name="tag_key_position" type="id" />
@@ -129,6 +130,37 @@
     <string name="record_one">第一份病历</string>
     <string name="record_two">第二份病历</string>
     <string name="history_record">历史就诊信息</string>
+    <string name="my_point">我的预约</string>
+    <string name="my_record">我的病历</string>
+    <string name="my_visit">我的复诊</string>
+    <string name="my_orders">我的复诊</string>
+    <string name="account_set">账号设置</string>
+    <string name="address_set">地址设置</string>
+    <string name="clean_cache">清除缓存</string>
+    <string name="user_fade">用户反馈</string>
+    <string name="about_us">关于我们</string>
+    <string name="current_version">当前版本</string>
+    <string name="check_info">请务必填写真实信息,您的信息我们将严格保密</string>
+    <string name="account">账号</string>
+    <string name="acount_edit">请输入您的账号</string>
+    <string name="your_name">姓名</string>
+    <string name="your_name_edit">请输入您的姓名</string>
+    <string name="identity">身份证(可选)</string>
+    <string name="identity_edit">请输入您的身份证号码</string>
+    <string name="submit">提交</string>
+    <string name="change_icon">点击修改头像</string>
+    <string name="identify">实名认证</string>
+    <string name="change_pwd">修改密码</string>
+    <string name="pwd_txt">请设置新的密码</string>
+    <string name="pwd">新密码</string>
+    <string name="new_pwd">确认新密码</string>
+    <string name="letter_or_num">8-20位字母,数字或符号</string>
+    <string name="qq_num">qq号码</string>
+    <string name="phone_num">电话号码</string>
+    <string name="user_fade_txt">请留下你的宝贵意见</string>
+    <string name="confirm_dialog_btn">确定</string>
+    <string name="cancel_dialog_btn">取消</string>
+
     <!--二维码扫描-->
     <string name="title_activity_scan_qr_code">扫一扫</string>
     <string name="close">关闭</string>
@@ -138,6 +170,12 @@
     <string name="could_not_read_qr_code_from_scanner">对不起，无法打开扫出的内容</string>
     <string name="camera_not_found">未检测到相机</string>
     <string name="is_open_flashlight">是否打开闪光灯 </string>
+
+    <!--环信-->
+    <string name="emojicon_test_name">示例</string>
+    <string name="recall">撤回</string>
+    <string name="msg_recall_by_self">您撤回了一条消息</string>
+    <string name="at_your_in_group">%s在群聊中@了你</string>
     <string name="focus">关注</string>
     <string name="un_focus">取消关注</string>
 </resources>

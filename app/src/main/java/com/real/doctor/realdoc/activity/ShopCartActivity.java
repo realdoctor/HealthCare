@@ -53,7 +53,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/20.
  */
 
-public class ShopCartActivity extends BaseActivity  implements ShopcartExpandableListViewAdapter.CheckInterface, ShopcartExpandableListViewAdapter.ModifyCountInterface, View.OnClickListener {
+public class ShopCartActivity extends BaseActivity implements ShopcartExpandableListViewAdapter.CheckInterface, ShopcartExpandableListViewAdapter.ModifyCountInterface, View.OnClickListener {
 
     @BindView(R.id.exListView)
     ExpandableListView exListView;
@@ -83,7 +83,7 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     //默认店铺
     public GroupInfo groupInfo;
     //默认店铺id
-    public static  String gourpId="0001";
+    public static String gourpId = "0001";
 
     @Override
     public int getLayoutId() {
@@ -101,6 +101,7 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
             topTitle.setLayoutParams(lp);
         }
     }
+
     @Override
     public void initData() {
         //加上沉浸式状态栏高度
@@ -112,9 +113,9 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
         }
         pageTitle.setText("购物车");
         context = this;
-        userId= (String)SPUtils.get(ShopCartActivity.this, Constants.USER_KEY,"");
-        groups.add(new GroupInfo(gourpId,"自营店铺"));
-       // virtualData();
+        userId = (String) SPUtils.get(ShopCartActivity.this, Constants.USER_KEY, "");
+        groups.add(new GroupInfo(gourpId, "自营店铺"));
+        // virtualData();
     }
 
     @Override
@@ -128,8 +129,9 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
         tvDelete.setOnClickListener(this);
         tvGoToPay.setOnClickListener(this);
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         getCartData();
     }
@@ -144,11 +146,9 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         AlertDialog alert;
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.all_chekbox:
                 doCheckAll();
                 break;
@@ -156,63 +156,53 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
                 ShopCartActivity.this.finish();
                 break;
             case R.id.tv_go_to_pay:
-                if (totalCount == 0)
-                {
+                if (totalCount == 0) {
                     Toast.makeText(context, "请选择要支付的商品", Toast.LENGTH_LONG).show();
                     return;
                 }
                 alert = new AlertDialog.Builder(context).create();
                 alert.setTitle("操作提示");
                 alert.setMessage("总计:\n" + totalCount + "种商品\n" + totalPrice + "元");
-                alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener()
-                {
+                alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         return;
                     }
                 });
-                alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener()
-                {
+                alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        Intent intent =new Intent(ShopCartActivity.this,PayActivity.class);
-                        intent.putExtra("totalPrice",String.valueOf(totalPrice));
-                        ArrayList<ProductBean> list=new ArrayList<ProductBean>();
-                        for(ProductBean bean:children.get(gourpId)){
-                            if(bean.isChoosed()){
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(ShopCartActivity.this, PayActivity.class);
+                        intent.putExtra("totalPrice", String.valueOf(totalPrice));
+                        ArrayList<ProductBean> list = new ArrayList<ProductBean>();
+                        for (ProductBean bean : children.get(gourpId)) {
+                            if (bean.isChoosed()) {
                                 list.add(bean);
                             }
                         }
-                        intent.putExtra("goodsList",list);
+                        intent.putExtra("goodsList", list);
                         startActivity(intent);
                     }
                 });
                 alert.show();
                 break;
             case R.id.tv_delete:
-                if (totalCount == 0)
-                {
+                if (totalCount == 0) {
                     Toast.makeText(context, "请选择要移除的商品", Toast.LENGTH_LONG).show();
                     return;
                 }
                 alert = new AlertDialog.Builder(context).create();
                 alert.setTitle("操作提示");
                 alert.setMessage("您确定要将这些商品从购物车中移除吗？");
-                alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener()
-                {
+                alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         return;
                     }
                 });
-                alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener()
-                {
+                alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         doDelete();
                     }
                 });
@@ -226,45 +216,41 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
      * 1.不要边遍历边删除，容易出现数组越界的情况<br>
      * 2.现将要删除的对象放进相应的列表容器中，待遍历完后，以removeAll的方式进行删除
      */
-    protected void doDelete()
-    {
+    protected void doDelete() {
         List<GroupInfo> toBeDeleteGroups = new ArrayList<GroupInfo>();// 待删除的组元素列表
         //封装要删除的购物车商品
-        final JSONArray jsonArray=new JSONArray();
-        for (int i = 0; i < groups.size(); i++)
-        {
+        final JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < groups.size(); i++) {
             GroupInfo group = groups.get(i);
-            if (group.isChoosed())
-            {
+            if (group.isChoosed()) {
                 toBeDeleteGroups.add(group);
             }
             List<ProductBean> toBeDeleteProducts = new ArrayList<ProductBean>();// 待删除的子元素列表
             List<ProductBean> childs = children.get(group.getId());
-            for (int j = 0; j < childs.size(); j++)
-            {
-                if (childs.get(j).isChoosed())
-                {
+            for (int j = 0; j < childs.size(); j++) {
+                if (childs.get(j).isChoosed()) {
                     toBeDeleteProducts.add(childs.get(j));
                 }
             }
             childs.removeAll(toBeDeleteProducts);
-            for(int k=0;k<toBeDeleteProducts.size();k++){
+            for (int k = 0; k < toBeDeleteProducts.size(); k++) {
                 jsonArray.put(toBeDeleteProducts.get(k).getGoodsShopcarId());
             }
 
         }
         deleteCartIds(jsonArray);
     }
-    private void deleteCartIds(JSONArray array){
-        JSONObject jsonObject=new JSONObject();
+
+    private void deleteCartIds(JSONArray array) {
+        JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("ids",array);
+            jsonObject.put("ids", array);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
         HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().json("cart/deleteCartItem/"
-                ,body , new BaseObserver<ResponseBody>(ShopCartActivity.this) {
+                , body, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
 
                     @Override
 
@@ -312,9 +298,9 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
 
                 });
     }
+
     @Override
-    public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked)
-    {
+    public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
         ProductBean product = (ProductBean) selva.getChild(groupPosition, childPosition);
         int currentCount = product.getNum();
         currentCount++;
@@ -325,8 +311,7 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     }
 
     @Override
-    public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked)
-    {
+    public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
         ProductBean product = (ProductBean) selva.getChild(groupPosition, childPosition);
         int currentCount = product.getNum();
         if (currentCount == 1)
@@ -339,12 +324,10 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     }
 
     @Override
-    public void checkGroup(int groupPosition, boolean isChecked)
-    {
+    public void checkGroup(int groupPosition, boolean isChecked) {
         GroupInfo group = groups.get(groupPosition);
         List<ProductBean> childs = children.get(group.getId());
-        for (int i = 0; i < childs.size(); i++)
-        {
+        for (int i = 0; i < childs.size(); i++) {
             childs.get(i).setChoosed(isChecked);
         }
         if (isAllCheck())
@@ -356,24 +339,19 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
     }
 
     @Override
-    public void checkChild(int groupPosition, int childPosiTion, boolean isChecked)
-    {
+    public void checkChild(int groupPosition, int childPosiTion, boolean isChecked) {
         boolean allChildSameState = true;// 判断改组下面的所有子元素是否是同一种状态
         GroupInfo group = groups.get(groupPosition);
         List<ProductBean> childs = children.get(group.getId());
-        for (int i = 0; i < childs.size(); i++)
-        {
-            if (childs.get(i).isChoosed() != isChecked)
-            {
+        for (int i = 0; i < childs.size(); i++) {
+            if (childs.get(i).isChoosed() != isChecked) {
                 allChildSameState = false;
                 break;
             }
         }
-        if (allChildSameState)
-        {
+        if (allChildSameState) {
             group.setChoosed(isChecked);// 如果所有子元素状态相同，那么对应的组元素被设为这种统一状态
-        } else
-        {
+        } else {
             group.setChoosed(false);// 否则，组元素一律设置为未选中状态
         }
 
@@ -385,11 +363,9 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
         calculate();
     }
 
-    private boolean isAllCheck()
-    {
+    private boolean isAllCheck() {
 
-        for (GroupInfo group : groups)
-        {
+        for (GroupInfo group : groups) {
             if (!group.isChoosed())
                 return false;
         }
@@ -397,16 +373,15 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
         return true;
     }
 
-    /** 全选与反选 */
-    private void doCheckAll()
-    {
-        for (int i = 0; i < groups.size(); i++)
-        {
+    /**
+     * 全选与反选
+     */
+    private void doCheckAll() {
+        for (int i = 0; i < groups.size(); i++) {
             groups.get(i).setChoosed(cbCheck.isChecked());
             GroupInfo group = groups.get(i);
             List<ProductBean> childs = children.get(group.getId());
-            for (int j = 0; j < childs.size(); j++)
-            {
+            for (int j = 0; j < childs.size(); j++) {
                 childs.get(j).setChoosed(cbCheck.isChecked());
             }
         }
@@ -420,19 +395,15 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
      * 2.遍历所有子元素，只要是被选中状态的，就进行相关的计算操作<br>
      * 3.给底部的textView进行数据填充
      */
-    private void calculate()
-    {
+    private void calculate() {
         totalCount = 0;
         totalPrice = 0.00;
-        for (int i = 0; i < groups.size(); i++)
-        {
+        for (int i = 0; i < groups.size(); i++) {
             GroupInfo group = groups.get(i);
             List<ProductBean> childs = children.get(group.getId());
-            for (int j = 0; j < childs.size(); j++)
-            {
+            for (int j = 0; j < childs.size(); j++) {
                 ProductBean product = childs.get(j);
-                if (product.isChoosed())
-                {
+                if (product.isChoosed()) {
                     totalCount++;
                     totalPrice += product.getCost() * product.getNum();
                 }
@@ -441,9 +412,10 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
         tvTotalPrice.setText("￥" + totalPrice);
         tvGoToPay.setText("去支付(" + totalCount + ")");
     }
-    private void getCartData(){
-        HashMap<String,String> param=new HashMap<>();
-        param.put("userId",userId);
+
+    private void getCartData() {
+        HashMap<String, String> param = new HashMap<>();
+        param.put("userId", userId);
         HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().get("cart/"
                 , param, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
 
@@ -480,14 +452,15 @@ public class ShopCartActivity extends BaseActivity  implements ShopcartExpandabl
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONArray array=object.getJSONArray("data");
-                                    List<ProductBean> products= new Gson().fromJson(array.toString(),new TypeToken<ArrayList<ProductBean>>(){}.getType());
-                                    if(products.size()==0){
-                                            groups.clear();
-                                            children.remove(gourpId);
-                                    }else {
-                                            children.remove(gourpId);
-                                            children.put(gourpId, products);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
+                                    JSONArray array = object.getJSONArray("data");
+                                    List<ProductBean> products = new Gson().fromJson(array.toString(), new TypeToken<ArrayList<ProductBean>>() {
+                                    }.getType());
+                                    if (products.size() == 0) {
+                                        groups.clear();
+                                        children.remove(gourpId);
+                                    } else {
+                                        children.remove(gourpId);
+                                        children.put(gourpId, products);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
                                     }
                                     selva.notifyDataSetChanged();
                                     for (int k = 0; k < selva.getGroupCount(); k++) {

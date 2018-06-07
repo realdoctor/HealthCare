@@ -18,36 +18,24 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.DocContentActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
 import com.real.doctor.realdoc.activity.RegistrationsActivity;
-import com.real.doctor.realdoc.activity.SaveDocActivity;
 import com.real.doctor.realdoc.activity.ScannerActivity;
-import com.real.doctor.realdoc.activity.SearchActivity;
 import com.real.doctor.realdoc.activity.SearchHistoryListActivity;
-import com.real.doctor.realdoc.activity.ShopCartActivity;
 import com.real.doctor.realdoc.adapter.HomeRecordAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
-import com.real.doctor.realdoc.model.BannerBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.DocUtils;
-import com.real.doctor.realdoc.util.DynamicTimeFormat;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,6 +56,12 @@ public class HomeFragment extends BaseFragment {
     RelativeLayout homeSearch;
     @BindView(R.id.save_doc_linear)
     LinearLayout saveDocLinear;
+    @BindView(R.id.appoint_icon)
+    LinearLayout appointIconLinear;
+    @BindView(R.id.doctor_online)
+    LinearLayout doctorOnline;
+    @BindView(R.id.search_text)
+    TextView searchText;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
     @BindView(R.id.bga_banner)
@@ -99,6 +93,7 @@ public class HomeFragment extends BaseFragment {
             lp.topMargin = statusHeight;
             titleLinear.setLayoutParams(lp);
         }
+        searchText.getBackground().setAlpha(180);
     }
 
     @Override
@@ -124,8 +119,8 @@ public class HomeFragment extends BaseFragment {
             adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
             recycleView.setAdapter(adapter);
         }
-        localBroadcast();
         initEvent();
+        localBroadcast();
     }
 
     private void localBroadcast() {
@@ -142,6 +137,7 @@ public class HomeFragment extends BaseFragment {
                     recycleView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
                     adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
                     recycleView.setAdapter(adapter);
+                    initEvent();
                 }
             }
         };
@@ -164,7 +160,7 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
-    @OnClick({R.id.home_search, R.id.save_doc_linear, R.id.base_cure, R.id.doctor_online, R.id.scan_icon})
+    @OnClick({R.id.home_search, R.id.save_doc_linear, R.id.base_cure, R.id.doctor_online, R.id.scan_icon, R.id.appoint_icon})
     @Override
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
@@ -184,6 +180,11 @@ public class HomeFragment extends BaseFragment {
                     startActivity(intent);
                     break;
                 case R.id.doctor_online:
+                    //在线复诊
+                    intent = new Intent(getActivity(), DoctorsListActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.appoint_icon:
                     intent = new Intent(getActivity(), RegistrationsActivity.class);
                     startActivity(intent);
                     break;

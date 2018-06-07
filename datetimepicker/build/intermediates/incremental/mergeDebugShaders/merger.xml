@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="D:\study\demo\RealDoc\datetimepicker\src\main\shaders"/></dataSet><dataSet config="debug"><source path="D:\study\demo\RealDoc\datetimepicker\src\debug\shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="D:\RealDoc\datetimepicker\src\main\shaders"/></dataSet><dataSet config="debug"><source path="D:\RealDoc\datetimepicker\src\debug\shaders"/></dataSet></merger>
