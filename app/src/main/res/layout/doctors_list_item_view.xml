@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="15dp"
-    >
+    android:padding="15dp">
 
     <ImageView
         android:layout_width="75dp"
         android:layout_height="68dp"
-        android:background="#ccc"
-        android:layout_marginRight="15dp"/>
+        android:layout_marginRight="15dp"
+        android:background="#ccc" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,65 +18,65 @@
 
         <TextView
             android:id="@+id/doctor_name"
-            android:text="刘志远"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:paddingRight="10dp"
-            android:textSize="14sp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/text_gray_color"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/hospital_name"
-            android:text="浙江大学附属邵逸夫医院 呼吸内科 呼吸内科 呼吸内科"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/doctor_name"
             android:layout_alignBaseline="@id/doctor_name"
-            android:layout_alignLeft="@id/desease_name"
-            android:textSize="10sp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/doctor_name"
+            android:textColor="@color/text_gray_color"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/desease_name_tv"
-            android:text="就诊疾病："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/desease_name"
+            android:layout_marginBottom="5dp"
             android:paddingRight="5dp"
-            android:textSize="12sp"
-            android:layout_marginBottom="10dp"/>
+            android:textColor="@color/text_gray_color"
+            android:textSize="14sp"
+            android:text="就诊疾病:" />
+
         <TextView
             android:id="@+id/desease_name"
-            android:text="肺结节 肺结节 肺结节 肺结节肺结节肺结节肺结节肺结节肺结节肺结节"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/desease_name_tv"
-            android:textSize="10sp"
             android:layout_below="@id/hospital_name"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/desease_name_tv"
+            android:textColor="@color/text_gray_color"
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/visit_date_tv"
-            android:text="就诊时间："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/visit_date"
-            android:textSize="12sp"
+            android:layout_marginBottom="5dp"
             android:paddingRight="5dp"
-            android:layout_marginBottom="10dp"/>
+            android:text="就诊时间:"
+            android:textColor="@color/text_gray_color"
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/visit_date"
-            android:text="2018-5-9 10:31"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/visit_date_tv"
             android:layout_below="@id/desease_name"
-            android:layout_alignLeft="@id/desease_name"
-            android:textSize="10sp"
-            android:layout_marginBottom="10dp"/>
-
-
-
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/visit_date_tv"
+            android:textColor="@color/text_gray_color"
+            android:textSize="14sp" />
     </RelativeLayout>
-
 </LinearLayout>

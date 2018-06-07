@@ -2,6 +2,8 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -75,6 +77,9 @@ public class DoctorsListActivity extends BaseActivity {
 
     public void initData() {
         doctors = new ArrayList<>();
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.disease_divider));
+        doctorsRv.addItemDecoration(divider);
         doctorsRv.setLayoutManager(new LinearLayoutManager(this));
         doctorsAdapter = new DoctorsAdapter(R.layout.doctors_list_item_view, doctors);
         doctorsRv.setAdapter(doctorsAdapter);

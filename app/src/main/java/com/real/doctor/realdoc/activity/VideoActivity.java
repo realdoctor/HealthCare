@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +49,7 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
     CircleBtnView videoBtn;
     @BindView(R.id.time)
     TextView time;
+
     //是否正在录像
     private boolean startedFlg = false;
     private MediaRecorder recorder;
@@ -85,6 +87,7 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        requestPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 0);
         surfaceView = findViewById(R.id.surface_view);
     }
 
