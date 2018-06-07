@@ -247,6 +247,18 @@ public class UserManager {
         return (Boolean) (val != null ? val : true);
     }
 
+    public boolean isContactSynced() {
+        return PreferenceManager.getInstance().isContactSynced();
+    }
+
+    public boolean isGroupsSynced() {
+        return PreferenceManager.getInstance().isGroupsSynced();
+    }
+
+    public boolean isBacklistSynced() {
+        return PreferenceManager.getInstance().isBacklistSynced();
+    }
+
     public boolean isPushCall() {
         return PreferenceManager.getInstance().isPushCall();
     }

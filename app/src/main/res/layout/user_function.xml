@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
-                android:text="@string/my_orders"
+                android:text="@string/my_visit"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>
@@ -117,6 +117,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10.0dip"
                 android:text="@string/my_orders"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/text_size_12sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dip"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="12.0dip"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:id="@+id/user_function_five"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:src="@mipmap/function_four" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:text="@string/my_follow"
                 android:textColor="@color/text_primary_color"
                 android:textSize="@dimen/text_size_12sp" />
         </LinearLayout>

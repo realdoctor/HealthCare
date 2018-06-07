@@ -3,14 +3,20 @@ package com.real.doctor.realdoc.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.hyphenate.EMConferenceListener;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMStreamStatistics;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.domain.EaseAvatarOptions;
 import com.hyphenate.easeui.domain.EaseEmojicon;
@@ -19,6 +25,8 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseNotifier;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.util.EMLog;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ChatActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
@@ -27,10 +35,13 @@ import com.real.doctor.realdoc.greendao.table.RobotManager;
 import com.real.doctor.realdoc.greendao.table.UserManager;
 import com.real.doctor.realdoc.model.RobotUser;
 import com.real.doctor.realdoc.parse.UserProfileManager;
+import com.real.doctor.realdoc.receiver.CallReceiver;
 import com.real.doctor.realdoc.receiver.HeadsetReceiver;
 import com.real.doctor.realdoc.util.PreferenceManager;
 import com.real.doctor.realdoc.view.EmojiconExampleGroupData;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +107,7 @@ public class HuanXinHelper {
 
     private Context appContext;
 
-//    private CallReceiver callReceiver;
+    private CallReceiver callReceiver;
 
 //    private InviteMessgeDao inviteMessgeDao;
 //    private UserDao userDao;
@@ -114,6 +125,8 @@ public class HuanXinHelper {
     private UserManager userInstance;
     private PrefManager prefInstance;
     private RobotManager robotInstance;
+
+    EMConnectionListener connectionListener;
 
     private HuanXinHelper() {
         executor = Executors.newCachedThreadPool();
@@ -160,8 +173,8 @@ public class HuanXinHelper {
             getUserProfileManager().init(context);
             //set Call options
             setCallOptions();
-//
-//            setGlobalListeners();
+
+            setGlobalListeners();
 //            broadcastManager = LocalBroadcastManager.getInstance(appContext);
 ////            initDbDao();
         }
@@ -415,6 +428,7 @@ public class HuanXinHelper {
     public boolean isLoggedIn() {
         return EMClient.getInstance().isLoggedInBefore();
     }
+
     private void setCallOptions() {
         HeadsetReceiver headsetReceiver = new HeadsetReceiver();
         IntentFilter headsetFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
@@ -477,8 +491,303 @@ public class HuanXinHelper {
         // 设置会议模式
         if (PreferenceManager.getInstance().isLargeConferenceMode()) {
             EMClient.getInstance().conferenceManager().setConferenceMode(EMConferenceListener.ConferenceMode.LARGE);
-        }else{
+        } else {
             EMClient.getInstance().conferenceManager().setConferenceMode(EMConferenceListener.ConferenceMode.NORMAL);
         }
     }
+
+    /**
+     * set global listener
+     */
+    protected void setGlobalListeners() {
+        syncGroupsListeners = new ArrayList<>();
+        syncContactsListeners = new ArrayList<>();
+        syncBlackListListeners = new ArrayList<>();
+
+        isGroupsSyncedWithServer = userInstance.isGroupsSynced();
+        isContactsSyncedWithServer = userInstance.isContactSynced();
+        isBlackListSyncedWithServer = userInstance.isBacklistSynced();
+
+        // create the global connection listener
+        connectionListener = new EMConnectionListener() {
+            @Override
+            public void onDisconnected(int error) {
+                EMLog.d("global listener", "onDisconnect" + error);
+                if (error == EMError.USER_REMOVED) {
+                    onUserException(Constant.ACCOUNT_REMOVED);
+                } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                    onUserException(Constant.ACCOUNT_CONFLICT);
+                } else if (error == EMError.SERVER_SERVICE_RESTRICTED) {
+                    onUserException(Constant.ACCOUNT_FORBIDDEN);
+                } else if (error == EMError.USER_KICKED_BY_CHANGE_PASSWORD) {
+                    onUserException(Constant.ACCOUNT_KICKED_BY_CHANGE_PASSWORD);
+                } else if (error == EMError.USER_KICKED_BY_OTHER_DEVICE) {
+                    onUserException(Constant.ACCOUNT_KICKED_BY_OTHER_DEVICE);
+                }
+            }
+
+            @Override
+            public void onConnected() {
+                // in case group and contact were already synced, we supposed to notify sdk we are ready to receive the events
+                if (isGroupsSyncedWithServer && isContactsSyncedWithServer) {
+                    EMLog.d(TAG, "group and contact already synced with servre");
+                } else {
+                    if (!isGroupsSyncedWithServer) {
+//                        asyncFetchGroupsFromServer(null);
+                    }
+
+                    if (!isContactsSyncedWithServer) {
+                        asyncFetchContactsFromServer(null);
+                    }
+
+                    if (!isBlackListSyncedWithServer) {
+                        asyncFetchBlackListFromServer(null);
+                    }
+                }
+            }
+        };
+
+        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        if (callReceiver == null) {
+            callReceiver = new CallReceiver();
+        }
+        EMClient.getInstance().conferenceManager().addConferenceListener(new EMConferenceListener() {
+            @Override
+            public void onMemberJoined(String username) {
+                EMLog.i(TAG, String.format("member joined username: %s, member: %d", username,
+                        EMClient.getInstance().conferenceManager().getConferenceMemberList().size()));
+            }
+
+            @Override
+            public void onMemberExited(String username) {
+                EMLog.i(TAG, String.format("member exited username: %s, member size: %d", username,
+                        EMClient.getInstance().conferenceManager().getConferenceMemberList().size()));
+            }
+
+            @Override
+            public void onStreamAdded(EMConferenceStream stream) {
+                EMLog.i(TAG, String.format("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
+                        stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
+                        stream.getExtension(), stream.isVideoOff(), stream.isAudioOff()));
+                EMLog.i(TAG, String.format("Conference stream subscribable: %d, subscribed: %d",
+                        EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size()));
+            }
+
+            @Override
+            public void onStreamRemoved(EMConferenceStream stream) {
+                EMLog.i(TAG, String.format("Stream removed streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
+                        stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
+                        stream.getExtension(), stream.isVideoOff(), stream.isAudioOff()));
+                EMLog.i(TAG, String.format("Conference stream subscribable: %d, subscribed: %d",
+                        EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size()));
+            }
+
+            @Override
+            public void onStreamUpdate(EMConferenceStream stream) {
+                EMLog.i(TAG, String.format("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
+                        stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
+                        stream.getExtension(), stream.isVideoOff(), stream.isAudioOff()));
+                EMLog.i(TAG, String.format("Conference stream subscribable: %d, subscribed: %d",
+                        EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size()));
+            }
+
+            @Override
+            public void onPassiveLeave(int error, String message) {
+                EMLog.i(TAG, String.format("passive leave code: %d, message: %s", error, message));
+            }
+
+            @Override
+            public void onConferenceState(ConferenceState state) {
+                EMLog.i(TAG, String.format("State code=%d", state.ordinal()));
+            }
+
+            @Override
+            public void onStreamStatistics(EMStreamStatistics statistics) {
+                EMLog.d(TAG, statistics.toString());
+            }
+
+            @Override
+            public void onStreamSetup(String streamId) {
+                EMLog.i(TAG, String.format("Stream id - %s", streamId));
+            }
+
+            @Override
+            public void onSpeakers(List<String> speakers) {
+            }
+
+            @Override
+            public void onReceiveInvite(String confId, String password, String extension) {
+                EMLog.i(TAG, String.format("Receive conference invite confId: %s, password: %s, extension: %s", confId, password, extension));
+                if (easeUI.hasForegroundActivies() && easeUI.getTopActivity().getClass().getSimpleName().equals("ConferenceActivity")) {
+                    return;
+                }
+//                Intent conferenceIntent = new Intent(appContext, ConferenceActivity.class);
+//                conferenceIntent.putExtra(Constant.EXTRA_CONFERENCE_ID, confId);
+//                conferenceIntent.putExtra(Constant.EXTRA_CONFERENCE_PASS, password);
+//                conferenceIntent.putExtra(Constant.EXTRA_CONFERENCE_IS_CREATOR, false);
+//                conferenceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                appContext.startActivity(conferenceIntent);
+            }
+        });
+        //register incoming call receiver
+        appContext.registerReceiver(callReceiver, callFilter);
+        //register connection listener
+        EMClient.getInstance().addConnectionListener(connectionListener);
+        //register group and contact event listener
+//        registerGroupAndContactListener();
+//        //register message event listener
+//        registerMessageListener();
+    }
+
+    /**
+     * user met some exception: conflict, removed or forbidden
+     */
+    protected void onUserException(String exception) {
+        EMLog.e(TAG, "onUserException: " + exception);
+//        Intent intent = new Intent(appContext, MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//        intent.putExtra(exception, true);
+//        appContext.startActivity(intent);
+        showToast(exception);
+    }
+
+    void showToast(final String message) {
+        Log.d(TAG, "receive invitation to join the group：" + message);
+        if (handler != null) {
+            Message msg = Message.obtain(handler, 0, message);
+            handler.sendMessage(msg);
+        } else {
+            msgQueue.add(message);
+        }
+    }
+
+    public void asyncFetchContactsFromServer(final EMValueCallBack<List<String>> callback) {
+        if (isSyncingContactsWithServer) {
+            return;
+        }
+
+        isSyncingContactsWithServer = true;
+
+        new Thread() {
+            @Override
+            public void run() {
+                List<String> usernames = null;
+                List<String> selfIds = null;
+                try {
+                    usernames = EMClient.getInstance().contactManager().getAllContactsFromServer();
+                    selfIds = EMClient.getInstance().contactManager().getSelfIdsOnOtherPlatform();
+                    // in case that logout already before server returns, we should return immediately
+                    if (!isLoggedIn()) {
+                        isContactsSyncedWithServer = false;
+                        isSyncingContactsWithServer = false;
+//                        notifyContactsSyncListener(false);
+                        return;
+                    }
+                    if (selfIds.size() > 0) {
+                        usernames.addAll(selfIds);
+                    }
+                    Map<String, EaseUser> userlist = new HashMap<String, EaseUser>();
+                    for (String username : usernames) {
+                        EaseUser user = new EaseUser(username);
+                        EaseCommonUtils.setUserInitialLetter(user);
+                        userlist.put(username, user);
+                    }
+                    // save the contact list to cache
+                    getContactList().clear();
+                    getContactList().putAll(userlist);
+                    // save the contact list to database
+//                    UserDao dao = new UserDao(appContext);
+//                    List<EaseUser> users = new ArrayList<EaseUser>(userlist.values());
+//                    dao.saveContactList(users);
+
+//                    demoModel.setContactSynced(true);
+                    EMLog.d(TAG, "set contact syn status to true");
+
+                    isContactsSyncedWithServer = true;
+                    isSyncingContactsWithServer = false;
+
+                    //notify sync success
+//                    notifyContactsSyncListener(true);
+
+                    getUserProfileManager().asyncFetchContactInfosFromServer(usernames, new EMValueCallBack<List<EaseUser>>() {
+
+                        @Override
+                        public void onSuccess(List<EaseUser> uList) {
+//                            updateContactList(uList);
+                            getUserProfileManager().notifyContactInfosSyncListener(true);
+                        }
+
+                        @Override
+                        public void onError(int error, String errorMsg) {
+                        }
+                    });
+                    if (callback != null) {
+                        callback.onSuccess(usernames);
+                    }
+                } catch (HyphenateException e) {
+//                    demoModel.setContactSynced(false);
+//                    isContactsSyncedWithServer = false;
+//                    isSyncingContactsWithServer = false;
+//                    notifyContactsSyncListener(false);
+                    e.printStackTrace();
+                    if (callback != null) {
+                        callback.onError(e.getErrorCode(), e.toString());
+                    }
+                }
+
+            }
+        }.start();
+    }
+
+    public void asyncFetchBlackListFromServer(final EMValueCallBack<List<String>> callback) {
+
+        if (isSyncingBlackListWithServer) {
+            return;
+        }
+
+        isSyncingBlackListWithServer = true;
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    List<String> usernames = EMClient.getInstance().contactManager().getBlackListFromServer();
+
+                    // in case that logout already before server returns, we should return immediately
+                    if (!isLoggedIn()) {
+                        isBlackListSyncedWithServer = false;
+                        isSyncingBlackListWithServer = false;
+//                        notifyBlackListSyncListener(false);
+                        return;
+                    }
+
+//                    demoModel.setBlacklistSynced(true);
+
+                    isBlackListSyncedWithServer = true;
+                    isSyncingBlackListWithServer = false;
+
+//                    notifyBlackListSyncListener(true);
+                    if (callback != null) {
+                        callback.onSuccess(usernames);
+                    }
+                } catch (HyphenateException e) {
+//                    demoModel.setBlacklistSynced(false);
+
+                    isBlackListSyncedWithServer = false;
+                    isSyncingBlackListWithServer = true;
+                    e.printStackTrace();
+
+                    if (callback != null) {
+                        callback.onError(e.getErrorCode(), e.toString());
+                    }
+                }
+
+            }
+        }.start();
+    }
+
 }

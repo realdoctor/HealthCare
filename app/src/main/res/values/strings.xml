@@ -133,7 +133,8 @@
     <string name="my_point">我的预约</string>
     <string name="my_record">我的病历</string>
     <string name="my_visit">我的复诊</string>
-    <string name="my_orders">我的复诊</string>
+    <string name="my_orders">我的订单</string>
+    <string name="my_follow">我的关注</string>
     <string name="account_set">账号设置</string>
     <string name="address_set">地址设置</string>
     <string name="clean_cache">清除缓存</string>
