@@ -17,6 +17,7 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
+import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
 import com.real.doctor.realdoc.activity.OrderListActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
@@ -74,6 +75,8 @@ public class UserFragment extends BaseFragment {
     LinearLayout userFunctionThree;
     @BindView(R.id.user_function_four)
     LinearLayout userFunctionFour;
+    @BindView(R.id.user_function_five)
+    LinearLayout userFunctionFive;
     @BindView(R.id.user_avator)
     CircleImageView userAvator;
     @BindView(R.id.title)
@@ -240,7 +243,7 @@ public class UserFragment extends BaseFragment {
                                     }
                                     if (DocUtils.hasValue(obj, "originalImageUrl")) {
                                         originalImageUrl = obj.getString("originalImageUrl");
-                                        GlideUtils.loadImageViewLoding(RealDocApplication.getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
+                                        GlideUtils.loadImageView(RealDocApplication.getContext(), originalImageUrl, userAvator);
                                     }
                                 } else {
                                     ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");
@@ -293,6 +296,10 @@ public class UserFragment extends BaseFragment {
                 break;
             case R.id.user_function_four:
                 intent = new Intent(getActivity(), OrderListActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.user_function_five:
+                intent = new Intent(getActivity(), MyFollowNewsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.right_icon:
