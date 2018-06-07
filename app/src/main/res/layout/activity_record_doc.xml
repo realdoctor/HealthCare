@@ -10,7 +10,6 @@
         android:id="@+id/title"
         layout="@layout/title_bar" />
 
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

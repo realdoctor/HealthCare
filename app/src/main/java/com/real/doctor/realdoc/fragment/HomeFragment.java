@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,8 +33,10 @@ import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +75,9 @@ public class HomeFragment extends BaseFragment {
     LinearLayout titleLinear;
     private HomeRecordAdapter adapter;
     private SaveDocManager instance = null;
+    private String token;
     private List<SaveDocBean> recordList;
+    private DividerItemDecoration divider;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -110,16 +115,21 @@ public class HomeFragment extends BaseFragment {
                 ToastUtil.showLong(banner.getContext(), "点击了" + position);
             }
         });
-        instance = SaveDocManager.getInstance(getActivity());
-        if (EmptyUtils.isNotEmpty(instance)) {
-            recordList = instance.querySaveDocList(getActivity());
-            recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-            //添加Android自带的分割线
-            recycleView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-            adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
-            recycleView.setAdapter(adapter);
+        token = (String) SPUtils.get(getActivity(), "token", "");
+        if (EmptyUtils.isNotEmpty(token)) {
+            instance = SaveDocManager.getInstance(getActivity());
+            if (EmptyUtils.isNotEmpty(instance)) {
+                recordList = instance.querySaveDocList(getActivity());
+                recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                //添加分割线
+                divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+                divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.disease_divider));
+                recycleView.addItemDecoration(divider);
+                adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
+                recycleView.setAdapter(adapter);
+            }
+            initEvent();
         }
-        initEvent();
         localBroadcast();
     }
 
@@ -133,8 +143,10 @@ public class HomeFragment extends BaseFragment {
                 if (EmptyUtils.isNotEmpty(instance)) {
                     recordList = instance.querySaveDocList(getActivity());
                     recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-                    //添加Android自带的分割线
-                    recycleView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+                    //添加分割线
+//                    recycleView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+                    divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.disease_divider));
+                    recycleView.addItemDecoration(divider);
                     adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
                     recycleView.setAdapter(adapter);
                     initEvent();
@@ -168,12 +180,16 @@ public class HomeFragment extends BaseFragment {
             switch (v.getId()) {
                 case R.id.home_search:
                     intent = new Intent(getActivity(), SearchHistoryListActivity.class);
-                    intent.putExtra("requestCode", RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE);;
+                    intent.putExtra("requestCode", RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE);
                     startActivity(intent);
                     break;
                 case R.id.save_doc_linear:
-                    intent = new Intent(getActivity(), RecordListActivity.class);
-                    startActivity(intent);
+                    if (EmptyUtils.isNotEmpty(token)) {
+                        intent = new Intent(getActivity(), RecordListActivity.class);
+                        startActivity(intent);
+                    }else{
+                        ToastUtil.showLong(getActivity(),"请登录您的账户!");
+                    }
                     break;
                 case R.id.base_cure:
                     intent = new Intent(getActivity(), ProductShowByCategoryActivity.class);

@@ -22,6 +22,7 @@ import com.real.doctor.realdoc.activity.OrderListActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
 import com.real.doctor.realdoc.activity.SettingActivity;
 import com.real.doctor.realdoc.activity.VerifyActivity;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
@@ -239,7 +240,7 @@ public class UserFragment extends BaseFragment {
                                     }
                                     if (DocUtils.hasValue(obj, "originalImageUrl")) {
                                         originalImageUrl = obj.getString("originalImageUrl");
-                                        GlideUtils.loadImageViewLoding(getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
+                                        GlideUtils.loadImageViewLoding(RealDocApplication.getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
                                     }
                                 } else {
                                     ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");

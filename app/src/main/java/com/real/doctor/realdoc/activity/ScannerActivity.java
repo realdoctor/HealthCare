@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -113,8 +114,23 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     @Override
     protected void onResume() {
         super.onResume();
-        CameraManager.init();
-        initCamera();
+        requestPermission(new String[]{Manifest.permission.CAMERA}, 0x0001);
+    }
+
+    /**
+     * 权限成功回调函数
+     *
+     * @param requestCode
+     */
+    @Override
+    public void permissionSuccess(int requestCode) {
+        super.permissionSuccess(requestCode);
+        switch (requestCode) {
+            case 0x0001:
+                CameraManager.init();
+                initCamera();
+                break;
+        }
     }
 
     private void initCamera() {
