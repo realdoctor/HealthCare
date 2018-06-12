@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +28,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 	//HashMap<Integer, View> childrenMap = new HashMap<Integer, View>();
 	private CheckInterface checkInterface;
 	private ModifyCountInterface modifyCountInterface;
-
+	private boolean flag = false;
 	/**
 	 * 构造函数
 	 * 
@@ -153,12 +154,23 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 			cholder.iv_increase = (TextView) convertView.findViewById(R.id.tv_add);
 			cholder.iv_decrease = (TextView) convertView.findViewById(R.id.tv_reduce);
 			cholder.tv_count = (TextView) convertView.findViewById(R.id.tv_num);
+			cholder.tv_count_show=(TextView)convertView.findViewById(R.id.tv_num_show);
+			cholder.edit=(RelativeLayout) convertView.findViewById(R.id.edit);
+			cholder.noraml=(RelativeLayout)convertView.findViewById(R.id.normal);
+			cholder.tv_product_content=(TextView)convertView.findViewById(R.id.tv_product_content);
 			// childrenMap.put(groupPosition, convertView);
 			convertView.setTag(cholder);
 		} else
 		{
 			// convertView = childrenMap.get(groupPosition);
 			cholder = (ChildHolder) convertView.getTag();
+		}
+		if(flag){
+			cholder.noraml.setVisibility(View.GONE);
+			cholder.edit.setVisibility(View.VISIBLE);
+		}else{
+			cholder.noraml.setVisibility(View.VISIBLE);
+			cholder.edit.setVisibility(View.GONE);
 		}
 		final ProductBean product = (ProductBean) getChild(groupPosition, childPosition);
 
@@ -169,6 +181,8 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 			cholder.tv_price.setText("￥" + product.getCost() + "");
 			Glide.with(context).load(product.getSmallPic()).crossFade().into((ImageView)cholder.iv_adapter_list_pic);
 			cholder.tv_count.setText(product.getNum() + "");
+			cholder.tv_product_content.setText(product.getDescription());
+			cholder.tv_count_show.setText("x"+product.getNum()+"");
 			cholder.cb_check.setChecked(product.isChoosed());
 			cholder.cb_check.setOnClickListener(new OnClickListener()
 			{
@@ -186,6 +200,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 				public void onClick(View v)
 				{
 					modifyCountInterface.doIncrease(groupPosition, childPosition, cholder.tv_count, cholder.cb_check.isChecked());// 暴露增加接口
+
 				}
 			});
 			cholder.iv_decrease.setOnClickListener(new OnClickListener()
@@ -231,8 +246,16 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 		TextView tv_price;
 		TextView iv_increase;
 		TextView tv_count;
+		TextView tv_count_show;
 		TextView iv_decrease;
+		TextView tv_product_content;
 		ImageView iv_adapter_list_pic;
+		RelativeLayout edit;
+		RelativeLayout noraml;
+	}
+	public void setEdit(boolean flag){
+		this.flag = flag;
+		this.notifyDataSetChanged();
 	}
 
 	/**

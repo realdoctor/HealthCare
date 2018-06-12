@@ -32,7 +32,7 @@ public class NewModel implements Serializable {
     public String newsName;
     public String newsType;
     public String newsTypeId;
-    public String photoAddress="https://gss1.bdstatic.com/-vo3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike116%2C5%2C5%2C116%2C38/sign=1300500efffaaf5190ee89eded3dff8b/cdbf6c81800a19d861257c2d31fa828ba61e46f0.jpg";
+    public String photoAddress="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1526975425&di=74dfd10b301a448bbaf8a318a0f04d71&src=http://pic.58pic.com/58pic/15/26/31/29y58PIChz7_1024.jpg";
     public String putOn;
     public String viewedTime;
 }

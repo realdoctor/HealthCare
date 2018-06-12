@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +25,11 @@ import com.real.doctor.realdoc.model.GroupInfo;
 import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.model.ProductInfo;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -53,7 +56,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/20.
  */
 
-public class ShopCartActivity extends BaseActivity implements ShopcartExpandableListViewAdapter.CheckInterface, ShopcartExpandableListViewAdapter.ModifyCountInterface, View.OnClickListener {
+public class ShopCartActivity extends BaseActivity implements ShopcartExpandableListViewAdapter.CheckInterface, ShopcartExpandableListViewAdapter.ModifyCountInterface, View.OnClickListener{
 
     @BindView(R.id.exListView)
     ExpandableListView exListView;
@@ -71,11 +74,15 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
     ImageView finishBack;
     @BindView(R.id.title_bar)
     RelativeLayout topTitle;
+    @BindView(R.id.right_title)
+    TextView right_title;
+    @BindView(R.id.ll_content)
+    RelativeLayout ll_content;
 
     private Context context;
     private double totalPrice = 0.00;// 购买的商品总价
     private int totalCount = 0;// 购买的商品总数量
-
+    private boolean flag = false;
     private ShopcartExpandableListViewAdapter selva;
     private List<GroupInfo> groups = new ArrayList<GroupInfo>();// 组元素数据列表
     private Map<String, List<ProductBean>> children = new HashMap<String, List<ProductBean>>();// 子元素数据列表
@@ -93,6 +100,10 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        right_title.setVisibility(View.VISIBLE);
+        right_title.setText("编辑");
+        tvDelete.setVisibility(View.GONE);
+        ll_content.setVisibility(View.VISIBLE);
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(ShopCartActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -127,7 +138,9 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
         finishBack.setOnClickListener(this);
         cbCheck.setOnClickListener(this);
         tvDelete.setOnClickListener(this);
+        right_title.setOnClickListener(this);
         tvGoToPay.setOnClickListener(this);
+        right_title.setOnClickListener(this);
     }
 
     @Override
@@ -207,6 +220,23 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
                     }
                 });
                 alert.show();
+                break;
+            case R.id.right_title:
+                if (selva != null) {
+                    if (right_title.getText().equals("编辑")) {
+                        right_title.setText("完成");
+                        flag=true;
+                        selva.setEdit(true);
+                        ll_content.setVisibility(View.INVISIBLE);
+                        tvDelete.setVisibility(View.VISIBLE);
+                    } else {
+                        right_title.setText("编辑");
+                        flag=false;
+                        selva.setEdit(false);
+                        ll_content.setVisibility(View.VISIBLE);
+                        tvDelete.setVisibility(View.GONE);
+                    }
+                }
                 break;
         }
     }
@@ -325,6 +355,7 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
 
     @Override
     public void checkGroup(int groupPosition, boolean isChecked) {
+
         GroupInfo group = groups.get(groupPosition);
         List<ProductBean> childs = children.get(group.getId());
         for (int i = 0; i < childs.size(); i++) {
@@ -410,9 +441,75 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
             }
         }
         tvTotalPrice.setText("￥" + totalPrice);
-        tvGoToPay.setText("去支付(" + totalCount + ")");
+        tvGoToPay.setText("结算(" + totalCount + ")");
     }
 
+    //添加到购物车
+    public void addToCart(String goodsId){
+        JSONObject object=new JSONObject();
+        try {
+            object.put("goodsId",goodsId);
+            object.put("num",1);
+            object.put("userId",userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String token = (String) SPUtils.get(ShopCartActivity.this, "token", "");
+        Map<String, String> header = null;
+        if (EmptyUtils.isNotEmpty(token)) {
+            header = new HashMap<String, String>();
+            header.put("Authorization", token);
+        } else {
+            ToastUtil.showLong(ShopCartActivity.this, "请确定您的账户已登录!");
+        }
+        HttpRequestClient client= HttpRequestClient.getInstance(ShopCartActivity.this, HttpNetUtil.BASE_URL,header);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
+        client.createBaseApi().json("cart/addCartItem/"
+                , body, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+//                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
+                        ToastUtil.showLong(ShopCartActivity.this, "加入购物车失败!");
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                } else {
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
     private void getCartData() {
         HashMap<String, String> param = new HashMap<>();
         param.put("userId", userId);
@@ -480,4 +577,6 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
 
                 });
     }
+
+
 }
