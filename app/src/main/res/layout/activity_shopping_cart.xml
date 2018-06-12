@@ -18,10 +18,9 @@
         android:layout_height="50dp"
         android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2.5"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
 
@@ -30,6 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="4dp"
                 android:button="@drawable/check_box_bg"
@@ -39,12 +40,24 @@
                 android:paddingLeft="10dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:visibility="visible" />
-
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/all_chekbox"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/ll_content"
+                android:layout_height="match_parent">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
                 android:text="合计:"
+                android:layout_toLeftOf="@+id/tv_total_price"
+                android:id="@+id/coun"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -53,32 +66,42 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="￥0.00"
-                android:textColor="@color/purple"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/tv_go_to_pay"
+                android:textColor="@color/paycolor"
                 android:textSize="16sp"
+                android:layout_marginRight="@dimen/txt_10"
                 android:textStyle="bold" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_go_to_pay"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/paycolor"
+                    android:clickable="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold"
+                    android:text="结算(0)"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_delete"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@color/paycolor"
+                android:clickable="true"
+                android:textSize="@dimen/sp_16"
+                android:gravity="center"
+                android:text="删除"
+                android:textStyle="bold"
+                android:textColor="@color/white" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_delete"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/orange"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="删除"
-            android:textColor="#FAFAFA" />
 
-        <TextView
-            android:id="@+id/tv_go_to_pay"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/crimson"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="结算(0)"
-            android:textColor="#FAFAFA" />
     </LinearLayout>
 
 </LinearLayout>
