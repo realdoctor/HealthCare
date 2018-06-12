@@ -30,6 +30,7 @@ import com.hyphenate.util.EMLog;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ChatActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
+import com.real.doctor.realdoc.greendao.table.NewsFriendsManager;
 import com.real.doctor.realdoc.greendao.table.PrefManager;
 import com.real.doctor.realdoc.greendao.table.RobotManager;
 import com.real.doctor.realdoc.greendao.table.UserManager;
@@ -109,9 +110,6 @@ public class HuanXinHelper {
 
     private CallReceiver callReceiver;
 
-//    private InviteMessgeDao inviteMessgeDao;
-//    private UserDao userDao;
-
     private LocalBroadcastManager broadcastManager;
 
     private boolean isGroupAndContactListenerRegisted;
@@ -125,6 +123,7 @@ public class HuanXinHelper {
     private UserManager userInstance;
     private PrefManager prefInstance;
     private RobotManager robotInstance;
+    private NewsFriendsManager newsFriendsInstance;
 
     EMConnectionListener connectionListener;
 
@@ -175,8 +174,7 @@ public class HuanXinHelper {
             setCallOptions();
 
             setGlobalListeners();
-//            broadcastManager = LocalBroadcastManager.getInstance(appContext);
-////            initDbDao();
+            broadcastManager = LocalBroadcastManager.getInstance(appContext);
         }
     }
 
@@ -418,6 +416,17 @@ public class HuanXinHelper {
             userProManager = new UserProfileManager();
         }
         return userProManager;
+    }
+
+    public void setRobotList(Map<String, RobotUser> robotList) {
+        this.robotList = robotList;
+    }
+
+    public Map<String, RobotUser> getRobotList() {
+        if (isLoggedIn() && robotList == null) {
+            robotList = robotInstance.getRobotList(RealDocApplication.getDaoSession(RealDocApplication.getContext()));
+        }
+        return robotList;
     }
 
     /**
@@ -790,4 +799,11 @@ public class HuanXinHelper {
         }.start();
     }
 
+    public boolean isMsgRoaming() {
+        return PreferenceManager.getInstance().isMsgRoaming();
+    }
+
+    public void setMsgRoaming(boolean roaming) {
+        PreferenceManager.getInstance().setMsgRoaming(roaming);
+    }
 }

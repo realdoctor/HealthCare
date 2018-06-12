@@ -42,7 +42,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
-
+    <uses-permission
+        android:name="android.permission.SYSTEM_ALERT_WINDOW"
+        android:exported="true" />
     <!--环信 -->
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission
@@ -332,7 +334,30 @@
             android:name=".activity.UserFadeActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".activity.ContextMenuActivity" />
+        <activity
+            android:name=".activity.VoiceCallActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.VideoCallActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.MyQrActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.CaseControlActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.SearchPatientActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ContextMenuActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
         <!--    <intent-filter>
                          <action android:name="android.intent.action.MAIN" />
                          <category android:name="android.intent.category.LAUNCHER" />
@@ -364,6 +389,11 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+
+        <!-- 设置环信应用的appkey -->
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="easemob-demo#chatdemoui" />
 
         <meta-data
             android:name="WEIBO_APPKEY"

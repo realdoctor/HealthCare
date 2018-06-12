@@ -48,6 +48,7 @@ public class UserManager {
             synchronized (UserManager.class) {
                 if (mInstance == null) {
                     mInstance = new UserManager(context);
+                    PreferenceManager.init(context);
                 }
             }
         }
@@ -172,14 +173,6 @@ public class UserManager {
     public void setSettingMsgSound(boolean paramBoolean) {
         PreferenceManager.getInstance().setSettingMsgSound(paramBoolean);
         valueCache.put(Key.PlayToneOn, paramBoolean);
-    }
-
-    public boolean isMsgRoaming() {
-        return PreferenceManager.getInstance().isMsgRoaming();
-    }
-
-    public void setMsgRoaming(boolean roaming) {
-        PreferenceManager.getInstance().setMsgRoaming(roaming);
     }
 
     public String getCutomAppkey() {

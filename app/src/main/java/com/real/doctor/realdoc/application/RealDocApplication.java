@@ -32,6 +32,7 @@ import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.widget.HuanXinHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,6 +95,8 @@ public class RealDocApplication extends MultiDexApplication {
         getRecordListData();
         //建立全局文件夹
         SDCardUtils.creatSDDir("RealDoc");
+        //init demo helper
+        HuanXinHelper.getInstance().init(getContext());
         //医生端下载病历文件后处理
 //        onGetPatientList();
 //        localBroadcast();
