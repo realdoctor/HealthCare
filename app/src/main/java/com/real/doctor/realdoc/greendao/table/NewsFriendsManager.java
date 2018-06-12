@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
+import com.real.doctor.realdoc.greendao.NewFriendsMsgsDao;
 import com.real.doctor.realdoc.model.NewFriendsMsgs;
 import com.real.doctor.realdoc.util.EmptyUtils;
 
