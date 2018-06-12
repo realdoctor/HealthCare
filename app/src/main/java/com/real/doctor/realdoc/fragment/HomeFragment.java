@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
@@ -95,6 +96,8 @@ public class HomeFragment extends BaseFragment {
     LinearLayout mainLayout;
     @BindView(R.id.doc_function_layout)
     LinearLayout docLayout;
+    @BindView(R.id.viewFlipper)
+    ViewFlipper viewFlipper;
     private HomeRecordAdapter adapter;
     private SaveDocManager instance = null;
     private String token;
@@ -130,6 +133,11 @@ public class HomeFragment extends BaseFragment {
         }
         searchText.getBackground().setAlpha(180);
         initFloatMenu();
+        initViewFlipper();
+    }
+
+    public void initViewFlipper() {
+        viewFlipper.addView(View.inflate(getActivity(), R.layout.home_ads, null));
     }
 
     @Override

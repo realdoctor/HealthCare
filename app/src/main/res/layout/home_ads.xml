@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="有人回复了你的评论"
+            android:textColor="@color/text_gray_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/comment_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:text="2018年5月22日"
+            android:textColor="@color/time_color"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="8.5dp"
+            android:layout_height="8.5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/arrow_more" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="就诊结束，病历更新了"
+            android:textColor="@color/text_gray_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/connect_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:text="2018年5月22日"
+            android:textColor="@color/time_color"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="8.5dp"
+            android:layout_height="8.5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/arrow_more" />
+    </RelativeLayout>
+</LinearLayout>
