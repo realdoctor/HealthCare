@@ -7,10 +7,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class DoctorBean implements Parcelable {
+public class DoctorBean extends UserBean implements Parcelable {
 
     private String doctorCode;
     //    private String doctorImg;
+    //这个字段本身来说是多余的,但后台给的数据要和这边匹配,才能解析
     private String respDoctorName;
     private String visitOrgName;
     private String diagName;

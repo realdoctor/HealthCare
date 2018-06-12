@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -15,6 +16,7 @@ import com.real.doctor.realdoc.fragment.MessageFragment;
 import com.real.doctor.realdoc.fragment.ReadFragment;
 import com.real.doctor.realdoc.fragment.ShoppintMallFragment;
 import com.real.doctor.realdoc.fragment.UserFragment;
+import com.real.doctor.realdoc.util.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,7 @@ public class RealDocActivity extends BaseActivity {
     private FragmentTransaction transaction;
     private Fragment tempFragment;
     private int position = 0;
+    private long exitTime = 0;
 
     @Override
     public int getLayoutId() {
@@ -59,9 +62,9 @@ public class RealDocActivity extends BaseActivity {
     public void initData() {
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
-        readFragment = new  ReadFragment();
+        readFragment = new ReadFragment();
         shoppintMallFragment = ShoppintMallFragment.newInstance();
-        userFragment  = new  UserFragment();
+        userFragment = new UserFragment();
 
         fragments.add(homeFragment);
         fragments.add(readFragment);
@@ -81,15 +84,19 @@ public class RealDocActivity extends BaseActivity {
                 switch (i) {
                     case R.id.homepage:
                         position = 0;
+                        homeFragment.onShowMenu();
                         break;
                     case R.id.read:
                         position = 1;
+                        homeFragment.onDestroyMenu();
                         break;
                     case R.id.message:
                         position = 2;
+                        homeFragment.onDestroyMenu();
                         break;
                     case R.id.user:
                         position = 3;
+                        homeFragment.onDestroyMenu();
                         break;
                     default:
                         position = 0;
@@ -160,5 +167,25 @@ public class RealDocActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                exitApp();
+                break;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    public void exitApp() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            ToastUtil.showLong(this, "再按一次退出程序");
+            exitTime = System.currentTimeMillis();
+        } else {
+            this.finish();
+        }
     }
 }

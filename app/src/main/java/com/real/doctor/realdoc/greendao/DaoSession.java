@@ -11,6 +11,7 @@ import org.greenrobot.greendao.internal.DaoConfig;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.ImageListBean;
 import com.real.doctor.realdoc.model.MessageBean;
+import com.real.doctor.realdoc.model.NewFriendsMsgs;
 import com.real.doctor.realdoc.model.PrefBean;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.RobotBean;
@@ -21,6 +22,7 @@ import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.greendao.ImageBeanDao;
 import com.real.doctor.realdoc.greendao.ImageListBeanDao;
 import com.real.doctor.realdoc.greendao.MessageBeanDao;
+import com.real.doctor.realdoc.greendao.NewFriendsMsgsDao;
 import com.real.doctor.realdoc.greendao.PrefBeanDao;
 import com.real.doctor.realdoc.greendao.RecordBeanDao;
 import com.real.doctor.realdoc.greendao.RobotBeanDao;
@@ -40,6 +42,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig imageBeanDaoConfig;
     private final DaoConfig imageListBeanDaoConfig;
     private final DaoConfig messageBeanDaoConfig;
+    private final DaoConfig newFriendsMsgsDaoConfig;
     private final DaoConfig prefBeanDaoConfig;
     private final DaoConfig recordBeanDaoConfig;
     private final DaoConfig robotBeanDaoConfig;
@@ -50,6 +53,7 @@ public class DaoSession extends AbstractDaoSession {
     private final ImageBeanDao imageBeanDao;
     private final ImageListBeanDao imageListBeanDao;
     private final MessageBeanDao messageBeanDao;
+    private final NewFriendsMsgsDao newFriendsMsgsDao;
     private final PrefBeanDao prefBeanDao;
     private final RecordBeanDao recordBeanDao;
     private final RobotBeanDao robotBeanDao;
@@ -69,6 +73,9 @@ public class DaoSession extends AbstractDaoSession {
 
         messageBeanDaoConfig = daoConfigMap.get(MessageBeanDao.class).clone();
         messageBeanDaoConfig.initIdentityScope(type);
+
+        newFriendsMsgsDaoConfig = daoConfigMap.get(NewFriendsMsgsDao.class).clone();
+        newFriendsMsgsDaoConfig.initIdentityScope(type);
 
         prefBeanDaoConfig = daoConfigMap.get(PrefBeanDao.class).clone();
         prefBeanDaoConfig.initIdentityScope(type);
@@ -91,6 +98,7 @@ public class DaoSession extends AbstractDaoSession {
         imageBeanDao = new ImageBeanDao(imageBeanDaoConfig, this);
         imageListBeanDao = new ImageListBeanDao(imageListBeanDaoConfig, this);
         messageBeanDao = new MessageBeanDao(messageBeanDaoConfig, this);
+        newFriendsMsgsDao = new NewFriendsMsgsDao(newFriendsMsgsDaoConfig, this);
         prefBeanDao = new PrefBeanDao(prefBeanDaoConfig, this);
         recordBeanDao = new RecordBeanDao(recordBeanDaoConfig, this);
         robotBeanDao = new RobotBeanDao(robotBeanDaoConfig, this);
@@ -101,6 +109,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(ImageBean.class, imageBeanDao);
         registerDao(ImageListBean.class, imageListBeanDao);
         registerDao(MessageBean.class, messageBeanDao);
+        registerDao(NewFriendsMsgs.class, newFriendsMsgsDao);
         registerDao(PrefBean.class, prefBeanDao);
         registerDao(RecordBean.class, recordBeanDao);
         registerDao(RobotBean.class, robotBeanDao);
@@ -113,6 +122,7 @@ public class DaoSession extends AbstractDaoSession {
         imageBeanDaoConfig.clearIdentityScope();
         imageListBeanDaoConfig.clearIdentityScope();
         messageBeanDaoConfig.clearIdentityScope();
+        newFriendsMsgsDaoConfig.clearIdentityScope();
         prefBeanDaoConfig.clearIdentityScope();
         recordBeanDaoConfig.clearIdentityScope();
         robotBeanDaoConfig.clearIdentityScope();
@@ -131,6 +141,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public MessageBeanDao getMessageBeanDao() {
         return messageBeanDao;
+    }
+
+    public NewFriendsMsgsDao getNewFriendsMsgsDao() {
+        return newFriendsMsgsDao;
     }
 
     public PrefBeanDao getPrefBeanDao() {

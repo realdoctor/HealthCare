@@ -37,9 +37,12 @@ import com.hyphenate.util.PathUtil;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ContextMenuActivity;
 import com.real.doctor.realdoc.activity.UserProfileActivity;
+import com.real.doctor.realdoc.activity.VideoCallActivity;
+import com.real.doctor.realdoc.activity.VoiceCallActivity;
 import com.real.doctor.realdoc.model.RobotUser;
 import com.real.doctor.realdoc.view.EmojiconExampleGroupData;
 import com.real.doctor.realdoc.widget.Constant;
+import com.real.doctor.realdoc.widget.HuanXinHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -74,18 +77,19 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return super.onCreateView(inflater, container, savedInstanceState,
+                HuanXinHelper.getInstance().isMsgRoaming() && (chatType != EaseConstant.CHATTYPE_CHATROOM));
     }
 
     @Override
     protected void setUpView() {
         setChatFragmentHelper(this);
-//        if (chatType == Constant.CHATTYPE_SINGLE) {
-//            Map<String, RobotUser> robotMap = DemoHelper.getInstance().getRobotList();
-//            if (robotMap != null && robotMap.containsKey(toChatUsername)) {
-//                isRobot = true;
-//            }
-//        }
+        if (chatType == Constant.CHATTYPE_SINGLE) {
+            Map<String, RobotUser> robotMap = HuanXinHelper.getInstance().getRobotList();
+            if (robotMap != null && robotMap.containsKey(toChatUsername)) {
+                isRobot = true;
+            }
+        }
         super.setUpView();
         // set click listener
         titleBar.setLeftLayoutClickListener(new OnClickListener() {
@@ -93,6 +97,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
             @Override
             public void onClick(View v) {
                 if (EasyUtils.isSingleActivity(getActivity())) {
+                    //跳转回医生详情页面
 //                    Intent intent = new Intent(getActivity(), MainActivity.class);
 //                    startActivity(intent);
                 }
@@ -100,28 +105,29 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
             }
         });
         ((EaseEmojiconMenu) inputMenu.getEmojiconMenu()).addEmojiconGroup(EmojiconExampleGroupData.getData());
-        if (chatType == EaseConstant.CHATTYPE_GROUP) {
-            inputMenu.getPrimaryMenu().getEditText().addTextChangedListener(new TextWatcher() {
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (count == 1 && "@".equals(String.valueOf(s.charAt(start)))) {
+        //多人聊天,病友交流中用到
+//        if (chatType == EaseConstant.CHATTYPE_GROUP) {
+//            inputMenu.getPrimaryMenu().getEditText().addTextChangedListener(new TextWatcher() {
+//
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    if (count == 1 && "@".equals(String.valueOf(s.charAt(start)))) {
 //                        startActivityForResult(new Intent(getActivity(), PickAtUserActivity.class).
 //                                putExtra("groupId", toChatUsername), REQUEST_CODE_SELECT_AT_USER);
-                    }
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-        }
+//                    }
+//                }
+//
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -228,8 +234,9 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                     break;
             }
         }
-        if (requestCode == REQUEST_CODE_GROUP_DETAIL) {
-            switch (resultCode) {
+        //多人聊天,病友交流中用到
+//        if (requestCode == REQUEST_CODE_GROUP_DETAIL) {
+//            switch (resultCode) {
 //                case GroupDetailsActivity.RESULT_CODE_SEND_GROUP_NOTIFICATION:
 //                    // Start the ding-type msg send ui.
 //                    EMLog.i(TAG, "Intent to the ding-msg send activity.");
@@ -237,8 +244,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
 //                    intent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
 //                    startActivityForResult(intent, REQUEST_CODE_DING_MSG);
 //                    break;
-            }
-        }
+//            }
+//    }
     }
 
     @Override
@@ -350,10 +357,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         if (!EMClient.getInstance().isConnected()) {
             Toast.makeText(getActivity(), R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
         } else {
-//            startActivity(new Intent(getActivity(), VoiceCallActivity.class).putExtra("username", toChatUsername)
-//                    .putExtra("isComingCall", false));
-//            // voiceCallBtn.setEnabled(false);
-//            inputMenu.hideExtendMenuContainer();
+            startActivity(new Intent(getActivity(), VoiceCallActivity.class).putExtra("username", toChatUsername)
+                    .putExtra("isComingCall", false));
+            // voiceCallBtn.setEnabled(false);
+            inputMenu.hideExtendMenuContainer();
         }
     }
 
@@ -364,10 +371,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         if (!EMClient.getInstance().isConnected())
             Toast.makeText(getActivity(), R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
         else {
-//            startActivity(new Intent(getActivity(), VideoCallActivity.class).putExtra("username", toChatUsername)
-//                    .putExtra("isComingCall", false));
-//            // videoCallBtn.setEnabled(false);
-//            inputMenu.hideExtendMenuContainer();
+            startActivity(new Intent(getActivity(), VideoCallActivity.class).putExtra("username", toChatUsername)
+                    .putExtra("isComingCall", false));
+            // videoCallBtn.setEnabled(false);
+            inputMenu.hideExtendMenuContainer();
         }
     }
 

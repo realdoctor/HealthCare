@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.DoctorsAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.DoctorBean;
+import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
@@ -132,9 +135,9 @@ public class DoctorsListActivity extends BaseActivity {
                                         if (doctors.size() > 0) {
                                             doctorsAdapter = new DoctorsAdapter(R.layout.doctors_list_item_view, doctors);
                                             doctorsRv.setAdapter(doctorsAdapter);
+                                            initEvent();
 //                                            doctorsAdapter.notifyDataSetChanged();
                                         } else {
-
                                             ToastUtil.showLong(DoctorsListActivity.this, "医生列表为空!");
                                         }
                                     }
@@ -153,7 +156,15 @@ public class DoctorsListActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-
+        doctorsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(DoctorsListActivity.this, ChatActivity.class);
+                intent.putExtra("userId",doctors.get(position).getDoctorCode());
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
     }
 
     @Override

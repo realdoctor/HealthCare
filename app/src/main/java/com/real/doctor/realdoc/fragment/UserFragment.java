@@ -267,7 +267,7 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four,R.id.user_function_five, R.id.right_icon})
+    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four, R.id.user_function_five, R.id.right_icon})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
