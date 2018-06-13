@@ -28,7 +28,9 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
             holder.new_title=(TextView) convertView.findViewById(R.id.new_title);
             holder.new_autor=(TextView) convertView.findViewById(R.id.new_autor);
             holder.new_time=(TextView) convertView.findViewById(R.id.new_time);
-            holder.new_type=(TextView) convertView.findViewById(R.id.new_type);
+            holder.tv_content=(TextView)convertView.findViewById(R.id.tv_content);
+            holder.tv_comment=(TextView) convertView.findViewById(R.id.tv_comment);
+
 
             convertView.setTag(holder);
         } else {
@@ -37,8 +39,9 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
         holder.new_title.setText(bean.newsName);
         holder.new_autor.setText(bean.newsAuthor);
         holder.new_time.setText(bean.createDate);
-        holder.new_type.setText(bean.newsType);
-        Glide.with(mContext).load(bean.photoAddress).crossFade().into((ImageView) holder.new_detail_img);
+        holder.tv_comment.setText(bean.viewedTime);
+//        holder.tv_content.setText();
+        Glide.with(mContext).load(bean.photoAddress).crossFade().into(holder.new_detail_img);
         return convertView;
     }
 
@@ -49,7 +52,8 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
        public TextView new_title;
        public TextView new_autor;
        public TextView new_time;
-       public TextView new_type;
+       public TextView tv_content;
+       public TextView tv_comment;
     }
 
 

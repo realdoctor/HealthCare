@@ -25,8 +25,11 @@
     <color name="main_bg">#F5F5F5</color>
     <color name="black_light">#3A3A3A</color>
     <color name="orange">#FF5301</color>
+    <color name="paycolor">#E23409</color>
+
     <color name="red_light">#FF8880</color>
     <color name="purple">#A577FB</color>
+    <color name="comment_color">#B3CCF4</color>
 
     <color name="black_transparent">#8000</color>
     <color name="yellow">#FFA500</color>
@@ -79,7 +82,7 @@
     <color name="grey_color1">#333333</color>
     <color name="grey_color2">#666666</color>
     <color name="grey_color3">#999999</color>
-    <color name="orange_color">#de6838</color>
+    <color name="orange_color">#E23409</color>
     <!-- 淡灰色 -->
     <color name="crimson">#dc143c</color>
     <color name="holo_red_light">#ffff4444</color>

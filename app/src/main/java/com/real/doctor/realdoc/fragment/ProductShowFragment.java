@@ -13,20 +13,22 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.ProductShowActivity;
-import com.real.doctor.realdoc.activity.SearchActivity;
 import com.real.doctor.realdoc.adapter.BrandAdapter;
 import com.real.doctor.realdoc.adapter.ProductAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
-import com.real.doctor.realdoc.model.BrandBean;
 import com.real.doctor.realdoc.model.CategoryBean;
 import com.real.doctor.realdoc.model.PageModel;
 import com.real.doctor.realdoc.model.ProductBean;
-import com.real.doctor.realdoc.model.ProductInfo;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
+import com.real.doctor.realdoc.util.DataUtil;
 import com.real.doctor.realdoc.util.DocUtils;
-import com.real.doctor.realdoc.util.DynamicTimeFormat;
+import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.BrandListView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -40,11 +42,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -58,7 +58,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class ProductShowFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener,AdapterView.OnItemClickListener {
+public class ProductShowFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener,AdapterView.OnItemClickListener,ProductAdapter.ClickListener {
     private Unbinder unbinder;
     public CategoryBean bean;
     @BindView(R.id.lv_brands)
@@ -75,6 +75,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
     public int pageSize=10;
     public boolean isFirstEnter=true;
     public String searchKey="";
+    public String  userId;
     private PageModel<ProductBean> baseModel = new PageModel<ProductBean>();
     public ArrayList<ProductBean> productList=new ArrayList<ProductBean>();
     public static ProductShowFragment newInstance(CategoryBean bean) {
@@ -98,17 +99,18 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
     @Override
     public void doBusiness(final Context mContext) {
         if(getArguments()!=null) {
+            userId=(String)SPUtils.get(getContext(),  Constants.USER_KEY,"");
             bean=(CategoryBean)getArguments().get("model");
-//            brandAdapter = new BrandAdapter(mContext, bean.brands);
-//            brandListView.setAdapter(brandAdapter);
-//            brandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-//                                        long arg3) {
-//                    // TODO Auto-generated method stub
-//                    final int location = position;
-//                    brandAdapter.setSelectedPosition(position);
-//                    brandAdapter.notifyDataSetInvalidated();
+            brandAdapter = new BrandAdapter(mContext, DataUtil.brandBeans);
+            brandListView.setAdapter(brandAdapter);
+            brandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+                                        long arg3) {
+                    // TODO Auto-generated method stub
+                    final int location = position;
+                    brandAdapter.setSelectedPosition(position);
+                    brandAdapter.notifyDataSetInvalidated();
 //                    final BrandBean bean = (BrandBean) brandAdapter.getItem(position);
 //                    productAdapter = new ProductAdapter(mContext, bean.orderModels);
 //                    listView.setAdapter(productAdapter);
@@ -125,16 +127,17 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
 //
 //                        }
 //                    });
-//
-//                }
-//            });
-//            selectDefault();
+
+                }
+            });
+            selectDefault();
             int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
             mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
             ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
             refreshLayout.setOnLoadmoreListener(this);
             refreshLayout.setOnRefreshListener(this);
             productAdapter = new ProductAdapter(mContext, productList);
+            productAdapter.setmListener(this);
             listView.setAdapter(productAdapter);
             listView.setOnItemClickListener(this);
             getRefreshProducts();
@@ -280,21 +283,21 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
         final int location=0;
         brandAdapter.setSelectedPosition(0);
         brandAdapter.notifyDataSetInvalidated();
-        final BrandBean breadBean=	(BrandBean) brandAdapter.getItem(0);
-        productAdapter=new ProductAdapter(getContext(), breadBean.productList);
-        listView.setAdapter(productAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-                ProductInfo product= breadBean.productList.get(position);
-                Intent intent = new Intent(getActivity(), ProductShowActivity.class);
-                intent.putExtra("model",product);
-                startActivity(intent);
-                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                getActivity().finish();
-            }
-        });
+//        final BrandBean breadBean=	(BrandBean) brandAdapter.getItem(0);
+//        productAdapter=new ProductAdapter(getContext(), breadBean.productList);
+//        listView.setAdapter(productAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> arg0, View arg1,
+//                                    int position, long arg3) {
+//                ProductInfo product= breadBean.productList.get(position);
+//                Intent intent = new Intent(getActivity(), ProductShowActivity.class);
+//                intent.putExtra("model",product);
+//                startActivity(intent);
+//                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//                getActivity().finish();
+//            }
+//        });
     }
 
     @Override
@@ -318,8 +321,90 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ProductBean bean =(ProductBean) parent.getAdapter().getItem(position);
-        Intent intent =new Intent(getContext(),ProductShowActivity.class);
+        Intent intent =new Intent(getContext(), ProductShowActivity.class);
         intent.putExtra("model",bean);
         startActivity(intent);
     }
+
+    @Override
+    public void clickListener(View v) {
+        if(userId==null||userId.length()==0){
+            Intent intent=new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+        }else{
+            ProductBean bean=(ProductBean) v.getTag();
+            addToCart(bean.getGoodsId(),1);
+        }
+
+    }
+    //添加到购物车
+    public void addToCart(String goodsId,int num){
+        JSONObject object=new JSONObject();
+        try {
+            object.put("goodsId",goodsId);
+            object.put("num",num);
+            object.put("userId",userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String token = (String) SPUtils.get(getContext(), "token", "");
+        Map<String, String> header = null;
+        if (EmptyUtils.isNotEmpty(token)) {
+            header = new HashMap<String, String>();
+            header.put("Authorization", token);
+        } else {
+            ToastUtil.showLong(getContext(), "请确定您的账户已登录!");
+            return;
+        }
+        HttpRequestClient client= HttpRequestClient.getInstance(getContext(), HttpNetUtil.BASE_URL,header);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
+        client.createBaseApi().json("cart/addCartItem/"
+                , body, new BaseObserver<ResponseBody>(getContext()) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+//                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
+                        ToastUtil.showLong(getContext(), "加入购物车失败!");
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    ToastUtil.showLong(getContext(), "加入购物车成功!");
+                                } else {
+                                    ToastUtil.showLong(getContext(), "加入购物车失败!");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
+
 }

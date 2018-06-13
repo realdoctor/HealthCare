@@ -93,7 +93,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
         }
         page_title.setText("资讯");
         finish_back.setVisibility(View.GONE);
-        newsAdapter= new NewsAdapter(getContext(),newModels);
+        newsAdapter= new NewsAdapter(getActivity(),newModels);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);
         ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();

@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.util;
 
+import com.real.doctor.realdoc.model.BrandBean;
 import com.real.doctor.realdoc.model.ExpertBean;
 import com.real.doctor.realdoc.model.ExpertPostionalBean;
 import com.real.doctor.realdoc.model.HospitalLevelBean;
@@ -16,6 +17,7 @@ public class DataUtil {
     public static ArrayList<HospitalLevelBean> hospitalLevelBeans=new ArrayList<HospitalLevelBean>();
     public static ArrayList<ExpertPostionalBean> expertPostionalBeans=new ArrayList<ExpertPostionalBean>();
     public static ArrayList<OrderStatusModel> orderStatusModels=new ArrayList<OrderStatusModel>();
+    public static ArrayList<BrandBean> brandBeans=new ArrayList<BrandBean>();
     static {
         SortBean bean0=new SortBean();
         bean0.SortId="0";
@@ -62,6 +64,14 @@ public class DataUtil {
         orderStatusModels.add(model);
         orderStatusModels.add(model1);
         orderStatusModels.add(model2);
+
+        BrandBean brandBean=new BrandBean();
+        brandBean.breadName="感康";
+        brandBeans.add(brandBean);
+        BrandBean brandBean2=new BrandBean();
+        brandBean2.breadName="三九";
+        brandBeans.add(brandBean2);
+
 
     }
 }

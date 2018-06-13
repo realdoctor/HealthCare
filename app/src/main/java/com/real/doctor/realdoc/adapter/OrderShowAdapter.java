@@ -55,7 +55,7 @@ public class OrderShowAdapter extends BaseExpandableListAdapter {
 //            parentViewHolder.iv_expand.setImageDrawable(context.getResources().getDrawable(R.mipmap.ic_unexpanded));
 //        }
 
-        parentViewHolder.tv_goodsOrderId.setText("订单编号："+friendGroupItem.goodsOrderId);
+        parentViewHolder.tv_goodsOrderId.setText(""+friendGroupItem.orderNo);
         parentViewHolder.tv_tradeStatus.setText("订单总额："+friendGroupItem.payPrice);
         return view;
     }
