@@ -59,8 +59,8 @@ public class ProductShowActivity extends BaseActivity  {
     TextView addCart;
     @BindView(R.id.tv_proproty)
     TextView tv_proproty;
-    @BindView(R.id.tv_cart)
-    TextView cart;
+    @BindView(R.id.img_cart)
+    ImageView cart;
     @BindView(R.id.tv_description)
     TextView description;
     @BindView(R.id.finish_back)
@@ -114,7 +114,7 @@ public class ProductShowActivity extends BaseActivity  {
 
 
     @Override
-    @OnClick({R.id.tv_buy,R.id.tv_cart,R.id.tv_incart,R.id.finish_back})
+    @OnClick({R.id.tv_buy,R.id.img_cart,R.id.tv_incart,R.id.finish_back})
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.tv_buy:
@@ -136,7 +136,7 @@ public class ProductShowActivity extends BaseActivity  {
                 }
                 addToCart(goodId,num);
                 break;
-            case R.id.tv_cart:
+            case R.id.img_cart:
                 if(userId==null||userId.length()==0){
                     Toast.makeText(ProductShowActivity.this,"请登录",Toast.LENGTH_SHORT).show();
                     return;

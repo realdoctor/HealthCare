@@ -38,11 +38,11 @@ public class BrandAdapter extends RdBaseAdapter<BrandBean> {
         if(selectedPosition == position)
         {
             holder.v_line.setVisibility(View.VISIBLE);
-           holder.ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            holder.brandText.setTextColor(mContext.getResources().getColor(R.color.main));
 
         } else {
             holder.v_line.setVisibility(View.INVISIBLE);
-            holder.ll.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+            holder.brandText.setTextColor(mContext.getResources().getColor(R.color.gray));
         }
         holder.brandText.setText(bean.breadName);
         return convertView;

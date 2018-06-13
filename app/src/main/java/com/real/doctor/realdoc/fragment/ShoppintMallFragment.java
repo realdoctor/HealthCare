@@ -13,6 +13,7 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.SearchActivity;
 import com.real.doctor.realdoc.activity.SearchHistoryListActivity;
+import com.real.doctor.realdoc.activity.ShopCartActivity;
 import com.real.doctor.realdoc.adapter.ProductPagerAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.model.CategoryBean;
@@ -35,12 +36,12 @@ public class ShoppintMallFragment extends BaseFragment {
     TabLayout tb_category;
     @BindView(R.id.vp_show)
     ViewPager viewPager;
-    @BindView(R.id.finish_back)
-    ImageView finish_back;
     @BindView(R.id.home_search)
     RelativeLayout relativeLayout;
     @BindView(R.id.top_title)
     RelativeLayout topTitle;
+    @BindView(R.id.img_shop_cart)
+    ImageView img_shop_cart;
     public final static int SHOPPING_EVENT_REQUEST_CODE = 3;
     public ProductPagerAdapter productPagerAdapter;
     public ArrayList<CategoryBean> categoryBeanArrayList=new ArrayList<CategoryBean>();
@@ -86,7 +87,7 @@ public class ShoppintMallFragment extends BaseFragment {
         categoryBeanArrayList.add(bean2);
     }
     @Override
-    @OnClick(R.id.home_search)
+    @OnClick({R.id.home_search,R.id.img_shop_cart})
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.home_search:
@@ -94,6 +95,11 @@ public class ShoppintMallFragment extends BaseFragment {
                 intent.putExtra("requestCode",SHOPPING_EVENT_REQUEST_CODE);
                 startActivityForResult(intent,SHOPPING_EVENT_REQUEST_CODE);
                 break;
+            case R.id.img_shop_cart:
+                Intent intentShopCart =new Intent(getContext(),ShopCartActivity.class);
+                startActivity(intentShopCart);
+                break;
+
 
 
         }

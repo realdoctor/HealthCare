@@ -11,12 +11,12 @@
         <View
             android:layout_width="2dp"
             android:id="@+id/v_line"
-            android:background="@color/orange"
+            android:background="@color/main"
             android:layout_height="match_parent"></View>
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/tv_brand"
-        android:gravity="left"
+        android:gravity="center"
         android:paddingTop="@dimen/dp_10"
         android:textSize="16sp"
         android:text="@string/property"
