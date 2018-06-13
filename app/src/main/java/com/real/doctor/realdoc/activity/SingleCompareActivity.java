@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,8 +34,8 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
     TextView pageTitle;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
-    @BindView(R.id.btn_editor)
-    TextView mBtnEditor;
+    @BindView(R.id.back)
+    ImageView back;
     @BindView(R.id.btn_compare)
     TextView mBtnCompare;
     private SingleCompareAdapter mSingleCompareAdapter = null;
@@ -86,7 +87,7 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
     }
 
     @Override
-    @OnClick({R.id.btn_compare})
+    @OnClick({R.id.btn_compare, R.id.back})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.btn_compare:
@@ -96,6 +97,9 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
                     startActivity(mIntent);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

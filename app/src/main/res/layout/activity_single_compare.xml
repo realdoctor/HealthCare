@@ -15,16 +15,13 @@
             android:layout_width="fill_parent"
             android:layout_height="48dip">
 
-            <TextView
-                android:id="@+id/btn_editor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="55.0dip"
+                android:layout_height="20.0dip"
                 android:layout_centerVertical="true"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
-                android:text="编辑"
-                android:textColor="@android:color/white"
-                android:textSize="15sp" />
+                android:layout_marginLeft="10.0dip"
+                android:background="@drawable/finish_back_white_selector" />
 
             <TextView
                 android:id="@+id/page_title"
