@@ -15,27 +15,22 @@ import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.ProductShowActivity;
-import com.real.doctor.realdoc.activity.SearchActivity;
 import com.real.doctor.realdoc.adapter.BrandAdapter;
 import com.real.doctor.realdoc.adapter.ProductAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
-import com.real.doctor.realdoc.model.BrandBean;
 import com.real.doctor.realdoc.model.CategoryBean;
 import com.real.doctor.realdoc.model.PageModel;
 import com.real.doctor.realdoc.model.ProductBean;
-import com.real.doctor.realdoc.model.ProductInfo;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DataUtil;
 import com.real.doctor.realdoc.util.DocUtils;
-import com.real.doctor.realdoc.util.DynamicTimeFormat;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.BrandListView;
-import com.real.doctor.realdoc.widget.Constant;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
@@ -47,11 +42,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -329,7 +321,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ProductBean bean =(ProductBean) parent.getAdapter().getItem(position);
-        Intent intent =new Intent(getContext(),ProductShowActivity.class);
+        Intent intent =new Intent(getContext(), ProductShowActivity.class);
         intent.putExtra("model",bean);
         startActivity(intent);
     }

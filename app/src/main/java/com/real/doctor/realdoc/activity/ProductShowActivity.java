@@ -47,11 +47,11 @@ import okhttp3.ResponseBody;
 
 public class ProductShowActivity extends BaseActivity  {
 
-    @BindView(R.id.banner_id)
+    @BindView(R.id.banner_id_show)
     Banner banner;
     @BindView(R.id.tv_pName)
     TextView tv_pName;
-    @BindView(R.id.tv_price)
+    @BindView(R.id.tv_price_show)
     TextView tv_price;
     @BindView(R.id.tv_buy)
     TextView goToBuy;
@@ -59,8 +59,8 @@ public class ProductShowActivity extends BaseActivity  {
     TextView addCart;
     @BindView(R.id.tv_proproty)
     TextView tv_proproty;
-    @BindView(R.id.img_cart)
-    ImageView cart;
+//    @BindView(R.id.img_cart)
+//    ImageView cart;
     @BindView(R.id.tv_description)
     TextView description;
     @BindView(R.id.finish_back)
@@ -114,7 +114,7 @@ public class ProductShowActivity extends BaseActivity  {
 
 
     @Override
-    @OnClick({R.id.tv_buy,R.id.img_cart,R.id.tv_incart,R.id.finish_back})
+    @OnClick({R.id.tv_buy,R.id.tv_incart,R.id.finish_back})
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.tv_buy:
