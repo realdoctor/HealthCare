@@ -38,14 +38,8 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     RelativeLayout titleBar;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
-    @BindView(R.id.tv_select_num)
-    TextView mTvSelectNum;
-    @BindView(R.id.btn_delete)
-    Button mBtnDelete;
     @BindView(R.id.select_all)
     TextView mSelectAll;
-    @BindView(R.id.ll_bottom_dialog)
-    LinearLayout mBottomDialog;
     @BindView(R.id.btn_update)
     TextView mBtnUpdate;
     private CheckDocAdapter mCheckDocAdapter = null;
@@ -57,17 +51,13 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     @Override
     public void initEvent() {
         mCheckDocAdapter.setOnItemClickListener(this);
-        mBtnDelete.setOnClickListener(this);
         mSelectAll.setOnClickListener(this);
     }
 
     @Override
-    @OnClick({R.id.btn_delete, R.id.select_all, R.id.btn_update})
+    @OnClick({R.id.select_all, R.id.btn_update})
     public void widgetClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_delete:
-                deleteItem();
-                break;
             case R.id.select_all:
                 selectAllMain();
                 break;
@@ -98,25 +88,6 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     public void doBusiness(Context mContext) {
 
     }
-
-
-    /**
-     * 根据选择的数量是否为0来判断按钮的是否可点击.
-     *
-     * @param size
-     */
-    private void setBtnBackground(int size) {
-        if (size != 0) {
-            mBtnDelete.setBackgroundResource(R.drawable.button_shape);
-            mBtnDelete.setEnabled(true);
-            mBtnDelete.setTextColor(Color.WHITE);
-        } else {
-            mBtnDelete.setBackgroundResource(R.drawable.button_noclickable_shape);
-            mBtnDelete.setEnabled(false);
-            mBtnDelete.setTextColor(ContextCompat.getColor(this, R.color.appthemecolor));
-        }
-    }
-
 
     @Override
     public int getLayoutId() {
@@ -156,7 +127,6 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
                 mCheckDocAdapter.getSaveDocBeanList().get(i).setIsSelect(true);
             }
             index = mCheckDocAdapter.getSaveDocBeanList().size();
-            mBtnDelete.setEnabled(true);
             mSelectAll.setText("取消全选");
             isSelectAll = true;
         } else {
@@ -164,66 +134,11 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
                 mCheckDocAdapter.getSaveDocBeanList().get(i).setIsSelect(false);
             }
             index = 0;
-            mBtnDelete.setEnabled(false);
             mSelectAll.setText("全选");
             isSelectAll = false;
         }
         mCheckDocAdapter.notifyDataSetChanged();
-        setBtnBackground(index);
-        mTvSelectNum.setText(String.valueOf(index));
     }
-
-    /**
-     * 删除逻辑
-     */
-    private void deleteItem() {
-        if (index == 0) {
-            mBtnDelete.setEnabled(false);
-            return;
-        }
-        final AlertDialog builder = new AlertDialog.Builder(this)
-                .create();
-        builder.show();
-        if (builder.getWindow() == null) return;
-        builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
-        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
-        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
-        Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancle == null || sure == null) return;
-
-        if (index == 1) {
-            msg.setText("删除后不可恢复，是否删除该条目？");
-        } else {
-            msg.setText("删除后不可恢复，是否删除这" + index + "个条目？");
-        }
-        cancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                builder.dismiss();
-            }
-        });
-        sure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = mCheckDocAdapter.getSaveDocBeanList().size(), j = 0; i > j; i--) {
-                    SaveDocBean mSaveDocBean = mCheckDocAdapter.getSaveDocBeanList().get(i - 1);
-                    if (mSaveDocBean.getIsSelect()) {
-                        mCheckDocAdapter.getSaveDocBeanList().remove(mSaveDocBean);
-                        index--;
-                    }
-                }
-                index = 0;
-                mTvSelectNum.setText(String.valueOf(0));
-                setBtnBackground(index);
-                if (mCheckDocAdapter.getSaveDocBeanList().size() == 0) {
-                    mBottomDialog.setVisibility(View.GONE);
-                }
-                mCheckDocAdapter.notifyDataSetChanged();
-                builder.dismiss();
-            }
-        });
-    }
-
 
     @Override
     public void onItemClickListener(int pos, List<SaveDocBean> mSaveDocBeanList) {
@@ -243,8 +158,6 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
             isSelectAll = false;
             mSelectAll.setText("全选");
         }
-        setBtnBackground(index);
-        mTvSelectNum.setText(String.valueOf(index));
         mCheckDocAdapter.notifyDataSetChanged();
     }
 }
