@@ -34,9 +34,6 @@ import butterknife.OnClick;
  */
 public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.OnItemClickListener {
 
-    private static final int mSaveDocBean_MODE_CHECK = 0;
-    private static final int mSaveDocBean_MODE_EDIT = 1;
-
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.recyclerview)
@@ -49,16 +46,11 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     TextView mSelectAll;
     @BindView(R.id.ll_bottom_dialog)
     LinearLayout mBottomDialog;
-    @BindView(R.id.btn_editor)
-    TextView mBtnEditor;
     @BindView(R.id.btn_update)
     TextView mBtnUpdate;
-
     private CheckDocAdapter mCheckDocAdapter = null;
     private LinearLayoutManager mLinearLayoutManager;
-    private int mEditMode = mSaveDocBean_MODE_CHECK;
     private boolean isSelectAll = false;
-    private boolean editorStatus = false;
     private int index = 0;
 
 
@@ -67,11 +59,10 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
         mCheckDocAdapter.setOnItemClickListener(this);
         mBtnDelete.setOnClickListener(this);
         mSelectAll.setOnClickListener(this);
-        mBtnEditor.setOnClickListener(this);
     }
 
     @Override
-    @OnClick({R.id.btn_delete, R.id.select_all, R.id.btn_editor, R.id.btn_update})
+    @OnClick({R.id.btn_delete, R.id.select_all, R.id.btn_update})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.btn_delete:
@@ -79,9 +70,6 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
                 break;
             case R.id.select_all:
                 selectAllMain();
-                break;
-            case R.id.btn_editor:
-                updataEditMode();
                 break;
             case R.id.btn_update:
                 //跳转到进度条页面，并开启Service，上传成功，进度条页面消失
@@ -236,51 +224,27 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
         });
     }
 
-    private void updataEditMode() {
-        mEditMode = mEditMode == mSaveDocBean_MODE_CHECK ? mSaveDocBean_MODE_EDIT : mSaveDocBean_MODE_CHECK;
-        if (mEditMode == mSaveDocBean_MODE_EDIT) {
-            mBtnEditor.setText("取消");
-            mBottomDialog.setVisibility(View.VISIBLE);
-            editorStatus = true;
-        } else {
-            mBtnEditor.setText("编辑");
-            mBottomDialog.setVisibility(View.GONE);
-            editorStatus = false;
-            clearAll();
-        }
-        mCheckDocAdapter.setEditMode(mEditMode);
-    }
-
-
-    private void clearAll() {
-        mTvSelectNum.setText(String.valueOf(0));
-        isSelectAll = false;
-        mSelectAll.setText("全选");
-        setBtnBackground(0);
-    }
 
     @Override
     public void onItemClickListener(int pos, List<SaveDocBean> mSaveDocBeanList) {
-        if (editorStatus) {
-            SaveDocBean mSaveDocBean = mSaveDocBeanList.get(pos);
-            boolean isSelect = mSaveDocBean.getIsSelect();
-            if (!isSelect) {
-                index++;
-                mSaveDocBean.setIsSelect(true);
-                if (index == mSaveDocBeanList.size()) {
-                    isSelectAll = true;
-                    mSelectAll.setText("取消全选");
-                }
-
-            } else {
-                mSaveDocBean.setIsSelect(false);
-                index--;
-                isSelectAll = false;
-                mSelectAll.setText("全选");
+        SaveDocBean mSaveDocBean = mSaveDocBeanList.get(pos);
+        boolean isSelect = mSaveDocBean.getIsSelect();
+        if (!isSelect) {
+            index++;
+            mSaveDocBean.setIsSelect(true);
+            if (index == mSaveDocBeanList.size()) {
+                isSelectAll = true;
+                mSelectAll.setText("取消全选");
             }
-            setBtnBackground(index);
-            mTvSelectNum.setText(String.valueOf(index));
-            mCheckDocAdapter.notifyDataSetChanged();
+
+        } else {
+            mSaveDocBean.setIsSelect(false);
+            index--;
+            isSelectAll = false;
+            mSelectAll.setText("全选");
         }
+        setBtnBackground(index);
+        mTvSelectNum.setText(String.valueOf(index));
+        mCheckDocAdapter.notifyDataSetChanged();
     }
 }

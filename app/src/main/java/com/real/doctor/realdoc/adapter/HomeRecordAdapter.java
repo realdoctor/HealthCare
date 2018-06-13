@@ -19,6 +19,6 @@ public class HomeRecordAdapter extends BaseQuickAdapter<SaveDocBean, BaseViewHol
     protected void convert(BaseViewHolder viewHolder, SaveDocBean item) {
         viewHolder.setText(R.id.disease, item.getIll()).setText(R.id.hospital, item.getHospital())
                 .setText(R.id.doctor, item.getDoctor()).setText(R.id.time,
-                DateUtil.timeStamp2Date(item.getTime(), "y年M月d日"));
+                DateUtil.timeStamp2Date(item.getTime(), "yyyy年MM月dd日"));
     }
 }

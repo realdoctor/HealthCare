@@ -33,6 +33,6 @@ public class DocDetailAdapter extends BaseQuickAdapter<SaveDocBean, BaseViewHold
     protected void convert(BaseViewHolder viewHolder, SaveDocBean item) {
         viewHolder.setText(R.id.doc_detail_title, item.getIll())
                 .setText(R.id.doc_detail_content, item.getHospital())
-                .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(), "y年M月d日"));
+                .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(), "yyyy年MM月dd日"));
     }
 }

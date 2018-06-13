@@ -1,7 +1,5 @@
 package com.real.doctor.realdoc.activity;
 
-import com.fourmob.datetimepicker.date.DatePickerDialog;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,16 +34,19 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.widget.timepicker.CustomDatePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RecordListActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener {
+public class RecordListActivity extends BaseActivity {
 
     public static final String DATEPICKER_TAG = "datepicker";
     public static String RECORD_LIST_TEXT = "android.intent.action.record.list";
@@ -68,10 +69,6 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
     TextView startTime;
     @BindView(R.id.end_time)
     TextView endTime;
-    @BindView(R.id.add_start_time)
-    ImageView addStartTime;
-    @BindView(R.id.add_end_time)
-    ImageView addEndTime;
     @BindView(R.id.confirm_btn)
     Button confirmBtn;
     @BindView(R.id.select_time_linear)
@@ -82,15 +79,13 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
     RecyclerView selectDiseaseList;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
-    DatePickerDialog datePickerDialog;
     DiseaseListAdapter diseaseListAdapter;
-    private boolean startFlag = false;
-    private boolean endFlag = false;
     private boolean selectTimeLinearFlag = false;
     private boolean selectDiseaseLinearFlag = false;
     private List<SaveDocBean> recordList;
     private List<String> diseaseList;
     private SaveDocManager instance = null;
+    private CustomDatePicker customDatePicker1, customDatePicker2;
 
     @Override
     public int getLayoutId() {
@@ -107,6 +102,7 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        initDatePicker();
     }
 
     @Override
@@ -128,8 +124,6 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
         docDetailAdapter = new DocDetailAdapter(RecordListActivity.this, R.layout.doc_detail_item, recordList);
         //给RecyclerView设置适配器
         recordListlRecycleView.setAdapter(docDetailAdapter);
-        final Calendar calendar = Calendar.getInstance();
-        datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), true);
         //疾病列表
         diseaseList = instance.queryDiseaseList(RealDocApplication.getDaoSession(RecordListActivity.this));
         //创建布局管理
@@ -215,6 +209,29 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
         });
     }
 
+    private void initDatePicker() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+        String now = sdf.format(new Date());
+        startTime.setText(now.split(" ")[0]);
+        endTime.setText(now.split(" ")[0]);
+        customDatePicker1 = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                startTime.setText(time.split(" ")[0]);
+            }
+        }, "2010年01月01日 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        customDatePicker1.showSpecificTime(false); // 不显示时和分
+        customDatePicker1.setIsLoop(false); // 不允许循环滚动
+        customDatePicker2 = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                endTime.setText(time.split(" ")[0]);
+            }
+        }, "2010年01月01日 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        customDatePicker2.showSpecificTime(false); // 不显示时和分
+        customDatePicker2.setIsLoop(false); // 不允许循环滚动
+    }
+
     private void localBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
@@ -236,14 +253,14 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
     }
 
     @Override
-    @OnClick({R.id.select_time_record, R.id.select_disease_record, R.id.add_start_time, R.id.add_end_time, R.id.confirm_btn, R.id.finish_back, R.id.right_title})
+    @OnClick({R.id.select_time_record, R.id.select_disease_record, R.id.start_time, R.id.end_time, R.id.confirm_btn, R.id.finish_back, R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.select_time_record:
                 if (!selectTimeLinearFlag) {
                     selectTimeLinear.setVisibility(View.VISIBLE);
-                    startTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "y年M月d日"));
-                    endTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "y年M月d日"));
+                    startTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "yyyy年MM月dd日"));
+                    endTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "yyyy年MM月dd日"));
                     selectTimeLinear.clearAnimation();
                     selectDiseaseLinear.setVisibility(View.GONE);
                     selectDiseaseLinearFlag = false;
@@ -270,20 +287,12 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
                 }
                 break;
 
-            case R.id.add_start_time:
-                startFlag = true;
-                datePickerDialog.setVibrate(true);
-                datePickerDialog.setYearRange(1985, 2028);
-                datePickerDialog.setCloseOnSingleTapDay(true);
-                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            case R.id.start_time:
+                customDatePicker1.show(startTime.getText().toString());
                 break;
 
-            case R.id.add_end_time:
-                endFlag = true;
-                datePickerDialog.setVibrate(true);
-                datePickerDialog.setYearRange(1985, 2028);
-                datePickerDialog.setCloseOnSingleTapDay(true);
-                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            case R.id.end_time:
+                customDatePicker2.show(endTime.getText().toString());
                 break;
 
             case R.id.confirm_btn:
@@ -315,17 +324,6 @@ public class RecordListActivity extends BaseActivity implements DatePickerDialog
     @Override
     public void doBusiness(Context mContext) {
 
-    }
-
-    @Override
-    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-        if (startFlag && !endFlag) {
-            startTime.setText(year + "年" + (month + 1) + "月" + day + "日");
-            startFlag = false;
-        } else if (!startFlag && endFlag) {
-            endTime.setText(year + "年" + (month + 1) + "月" + day + "日");
-            endFlag = false;
-        }
     }
 
     private void getDateList(String start, String end) {

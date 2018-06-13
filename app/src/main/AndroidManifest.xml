@@ -355,9 +355,19 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".activity.ImageGridActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.RecorderVideoActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activity.ContextMenuActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
+
+
         <!--    <intent-filter>
                          <action android:name="android.intent.action.MAIN" />
                          <category android:name="android.intent.category.LAUNCHER" />

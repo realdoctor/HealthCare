@@ -27,9 +27,6 @@ import butterknife.OnClick;
 
 public class SingleCompareActivity extends BaseActivity implements SingleCompareAdapter.OnItemClickListener {
 
-    private static final int mSaveDocBean_MODE_CHECK = 0;
-    private static final int mSaveDocBean_MODE_EDIT = 1;
-
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.page_title)
@@ -40,13 +37,10 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
     TextView mBtnEditor;
     @BindView(R.id.btn_compare)
     TextView mBtnCompare;
-    private boolean editorStatus = false;
-    private int mEditMode = mSaveDocBean_MODE_CHECK;
     private SingleCompareAdapter mSingleCompareAdapter = null;
     private List<SaveDocBean> mList;
     private SaveDocBean mSaveDocBean;
     private List<SaveDocBean> mSaveList;
-
 
     @Override
     public int getLayoutId() {
@@ -92,12 +86,9 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
     }
 
     @Override
-    @OnClick({R.id.btn_editor, R.id.btn_compare})
+    @OnClick({R.id.btn_compare})
     public void widgetClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_editor:
-                updataEditMode();
-                break;
             case R.id.btn_compare:
                 if (mSaveList.size() == 2) {
                     Intent mIntent = new Intent(this, RecordCompareActivity.class);
@@ -109,18 +100,6 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
         }
     }
 
-    private void updataEditMode() {
-        mEditMode = mEditMode == mSaveDocBean_MODE_CHECK ? mSaveDocBean_MODE_EDIT : mSaveDocBean_MODE_CHECK;
-        if (mEditMode == mSaveDocBean_MODE_EDIT) {
-            mBtnEditor.setText("取消");
-            editorStatus = true;
-        } else {
-            mBtnEditor.setText("编辑");
-            editorStatus = false;
-        }
-        mSingleCompareAdapter.setEditMode(mEditMode);
-    }
-
     @Override
     public void doBusiness(Context mContext) {
 
@@ -128,10 +107,8 @@ public class SingleCompareActivity extends BaseActivity implements SingleCompare
 
     @Override
     public void onItemClickListener(int pos) {
-        if (editorStatus) {
-            mSaveList.remove(1);
-            mSaveDocBean = mList.get(pos);
-            mSaveList.add(mSaveDocBean);
-        }
+        mSaveList.remove(1);
+        mSaveDocBean = mList.get(pos);
+        mSaveList.add(mSaveDocBean);
     }
 }
