@@ -95,4 +95,14 @@
     <color name="b_c_fafafa">#fafafa</color>
     <color name="check_color">#ff03b5e5</color>
     <color name="time_color">#C0C0C0</color>
+    <color name="blue">#ff33b5e5</color>
+    <!--时间选择器-->
+    <string name="cancle">取消</string>
+    <string name="title">请选择时间</string>
+    <string name="commit">确定</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="hour">时</string>
+    <string name="minute">分</string>
 </resources>

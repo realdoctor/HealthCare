@@ -84,7 +84,7 @@ public class DoctorsListActivity extends BaseActivity {
         divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.disease_divider));
         doctorsRv.addItemDecoration(divider);
         doctorsRv.setLayoutManager(new LinearLayoutManager(this));
-        doctorsAdapter = new DoctorsAdapter(R.layout.doctors_list_item_view, doctors);
+        doctorsAdapter = new DoctorsAdapter(DoctorsListActivity.this, R.layout.doctors_list_item_view, doctors);
         doctorsRv.setAdapter(doctorsAdapter);
         //获得医生数据
         getDoctorsData("1");
@@ -133,7 +133,7 @@ public class DoctorsListActivity extends BaseActivity {
                                     if (DocUtils.hasValue(obj, "list")) {
                                         doctors = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), DoctorBean.class);
                                         if (doctors.size() > 0) {
-                                            doctorsAdapter = new DoctorsAdapter(R.layout.doctors_list_item_view, doctors);
+                                            doctorsAdapter = new DoctorsAdapter(DoctorsListActivity.this, R.layout.doctors_list_item_view, doctors);
                                             doctorsRv.setAdapter(doctorsAdapter);
                                             initEvent();
 //                                            doctorsAdapter.notifyDataSetChanged();
@@ -159,10 +159,7 @@ public class DoctorsListActivity extends BaseActivity {
         doctorsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(DoctorsListActivity.this, ChatActivity.class);
-                intent.putExtra("userId",doctors.get(position).getDoctorCode());
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                //跳转进医生详情
             }
         });
     }

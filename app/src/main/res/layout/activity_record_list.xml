@@ -87,7 +87,6 @@
                 android:id="@+id/start_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
                 android:background="@drawable/my_tab_background"
                 android:padding="10dp"
                 android:singleLine="true"
@@ -100,20 +99,11 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/start_time_text"
                 android:background="@drawable/my_tab_background"
-                android:padding="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:singleLine="true"
                 android:textColor="@color/text_primary_color"
                 tools:text="2015年5月5日" />
-
-            <ImageView
-                android:id="@+id/add_start_time"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="50dp"
-                android:background="@mipmap/add"
-                android:clickable="true" />
         </RelativeLayout>
 
         <View
@@ -130,7 +120,6 @@
                 android:id="@+id/end_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
                 android:background="@drawable/my_tab_background"
                 android:padding="10dp"
                 android:singleLine="true"
@@ -143,20 +132,11 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/end_time_text"
                 android:background="@drawable/my_tab_background"
-                android:padding="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:singleLine="true"
                 android:textColor="@color/text_primary_color"
                 tools:text="2015年5月5日" />
-
-            <ImageView
-                android:id="@+id/add_end_time"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="50dp"
-                android:background="@mipmap/add"
-                android:clickable="true" />
         </RelativeLayout>
 
         <View

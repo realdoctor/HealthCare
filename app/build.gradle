@@ -110,7 +110,6 @@ dependencies {
 
     //微信支付
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
-    implementation project(':datetimepicker')
     compile 'com.melnykov:floatingactionbutton:1.1.0'
 
     //luban 图片压缩

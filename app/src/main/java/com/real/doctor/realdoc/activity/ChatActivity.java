@@ -76,11 +76,6 @@ public class ChatActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         chatFragment.onBackPressed();
-        if (EasyUtils.isSingleActivity(this)) {
-            //跳转回医生详情页面
-//            Intent intent = new Intent(this, MainActivity.class);
-//            startActivity(intent);
-        }
     }
 
     public String getToChatUsername() {

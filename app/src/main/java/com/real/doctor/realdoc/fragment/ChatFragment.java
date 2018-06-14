@@ -36,6 +36,7 @@ import com.hyphenate.util.EasyUtils;
 import com.hyphenate.util.PathUtil;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ContextMenuActivity;
+import com.real.doctor.realdoc.activity.ImageGridActivity;
 import com.real.doctor.realdoc.activity.UserProfileActivity;
 import com.real.doctor.realdoc.activity.VideoCallActivity;
 import com.real.doctor.realdoc.activity.VoiceCallActivity;
@@ -315,8 +316,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     public boolean onExtendMenuItemClick(int itemId, View view) {
         switch (itemId) {
             case ITEM_VIDEO:
-//            Intent intent = new Intent(getActivity(), ImageGridActivity.class);
-//            startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+                Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
                 break;
             case ITEM_FILE: //file
                 selectFileFromLocal();

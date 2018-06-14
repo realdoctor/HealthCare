@@ -1,18 +1,18 @@
 <resources xmlns:android="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-  <!--  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!--  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+          <item name="colorPrimary">@color/colorPrimary</item>
+          <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+          <item name="colorAccent">@color/colorAccent</item>
+      </style>
+      <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
 
 
 
 
-    -->
+      -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
 
         <item name="android:windowActionBar">false</item>
@@ -27,8 +27,6 @@
     <style name="ActionBarStyle" parent="Base.Widget.AppCompat.Toolbar">
         <item name="android:textColor">@color/blue</item>
     </style>
-
-
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -112,5 +110,13 @@
     <style name="RightTopPopAnim" parent="@android:style/Animation.Activity">
         <item name="android:windowEnterAnimation">@anim/right_top_in</item>
         <item name="android:windowExitAnimation">@anim/right_top_out</item>
+    </style>
+
+    <style name="time_dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 </resources>

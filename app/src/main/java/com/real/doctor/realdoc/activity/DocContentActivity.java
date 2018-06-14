@@ -199,7 +199,7 @@ public class DocContentActivity extends BaseActivity {
                 doctor.setText(mDoctor);
             }
             if (EmptyUtils.isNotEmpty(mTime)) {
-                time.setText(DateUtil.timeStamp2Date(mTime, "y年M月d日"));
+                time.setText(DateUtil.timeStamp2Date(mTime, "yyyy年MM月dd日"));
             }
 
             String recordId = saveDocBean.getId();
@@ -467,7 +467,7 @@ public class DocContentActivity extends BaseActivity {
                     doctor.setText(mDoctor);
                 }
                 if (EmptyUtils.isNotEmpty(mTime)) {
-                    time.setText(DateUtil.timeStamp2Date(mTime, "y年M月d日"));
+                    time.setText(DateUtil.timeStamp2Date(mTime, "yyyy年MM月dd日"));
                 }
                 imageOriganList.clear();
                 for (int i = 0; i < mAllList.size(); i++) {
