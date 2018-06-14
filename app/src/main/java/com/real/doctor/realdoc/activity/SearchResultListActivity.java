@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,6 +29,7 @@ import com.real.doctor.realdoc.model.ExpertPostionalBean;
 import com.real.doctor.realdoc.model.FilterBean;
 import com.real.doctor.realdoc.model.HospitalBean;
 import com.real.doctor.realdoc.model.HospitalLevelBean;
+import com.real.doctor.realdoc.model.PageModel;
 import com.real.doctor.realdoc.model.SortBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
@@ -41,6 +43,12 @@ import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.DropDownMenuForResult;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +69,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/23.
  */
 
-public class SearchResultListActivity extends BaseActivity implements OnFilterDoneListener,ExpertAdapter.MyClickListener{
+public class SearchResultListActivity extends BaseActivity implements OnFilterDoneListener,ExpertAdapter.MyClickListener,OnLoadmoreListener,OnRefreshListener {
     @BindView(R.id.rg)
     RadioGroup radioGroup;
     @BindView(R.id.rb_hospital)
@@ -78,6 +86,8 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     ListView expert_list;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     //@BindView(R.id.dropMenu)
     DropDownMenuForResult dropDownMenu;
     public String hospitalLevel="";
@@ -86,12 +96,19 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     public String positional="";
     public String searchstr="";
     public FilterBean filterBean;
+    public int pageNum=1;
+    public int pageSize=10;
+    public int pageNum2=1;
+    public String tag="1";
     public String userId;
     private String[] titleList;//标题
     private DropMenuAdapterForResult dropMenuAdapter;
+    private PageModel<HospitalBean> baseModel = new PageModel<HospitalBean>();
     public ArrayList<HospitalBean> hospitalBeans=new ArrayList<HospitalBean>();
     HospitalAdapter adapter;
+    private PageModel<ExpertBean> baseModel1 = new PageModel<ExpertBean>();
     public ArrayList<ExpertBean> expertBeans=new ArrayList<ExpertBean>();
+
     ExpertAdapter expertAdapter;
 
 
@@ -118,7 +135,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         dropDownMenu=findViewById(R.id.dropMenu);
         searchstr= getIntent().getStringExtra("searchKey");
         init();
-        searchHospital();
+        searchHospital(pageNum,pageSize);
     }
 
     @Override
@@ -148,6 +165,10 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         filterBean.setHospitalLevelBeans(DataUtil.hospitalLevelBeans);
         filterBean.setExpertPostionalBeans(DataUtil.expertPostionalBeans);
         initFilterDropDownView();
+        ClassicsHeader mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
+        ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+        refreshLayout.setOnLoadmoreListener(this);
+        refreshLayout.setOnRefreshListener(this);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -155,10 +176,12 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                     case R.id.rb_hospital:// first
                         hosptial_list.setVisibility(View.VISIBLE);
                         expert_list.setVisibility(View.GONE);
+                        tag="1";
                         break;
                     case R.id.rb_expert:// 第二个
                         hosptial_list.setVisibility(View.GONE);
                         expert_list.setVisibility(View.VISIBLE);
+                        tag="2";
                         break;
                     default:
                         break;
@@ -218,16 +241,60 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 }else{
                     positional=bean3.postional;
                 }
-                searchHospital();
+                if(tag.equals("1")){
+                    searchHospital(pageNum,pageSize);
+                }else {
+                    searchHospital(pageNum2,pageSize);
+                }
             }
         });
 
 
     }
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        if(tag.equals("1")){
+        if(pageSize*pageNum>hospitalBeans.size()){
+            ToastUtil.show(SearchResultListActivity.this,"已经是最后一页", Toast.LENGTH_SHORT);
+            refreshlayout.finishLoadmore();
+            return;
+        }
+        pageNum++;
+        searchHospital(pageNum,pageSize);
+        refreshlayout.finishLoadmore();
+        }else{
+            if(pageSize*pageNum2>expertBeans.size()){
+                ToastUtil.show(SearchResultListActivity.this,"已经是最后一页", Toast.LENGTH_SHORT);
+                refreshlayout.finishLoadmore();
+                return;
+            }
+            pageNum2++;
+            searchHospital(pageNum2,pageSize);
+            refreshlayout.finishLoadmore();
+        }
+    }
 
-    private void searchHospital() {
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        if(tag.equals("1")){
+            pageNum=1;
+            hospitalBeans.clear();
+            searchHospital(pageNum,pageSize);
+            refreshLayout.finishRefresh();
+        }else{
+            pageNum2=1;
+            expertBeans.clear();
+            searchHospital(pageNum2,pageSize);
+            refreshLayout.finishRefresh();
+        }
+
+    }
+
+    private void searchHospital(int pageNum,int pageSize) {
         HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("hospitalLevel",hospitalLevel);
+        params.put("pageNum",pageNum);
+        params.put("pageSize",pageSize);
+        params.put("tag",tag);
         params.put("sortstr",sortstr);
         params.put("cityName",cityName);
         params.put("positional",positional);
@@ -270,10 +337,16 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                     JSONObject jsonObject=object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    expertBeans.addAll((ArrayList<ExpertBean>)(localGson.fromJson(jsonObject.getJSONArray("doctorList").toString(),new TypeToken<ArrayList<ExpertBean>>(){}.getType()
-                                    )));
+                                    baseModel1 = localGson.fromJson(jsonObject.toString(),
+                                            new TypeToken<PageModel<ExpertBean>>() {
+                                            }.getType());
+
+                                    expertBeans.addAll(baseModel1.list);
                                     expertAdapter.notifyDataSetChanged();
-                                    hospitalBeans.addAll((ArrayList<HospitalBean>)(localGson.fromJson(jsonObject.getJSONArray("hospitalList").toString(),new TypeToken<ArrayList<HospitalBean>>(){}.getType())));
+                                    baseModel = localGson.fromJson(jsonObject.toString(),
+                                            new TypeToken<PageModel<HospitalBean>>() {
+                                            }.getType());
+                                    hospitalBeans.addAll(baseModel.list);
                                     adapter.notifyDataSetChanged();
                                     if(rb_hospital.isChecked()){
                                         hosptial_list.setVisibility(View.VISIBLE);
@@ -386,6 +459,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                     }
 
                 });
+
 
     }
 }

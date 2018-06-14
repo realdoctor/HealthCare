@@ -16,6 +16,7 @@ import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
@@ -155,7 +156,7 @@ public class NewDetailActivity extends BaseActivity {
                                     new_detail.setText(model.article);
                                     tv_autor.setText(model.newsAuthor);
                                     tv_profer.setText(model.authorProfer);
-                                    tv_time.setText(model.createDate);
+                                    tv_time.setText(DateUtil.timeStamp2Date(model.createDate,null));
                                     tv_type.setText(model.newsType);
 
                                 } else {

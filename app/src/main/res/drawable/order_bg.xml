@@ -6,9 +6,9 @@
         android:bottomRightRadius="2dp"
         android:topLeftRadius="2dp"
         android:topRightRadius="2dp" />
-    <padding android:bottom="@dimen/dp_4"
+    <padding android:bottom="1dp"
         android:left="@dimen/dp_4"
         android:right="@dimen/dp_4"
-        android:top="@dimen/dp_4">
+        android:top="1dp">
     </padding>
 </shape>

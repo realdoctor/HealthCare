@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.NewModel;
+import com.real.doctor.realdoc.util.DateUtil;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
         }
         holder.new_title.setText(bean.newsName);
         holder.new_autor.setText(bean.newsAuthor);
-        holder.new_time.setText(bean.createDate);
+        holder.new_time.setText(DateUtil.timeStamp2Date(bean.createDate,null));
         holder.tv_comment.setText(bean.viewedTime);
 //        holder.tv_content.setText();
         Glide.with(mContext).load(bean.photoAddress).crossFade().into(holder.new_detail_img);

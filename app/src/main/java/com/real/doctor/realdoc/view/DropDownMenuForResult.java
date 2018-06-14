@@ -61,7 +61,7 @@ public class DropDownMenuForResult extends RelativeLayout implements View.OnClic
     protected void onFinishInflate() {
         super.onFinishInflate();
         //
-        setContentView(findViewById(R.id.ll_contain));//mFilterRecyclerView layout_loaddata
+        setContentView(findViewById(R.id.refreshLayout));//mFilterRecyclerView layout_loaddata
 
     }
 

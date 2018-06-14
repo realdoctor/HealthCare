@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:padding="5dp">
     <ImageView
@@ -15,10 +15,10 @@
     <LinearLayout
         android:id="@+id/expert_detail_relative"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginLeft="@dimen/dp_4"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_10"
         android:layout_toRightOf="@+id/expert_detail_img"
         >
         <RelativeLayout
@@ -60,37 +60,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
-            android:layout_centerVertical="true"
             >
             <TextView
-                android:id="@+id/expert_level"
+                android:id="@+id/expert_good_at"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/red_light"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/gray"
                 android:textSize="@dimen/txt_14" />
 
-            <TextView
-                android:id="@+id/expert_markNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_4"
-                android:layout_toRightOf="@+id/expert_level"
-                android:textColor="@color/gray"
-                android:textSize="@dimen/txt_12" />
         </RelativeLayout>
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/good_at"
+            android:id="@+id/tv_plan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/centre_rl"
-            android:layout_marginTop="10dp"
             android:singleLine="true"
             android:ellipsize="end"
             android:textColor="@color/gray"
             android:textSize="@dimen/txt_14" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/gray"
+                android:id="@+id/expert_time"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
