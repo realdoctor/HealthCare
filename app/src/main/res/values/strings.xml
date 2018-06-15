@@ -160,7 +160,7 @@
     <string name="pwd_txt">请设置新的密码</string>
     <string name="pwd">新密码</string>
     <string name="new_pwd">确认新密码</string>
-    <string name="letter_or_num">8-20位字母,数字或符号</string>
+    <string name="letter_or_num">6-20位字母,数字或符号</string>
     <string name="qq_num">qq号码</string>
     <string name="phone_num">电话号码</string>
     <string name="user_fade_txt">请留下你的宝贵意见</string>
@@ -191,5 +191,5 @@
     <string name="network_unstable">网络不稳定</string>
     <string name="switch_camera">切换摄像头</string>
     <string name="capture_image">抓取图片</string>
-
+    <string name="msg_recall_by_user">%1$s 撤回了一条消息</string>
 </resources>
