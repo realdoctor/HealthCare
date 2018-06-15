@@ -657,6 +657,10 @@ public class SaveRecordActivity extends BaseActivity {
                         }
                         imageRecycleInstance.insertImageListList(this, imageBeanList);
                         String illness = ill.getText().toString().trim();
+                        if (EmptyUtils.isEmpty(illness)) {
+                            ToastUtil.showLong(this, "请填写疾病名称!");
+                            return;
+                        }
                         bean.setIll(illness);
                         String hospitaName = hospital.getText().toString().trim();
                         if (EmptyUtils.isEmpty(hospitaName)) {
