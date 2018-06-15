@@ -109,10 +109,6 @@ public class SaveRecordActivity extends BaseActivity {
     LinearLayout illLinear;
     @BindView(R.id.hospital_linear)
     LinearLayout hospitalLinear;
-    @BindView(R.id.add_audio_linear)
-    LinearLayout addAudioLinear;
-    @BindView(R.id.add_video_linear)
-    LinearLayout addVideoLinear;
     @BindView(R.id.audio_recycle_view)
     RecyclerView audioRecycleView;
     @BindView(R.id.video_recycle_view)
@@ -543,7 +539,7 @@ public class SaveRecordActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.button_save_doc, R.id.right_title, R.id.finish_back, R.id.more_ill, R.id.more_hospital, R.id.add_audio_linear, R.id.add_video_linear, R.id.add_icon})
+    @OnClick({R.id.button_save_doc, R.id.right_title, R.id.finish_back, R.id.more_ill, R.id.more_hospital, R.id.add_icon})
     public void widgetClick(View v) {
         Intent intent = null;
         Bundle bundle = null;
@@ -555,6 +551,10 @@ public class SaveRecordActivity extends BaseActivity {
                         SaveDocBean bean = new SaveDocBean();
                         bean.setId(mModifyId);
                         String illness = ill.getText().toString().trim();
+                        if (EmptyUtils.isEmpty(illness)) {
+                            ToastUtil.showLong(this, "请填写疾病名称!");
+                            return;
+                        }
                         bean.setIll(illness);
                         String hospitaName = hospital.getText().toString().trim();
                         if (EmptyUtils.isEmpty(hospitaName)) {
@@ -700,24 +700,6 @@ public class SaveRecordActivity extends BaseActivity {
                 intent = new Intent(this, HospitalLabelActivity.class);
                 startActivityForResult(intent, 110);
                 break;
-            case R.id.add_audio_linear:
-                if (DocUtils.isFastClick()) {
-                    intent = new Intent(this, RecordActivity.class);
-                    bundle = new Bundle();
-                    bundle.putString("folder", folder);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, 111);
-                }
-                break;
-            case R.id.add_video_linear:
-                if (DocUtils.isFastClick()) {
-                    intent = new Intent(this, VideoActivity.class);
-                    bundle = new Bundle();
-                    bundle.putString("folder", folder);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, 112);
-                }
-                break;
             case R.id.add_icon:
                 mPopup.showAtLocation(recordDocRelative, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
                 backgroundAlpha(0.5f);
@@ -753,6 +735,22 @@ public class SaveRecordActivity extends BaseActivity {
                  * 读写SD卡
                  */
                 requestPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0001);
+            } else if (i == R.id.add_audio) {
+                if (DocUtils.isFastClick()) {
+                    Intent intent = new Intent(SaveRecordActivity.this, RecordActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("folder", folder);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, 111);
+                }
+            } else if (i == R.id.add_video) {
+                if (DocUtils.isFastClick()) {
+                    Intent intent = new Intent(SaveRecordActivity.this, VideoActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("folder", folder);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, 112);
+                }
             }
         }
     };
