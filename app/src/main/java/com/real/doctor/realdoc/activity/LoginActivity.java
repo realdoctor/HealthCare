@@ -9,7 +9,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
@@ -25,6 +28,7 @@ import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.widget.EditTextPassword;
+import com.real.doctor.realdoc.widget.HuanXinHelper;
 import com.sina.weibo.sdk.auth.AccessTokenKeeper;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WbConnectErrorMessage;
@@ -182,7 +186,7 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    private void login(String mobilePhone, String pwd) {
+    private void login(final String mobilePhone, final String pwd) {
         JSONObject json = null;
         if (CheckPhoneUtils.isPhone(mobilePhone) && EmptyUtils.isNotEmpty(mobilePhone)) {
             if (EmptyUtils.isNotEmpty(pwd)) {
@@ -256,6 +260,7 @@ public class LoginActivity extends BaseActivity {
                                         }
                                         //登录成功,获得列表数据
                                         RealDocApplication.getRecordListData();
+                                        loginHuanXin(mobilePhone, pwd);
                                         //通知首页刷新界面
                                         actionStart(LoginActivity.this, RealDocActivity.class);
                                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -273,6 +278,37 @@ public class LoginActivity extends BaseActivity {
                     }
 
                 });
+    }
+
+    private void loginHuanXin(String currentUsername, String currentPassword) {
+        EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
+
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "login: onSuccess");
+                // ** manually load all local groups and conversation
+                EMClient.getInstance().groupManager().loadAllGroups();
+                EMClient.getInstance().chatManager().loadAllConversations();
+                // get user's info (this should be get from App's server or 3rd party service)
+                HuanXinHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                Log.d(TAG, "login: onProgress");
+            }
+
+            @Override
+            public void onError(final int code, final String message) {
+                Log.d(TAG, "login: onError: " + code);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     private void loginToWeiXin() {

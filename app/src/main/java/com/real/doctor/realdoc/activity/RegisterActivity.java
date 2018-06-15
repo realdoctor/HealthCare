@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
@@ -195,7 +197,7 @@ public class RegisterActivity extends BaseActivity {
 
     }
 
-    private void register(String mobilePhone, String verify, String pwd) {
+    private void register(final String mobilePhone, String verify, final String pwd) {
         JSONObject json = null;
         if (EmptyUtils.isEmpty(verify)) {
             ToastUtil.showLong(RegisterActivity.this, "验证码不能为空!");
@@ -258,6 +260,13 @@ public class RegisterActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
+                                    //环信用户注册
+                                    //注册失败会抛出HyphenateException
+                                    try {
+                                        EMClient.getInstance().createAccount(mobilePhone, pwd);//同步方法
+                                    } catch (HyphenateException e) {
+                                        e.printStackTrace();
+                                    }
                                     ToastUtil.showLong(RegisterActivity.this, "用户注册成功!");
                                     actionStart(RegisterActivity.this, LoginActivity.class);
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
