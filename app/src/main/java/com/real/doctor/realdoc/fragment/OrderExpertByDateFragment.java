@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ProductShowActivity;
 import com.real.doctor.realdoc.adapter.ExpertAdapter;
+import com.real.doctor.realdoc.adapter.ExpertByDateAdapter;
 import com.real.doctor.realdoc.adapter.OrderDateAdapter;
 import com.real.doctor.realdoc.adapter.ProductAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
@@ -54,13 +55,13 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class OrderExpertByDateFragment extends BaseFragment implements ExpertAdapter.MyClickListener {
+public class OrderExpertByDateFragment extends BaseFragment implements ExpertByDateAdapter.MyClickListener {
     @BindView(R.id.hlv_date)
     HorizontalListView horizontalListView;
     @BindView(R.id.lv_expert)
     ListView lv_expert;
     ArrayList<ExpertBean> arrayList=new ArrayList<ExpertBean>();
-    ExpertAdapter expertAdapter;
+    ExpertByDateAdapter expertAdapter;
     ArrayList<WeekModel> weekList=new ArrayList<WeekModel>();
     OrderDateAdapter orderDateAdapter;
     String hospitalId;
@@ -92,7 +93,7 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertAda
             userId=(String) SPUtils.get(getContext(), Constants.USER_KEY,"");
             hospitalId =(String)getArguments().get("hospitalId");
             deptName=(String)getArguments().get("deptName");
-            expertAdapter=new ExpertAdapter(getContext(),arrayList,this);
+            expertAdapter=new ExpertByDateAdapter(getContext(),arrayList,this);
             lv_expert.setAdapter(expertAdapter);
             orderDateAdapter=new OrderDateAdapter(getContext(),weekList);
             horizontalListView.setAdapter(orderDateAdapter);

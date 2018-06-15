@@ -28,6 +28,7 @@ import com.youth.banner.Banner;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,9 +47,8 @@ import okhttp3.ResponseBody;
  */
 
 public class ProductShowActivity extends BaseActivity  {
-
     @BindView(R.id.banner_id_show)
-    Banner banner;
+    com.youth.banner.Banner banner;
     @BindView(R.id.tv_pName)
     TextView tv_pName;
     @BindView(R.id.tv_price_show)
@@ -59,20 +59,24 @@ public class ProductShowActivity extends BaseActivity  {
     TextView addCart;
     @BindView(R.id.tv_proproty)
     TextView tv_proproty;
-//    @BindView(R.id.img_cart)
-//    ImageView cart;
+    @BindView(R.id.img_cart)
+    ImageView cart;
+    @BindView(R.id.page_title_ll)
+    TextView page_title_ll;
     @BindView(R.id.tv_description)
     TextView description;
     @BindView(R.id.finish_back)
     ImageView finish_back;
     @BindView(R.id.title_bar)
     RelativeLayout topTitle;
-    @BindView(R.id.page_title)
-    TextView page_title;
+    @BindView(R.id.tv_num)
+    TextView tv_num;
     private ProductBean bean;
     private String  userId;
     String goodId;
     int num=1;
+
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_product_show;
@@ -80,11 +84,12 @@ public class ProductShowActivity extends BaseActivity  {
 
     @Override
     public void initView() {
-        ButterKnife.bind(this);
+        ButterKnife.bind(ProductShowActivity.this);
     }
 
     @Override
     public void initData() {
+        banner=findViewById(R.id.banner_id_show);
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(ProductShowActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -92,7 +97,7 @@ public class ProductShowActivity extends BaseActivity  {
             lp.topMargin = statusHeight;
             topTitle.setLayoutParams(lp);
         }
-        page_title.setText("商品详情");
+        page_title_ll.setText("商品详情");
         userId=(String)SPUtils.get(ProductShowActivity.this, Constants.USER_KEY,"");
         bean=(ProductBean) getIntent().getSerializableExtra("model");
         bean.setNum(1);
@@ -105,6 +110,7 @@ public class ProductShowActivity extends BaseActivity  {
         tv_price.setText("￥"+bean.getCost());
         tv_proproty.setText(bean.getAttribute());
         description.setText(bean.getGoodsDescription());
+        tv_num.setText("库存："+bean.getStore());
     }
 
     @Override
@@ -114,7 +120,7 @@ public class ProductShowActivity extends BaseActivity  {
 
 
     @Override
-    @OnClick({R.id.tv_buy,R.id.tv_incart,R.id.finish_back})
+    @OnClick({R.id.tv_buy,R.id.img_cart,R.id.tv_incart,R.id.finish_back})
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.tv_buy:

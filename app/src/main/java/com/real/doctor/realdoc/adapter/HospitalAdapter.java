@@ -40,11 +40,11 @@ public class HospitalAdapter extends RdBaseAdapter<HospitalBean> {
         }
         holder.hospital_title.setText(bean.hospitalName);
         holder.hospital_level.setText(bean.hospitalLevel);
-        holder.hospital_markNum.setText("预约量为："+bean.markNum);
+        holder.hospital_markNum.setText("预约量为："+bean.receiveNum);
 
         DecimalFormat df = new DecimalFormat("#");
         Double distance=DistanceUtil.getDistance(RegistrationsActivity.latitude,RegistrationsActivity.longitude,Double.parseDouble(bean.lat),Double.parseDouble(bean.lng));
-        holder.tv_distance.setText("距"+ df.format(distance)+"米");
+        holder.tv_distance.setText("距"+ df.format(distance/1000)+"公里");
         Glide.with(mContext).load(bean.hospitalImage).crossFade().into((ImageView) holder.hospital_detail_img);
         return convertView;
     }

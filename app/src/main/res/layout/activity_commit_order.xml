@@ -9,29 +9,17 @@
         android:layout_height="match_parent">
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_above="@+id/bt_pay"
+            android:layout_above="@+id/rl_bottom"
             android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:padding="@dimen/dp_4"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/pay_price"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:id="@+id/tv_count_price"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
+                <com.real.doctor.realdoc.view.PayShowListView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/lv_products"
+                    ></com.real.doctor.realdoc.view.PayShowListView>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
@@ -54,23 +42,7 @@
                         android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:padding="@dimen/dp_4"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="@string/pay_product"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
 
-          <com.real.doctor.realdoc.view.PayShowListView
-              android:layout_height="wrap_content"
-              android:layout_width="match_parent"
-              android:id="@+id/lv_products"
-              ></com.real.doctor.realdoc.view.PayShowListView>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -80,8 +52,9 @@
         <RadioGroup android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:id="@+id/pay_type"
+            android:paddingLeft="@dimen/txt_10"
+            android:paddingRight="@dimen/txt_10"
             android:orientation="vertical"
-            android:background="@drawable/pay_bg"
             android:gravity="center">
             <RadioButton android:layout_height="wrap_content"
                 android:layout_width="match_parent"
@@ -89,33 +62,60 @@
                 android:id="@+id/weixin"
                 android:checked="true"
                 android:button="@drawable/check_box_bg"
-                android:layout_weight="1"
                 android:layout_gravity="center"
                 android:textSize="2dp"
-                android:drawableTop="@drawable/pay_winxin_bg"
+                android:drawableRight="@drawable/pay_winxin_bg"
                 />
             <RadioButton android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:gravity="center"
                 android:id="@+id/zhifubao"
+                android:layout_marginTop="@dimen/dp_4"
                 android:button="@drawable/check_box_bg"
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:textSize="2dp"
-                android:drawableTop="@drawable/pay_zhifubao_bg"
+                android:drawableRight="@drawable/pay_zhifubao_bg"
                 />
         </RadioGroup>
     </LinearLayout>
             </LinearLayout>
         </ScrollView>
-        <Button
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:id="@+id/bt_pay"
-            android:background="@drawable/pay_bg"
-            android:text="@string/pay"
-            android:layout_marginLeft="@dimen/dp_4"
-            android:layout_marginRight="@dimen/dp_4"
+            android:id="@+id/rl_bottom"
             android:layout_alignParentBottom="true"
-            android:layout_height="wrap_content" />
+            android:layout_height="50dp">
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/gray"
+                android:layout_height="1dp"></View>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/tv_count_price"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_12"
+                android:text="@string/count_price"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:id="@+id/tv_count_price"
+                android:textColor="@color/black"
+                android:layout_toLeftOf="@id/bt_pay"
+                android:textSize="@dimen/sp_12"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="100dp"
+            android:id="@+id/bt_pay"
+            android:background="@color/orange"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="@string/pay"
+            android:layout_height="match_parent" />
+        </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

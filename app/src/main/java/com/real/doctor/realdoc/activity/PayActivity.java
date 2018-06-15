@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.adapter.OrderProductAdapter;
 import com.real.doctor.realdoc.adapter.ProductAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.AddressBean;
@@ -67,7 +68,7 @@ public class PayActivity extends BaseActivity {
     @BindView(R.id.tv_count_price)
     TextView tvCountprice;
     @BindView(R.id.bt_pay)
-    Button btPay;
+    TextView btPay;
     @BindView(R.id.page_title)
     TextView pageTitle;
     @BindView(R.id.finish_back)
@@ -81,7 +82,7 @@ public class PayActivity extends BaseActivity {
     private IWXAPI api;
     public ArrayList<ProductBean> productBeanArrayList = new ArrayList<ProductBean>();
     public String totalPrice;
-    public ProductAdapter productAdapter;
+    public OrderProductAdapter productAdapter;
     public String userId;
     public final static int ADDRESS_EVENT_REQUEST_CODE = 2;
 
@@ -111,7 +112,7 @@ public class PayActivity extends BaseActivity {
         productBeanArrayList = (ArrayList<ProductBean>) getIntent().getSerializableExtra("goodsList");
         totalPrice = getIntent().getStringExtra("totalPrice");
         tvCountprice.setText(totalPrice);
-        productAdapter = new ProductAdapter(PayActivity.this, productBeanArrayList);
+        productAdapter = new OrderProductAdapter(PayActivity.this, productBeanArrayList);
         lv_products.setAdapter(productAdapter);
         productAdapter.notifyDataSetChanged();
     }
