@@ -262,11 +262,16 @@ public class RegisterActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     //环信用户注册
                                     //注册失败会抛出HyphenateException
-                                    try {
-                                        EMClient.getInstance().createAccount(mobilePhone, pwd);//同步方法
-                                    } catch (HyphenateException e) {
-                                        e.printStackTrace();
-                                    }
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                EMClient.getInstance().createAccount(mobilePhone, pwd);//同步方法
+                                            } catch (HyphenateException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
                                     ToastUtil.showLong(RegisterActivity.this, "用户注册成功!");
                                     actionStart(RegisterActivity.this, LoginActivity.class);
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
