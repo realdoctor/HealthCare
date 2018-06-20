@@ -11,12 +11,14 @@
  */
 package com.real.doctor.realdoc.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
@@ -29,10 +31,12 @@ import android.media.MediaRecorder.OnInfoListener;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -88,6 +92,14 @@ public class RecorderVideoActivity extends Activity implements
         // translucency mode，used in surface view
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         setContentView(R.layout.em_recorder_activity);
+        PackageManager p = getPackageManager();
+        boolean permission = (PackageManager.PERMISSION_GRANTED ==
+                p.checkPermission("android.permission.RECORD_AUDIO", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.CAMERA", "com.real.doctor.realdoc"));
+        if (!permission) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(RecorderVideoActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0);
+            }
+        }
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
                 CLASS_LABEL);

@@ -9,11 +9,14 @@ import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
+import com.real.doctor.realdoc.greendao.NewFriendsMsgsDao;
 import com.real.doctor.realdoc.greendao.UserBeanDao;
 import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.PreferenceManager;
 import com.real.doctor.realdoc.widget.Constant;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -78,6 +81,17 @@ public class UserManager {
     }
 
     /**
+     * 查询病历list列表
+     */
+    public List<UserBean> queryUserBeanList(Context context) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        UserBeanDao userBeanDao = daoSession.getUserBeanDao();
+        QueryBuilder<UserBean> qb = userBeanDao.queryBuilder();
+        List<UserBean> list = qb.list();
+        return list;
+    }
+
+    /**
      * 插入一条记录
      *
      * @param bean
@@ -86,6 +100,34 @@ public class UserManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         UserBeanDao userBeanDao = daoSession.getUserBeanDao();
         userBeanDao.insertOrReplace(bean);
+    }
+
+    /**
+     * 更改记录
+     *
+     * @param bean
+     */
+    public void saveUser(Context context, UserBean bean) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        UserBeanDao userBeanDao = daoSession.getUserBeanDao();
+        List<UserBean> list = queryUserBeanList(context);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setAvater(bean.getAvater());
+            list.get(i).setName(bean.getName());
+            list.get(i).setRealname(bean.getRealname());
+            insertUser(context, list.get(i));
+        }
+    }
+
+    /**
+     * delete a contact
+     *
+     * @param username
+     */
+    synchronized public void deleteContact(String username) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        UserBeanDao userBeanDao = daoSession.getUserBeanDao();
+        userBeanDao.queryBuilder().where(UserBeanDao.Properties.Realname.eq(username)).buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
     /**
@@ -254,6 +296,26 @@ public class UserManager {
 
     public boolean isPushCall() {
         return PreferenceManager.getInstance().isPushCall();
+    }
+
+    public boolean isChatroomOwnerLeaveAllowed() {
+        return PreferenceManager.getInstance().getSettingAllowChatroomOwnerLeave();
+    }
+
+    public boolean isDeleteMessagesAsExitGroup() {
+        return PreferenceManager.getInstance().isDeleteMessagesAsExitGroup();
+    }
+
+    public boolean isAutoAcceptGroupInvitation() {
+        return PreferenceManager.getInstance().isAutoAcceptGroupInvitation();
+    }
+
+    public void setGroupsSynced(boolean synced) {
+        PreferenceManager.getInstance().setGroupsSynced(synced);
+    }
+
+    public void setBlacklistSynced(boolean synced) {
+        PreferenceManager.getInstance().setBlacklistSynced(synced);
     }
 
     enum Key {

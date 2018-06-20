@@ -28,7 +28,7 @@ import com.real.doctor.realdoc.greendao.SaveDocBeanDao;
  */
 @SuppressLint("ParcelCreator")
 @Entity
-public class SaveDocBean implements Parcelable{
+public class SaveDocBean implements Parcelable {
 
     @Id
     @SerializedName("diagCode")
@@ -90,26 +90,26 @@ public class SaveDocBean implements Parcelable{
     }
 
 
-@Generated(hash = 434754401)
-public SaveDocBean(String id, String ill, String hospital, String doctor,
-        String time, String folder, String imgs, String advice, String orgCode,
-        String patientDiagId, String patientId, String visitDeptName,
-        String visitWay, boolean isSelect) {
-    this.id = id;
-    this.ill = ill;
-    this.hospital = hospital;
-    this.doctor = doctor;
-    this.time = time;
-    this.folder = folder;
-    this.imgs = imgs;
-    this.advice = advice;
-    this.orgCode = orgCode;
-    this.patientDiagId = patientDiagId;
-    this.patientId = patientId;
-    this.visitDeptName = visitDeptName;
-    this.visitWay = visitWay;
-    this.isSelect = isSelect;
-}
+    @Generated(hash = 434754401)
+    public SaveDocBean(String id, String ill, String hospital, String doctor,
+                       String time, String folder, String imgs, String advice, String orgCode,
+                       String patientDiagId, String patientId, String visitDeptName,
+                       String visitWay, boolean isSelect) {
+        this.id = id;
+        this.ill = ill;
+        this.hospital = hospital;
+        this.doctor = doctor;
+        this.time = time;
+        this.folder = folder;
+        this.imgs = imgs;
+        this.advice = advice;
+        this.orgCode = orgCode;
+        this.patientDiagId = patientDiagId;
+        this.patientId = patientId;
+        this.visitDeptName = visitDeptName;
+        this.visitWay = visitWay;
+        this.isSelect = isSelect;
+    }
 
 
     protected SaveDocBean(Parcel in) {
@@ -169,282 +169,290 @@ public SaveDocBean(String id, String ill, String hospital, String doctor,
     }
 
 
-public String getId() {
-    return this.id;
-}
+    public String getId() {
+        return this.id;
+    }
 
 
-public void setId(String id) {
-    this.id = id;
-}
+    public void setId(String id) {
+        this.id = id;
+    }
 
 
-public String getIll() {
-    return this.ill;
-}
+    public String getIll() {
+        return this.ill;
+    }
 
 
-public void setIll(String ill) {
-    this.ill = ill;
-}
+    public void setIll(String ill) {
+        this.ill = ill;
+    }
 
 
-public String getHospital() {
-    return this.hospital;
-}
+    public String getHospital() {
+        return this.hospital;
+    }
 
 
-public void setHospital(String hospital) {
-    this.hospital = hospital;
-}
+    public void setHospital(String hospital) {
+        this.hospital = hospital;
+    }
 
 
-public String getDoctor() {
-    return this.doctor;
-}
+    public String getDoctor() {
+        return this.doctor;
+    }
 
 
-public void setDoctor(String doctor) {
-    this.doctor = doctor;
-}
+    public void setDoctor(String doctor) {
+        this.doctor = doctor;
+    }
 
 
-public String getTime() {
-    return this.time;
-}
+    public String getTime() {
+        return this.time;
+    }
 
 
-public void setTime(String time) {
-    this.time = time;
-}
+    public void setTime(String time) {
+        this.time = time;
+    }
 
 
-public String getFolder() {
-    return this.folder;
-}
+    public String getFolder() {
+        return this.folder;
+    }
 
 
-public void setFolder(String folder) {
-    this.folder = folder;
-}
+    public void setFolder(String folder) {
+        this.folder = folder;
+    }
 
 
-public String getImgs() {
-    return this.imgs;
-}
+    public String getImgs() {
+        return this.imgs;
+    }
 
 
-public void setImgs(String imgs) {
-    this.imgs = imgs;
-}
+    public void setImgs(String imgs) {
+        this.imgs = imgs;
+    }
 
 
-public String getAdvice() {
-    return this.advice;
-}
+    public String getAdvice() {
+        return this.advice;
+    }
 
 
-public void setAdvice(String advice) {
-    this.advice = advice;
-}
+    public void setAdvice(String advice) {
+        this.advice = advice;
+    }
 
 
-public String getOrgCode() {
-    return this.orgCode;
-}
+    public String getOrgCode() {
+        return this.orgCode;
+    }
 
 
-public void setOrgCode(String orgCode) {
-    this.orgCode = orgCode;
-}
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
 
 
-public String getPatientDiagId() {
-    return this.patientDiagId;
-}
+    public String getPatientDiagId() {
+        return this.patientDiagId;
+    }
 
 
-public void setPatientDiagId(String patientDiagId) {
-    this.patientDiagId = patientDiagId;
-}
+    public void setPatientDiagId(String patientDiagId) {
+        this.patientDiagId = patientDiagId;
+    }
 
 
-public String getPatientId() {
-    return this.patientId;
-}
+    public String getPatientId() {
+        return this.patientId;
+    }
 
 
-public void setPatientId(String patientId) {
-    this.patientId = patientId;
-}
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
 
 
-public String getVisitDeptName() {
-    return this.visitDeptName;
-}
+    public String getVisitDeptName() {
+        return this.visitDeptName;
+    }
 
 
-public void setVisitDeptName(String visitDeptName) {
-    this.visitDeptName = visitDeptName;
-}
+    public void setVisitDeptName(String visitDeptName) {
+        this.visitDeptName = visitDeptName;
+    }
 
 
-public String getVisitWay() {
-    return this.visitWay;
-}
+    public String getVisitWay() {
+        return this.visitWay;
+    }
 
 
-public void setVisitWay(String visitWay) {
-    this.visitWay = visitWay;
-}
+    public void setVisitWay(String visitWay) {
+        this.visitWay = visitWay;
+    }
 
 
-public boolean getIsSelect() {
-    return this.isSelect;
-}
+    public boolean getIsSelect() {
+        return this.isSelect;
+    }
 
 
-public void setIsSelect(boolean isSelect) {
-    this.isSelect = isSelect;
-}
+    public void setIsSelect(boolean isSelect) {
+        this.isSelect = isSelect;
+    }
 
 
-/**
- * To-many relationship, resolved on first access (and after reset).
- * Changes to to-many relations are not persisted, make changes to the target entity.
- */
-@Generated(hash = 92669509)
-public List<ImageListBean> getImageListBeans() {
-    if (imageListBeans == null) {
-        final DaoSession daoSession = this.daoSession;
-        if (daoSession == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }
-        ImageListBeanDao targetDao = daoSession.getImageListBeanDao();
-        List<ImageListBean> imageListBeansNew = targetDao
-                ._querySaveDocBean_ImageListBeans(id);
-        synchronized (this) {
-            if (imageListBeans == null) {
-                imageListBeans = imageListBeansNew;
+    /**
+     * To-many relationship, resolved on first access (and after reset).
+     * Changes to to-many relations are not persisted, make changes to the target entity.
+     */
+    @Generated(hash = 92669509)
+    public List<ImageListBean> getImageListBeans() {
+        if (imageListBeans == null) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            ImageListBeanDao targetDao = daoSession.getImageListBeanDao();
+            List<ImageListBean> imageListBeansNew = targetDao
+                    ._querySaveDocBean_ImageListBeans(id);
+            synchronized (this) {
+                if (imageListBeans == null) {
+                    imageListBeans = imageListBeansNew;
+                }
             }
         }
+        return imageListBeans;
     }
-    return imageListBeans;
-}
 
 
-/** Resets a to-many relationship, making the next get call to query for a fresh result. */
-@Generated(hash = 640787854)
-public synchronized void resetImageListBeans() {
-    imageListBeans = null;
-}
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
+    @Generated(hash = 640787854)
+    public synchronized void resetImageListBeans() {
+        imageListBeans = null;
+    }
 
 
-/**
- * To-many relationship, resolved on first access (and after reset).
- * Changes to to-many relations are not persisted, make changes to the target entity.
- */
-@Generated(hash = 706159832)
-public List<RecordBean> getAudioList() {
-    if (audioList == null) {
-        final DaoSession daoSession = this.daoSession;
-        if (daoSession == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }
-        RecordBeanDao targetDao = daoSession.getRecordBeanDao();
-        List<RecordBean> audioListNew = targetDao
-                ._querySaveDocBean_AudioList(id);
-        synchronized (this) {
-            if (audioList == null) {
-                audioList = audioListNew;
+    /**
+     * To-many relationship, resolved on first access (and after reset).
+     * Changes to to-many relations are not persisted, make changes to the target entity.
+     */
+    @Generated(hash = 706159832)
+    public List<RecordBean> getAudioList() {
+        if (audioList == null) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            RecordBeanDao targetDao = daoSession.getRecordBeanDao();
+            List<RecordBean> audioListNew = targetDao
+                    ._querySaveDocBean_AudioList(id);
+            synchronized (this) {
+                if (audioList == null) {
+                    audioList = audioListNew;
+                }
             }
         }
+        return audioList;
     }
-    return audioList;
-}
 
 
-/** Resets a to-many relationship, making the next get call to query for a fresh result. */
-@Generated(hash = 1629719131)
-public synchronized void resetAudioList() {
-    audioList = null;
-}
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
+    @Generated(hash = 1629719131)
+    public synchronized void resetAudioList() {
+        audioList = null;
+    }
 
 
-/**
- * To-many relationship, resolved on first access (and after reset).
- * Changes to to-many relations are not persisted, make changes to the target entity.
- */
-@Generated(hash = 1048978764)
-public List<VideoBean> getVideoList() {
-    if (videoList == null) {
-        final DaoSession daoSession = this.daoSession;
-        if (daoSession == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }
-        VideoBeanDao targetDao = daoSession.getVideoBeanDao();
-        List<VideoBean> videoListNew = targetDao
-                ._querySaveDocBean_VideoList(id);
-        synchronized (this) {
-            if (videoList == null) {
-                videoList = videoListNew;
+    /**
+     * To-many relationship, resolved on first access (and after reset).
+     * Changes to to-many relations are not persisted, make changes to the target entity.
+     */
+    @Generated(hash = 1048978764)
+    public List<VideoBean> getVideoList() {
+        if (videoList == null) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            VideoBeanDao targetDao = daoSession.getVideoBeanDao();
+            List<VideoBean> videoListNew = targetDao
+                    ._querySaveDocBean_VideoList(id);
+            synchronized (this) {
+                if (videoList == null) {
+                    videoList = videoListNew;
+                }
             }
         }
+        return videoList;
     }
-    return videoList;
-}
 
 
-/** Resets a to-many relationship, making the next get call to query for a fresh result. */
-@Generated(hash = 1186219891)
-public synchronized void resetVideoList() {
-    videoList = null;
-}
-
-
-/**
- * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
- * Entity must attached to an entity context.
- */
-@Generated(hash = 128553479)
-public void delete() {
-    if (myDao == null) {
-        throw new DaoException("Entity is detached from DAO context");
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
+    @Generated(hash = 1186219891)
+    public synchronized void resetVideoList() {
+        videoList = null;
     }
-    myDao.delete(this);
-}
 
 
-/**
- * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
- * Entity must attached to an entity context.
- */
-@Generated(hash = 1942392019)
-public void refresh() {
-    if (myDao == null) {
-        throw new DaoException("Entity is detached from DAO context");
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 128553479)
+    public void delete() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.delete(this);
     }
-    myDao.refresh(this);
-}
 
 
-/**
- * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
- * Entity must attached to an entity context.
- */
-@Generated(hash = 713229351)
-public void update() {
-    if (myDao == null) {
-        throw new DaoException("Entity is detached from DAO context");
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 1942392019)
+    public void refresh() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.refresh(this);
     }
-    myDao.update(this);
-}
 
 
-/** called by internal mechanisms, do not call yourself. */
-@Generated(hash = 748456124)
-public void __setDaoSession(DaoSession daoSession) {
-    this.daoSession = daoSession;
-    myDao = daoSession != null ? daoSession.getSaveDocBeanDao() : null;
-}
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 713229351)
+    public void update() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.update(this);
+    }
+
+
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
+    @Generated(hash = 748456124)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getSaveDocBeanDao() : null;
+    }
 }

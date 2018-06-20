@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.platform.comapi.map.E;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
@@ -235,6 +237,8 @@ public class SettingActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(RealDocApplication.getContext(), "用户退出成功!");
                                     SPUtils.clear(SettingActivity.this);
+                                    //环信登出
+                                    loginOutHuanXin();
                                     //跳转到首页
                                     Intent intent = new Intent(SettingActivity.this, RealDocActivity.class);
                                     startActivity(intent);
@@ -250,6 +254,29 @@ public class SettingActivity extends BaseActivity {
                     }
 
                 });
+    }
+
+    private void loginOutHuanXin() {
+        EMClient.getInstance().logout(true, new EMCallBack() {
+
+            @Override
+            public void onSuccess() {
+                // TODO Auto-generated method stub
+                Log.d(TAG, "loginOut: onSuccess");
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                // TODO Auto-generated method stub
+                Log.d(TAG, "loginOut: onError");
+            }
+        });
     }
 
     @Override
