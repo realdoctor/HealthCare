@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
@@ -67,11 +68,15 @@ public class ProgressBarActivity extends BaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
+                String path = intent.getExtras().getString("folderName");
                 if (StringUtils.equals(action, HAVE_IMG)) {
                     ToastUtil.showLong(ProgressBarActivity.this, "病历资源打包成功!");
-                }else if(StringUtils.equals(action, HAVE_NOTHING)){
+                } else if (StringUtils.equals(action, HAVE_NOTHING)) {
                     ToastUtil.showLong(ProgressBarActivity.this, "没有病历资源可打包!");
                 }
+                Intent extras = new Intent();
+                extras.putExtra("path", path);
+                ProgressBarActivity.this.setResult(RESULT_OK, extras);
                 finish();
             }
         };

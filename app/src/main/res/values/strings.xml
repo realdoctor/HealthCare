@@ -169,6 +169,7 @@
     <string name="cancel_dialog_btn">取消</string>
     <string name="my_qr">我是"朱家斌"医生,这是我的二维码</string>
     <string name="my_qr_txt">请对准扫描枪</string>
+    <string name="go_zip_path">点击图片进入压缩包所在文件夹 </string>
     <!--二维码扫描-->
     <string name="title_activity_scan_qr_code">扫一扫</string>
     <string name="close">关闭</string>

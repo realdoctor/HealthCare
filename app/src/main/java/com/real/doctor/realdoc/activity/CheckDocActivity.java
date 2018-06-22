@@ -36,6 +36,8 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
 
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
     @BindView(R.id.select_all)
@@ -70,7 +72,8 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     }
 
     private void updateService() {
-        Intent intent = new Intent(CheckDocActivity.this, ProgressBarActivity.class);
+//        Intent intent = new Intent(CheckDocActivity.this, ProgressBarActivity.class);
+        Intent intent = new Intent(CheckDocActivity.this, CheckDetailActivity.class);
         List<SaveDocBean> mList = new ArrayList<>();
         for (int i = mCheckDocAdapter.getSaveDocBeanList().size(), j = 0; i > j; i--) {
             SaveDocBean mSaveDocBean = mCheckDocAdapter.getSaveDocBeanList().get(i - 1);
@@ -108,6 +111,7 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
 
     @Override
     public void initData() {
+        pageTitle.setText("病历打包");
         mCheckDocAdapter = new CheckDocAdapter(this);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(mLinearLayoutManager);

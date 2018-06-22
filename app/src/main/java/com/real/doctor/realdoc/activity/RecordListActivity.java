@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,22 +30,41 @@ import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.GsonUtil;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
+import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.view.TriangleDrawable;
+import com.real.doctor.realdoc.view.popup.EasyPopup;
+import com.real.doctor.realdoc.view.popup.XGravity;
+import com.real.doctor.realdoc.view.popup.YGravity;
 import com.real.doctor.realdoc.widget.timepicker.CustomDatePicker;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
+import okhttp3.ResponseBody;
 
 public class RecordListActivity extends BaseActivity {
 
@@ -52,12 +72,16 @@ public class RecordListActivity extends BaseActivity {
     public static String RECORD_LIST_TEXT = "android.intent.action.record.list";
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
+    @BindView(R.id.title)
+    RelativeLayout title;
     @BindView(R.id.page_title)
     TextView pageTitle;
     @BindView(R.id.right_title)
     TextView rightTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    @BindView(R.id.right_icon)
+    ImageView rightIcon;
     DocDetailAdapter docDetailAdapter;
     @BindView(R.id.record_list_recycler)
     RecyclerView recordListlRecycleView;
@@ -86,6 +110,10 @@ public class RecordListActivity extends BaseActivity {
     private List<String> diseaseList;
     private SaveDocManager instance = null;
     private CustomDatePicker customDatePicker1, customDatePicker2;
+    private EasyPopup mRightPop;
+    private boolean getList = false;
+    private String token;
+    private String verifyFlag = "";
 
     @Override
     public int getLayoutId() {
@@ -107,9 +135,16 @@ public class RecordListActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        token = (String) SPUtils.get(RecordListActivity.this, "token", "");
+        String mobile = (String) SPUtils.get(RecordListActivity.this, "mobile", "");
         pageTitle.setText("病历列表");
-        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setVisibility(View.GONE);
         rightTitle.setText("新增");
+        rightIcon.setVisibility(View.VISIBLE);
+        if (EmptyUtils.isNotEmpty(token)) {
+            //实名认证
+            checkName(mobile);
+        }
         recordList = new ArrayList<>();
         instance = SaveDocManager.getInstance(RecordListActivity.this);
         if (EmptyUtils.isNotEmpty(instance)) {
@@ -161,6 +196,7 @@ public class RecordListActivity extends BaseActivity {
                 }, 3000);
             }
         });
+        initAbovePop();
     }
 
     @Override
@@ -252,8 +288,56 @@ public class RecordListActivity extends BaseActivity {
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 
+    private void initAbovePop() {
+        mRightPop = EasyPopup.create()
+                .setContext(this)
+                .setContentView(R.layout.right_pop_layout)
+                .setAnimationStyle(R.style.RightTopPopAnim)
+                .setOnViewListener(new EasyPopup.OnViewListener() {
+                    @Override
+                    public void initViews(View view) {
+                        View arrowView = view.findViewById(R.id.v_arrow);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            arrowView.setBackground(new TriangleDrawable(TriangleDrawable.TOP, Color.parseColor("#ff03b5e5")));
+                        }
+                    }
+                })
+                .setFocusAndOutsideEnable(true)
+                .apply();
+        TextView modify = mRightPop.findViewById(R.id.modify);
+        TextView compare = mRightPop.findViewById(R.id.compare);
+        modify.setText("新增");
+        compare.setText("获取远程病历");
+        modify.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                actionStart(RecordListActivity.this, SaveRecordActivity.class);
+                mRightPop.dismiss();
+            }
+        });
+        compare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到实名认证页面
+                if (EmptyUtils.isEmpty(token)) {
+                    Intent intent = new Intent(RecordListActivity.this, LoginActivity.class);
+                    intent.putExtra("get_list", true);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(RecordListActivity.this, VerifyActivity.class);
+                    intent.putExtra("get_list", true);
+                    startActivity(intent);
+                    finish();
+                }
+                mRightPop.dismiss();
+            }
+        });
+    }
+
     @Override
-    @OnClick({R.id.select_time_record, R.id.select_disease_record, R.id.start_time, R.id.end_time, R.id.confirm_btn, R.id.finish_back, R.id.right_title})
+    @OnClick({R.id.select_time_record, R.id.select_disease_record, R.id.start_time, R.id.end_time, R.id.confirm_btn, R.id.finish_back, R.id.right_title, R.id.right_icon})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.select_time_record:
@@ -307,7 +391,16 @@ public class RecordListActivity extends BaseActivity {
             case R.id.right_title:
                 actionStart(this, SaveRecordActivity.class);
                 break;
+            case R.id.right_icon:
+                showRightPop(v);
+                break;
         }
+    }
+
+    private void showRightPop(View view) {
+        int offsetX = SizeUtils.dp2px(this, 20) - view.getWidth() / 2;
+        int offsetY = (title.getHeight() - view.getHeight()) / 2;
+        mRightPop.showAtAnchorView(view, YGravity.BELOW, XGravity.ALIGN_RIGHT, offsetX, offsetY);
     }
 
     public void refreshList() {
@@ -349,5 +442,68 @@ public class RecordListActivity extends BaseActivity {
                 initEvent();
             }
         }
+    }
+
+    private void checkName(String mobilePhone) {
+        HashMap<String, String> param = new HashMap<String, String>();
+        param.put("mobilePhone", mobilePhone);
+        HttpRequestClient.getInstance(RecordListActivity.this).createBaseApi().get("user/certification/check"
+                , param, new BaseObserver<ResponseBody>(RecordListActivity.this) {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONObject obj = object.getJSONObject("data");
+                                    if (DocUtils.hasValue(obj, "verifyFlag")) {
+                                        verifyFlag = obj.getString("verifyFlag");
+                                        SPUtils.put(RecordListActivity.this, "verifyFlag", verifyFlag);
+                                        if (StringUtils.equals(verifyFlag, "1")) {
+                                            rightTitle.setVisibility(View.VISIBLE);
+                                            rightIcon.setVisibility(View.GONE);
+                                        } else {
+                                            rightTitle.setVisibility(View.GONE);
+                                            rightIcon.setVisibility(View.VISIBLE);
+                                        }
+                                    }
+                                } else {
+                                    ToastUtil.showLong(RecordListActivity.this, "获取用户信息失败.请确定是否已登录!");
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
     }
 }

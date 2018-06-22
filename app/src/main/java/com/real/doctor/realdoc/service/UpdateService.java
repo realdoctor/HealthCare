@@ -196,9 +196,11 @@ public class UpdateService extends JobService {
                 if (isTrue() && zip) {
                     //动态注册广播
                     Intent intent = new Intent(ProgressBarActivity.HAVE_IMG);
+                    intent.putExtra("folderName", SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
                     LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
                 } else {
                     Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
+                    intent.putExtra("folderName", SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
                     LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
                 }
             }

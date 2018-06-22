@@ -24,7 +24,7 @@
             android:layout_height="72.0dip"
             android:layout_marginLeft="145.0dip"
             android:layout_marginTop="50.0dip"
-            android:src="@mipmap/login_logo" />
+            android:src="@mipmap/icon_app" />
     </RelativeLayout>
 
     <EditText

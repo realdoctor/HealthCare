@@ -26,6 +26,15 @@
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/page_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <TextView
                 android:id="@+id/btn_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -33,7 +42,7 @@
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
-                android:text="病历图片打包"
+                android:text="病历打包"
                 android:textColor="#ffffff"
                 android:textSize="15sp" />
         </RelativeLayout>

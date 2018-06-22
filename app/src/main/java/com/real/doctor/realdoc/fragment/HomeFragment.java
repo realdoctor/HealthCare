@@ -23,16 +23,19 @@ import android.widget.ViewFlipper;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.CaseControlActivity;
 import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyQrActivity;
+import com.real.doctor.realdoc.activity.PatientEduActivity;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.DocContentActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
 import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.activity.ScannerActivity;
 import com.real.doctor.realdoc.activity.SearchHistoryListActivity;
+import com.real.doctor.realdoc.activity.VerifyActivity;
 import com.real.doctor.realdoc.adapter.HomeRecordAdapter;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseFragment;
@@ -42,6 +45,7 @@ import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.floatmenu.FloatBallManager;
 import com.real.doctor.realdoc.view.floatmenu.floatball.FloatBallCfg;
@@ -57,6 +61,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.bingoogolapple.bgabanner.BGABanner;
 import cn.bingoogolapple.bgabanner.BGABannerUtil;
+
+import static com.real.doctor.realdoc.fragment.UserFragment.VERIFY_TEXT;
 
 /**
  * user：lqm
@@ -111,6 +117,7 @@ public class HomeFragment extends BaseFragment {
     private boolean personFlag = true;
     //该标识用来识别是从首页进入其他页面的,这样就可以处理返回回来按钮显示或不显示的问题
     private boolean isHomeIn = false;
+    private String verifyFlag = "";
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -142,6 +149,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void doBusiness(Context mContext) {
+        verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
         //滚轮
         List<View> views = new ArrayList<>();
         views.add(BGABannerUtil.getItemImageView(getActivity(), R.mipmap.useravator_bg));
@@ -156,18 +164,20 @@ public class HomeFragment extends BaseFragment {
         });
         token = (String) SPUtils.get(getActivity(), "token", "");
         if (EmptyUtils.isNotEmpty(token)) {
-            instance = SaveDocManager.getInstance(getActivity());
-            if (EmptyUtils.isNotEmpty(instance)) {
-                recordList = instance.querySaveDocList(getActivity());
-                recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-                //添加分割线
-                divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-                divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.disease_divider));
-                recycleView.addItemDecoration(divider);
-                adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
-                recycleView.setAdapter(adapter);
+            if (verifyFlag.equals("1")) {
+                instance = SaveDocManager.getInstance(getActivity());
+                if (EmptyUtils.isNotEmpty(instance)) {
+                    recordList = instance.querySaveDocList(getActivity());
+                    recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                    //添加分割线
+                    divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+                    divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.disease_divider));
+                    recycleView.addItemDecoration(divider);
+                    adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
+                    recycleView.setAdapter(adapter);
+                }
+                initEvent();
             }
-            initEvent();
         }
         localBroadcast();
     }
@@ -281,19 +291,19 @@ public class HomeFragment extends BaseFragment {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LoginActivity.RECORD_LIST_HOME);
+        intentFilter.addAction(VERIFY_TEXT);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (EmptyUtils.isNotEmpty(instance)) {
-                    recordList = instance.querySaveDocList(getActivity());
-                    recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-                    //添加分割线
-//                    recycleView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-                    divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.disease_divider));
-                    recycleView.addItemDecoration(divider);
-                    adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
-                    recycleView.setAdapter(adapter);
-                    initEvent();
+                String action = intent.getAction();
+                instance = SaveDocManager.getInstance(getActivity());
+                if (action.equals(LoginActivity.RECORD_LIST_HOME)) {
+                    recordList();
+                } else if (action.equals(VERIFY_TEXT)) {
+                    verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+                    if (StringUtils.equals(verifyFlag, "1")) {
+                        recordList();
+                    }
                 }
             }
         };
@@ -317,6 +327,21 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
+    private void recordList() {
+        if (EmptyUtils.isNotEmpty(instance)) {
+            recordList = instance.querySaveDocList(getActivity());
+            recycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            //添加分割线
+            divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+//                    recycleView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+            divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.disease_divider));
+            recycleView.addItemDecoration(divider);
+            adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
+            recycleView.setAdapter(adapter);
+            initEvent();
+        }
+    }
+
     @OnClick({R.id.home_search, R.id.save_doc_linear, R.id.base_cure, R.id.doctor_online, R.id.scan_icon, R.id.appoint_icon, R.id.case_control, R.id.patient_education, R.id.telemedicine, R.id.my_qr})
     @Override
     public void widgetClick(View v) {
@@ -330,41 +355,35 @@ public class HomeFragment extends BaseFragment {
                     startActivity(intent);
                     break;
                 case R.id.save_doc_linear:
-                    if (EmptyUtils.isNotEmpty(token)) {
-                        isHomeIn = true;
-                        intent = new Intent(getActivity(), RecordListActivity.class);
-                        startActivity(intent);
-                    } else {
-                        ToastUtil.showLong(getActivity(), "请登录您的账户!");
-                    }
+                    isHomeIn = true;
+                    intent = new Intent(getActivity(), RecordListActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.base_cure:
-                    if (EmptyUtils.isNotEmpty(token)) {
-                        isHomeIn = true;
-                        intent = new Intent(getActivity(), ProductShowByCategoryActivity.class);
-                        startActivity(intent);
-                    } else {
-                        ToastUtil.showLong(getActivity(), "请登录您的账户!");
-                    }
+                    isHomeIn = true;
+                    intent = new Intent(getActivity(), ProductShowByCategoryActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.doctor_online:
                     if (EmptyUtils.isNotEmpty(token)) {
-                        isHomeIn = true;
-                        //在线复诊
-                        intent = new Intent(getActivity(), DoctorsListActivity.class);
-                        startActivity(intent);
+                        if (verifyFlag.equals("1")) {
+                            isHomeIn = true;
+                            //在线复诊
+                            intent = new Intent(getActivity(), DoctorsListActivity.class);
+                            startActivity(intent);
+                        } else {
+                            //跳转到实名认证页面
+                            intent = new Intent(getActivity(), VerifyActivity.class);
+                            startActivity(intent);
+                        }
                     } else {
                         ToastUtil.showLong(getActivity(), "请登录您的账户!");
                     }
                     break;
                 case R.id.appoint_icon:
-                    if (EmptyUtils.isNotEmpty(token)) {
-                        isHomeIn = true;
-                        intent = new Intent(getActivity(), RegistrationsActivity.class);
-                        startActivity(intent);
-                    } else {
-                        ToastUtil.showLong(getActivity(), "请登录您的账户!");
-                    }
+                    isHomeIn = true;
+                    intent = new Intent(getActivity(), RegistrationsActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.scan_icon:
                     isHomeIn = true;
@@ -381,6 +400,9 @@ public class HomeFragment extends BaseFragment {
                     }
                     break;
                 case R.id.patient_education:
+                    isHomeIn = true;
+                    intent = new Intent(getActivity(), PatientEduActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.telemedicine:
                     break;

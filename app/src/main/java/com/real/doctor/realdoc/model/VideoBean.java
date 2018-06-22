@@ -10,8 +10,8 @@ import org.greenrobot.greendao.annotation.Generated;
 public class VideoBean implements Parcelable {
 
     @Id
-    private String fileName;
-    private String filePath;
+    public String fileName;
+    public String filePath;
     private String elapsedMillis;
     private String date;
     private String folder;

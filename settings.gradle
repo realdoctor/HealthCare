@@ -1,1 +1,1 @@
-include ':app', ':zxing', ':easeui', ':hmspush'
+include ':app', ':zxing', ':easeui', ':hmspush' ,':playerbase', ':ijkplayer'

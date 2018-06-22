@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10.0dip"
-        android:text="我病我医"
+        android:text="@string/name"
         android:textColor="#ff333333"
         android:textSize="14.0sp" />
 

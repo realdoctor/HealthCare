@@ -1,8 +1,12 @@
 package com.real.doctor.realdoc.util;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.real.doctor.realdoc.application.RealDocApplication;
@@ -127,5 +131,23 @@ public class DocUtils {
      */
     public static int getPixelById(int dimensionId) {
         return RealDocApplication.getContext().getResources().getDimensionPixelSize(dimensionId);
+    }
+
+    /**
+     * 使用文件管理器打开指定文件夹，浏览里面的内容
+     *
+     * @return
+     */
+    public static void openAssignFolder(Context context, String path) {
+        File file = new File(path);
+        if (null == file || !file.exists()) {
+            return;
+        }
+        //获取父目录
+        File parentFlie = new File(file.getParent());
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setDataAndType(Uri.fromFile(parentFlie), "*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        context.startActivity(intent);
     }
 }

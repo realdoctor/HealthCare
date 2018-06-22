@@ -32,6 +32,7 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
 
@@ -114,6 +115,11 @@ public class UserFragment extends BaseFragment {
         pageTitle.setText("个人中心");
         token = (String) SPUtils.get(getActivity(), "token", "");
         mobile = (String) SPUtils.get(getActivity(), "mobile", "");
+        verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+        if(StringUtils.equals(verifyFlag,"")){
+            //实名认证
+            checkName(mobile);
+        }
         //获得用户信息
         getUserInfo();
         localBroadcast();
@@ -122,13 +128,14 @@ public class UserFragment extends BaseFragment {
     private void localBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(VERIFY_TEXT);
-        intentFilter.addAction(AccountActivity.CHANGE_AVATOR);
+
+        intentFilter.addAction(AccountActivity.CHANGE_AVATOR);        intentFilter.addAction(VERIFY_TEXT);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(VERIFY_TEXT)) {
+                    verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
                     getUserInfo();
                 } else if (action.equals(AccountActivity.CHANGE_AVATOR)) {
                     originalImageUrl = (String) intent.getExtras().get("avator");
@@ -139,64 +146,7 @@ public class UserFragment extends BaseFragment {
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 
-    private void checkName() {
-        HashMap<String, String> param = new HashMap<String, String>();
-        param.put("mobilePhone", mobile);
-        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("user/certification/check"
-                , param, new BaseObserver<ResponseBody>(getActivity()) {
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    protected void onHandleSuccess(ResponseBody responseBody) {
-                        String data = null;
-                        String msg = null;
-                        String code = null;
-                        try {
-                            data = responseBody.string().toString();
-                            try {
-                                JSONObject object = new JSONObject(data);
-                                if (DocUtils.hasValue(object, "msg")) {
-                                    msg = object.getString("msg");
-                                }
-                                if (DocUtils.hasValue(object, "code")) {
-                                    code = object.getString("code");
-                                }
-                                if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject obj = object.getJSONObject("data");
-                                    if (DocUtils.hasValue(obj, "verifyFlag")) {
-                                        verifyFlag = obj.getString("verifyFlag");
-                                    }
-                                } else {
-                                    ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                });
-    }
-
     private void getUserInfo() {
-        //实名认证
-        checkName();
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("mobilePhone", mobile);
         HttpRequestClient.getInstance(getActivity()).createBaseApi().get("user/info"
@@ -283,20 +233,44 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.user_function_one:
-                intent = new Intent(getActivity(), MyRegistrationActivity.class);
-                startActivity(intent);
+                if (verifyFlag.equals("1")) {
+                    intent = new Intent(getActivity(), MyRegistrationActivity.class);
+                    startActivity(intent);
+                } else {
+                    //跳转到实名认证页面
+                    intent = new Intent(getActivity(), VerifyActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.user_function_two:
-                intent = new Intent(getActivity(), RecordListActivity.class);
-                startActivity(intent);
+                if (verifyFlag.equals("1")) {
+                    intent = new Intent(getActivity(), RecordListActivity.class);
+                    startActivity(intent);
+                } else {
+                    //跳转到实名认证页面
+                    intent = new Intent(getActivity(), VerifyActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.user_function_three:
-                intent = new Intent(getActivity(), DoctorsListActivity.class);
-                startActivity(intent);
+                if (verifyFlag.equals("1")) {
+                    intent = new Intent(getActivity(), DoctorsListActivity.class);
+                    startActivity(intent);
+                } else {
+                    //跳转到实名认证页面
+                    intent = new Intent(getActivity(), VerifyActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.user_function_four:
-                intent = new Intent(getActivity(), OrderListActivity.class);
-                startActivity(intent);
+                if (verifyFlag.equals("1")) {
+                    intent = new Intent(getActivity(), OrderListActivity.class);
+                    startActivity(intent);
+                } else {
+                    //跳转到实名认证页面
+                    intent = new Intent(getActivity(), VerifyActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.user_function_five:
                 intent = new Intent(getActivity(), MyFollowNewsActivity.class);
@@ -310,7 +284,61 @@ public class UserFragment extends BaseFragment {
                 break;
         }
     }
+    private void checkName(String mobilePhone) {
+        HashMap<String, String> param = new HashMap<String, String>();
+        param.put("mobilePhone", mobilePhone);
+        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("user/certification/check"
+                , param, new BaseObserver<ResponseBody>(getActivity()) {
 
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONObject obj = object.getJSONObject("data");
+                                    if (DocUtils.hasValue(obj, "verifyFlag")) {
+                                        verifyFlag = obj.getString("verifyFlag");
+                                        SPUtils.put(getActivity(), "verifyFlag", verifyFlag);
+                                    }
+                                } else {
+                                    ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

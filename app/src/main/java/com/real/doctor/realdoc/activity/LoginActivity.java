@@ -2,6 +2,7 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.CheckPhoneUtils;
 import com.real.doctor.realdoc.util.Constants;
@@ -26,6 +28,7 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.widget.EditTextPassword;
 import com.real.doctor.realdoc.widget.HuanXinHelper;
@@ -92,6 +95,7 @@ public class LoginActivity extends BaseActivity {
      * 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
      */
     private SsoHandler mSsoHandler;
+    private String verifyFlag = "";
 
     @Override
     public int getLayoutId() {
@@ -103,6 +107,8 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
+    private boolean getList = false;
+
     @Override
     public void initData() {
         //初始化一个IUiListener对象，在IUiListener接口的回调方法中获取到有关授权的某些信息
@@ -112,6 +118,13 @@ public class LoginActivity extends BaseActivity {
          * 新浪weibo登录
          * */
 //        mSsoHandler = new SsoHandler(LoginActivity.this);
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                getList = bundle.getBoolean("get_list", false);
+            }
+        }
     }
 
     @Override
@@ -126,15 +139,15 @@ public class LoginActivity extends BaseActivity {
         mTencent = Tencent.createInstance(Constants.QQ_APP_ID, this.getApplicationContext());
     }
 
-    //确保能接收到回调
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Tencent.onActivityResultData(requestCode, resultCode, data, mListener);
-        if (mSsoHandler != null) {
-            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
-        }
-    }
+//    //确保能接收到回调
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Tencent.onActivityResultData(requestCode, resultCode, data, mListener);
+//        if (mSsoHandler != null) {
+//            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+//        }
+//    }
 
     @Override
     @OnClick({R.id.user_register, R.id.button_login, R.id.login_dismiss})
@@ -244,10 +257,11 @@ public class LoginActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(RealDocApplication.getContext(), "用户登录成功!");
                                     if (DocUtils.hasValue(object, "data")) {
+                                        String token = "";
                                         //获取用户信息，保存token
                                         JSONObject jsonObject = object.getJSONObject("data");
                                         if (DocUtils.hasValue(jsonObject, "token")) {
-                                            String token = jsonObject.getString("token");
+                                            token = jsonObject.getString("token");
                                             if (EmptyUtils.isNotEmpty(token)) {
                                                 SPUtils.put(LoginActivity.this, "token", token);
                                             }
@@ -258,13 +272,8 @@ public class LoginActivity extends BaseActivity {
                                                 SPUtils.put(LoginActivity.this, Constants.USER_KEY, user.getId());
                                             }
                                         }
-                                        //登录成功,获得列表数据
-                                        RealDocApplication.getRecordListData();
-                                        loginHuanXin(mobilePhone, pwd);
-                                        //通知首页刷新界面
-                                        actionStart(LoginActivity.this, RealDocActivity.class);
-                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                        finish();
+                                        //实名认证
+                                        checkName(mobilePhone, pwd, token);
                                     }
                                 } else {
                                     ToastUtil.showLong(LoginActivity.this, "用户登录失败!");
@@ -484,4 +493,95 @@ public class LoginActivity extends BaseActivity {
         thread.start();
     }
 
+    private void checkName(final String mobilePhone, final String pwd, String token) {
+        HashMap<String, String> param = new HashMap<String, String>();
+        param.put("mobilePhone", mobilePhone);
+        Map<String, String> header = null;
+        if (EmptyUtils.isNotEmpty(token)) {
+            header = new HashMap<String, String>();
+            header.put("Authorization", token);
+        } else {
+            ToastUtil.showLong(this, "病历数据列表请求失败,请确定您的账户已登录!");
+        }
+        HttpRequestClient.getNotInstance(LoginActivity.this, HttpNetUtil.BASE_URL, header).createBaseApi().get("user/certification/check"
+                , param, new BaseObserver<ResponseBody>(LoginActivity.this) {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONObject obj = object.getJSONObject("data");
+                                    if (DocUtils.hasValue(obj, "verifyFlag")) {
+                                        verifyFlag = obj.getString("verifyFlag");
+                                        SPUtils.put(LoginActivity.this, "verifyFlag", verifyFlag);
+                                        if (!getList && StringUtils.equals(verifyFlag, "1")) {
+                                            //登录成功,获得列表数据
+                                            RealDocApplication.getRecordListData();
+                                            loginHuanXin(mobilePhone, pwd);
+                                            //通知首页刷新界面
+                                            actionStart(LoginActivity.this, RealDocActivity.class);
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                            finish();
+                                        } else if (getList && StringUtils.equals(verifyFlag, "0")) {
+                                            loginHuanXin(mobilePhone, pwd);
+                                            //跳转到实名认证页面
+                                            Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
+                                            intent.putExtra("get_list", true);
+                                            startActivity(intent);
+                                        } else if (getList && StringUtils.equals(verifyFlag, "1")) {
+                                            //登录成功,获得列表数据
+                                            RealDocApplication.getRecordListData();
+                                            loginHuanXin(mobilePhone, pwd);
+                                            //通知首页刷新界面
+                                            actionStart(LoginActivity.this, RecordListActivity.class);
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                            finish();
+                                        } else if (!getList) {
+                                            loginHuanXin(mobilePhone, pwd);
+                                            //通知首页刷新界面
+                                            actionStart(LoginActivity.this, RealDocActivity.class);
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                            finish();
+                                        }
+                                    }
+                                } else {
+                                    ToastUtil.showLong(LoginActivity.this, "获取用户信息失败.请确定是否已登录!");
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
 }

@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.CheckPhoneUtils;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 
@@ -53,6 +55,7 @@ public class VerifyActivity extends BaseActivity {
     EditText userName;
     @BindView(R.id.identify)
     EditText identify;
+    private boolean getList = false;
 
     @Override
     public int getLayoutId() {
@@ -74,6 +77,13 @@ public class VerifyActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                getList = bundle.getBoolean("get_list", false);
+            }
+        }
     }
 
     private void checkIdentify() {
@@ -136,10 +146,16 @@ public class VerifyActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
+                                    SPUtils.put(VerifyActivity.this, "verifyFlag", "1");
                                     ToastUtil.showLong(RealDocApplication.getContext(), "实名认证成功!");
                                     //广播通知我的页面刷新
                                     Intent intent = new Intent(UserFragment.VERIFY_TEXT);
                                     LocalBroadcastManager.getInstance(VerifyActivity.this).sendBroadcast(intent);
+                                    if (getList) {
+                                        //登录成功,获得列表数据
+                                        RealDocApplication.getRecordListData();
+                                        actionStart(VerifyActivity.this, RecordListActivity.class);
+                                    }
                                     finish();
                                 } else {
                                     ToastUtil.showLong(RealDocApplication.getContext(), "实名认证失败!");

@@ -11,11 +11,6 @@ buildscript {
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
         classpath 'com.novoda:bintray-release:0.5.0'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-
         // Google Firebase cloud messaging
         classpath 'com.google.gms:google-services:3.1.1'
     }
@@ -28,6 +23,10 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.google.com' }
         maven { url 'http://developer.huawei.com/repo' }
+    }
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
     }
 }
 

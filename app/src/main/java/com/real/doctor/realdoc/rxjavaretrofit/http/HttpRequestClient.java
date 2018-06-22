@@ -52,7 +52,7 @@ public class HttpRequestClient {
 
     private static String mBaseUrl = HttpNetUtil.BASE_URL;
 
-    public  static Map<String, String> mHeader = new HashMap<String, String>();
+    public static Map<String, String> mHeader = new HashMap<String, String>();
 
     /**
      * 链接建立的超时时间
@@ -103,8 +103,9 @@ public class HttpRequestClient {
                 .addNetworkInterceptor(
                         new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .cookieJar(new HttpCookieManager(context))
+
                 .cache(cache)
-                .addInterceptor(new BaseInterceptor(context,headers))
+                .addInterceptor(new BaseInterceptor(context, headers))
                 .addInterceptor(new CacheInterceptor(context))
                 .addNetworkInterceptor(new CacheInterceptor(context))
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
@@ -167,6 +168,16 @@ public class HttpRequestClient {
     }
 
     /**
+     * 获取HttpRequestClient(非单例,在token改变时使用)
+     */
+    public static HttpRequestClient getNotInstance(Context context,String baseUrl,Map<String,String> header) {
+        if (context != null) {
+            mContext = context;
+        }
+        return  new HttpRequestClient(context,baseUrl, header);
+    }
+
+    /**
      * create BaseApi  defalte ApiManager
      *
      * @return ApiManager
@@ -210,14 +221,12 @@ public class HttpRequestClient {
                 .subscribe(subscriber);
     }
 
-    public void getNotifications(String url, Map parameters){
+    public void getNotifications(String url, Map parameters) {
 
         OkHttpClient okHttpClient = getOkHttpClient();
 
         //retrofitService.getNotifications(url, parameters);
     }
-
-
 
 
     /**

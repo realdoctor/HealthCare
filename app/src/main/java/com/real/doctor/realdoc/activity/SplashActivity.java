@@ -135,7 +135,8 @@ public class SplashActivity extends BaseActivity {
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             //跳转到指定的Activity
-                            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+//                            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                            startActivity();
                             finish();
                         }
 

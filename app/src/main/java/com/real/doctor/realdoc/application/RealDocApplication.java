@@ -14,6 +14,9 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.kk.taurus.playerbase.config.PlayerConfig;
+import com.kk.taurus.playerbase.config.PlayerLibrary;
+import com.kk.taurus.playerbase.entity.DecoderPlan;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.fragment.HomeFragment;
 import com.real.doctor.realdoc.greendao.DaoMaster;
@@ -76,6 +79,14 @@ public class RealDocApplication extends MultiDexApplication {
      */
     private static int count;
 
+    public static boolean ignoreMobile;
+
+    private String verifyFlag = "";
+
+    public static final int PLAN_ID_IJK = 1;
+    public static final int PLAN_ID_EXO = 2;
+
+
     public RealDocApplication getInstance() {
         if (instance == null) {
             instance = this;
@@ -88,15 +99,30 @@ public class RealDocApplication extends MultiDexApplication {
         super.onCreate();
         mContext = this;
         MultiDex.install(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
+//        LeakCanary.install(this);
         StrictMode.setThreadPolicy(new
                 StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
         StrictMode.setVmPolicy(new
                 StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
-        getRecordListData();
+        verifyFlag = (String) SPUtils.get(mContext, "verifyFlag", "");
+        if (StringUtils.equals(verifyFlag, "1")) {
+            getRecordListData();
+        }else{
+            //do nothing
+        }
         //建立全局文件夹
         SDCardUtils.creatSDDir("RealDoc");
         //init demo helper
         HuanXinHelper.getInstance().init(getContext());
+        //use default NetworkEventProducer.
+        PlayerConfig.setUseDefaultNetworkEventProducer(true);
+
+        PlayerLibrary.init(this);
         //医生端下载病历文件后处理
 //        onGetPatientList();
 //        localBroadcast();
@@ -152,7 +178,7 @@ public class RealDocApplication extends MultiDexApplication {
 //        map.put("mobilePhone", "13777850036");
         map.put("mobilePhone", mobile);
         map.put("clientNum", String.valueOf(count));
-        HttpRequestClient.getInstance(getContext(), HttpNetUtil.BASE_URL, header).createBaseApi().get("patient"
+        HttpRequestClient.getInstance(getContext()).createBaseApi().get("patient"
                 , map, new BaseObserver<ResponseBody>(getContext()) {
 
                     @Override
