@@ -26,6 +26,8 @@ import com.real.doctor.realdoc.R;
 
 public class SelectPopupWindow extends PopupWindow {
 
+    private TextView mAddAudio;
+    private TextView mAddVideo;
     private TextView mPhotoUpload;
     private TextView mSelectPhoto;
     private TextView mCancelText;
@@ -38,6 +40,8 @@ public class SelectPopupWindow extends PopupWindow {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.select_popup_layout, null);
+        mAddAudio = mMenuView.findViewById(R.id.add_audio);
+        mAddVideo = mMenuView.findViewById(R.id.add_video);
         mPhotoUpload = mMenuView.findViewById(R.id.photo_upload);
         mSelectPhoto = mMenuView.findViewById(R.id.select_photo);
         mCancelText = mMenuView.findViewById(R.id.cancel_text);
@@ -52,6 +56,8 @@ public class SelectPopupWindow extends PopupWindow {
             }
         });
         //设置按钮监听
+        mAddAudio.setOnClickListener(itemsOnClick);
+        mAddVideo.setOnClickListener(itemsOnClick);
         mPhotoUpload.setOnClickListener(itemsOnClick);
         mSelectPhoto.setOnClickListener(itemsOnClick);
         //设置SelectPicPopupWindow的View

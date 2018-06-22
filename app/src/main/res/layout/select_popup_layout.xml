@@ -28,6 +28,34 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/add_audio"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="添加音频"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/add_video"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="添加视频"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
                 android:id="@+id/photo_upload"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"

@@ -51,8 +51,6 @@ public class RecordCompareActivity extends BaseActivity {
     RelativeLayout titleBar;
     @BindView(R.id.page_title)
     TextView pageTitle;
-    @BindView(R.id.right_title)
-    TextView rightTitle;
     @BindView(R.id.image_one)
     ImageView imageOne;
     @BindView(R.id.image_two)
@@ -113,8 +111,6 @@ public class RecordCompareActivity extends BaseActivity {
         if (intent != null) {
             mList = getIntent().getParcelableArrayListExtra("mSaveList");
         }
-        rightTitle.setVisibility(View.VISIBLE);
-        rightTitle.setText("病历打包上传");
         mListOne = new ArrayList<>();
         mListTwo = new ArrayList<>();
 

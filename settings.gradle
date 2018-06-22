@@ -1,1 +1,1 @@
-include ':app', ':zxing', ':easeui'
+include ':app', ':zxing', ':easeui', ':hmspush'
