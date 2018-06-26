@@ -13,6 +13,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kk.taurus.playerbase.event.OnPlayerEventListener;
 import com.kk.taurus.playerbase.receiver.OnReceiverEventListener;
@@ -23,6 +26,7 @@ import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.model.VideoListBean;
 import com.real.doctor.realdoc.util.DataUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.widget.play.AssistPlayer;
 import com.real.doctor.realdoc.widget.play.DataInter;
 import com.real.doctor.realdoc.widget.play.ReceiverGroupManager;
@@ -32,6 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PatientEduActivity extends BaseActivity implements
         VideoListAdapter.OnListListener,
@@ -40,6 +46,12 @@ public class PatientEduActivity extends BaseActivity implements
     private List<VideoListBean> items = new ArrayList<>();
     private VideoListAdapter adapter;
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
+    @BindView(R.id.finish_back)
+    ImageView finishBack;
     @BindView(R.id.play_recycler)
     RecyclerView playRecycler;
     @BindView(R.id.list_play_container)
@@ -57,19 +69,19 @@ public class PatientEduActivity extends BaseActivity implements
 
     @Override
     public void initView() {
-
+        ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(PatientEduActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
     }
 
     @Override
     public void initData() {
-        PackageManager p = getPackageManager();
-        boolean permission = (PackageManager.PERMISSION_GRANTED ==
-                p.checkPermission("android.permission.RECORD_AUDIO", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.CAMERA", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.ACCESS_NETWORK_STATE", "com.real.doctor.realdoc"));
-        if (!permission) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(PatientEduActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_NETWORK_STATE}, 0);
-            }
-        }
+        pageTitle.setText("患者教育");
         ActivityCompat.requestPermissions(PatientEduActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_NETWORK_STATE}, 0);
         playRecycler = findViewById(R.id.play_recycler);
         playRecycler.setLayoutManager(
@@ -93,8 +105,13 @@ public class PatientEduActivity extends BaseActivity implements
     }
 
     @Override
+    @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.finish_back:
+                finish();
+                break;
+        }
     }
 
     @Override

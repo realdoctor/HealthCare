@@ -18,6 +18,7 @@ import com.kk.taurus.playerbase.player.BaseInternalPlayer;
 
 import java.io.FileDescriptor;
 import java.util.HashMap;
+
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -498,9 +499,7 @@ public class IjkPlayer extends BaseInternalPlayer {
     private IMediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener =
             new IMediaPlayer.OnBufferingUpdateListener() {
                 public void onBufferingUpdate(IMediaPlayer mp, int percent) {
-                    Bundle bundle = BundlePool.obtain();
-                    bundle.putInt(EventKey.INT_DATA,percent);
-                    submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_UPDATE, bundle);
+//                    submitBufferingUpdate(percent, null);
                 }
             };
 

@@ -68,86 +68,86 @@ public class SplashActivity extends BaseActivity {
         super.onStart();
         new Thread(new Runnable() {
             public void run() {
-                if (HuanXinHelper.getInstance().isLoggedIn()) {
-                    // auto login mode, make sure all group and conversation is loaed before enter the main screen
-                    EMClient.getInstance().chatManager().loadAllConversations();
-                    EMClient.getInstance().groupManager().loadAllGroups();
-                    String topActivityName = EasyUtils.getTopActivityName(EMClient.getInstance().getContext());
-                    if (topActivityName != null && (topActivityName.equals(VideoCallActivity.class.getName()) || topActivityName.equals(VoiceCallActivity.class.getName()))) {
-                        // nop
-                        // avoid main screen overlap Calling Activity
-                    } else {
-                        //enter main screen
-                        ScaleAnimation scaleAnim = new ScaleAnimation(
-                                1.0f,
-                                1.2f,
-                                1.0f,
-                                1.2f,
-                                Animation.RELATIVE_TO_SELF,
-                                0.5f,
-                                Animation.RELATIVE_TO_SELF,
-                                0.5f
-                        );
+//                if (HuanXinHelper.getInstance().isLoggedIn()) {
+//                    // auto login mode, make sure all group and conversation is loaed before enter the main screen
+//                    EMClient.getInstance().chatManager().loadAllConversations();
+//                    EMClient.getInstance().groupManager().loadAllGroups();
+//                    String topActivityName = EasyUtils.getTopActivityName(EMClient.getInstance().getContext());
+//                    if (topActivityName != null && (topActivityName.equals(VideoCallActivity.class.getName()) || topActivityName.equals(VoiceCallActivity.class.getName()))) {
+//                        // nop
+//                        // avoid main screen overlap Calling Activity
+//                    } else {
+//                        //enter main screen
+//                        ScaleAnimation scaleAnim = new ScaleAnimation(
+//                                1.0f,
+//                                1.2f,
+//                                1.0f,
+//                                1.2f,
+//                                Animation.RELATIVE_TO_SELF,
+//                                0.5f,
+//                                Animation.RELATIVE_TO_SELF,
+//                                0.5f
+//                        );
+//
+//                        scaleAnim.setFillAfter(true);
+//                        scaleAnim.setDuration(3000);
+//                        scaleAnim.setAnimationListener(new Animation.AnimationListener() {
+//                            @Override
+//                            public void onAnimationStart(Animation animation) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onAnimationEnd(Animation animation) {
+//                                //跳转到指定的Activity
+//                                startActivity();
+//                            }
+//
+//                            @Override
+//                            public void onAnimationRepeat(Animation animation) {
+//
+//                            }
+//                        });
+//                        companyLogo.startAnimation(scaleAnim);
+//                    }
+//                    finish();
+//                } else {
+                //enter main screen
+                ScaleAnimation scaleAnim = new ScaleAnimation(
+                        1.0f,
+                        1.2f,
+                        1.0f,
+                        1.2f,
+                        Animation.RELATIVE_TO_SELF,
+                        0.5f,
+                        Animation.RELATIVE_TO_SELF,
+                        0.5f
+                );
 
-                        scaleAnim.setFillAfter(true);
-                        scaleAnim.setDuration(3000);
-                        scaleAnim.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
+                scaleAnim.setFillAfter(true);
+                scaleAnim.setDuration(3000);
+                scaleAnim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
 
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                //跳转到指定的Activity
-                                startActivity();
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                        companyLogo.startAnimation(scaleAnim);
                     }
-                    finish();
-                } else {
-                    //enter main screen
-                    ScaleAnimation scaleAnim = new ScaleAnimation(
-                            1.0f,
-                            1.2f,
-                            1.0f,
-                            1.2f,
-                            Animation.RELATIVE_TO_SELF,
-                            0.5f,
-                            Animation.RELATIVE_TO_SELF,
-                            0.5f
-                    );
 
-                    scaleAnim.setFillAfter(true);
-                    scaleAnim.setDuration(3000);
-                    scaleAnim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            //跳转到指定的Activity
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        //跳转到指定的Activity
 //                            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                            startActivity();
-                            finish();
-                        }
+                        startActivity();
+                        finish();
+                    }
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
 
-                        }
-                    });
-                    companyLogo.startAnimation(scaleAnim);
-                }
+                    }
+                });
+                companyLogo.startAnimation(scaleAnim);
             }
+//            }
         }).start();
 
     }

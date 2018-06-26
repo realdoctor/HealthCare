@@ -241,7 +241,9 @@ public class SettingActivity extends BaseActivity {
                                     loginOutHuanXin();
                                     //跳转到首页
                                     Intent intent = new Intent(SettingActivity.this, RealDocActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
+                                    finish();
                                 } else {
                                     ToastUtil.showLong(SettingActivity.this, "用户退出失败!");
                                 }

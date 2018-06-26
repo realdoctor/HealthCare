@@ -14,6 +14,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.kk.taurus.ijkplayer.IjkPlayer;
 import com.kk.taurus.playerbase.config.PlayerConfig;
 import com.kk.taurus.playerbase.config.PlayerLibrary;
 import com.kk.taurus.playerbase.entity.DecoderPlan;
@@ -112,13 +113,15 @@ public class RealDocApplication extends MultiDexApplication {
         verifyFlag = (String) SPUtils.get(mContext, "verifyFlag", "");
         if (StringUtils.equals(verifyFlag, "1")) {
             getRecordListData();
-        }else{
+        } else {
             //do nothing
         }
         //建立全局文件夹
         SDCardUtils.creatSDDir("RealDoc");
         //init demo helper
         HuanXinHelper.getInstance().init(getContext());
+        PlayerConfig.addDecoderPlan(new DecoderPlan(PLAN_ID_IJK, IjkPlayer.class.getName(), "IjkPlayer"));
+        PlayerConfig.setDefaultPlanId(PLAN_ID_IJK);
         //use default NetworkEventProducer.
         PlayerConfig.setUseDefaultNetworkEventProducer(true);
 
@@ -236,9 +239,6 @@ public class RealDocApplication extends MultiDexApplication {
                                                             mInstance.insertSaveDoc(getContext(), mList);
                                                         }
                                                         ToastUtil.showLong(getContext(), "获取病历数据列表成功!");
-                                                        //广播通知刷新列表
-                                                        Intent intent = new Intent(LoginActivity.RECORD_LIST_HOME);
-                                                        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
                                                     }
                                                 }
                                             }

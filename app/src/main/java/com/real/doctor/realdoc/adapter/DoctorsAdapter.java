@@ -37,7 +37,8 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
             public void onClick(View view) {
                 //点击进入聊天页
                 Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("userId", item.getDoctorCode());
+                intent.putExtra("userId", "admin");
+//                intent.putExtra("userId", item.getDoctorCode());
                 context.startActivity(intent);
             }
         });
