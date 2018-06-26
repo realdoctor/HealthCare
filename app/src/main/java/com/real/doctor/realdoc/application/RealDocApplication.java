@@ -14,6 +14,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.kk.taurus.ijkplayer.IjkPlayer;
 import com.kk.taurus.playerbase.config.PlayerConfig;
 import com.kk.taurus.playerbase.config.PlayerLibrary;
 import com.kk.taurus.playerbase.entity.DecoderPlan;
@@ -119,6 +120,8 @@ public class RealDocApplication extends MultiDexApplication {
         SDCardUtils.creatSDDir("RealDoc");
         //init demo helper
         HuanXinHelper.getInstance().init(getContext());
+        PlayerConfig.addDecoderPlan(new DecoderPlan(PLAN_ID_IJK, IjkPlayer.class.getName(), "IjkPlayer"));
+        PlayerConfig.setDefaultPlanId(PLAN_ID_IJK);
         //use default NetworkEventProducer.
         PlayerConfig.setUseDefaultNetworkEventProducer(true);
 

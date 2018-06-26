@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
@@ -540,6 +541,17 @@ public class LoginActivity extends BaseActivity {
                                     if (DocUtils.hasValue(obj, "verifyFlag")) {
                                         verifyFlag = obj.getString("verifyFlag");
                                         SPUtils.put(LoginActivity.this, "verifyFlag", verifyFlag);
+                                        //注册失败会抛出HyphenateException
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    EMClient.getInstance().createAccount(mobilePhone, pwd);//同步方法
+                                                } catch (HyphenateException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }).start();
                                         if (!getList && StringUtils.equals(verifyFlag, "1")) {
                                             //登录成功,获得列表数据
                                             RealDocApplication.getRecordListData();
