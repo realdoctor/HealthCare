@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,13 +26,17 @@ import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.widget.SpinerPopWindow;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +61,12 @@ public class VerifyActivity extends BaseActivity {
     EditText userName;
     @BindView(R.id.identify)
     EditText identify;
+    @BindView(R.id.identify_text)
+    TextView identifyText;
     private boolean getList = false;
+    private SpinerPopWindow<String> mSpinerPopWindow;
+    private List<String> list;
+
 
     @Override
     public int getLayoutId() {
@@ -84,7 +95,51 @@ public class VerifyActivity extends BaseActivity {
                 getList = bundle.getBoolean("get_list", false);
             }
         }
+        list = new ArrayList<String>();
+        list.add("身份证");
+        list.add("居民户口簿");
+        list.add("护照");
+        list.add("军官证");
+        list.add("驾驶证");
+        identifyText.setOnClickListener(clickListener);
+        mSpinerPopWindow = new SpinerPopWindow<String>(this, list, itemClickListener);
+        mSpinerPopWindow.setOnDismissListener(dismissListener);
     }
+
+    /**
+     * 监听popupwindow取消
+     */
+    private PopupWindow.OnDismissListener dismissListener = new PopupWindow.OnDismissListener() {
+        @Override
+        public void onDismiss() {
+        }
+    };
+
+    /**
+     * popupwindow显示的ListView的item点击事件
+     */
+    private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            mSpinerPopWindow.dismiss();
+            identifyText.setText(list.get(position));
+        }
+    };
+
+    /**
+     * 显示PopupWindow
+     */
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.identify_text:
+                    mSpinerPopWindow.setWidth(identifyText.getWidth());
+                    mSpinerPopWindow.showAsDropDown(identifyText);
+                    break;
+            }
+        }
+    };
 
     private void checkIdentify() {
         String mobilePhone = mobile.getText().toString().trim();
@@ -98,6 +153,18 @@ public class VerifyActivity extends BaseActivity {
                     json.put("mobilePhone", mobilePhone);
                     json.put("realName", name);
                     json.put("idNo", identityCode);
+                    String identify = identifyText.getText().toString();
+                    if (StringUtils.equals(identify, "身份证") || StringUtils.equals(identify, "身份证(可选)")) {
+                        json.put("typeId", "01");
+                    } else if (StringUtils.equals(identify, "居民户口簿")) {
+                        json.put("typeId", "02");
+                    } else if (StringUtils.equals(identify, "护照")) {
+                        json.put("typeId", "03");
+                    } else if (StringUtils.equals(identify, "军官证")) {
+                        json.put("typeId", "04");
+                    } else if (StringUtils.equals(identify, "驾驶证")) {
+                        json.put("typeId", "05");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

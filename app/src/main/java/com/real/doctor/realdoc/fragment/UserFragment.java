@@ -116,7 +116,7 @@ public class UserFragment extends BaseFragment {
         token = (String) SPUtils.get(getActivity(), "token", "");
         mobile = (String) SPUtils.get(getActivity(), "mobile", "");
         verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
-        if (StringUtils.equals(verifyFlag, "")) {
+        if (EmptyUtils.isNotEmpty(mobile)) {
             //实名认证
             checkName(mobile);
         }
@@ -184,13 +184,16 @@ public class UserFragment extends BaseFragment {
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     JSONObject obj = object.getJSONObject("data");
+                                    String realName = "";
                                     if (DocUtils.hasValue(obj, "realName")) {
-                                        String realName = obj.getString("realName");
-                                        if (verifyFlag.equals("1")) {
+                                        realName = obj.getString("realName");
+                                    }
+                                    if (verifyFlag.equals("1")) {
+                                        if (EmptyUtils.isNotEmpty(realName)) {
                                             userName.setText(realName);
-                                        } else {
-                                            userName.setText("完善信息");
                                         }
+                                    } else {
+                                        userName.setText("完善信息");
                                     }
                                     if (DocUtils.hasValue(obj, "originalImageUrl")) {
                                         originalImageUrl = obj.getString("originalImageUrl");

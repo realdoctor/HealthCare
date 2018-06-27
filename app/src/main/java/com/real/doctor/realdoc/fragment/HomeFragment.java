@@ -118,6 +118,7 @@ public class HomeFragment extends BaseFragment {
     //该标识用来识别是从首页进入其他页面的,这样就可以处理返回回来按钮显示或不显示的问题
     private boolean isHomeIn = false;
     private String verifyFlag = "";
+    private boolean isFirst = true;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -183,6 +184,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initFloatMenu() {
+        isFirst = (boolean) SPUtils.get(getActivity(), "first", true);
         //1 初始化悬浮球配置，定义好悬浮球大小和icon的drawable
         final int ballSize = DensityUtil.dip2px(getActivity(), 60);
         final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
@@ -190,6 +192,7 @@ public class HomeFragment extends BaseFragment {
         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
         mFloatballManager = new FloatBallManager(RealDocApplication.getContext(), ballCfg);
         setFloatPermission();
+//        SPUtils.put(getActivity(), "first", false);
         //5 如果没有添加菜单，可以设置悬浮球点击事件
         if (mFloatballManager.getMenuItemSize() == 0) {
             mFloatballManager.setOnFloatBallClickListener(new FloatBallManager.OnFloatBallClickListener() {
@@ -218,20 +221,25 @@ public class HomeFragment extends BaseFragment {
         mFloatballManager.setPermission(new FloatBallManager.IFloatBallPermission() {
             @Override
             public boolean onRequestFloatBallPermission() {
-                requestFloatBallPermission(getActivity());
+                if (isFirst) {
+                    requestFloatBallPermission(getActivity());
+                }
                 return true;
             }
 
             @Override
             public boolean hasFloatBallPermission(Context context) {
-                return mFloatPermissionManager.checkPermission(context);
+                boolean permission = mFloatPermissionManager.checkPermission(context);
+                return permission;
             }
 
             @Override
             public void requestFloatBallPermission(Activity activity) {
-                mFloatPermissionManager.applyPermission(activity);
+                if (isFirst) {
+                    mFloatPermissionManager.applyPermission(activity);
+                    isFirst = false;
+                }
             }
-
         });
     }
 

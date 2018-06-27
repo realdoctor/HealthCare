@@ -253,7 +253,7 @@ public class FloatPermissionManager {
         mParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
-                | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+                | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.TYPE_TOAST;
         mParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
         mParams.format = PixelFormat.RGBA_8888;
         mParams.gravity = Gravity.LEFT | Gravity.TOP;

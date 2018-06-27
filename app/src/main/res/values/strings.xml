@@ -153,7 +153,7 @@
     <string name="your_name">姓名</string>
     <string name="your_name_edit">请输入您的姓名</string>
     <string name="identity">身份证(可选)</string>
-    <string name="identity_edit">请输入您的身份证号码</string>
+    <string name="identity_edit">请输入您的证件号码</string>
     <string name="submit">提交</string>
     <string name="change_icon">点击修改头像</string>
     <string name="identify">实名认证</string>
