@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -47,6 +48,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -321,17 +324,21 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
         dropMenuAdapter.setOnSortCallbackListener(new DropMenuAdapter.OnSortCallbackListener() {
             @Override
             public void onSortCallbackListener(SortBean item) {
-                if(item==null||item.sortName.equals("不限"))
+                if(item==null||item.sortName.equals("离我最近"))
                 {
-                    sortstr="";
+                    sortstr="sortByDistance";
+                    Collections.sort(hospitalBeanArrayList, comparator);
+                    hospitalAdapter.notifyDataSetChanged();
+
                 }else
                 {
                     sortstr=item.SortId;
+                    hospitalBeanArrayList.clear();
+                    pageNum=1;
+                    getData();
+                    refreshLayout.finishRefresh();
                 }
-                hospitalBeanArrayList.clear();
-                pageNum=1;
-                getData();
-                refreshLayout.finishRefresh();
+
             }
         });
         //等级回调
@@ -344,11 +351,12 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                 }else
                 {
                     hospitalLevel=item.LevelName;
+                    hospitalBeanArrayList.clear();
+                    pageNum=1;
+                    getData();
+                    refreshLayout.finishRefresh();
                 }
-                hospitalBeanArrayList.clear();
-                pageNum=1;
-                getData();
-                refreshLayout.finishRefresh();
+
             }
         });
 
@@ -438,6 +446,9 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                                             new TypeToken<PageModel<HospitalBean>>() {
                                             }.getType());
                                     hospitalBeanArrayList.addAll(baseModel.list);
+                                    if(sortstr.equals("sortByDistance")){
+                                        Collections.sort(hospitalBeanArrayList, comparator);
+                                    }
                                     hospitalAdapter.notifyDataSetChanged();
                                 } else {
                                     ToastUtil.showLong(RegistrationsActivity.this, msg.toString().trim());
@@ -455,4 +466,11 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                 });
     }
 
+        public Comparator<HospitalBean> comparator=new Comparator<HospitalBean>() {
+            @Override
+            public int compare(HospitalBean o1, HospitalBean o2) {
+                int i=o1.distance-o2.distance;
+                return i;
+            }
+        };
 }

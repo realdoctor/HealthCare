@@ -21,7 +21,7 @@ public class DataUtil {
     static {
         SortBean bean0=new SortBean();
         bean0.SortId="0";
-        bean0.sortName="不限";
+        bean0.sortName="离我最近";
         sortBeans.add(bean0);
         SortBean bean=new SortBean();
         bean.SortId="1";
