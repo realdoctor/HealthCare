@@ -116,7 +116,7 @@ public class UserFragment extends BaseFragment {
         token = (String) SPUtils.get(getActivity(), "token", "");
         mobile = (String) SPUtils.get(getActivity(), "mobile", "");
         verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
-        if(StringUtils.equals(verifyFlag,"")){
+        if (StringUtils.equals(verifyFlag, "")) {
             //实名认证
             checkName(mobile);
         }
@@ -129,7 +129,8 @@ public class UserFragment extends BaseFragment {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
 
-        intentFilter.addAction(AccountActivity.CHANGE_AVATOR);        intentFilter.addAction(VERIFY_TEXT);
+        intentFilter.addAction(AccountActivity.CHANGE_AVATOR);
+        intentFilter.addAction(VERIFY_TEXT);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -284,6 +285,7 @@ public class UserFragment extends BaseFragment {
                 break;
         }
     }
+
     private void checkName(String mobilePhone) {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("mobilePhone", mobilePhone);
@@ -339,6 +341,7 @@ public class UserFragment extends BaseFragment {
 
                 });
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

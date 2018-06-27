@@ -290,16 +290,13 @@ public class HomeFragment extends BaseFragment {
     private void localBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(LoginActivity.RECORD_LIST_HOME);
         intentFilter.addAction(VERIFY_TEXT);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 instance = SaveDocManager.getInstance(getActivity());
-                if (action.equals(LoginActivity.RECORD_LIST_HOME)) {
-                    recordList();
-                } else if (action.equals(VERIFY_TEXT)) {
+                if (action.equals(VERIFY_TEXT)) {
                     verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
                     if (StringUtils.equals(verifyFlag, "1")) {
                         recordList();

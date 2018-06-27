@@ -3,7 +3,6 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
@@ -66,7 +66,6 @@ import okhttp3.ResponseBody;
 
 public class LoginActivity extends BaseActivity {
 
-    public static String RECORD_LIST_HOME = "android.intent.action.home.list";
     @BindView(R.id.user_register)
     TextView userRegister;
     @BindView(R.id.phone_number)
@@ -545,7 +544,9 @@ public class LoginActivity extends BaseActivity {
                                             RealDocApplication.getRecordListData();
                                             loginHuanXin(mobilePhone, pwd);
                                             //通知首页刷新界面
-                                            actionStart(LoginActivity.this, RealDocActivity.class);
+                                            Intent intent = new Intent(LoginActivity.this, RealDocActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(intent);
                                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                             finish();
                                         } else if (getList && StringUtils.equals(verifyFlag, "0")) {
@@ -559,13 +560,14 @@ public class LoginActivity extends BaseActivity {
                                             RealDocApplication.getRecordListData();
                                             loginHuanXin(mobilePhone, pwd);
                                             //通知首页刷新界面
-                                            actionStart(LoginActivity.this, RecordListActivity.class);
                                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                             finish();
                                         } else if (!getList) {
                                             loginHuanXin(mobilePhone, pwd);
                                             //通知首页刷新界面
-                                            actionStart(LoginActivity.this, RealDocActivity.class);
+                                            Intent intent = new Intent(LoginActivity.this, RealDocActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(intent);
                                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                             finish();
                                         }
