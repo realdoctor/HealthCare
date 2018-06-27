@@ -30,5 +30,6 @@ public class HospitalBean implements Serializable {
     public String lng;
     public String receiveNum;
     public String positional;
+    public int distance;
     public String hospitalImage="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3426565566,2670527994&fm=27&gp=0.jpg";
 }

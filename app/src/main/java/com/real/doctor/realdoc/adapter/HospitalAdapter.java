@@ -40,11 +40,15 @@ public class HospitalAdapter extends RdBaseAdapter<HospitalBean> {
         }
         holder.hospital_title.setText(bean.hospitalName);
         holder.hospital_level.setText(bean.hospitalLevel);
-        holder.hospital_markNum.setText("预约量为："+bean.receiveNum);
+        double num=Integer.parseInt(bean.receiveNum);
+        DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
+        String numShow=num>=10000?String.valueOf(num/10000)+"w":decimalFormat.format(num);
+        holder.hospital_markNum.setText("预约量为："+numShow);
 
         DecimalFormat df = new DecimalFormat("#");
         Double distance=DistanceUtil.getDistance(RegistrationsActivity.latitude,RegistrationsActivity.longitude,Double.parseDouble(bean.lat),Double.parseDouble(bean.lng));
         holder.tv_distance.setText("距"+ df.format(distance/1000)+"公里");
+        bean.distance=(Integer) distance.intValue();
         Glide.with(mContext).load(bean.hospitalImage).crossFade().into((ImageView) holder.hospital_detail_img);
         return convertView;
     }

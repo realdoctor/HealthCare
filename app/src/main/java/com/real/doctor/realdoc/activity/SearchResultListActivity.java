@@ -16,6 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -70,6 +74,8 @@ import okhttp3.ResponseBody;
  */
 
 public class SearchResultListActivity extends BaseActivity implements OnFilterDoneListener,ExpertAdapter.MyClickListener,OnLoadmoreListener,OnRefreshListener {
+    @BindView(R.id.right_title)
+    TextView right_title;
     @BindView(R.id.rg)
     RadioGroup radioGroup;
     @BindView(R.id.rb_hospital)
@@ -108,7 +114,10 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     HospitalAdapter adapter;
     private PageModel<ExpertBean> baseModel1 = new PageModel<ExpertBean>();
     public ArrayList<ExpertBean> expertBeans=new ArrayList<ExpertBean>();
-
+    //定位相关类
+    private AMapLocationClient locationClient = null;
+    private AMapLocationClientOption locationOption = null;
+    public final static int REGISTRATION_AREA_EVENT_REQUEST_CODE = 5;
     ExpertAdapter expertAdapter;
 
 
@@ -134,7 +143,11 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         }
         dropDownMenu=findViewById(R.id.dropMenu);
         searchstr= getIntent().getStringExtra("searchKey");
+        right_title.setVisibility(View.VISIBLE);
+        right_title.setText("定位中");
         init();
+        initLocation();
+        startLocation();
         searchHospital(pageNum,pageSize);
     }
 
@@ -144,11 +157,16 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     }
 
     @Override
-    @OnClick({R.id.finish_back})
+    @OnClick({R.id.finish_back,R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()){
             case R.id.finish_back:
                 SearchResultListActivity.this.finish();
+                break;
+            case R.id.right_title:
+                Intent intentArea = new Intent(SearchResultListActivity.this, AppointmentAddressActivity.class);
+                intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);;
+                startActivityForResult(intentArea,REGISTRATION_AREA_EVENT_REQUEST_CODE);
                 break;
         }
     }
@@ -156,6 +174,108 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+    /**
+     * 初始化定位
+     *
+     * @since 2.8.0
+     * @author hongming.wang
+     *
+     */
+    private void initLocation(){
+        //初始化client
+        locationClient = new AMapLocationClient(this.getApplicationContext());
+        locationOption = getDefaultOption();
+        //设置定位参数
+        locationClient.setLocationOption(locationOption);
+        // 设置定位监听
+        locationClient.setLocationListener(locationListener);
+    }
+    /**
+     * 默认的定位参数
+     * @since 2.8.0
+     * @author hongming.wang
+     *
+     */
+    private AMapLocationClientOption getDefaultOption(){
+        AMapLocationClientOption mOption = new AMapLocationClientOption();
+        mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
+        mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
+        mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
+        mOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
+        mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
+        mOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
+        mOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
+        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
+        mOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
+        mOption.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
+        mOption.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
+        mOption.setGeoLanguage(AMapLocationClientOption.GeoLanguage.DEFAULT);//可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
+        return mOption;
+    }
+    /**
+     * 定位监听
+     */
+    AMapLocationListener locationListener = new AMapLocationListener() {
+        @Override
+        public void onLocationChanged(AMapLocation location) {
+            if (null != location) {
+
+                StringBuffer sb = new StringBuffer();
+                //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
+                if (location.getErrorCode() == 0) {
+                    String city=location.getCity();
+                    right_title.setText(city);
+                    cityName=city;
+                } else {
+
+                }
+            }
+        }
+    };
+    /**
+     * 开始定位
+     *
+     * @since 2.8.0
+     * @author hongming.wang
+     *
+     */
+    private void startLocation(){
+        // 设置定位参数
+        locationClient.setLocationOption(locationOption);
+        // 启动定位
+        locationClient.startLocation();
+    }
+
+    /**
+     * 停止定位
+     *
+     * @since 2.8.0
+     * @author hongming.wang
+     *
+     */
+    private void stopLocation(){
+        // 停止定位
+        locationClient.stopLocation();
+    }
+
+    /**
+     * 销毁定位
+     *
+     * @since 2.8.0
+     * @author hongming.wang
+     *
+     */
+    private void destroyLocation(){
+        if (null != locationClient) {
+            /**
+             * 如果AMapLocationClient是在当前Activity实例化的，
+             * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
+             */
+            locationClient.onDestroy();
+            locationClient = null;
+            locationOption = null;
+        }
     }
     public void init() {
         page_title.setText("搜索结果");
@@ -461,5 +581,31 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 });
 
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            String province = data.getStringExtra("province");
+            String city = data.getStringExtra("city");
+
+            if (requestCode == REGISTRATION_AREA_EVENT_REQUEST_CODE) {
+                // 地区回传
+                cityName = city;
+                right_title.setText(cityName);
+                if (tag.equals("1")) {
+                    pageNum = 1;
+                    hospitalBeans.clear();
+                    searchHospital(pageNum, pageSize);
+                    refreshLayout.finishRefresh();
+                } else {
+                    pageNum2 = 1;
+                    expertBeans.clear();
+                    searchHospital(pageNum2, pageSize);
+                    refreshLayout.finishRefresh();
+                }
+            }
+        }
     }
 }
