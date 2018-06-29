@@ -55,12 +55,12 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
     ListView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.page_title)
-    TextView page_title;
-    @BindView(R.id.title_bar)
-    RelativeLayout titleBar;
-    @BindView(R.id.finish_back)
-    ImageView finish_back;
+//    @BindView(R.id.page_title)
+//    TextView page_title;
+//    @BindView(R.id.title_bar)
+//    RelativeLayout titleBar;
+//    @BindView(R.id.finish_back)
+//    ImageView finish_back;
     public NewsAdapter newsAdapter;
     private Unbinder unbinder;
     public ArrayList<NewModel> newModels=new ArrayList<NewModel>();
@@ -85,14 +85,14 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
     @Override
     public void doBusiness(Context mContext) {
         //加上沉浸式状态栏高度
-        int statusHeight = ScreenUtil.getStatusHeight(getActivity());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
-            lp.topMargin = statusHeight;
-            titleBar.setLayoutParams(lp);
-        }
-        page_title.setText("资讯");
-        finish_back.setVisibility(View.GONE);
+//        int statusHeight = ScreenUtil.getStatusHeight(getActivity());
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+//            lp.topMargin = statusHeight;
+//            titleBar.setLayoutParams(lp);
+//        }
+//        page_title.setText("资讯");
+//        finish_back.setVisibility(View.GONE);
         newsAdapter= new NewsAdapter(getActivity(),newModels);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);

@@ -172,6 +172,11 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".activity.SearchProductResultActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".activity.DocContentActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
