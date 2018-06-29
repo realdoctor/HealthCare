@@ -125,30 +125,33 @@ public class ProductShowActivity extends BaseActivity  {
         switch (v.getId()){
             case R.id.tv_buy:
                 if(userId==null||userId.length()==0){
-                Toast.makeText(ProductShowActivity.this,"请登录",Toast.LENGTH_SHORT).show();
-                return;
+                    Intent intent=new Intent(ProductShowActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(ProductShowActivity.this, PayActivity.class);
+                    intent.putExtra("totalPrice", String.valueOf(bean.getCost()));
+                    ArrayList<ProductBean> list = new ArrayList<ProductBean>();
+                    list.add(bean);
+                    intent.putExtra("goodsList", list);
+                    startActivity(intent);
                 }
-                Intent intent =new Intent(ProductShowActivity.this,PayActivity.class);
-                intent.putExtra("totalPrice",String.valueOf(bean.getCost()));
-                ArrayList<ProductBean> list=new ArrayList<ProductBean>();
-                list.add(bean);
-                intent.putExtra("goodsList",list);
-                startActivity(intent);
                 break;
             case R.id.tv_incart:
                 if(userId==null||userId.length()==0){
-                    Toast.makeText(ProductShowActivity.this,"请登录",Toast.LENGTH_SHORT).show();
-                    return;
+                    Intent intent=new Intent(ProductShowActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                }else {
+                    addToCart(goodId, num);
                 }
-                addToCart(goodId,num);
                 break;
             case R.id.img_cart:
                 if(userId==null||userId.length()==0){
-                    Toast.makeText(ProductShowActivity.this,"请登录",Toast.LENGTH_SHORT).show();
-                    return;
+                    Intent intent=new Intent(ProductShowActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intentCart = new Intent(ProductShowActivity.this, ShopCartActivity.class);
+                    startActivity(intentCart);
                 }
-                Intent intentCart =new Intent(ProductShowActivity.this,ShopCartActivity.class);
-                startActivity(intentCart);
                 break;
             case R.id.finish_back:
                 ProductShowActivity.this.finish();
@@ -298,6 +301,12 @@ public class ProductShowActivity extends BaseActivity  {
                     }
 
                 });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userId=(String)SPUtils.get(ProductShowActivity.this, Constants.USER_KEY,"");
     }
 }
 

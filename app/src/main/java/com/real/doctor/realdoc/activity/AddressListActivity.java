@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,13 +17,17 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.greendao.table.RecieverAddressListManager;
 import com.real.doctor.realdoc.model.AddressBean;
 import com.real.doctor.realdoc.model.RecieverAddressListBean;
 import com.real.doctor.realdoc.model.RecieverBean;
+import com.real.doctor.realdoc.util.ScreenUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +35,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class AddressListActivity extends AppCompatActivity {
 
@@ -39,7 +43,11 @@ public class AddressListActivity extends AppCompatActivity {
 
     @BindView(R.id.addresses_list_rv)
     RecyclerView addresses_list_rv;
-
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView page_title;
+    public RecieverAddressListManager addressInstance;
     AddressListAsapter mAddressListAsapter;
 
     // Data
@@ -55,9 +63,16 @@ public class AddressListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address_list);
         ButterKnife.bind(this);
-
-        initData();
-
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(AddressListActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
+        page_title.setText("我的收货地址");
+        addressInstance= RecieverAddressListManager.getInstance(AddressListActivity.this);
+        mRecieverAddressListBean = new ArrayList<>();
         addresses_list_rv.setLayoutManager(new LinearLayoutManager(this));
         mAddressListAsapter = new AddressListAsapter(R.layout.address_list_view, mRecieverAddressListBean);
 
@@ -88,7 +103,7 @@ public class AddressListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent mIntent = new Intent();
-                mIntent.putExtra("item",(Serializable) mRecieverAddressListBean.get(position));
+                mIntent.putExtra("item",mRecieverAddressListBean.get(position));
                 setResult(RESULT_OK,mIntent);
                 AddressListActivity.this.finish();
                 // 设置结果，并进行传送
@@ -105,18 +120,21 @@ public class AddressListActivity extends AppCompatActivity {
 
                 switch (view.getId()){
                     case R.id.change_address:
+
                         Intent intent = new Intent(AddressListActivity.this, EditAddressActivity.class);
                         // get the current data and send it to the edit address screen
                         intent.putExtra("requestCode", EDIT_EVENT_REQUEST_CODE);
                         intent.putExtra("name", mRecieverAddressListBean.get(position).getName());
                         intent.putExtra("phone", mRecieverAddressListBean.get(position).getPhone());
-                        intent.putExtra("provinceCityDistrict", mRecieverAddressListBean.get(position).getAddress().getProvinceCityDistrict());
-                        intent.putExtra("streetDetails", mRecieverAddressListBean.get(position).getAddress().getStreetDetails());
-
-                        startActivityForResult(intent, EDIT_EVENT_REQUEST_CODE);
+                        intent.putExtra("provinceCityDistrict", mRecieverAddressListBean.get(position).addressStr);
+                        intent.putExtra("streetDetails", mRecieverAddressListBean.get(position).daddress);
+                        intent.putExtra("model",mRecieverAddressListBean.get(position));
+                        startActivity(intent);
                         break;
                     case R.id.delete_address:
-                        mRecieverAddressListBean.remove(position);
+                        addressInstance.deleteBean(mRecieverAddressListBean.get(position).id);
+                        mRecieverAddressListBean.clear();
+                        mRecieverAddressListBean.addAll(addressInstance.queryBeanList(AddressListActivity.this));
                         mAddressListAsapter.notifyDataSetChanged();
                         break;
                 }
@@ -124,69 +142,6 @@ public class AddressListActivity extends AppCompatActivity {
         });
 
     }
-
-    public void initData() {
-        //mRecieverBean = new RecieverBean();
-
-        mRecieverAddressListBean = new ArrayList<>();
-
-        for (int i = 0; i < 3; i++) {
-            mAddressBean = new AddressBean();
-            mAddressBean.setProvinceCityDistrict("Province City District" + i);
-            mAddressBean.setStreetDetails("Street details" + i);
-            //mAddressBean.setFullAddress("Province", "City", "District", "Street details" + i);
-
-            RecieverAddressListBean bean = new RecieverAddressListBean();
-            bean.setName("Name " + i);
-            bean.setPhone("1234567" + i);
-            bean.setAddress(mAddressBean);
-
-            mRecieverAddressListBean.add(bean);
-
-        }
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode == RESULT_OK){
-            String name = data.getStringExtra("recieverName");
-            String phone = data.getStringExtra("recieverPhone");
-            String provinceCityDistrictStr = data.getStringExtra("provinceCityDistrictStr");
-            String street = data.getStringExtra("recieverStreet");
-
-            if(requestCode == EDIT_EVENT_REQUEST_CODE) {
-                // update data after editing
-                mRecieverAddressListBean.get(itemPosition).setName(name);
-                mRecieverAddressListBean.get(itemPosition).setPhone(phone);
-                mRecieverAddressListBean.get(itemPosition).getAddress().setProvinceCityDistrict(provinceCityDistrictStr);
-                mRecieverAddressListBean.get(itemPosition).getAddress().setStreetDetails(street);
-
-            }
-            else if(requestCode == ADD_EVENT_REQUEST_CODE) {
-                mAddressBean = new AddressBean();
-                mAddressBean.setProvinceCityDistrict(provinceCityDistrictStr);
-                mAddressBean.setStreetDetails(street);
-
-                RecieverAddressListBean bean = new RecieverAddressListBean();
-                bean.setName(name);
-                bean.setPhone(phone);
-                bean.setAddress(mAddressBean);
-
-                mRecieverAddressListBean.add(bean);
-            }
-
-        }
-
-
-
-            mAddressListAsapter.notifyDataSetChanged();
-
-
-    }
-
     class AddressListAsapter extends BaseQuickAdapter<RecieverAddressListBean, BaseViewHolder>{
 
 
@@ -198,7 +153,7 @@ public class AddressListActivity extends AppCompatActivity {
         protected void convert(BaseViewHolder helper, RecieverAddressListBean item) {
             helper.setText(R.id.product_reciever_name, item.getName())
                     .setText(R.id.product_reciever_phone, item.getPhone())
-                    .setText(R.id.product_reciever_full_address, item.getAddress().getProvinceCityDistrict() + item.getAddress().getStreetDetails())
+                    .setText(R.id.product_reciever_full_address, item.addressStr+item.daddress)
                     .addOnClickListener(R.id.change_address)
                     .addOnClickListener(R.id.delete_address);
         }
@@ -264,4 +219,11 @@ public class AddressListActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mRecieverAddressListBean.clear();
+        mRecieverAddressListBean.addAll(addressInstance.queryBeanList(AddressListActivity.this));
+        mAddressListAsapter.notifyDataSetChanged();
+    }
 }

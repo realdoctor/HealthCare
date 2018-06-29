@@ -1,8 +1,11 @@
 package com.real.doctor.realdoc.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
-public class AddressBean implements Serializable{
+public class AddressBean implements Parcelable {
     private  String province;
     private  String city;
     private  String district;
@@ -20,6 +23,26 @@ public class AddressBean implements Serializable{
         this.streetDetails = streetDetails;
     }
 
+
+    protected AddressBean(Parcel in) {
+        province = in.readString();
+        city = in.readString();
+        district = in.readString();
+        provinceCityDistrict = in.readString();
+        streetDetails = in.readString();
+    }
+
+    public static final Creator<AddressBean> CREATOR = new Creator<AddressBean>() {
+        @Override
+        public AddressBean createFromParcel(Parcel in) {
+            return new AddressBean(in);
+        }
+
+        @Override
+        public AddressBean[] newArray(int size) {
+            return new AddressBean[size];
+        }
+    };
 
     public  String getProvince() {
         return province;
@@ -63,6 +86,17 @@ public class AddressBean implements Serializable{
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(province);
+        dest.writeString(city);
+        dest.writeString(district);
+        dest.writeString(provinceCityDistrict);
+        dest.writeString(streetDetails);
+    }
 }

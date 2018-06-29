@@ -5,9 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.real.doctor.realdoc.activity.ProductRecieverAddress"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:background="@color/white">
 
 
     <RelativeLayout

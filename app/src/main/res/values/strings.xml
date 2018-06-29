@@ -131,6 +131,7 @@
     <string name="order_by_date">按日期预约</string>
     <string name="hospital">医院</string>
     <string name="expert">医生</string>
+    <string name="save">保存</string>
     <string name="count_price">合计：</string>
     <string name="advice_info">处方信息:</string>
     <string name="record_one">第一份病历</string>
