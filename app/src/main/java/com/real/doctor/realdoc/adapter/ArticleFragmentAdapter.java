@@ -15,7 +15,7 @@ import com.real.doctor.realdoc.fragment.ReadFragment;
 
 public class ArticleFragmentAdapter extends FragmentPagerAdapter {
 
-    private String[] mTitles = new String[]{"资讯","关注"};
+    private String[] mTitles = new String[]{"发现","关注"};
 
     public ArticleFragmentAdapter(FragmentManager fm) {
         super(fm);

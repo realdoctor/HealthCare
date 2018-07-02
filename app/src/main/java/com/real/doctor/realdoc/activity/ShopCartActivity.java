@@ -454,15 +454,7 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String token = (String) SPUtils.get(ShopCartActivity.this, "token", "");
-        Map<String, String> header = null;
-        if (EmptyUtils.isNotEmpty(token)) {
-            header = new HashMap<String, String>();
-            header.put("Authorization", token);
-        } else {
-            ToastUtil.showLong(ShopCartActivity.this, "请确定您的账户已登录!");
-        }
-        HttpRequestClient client= HttpRequestClient.getInstance(ShopCartActivity.this, HttpNetUtil.BASE_URL,header);
+        HttpRequestClient client= HttpRequestClient.getInstance(ShopCartActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ShopCartActivity.this) {

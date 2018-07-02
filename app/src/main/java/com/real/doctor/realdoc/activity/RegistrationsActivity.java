@@ -213,6 +213,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                     longitude=location.getLongitude();
                     String city=location.getCity();
                     right_title.setText(city);
+                    cityName=city;
 
                 } else {
 

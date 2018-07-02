@@ -11,6 +11,8 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.util.DateUtil;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 
@@ -27,20 +29,24 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
             convertView = mInflater.inflate(R.layout.news_item, parent, false);
             holder.new_detail_img = (ImageView) convertView.findViewById(R.id.new_detail_img);
             holder.new_title=(TextView) convertView.findViewById(R.id.new_title);
-            holder.new_autor=(TextView) convertView.findViewById(R.id.new_autor);
             holder.new_time=(TextView) convertView.findViewById(R.id.new_time);
             holder.tv_content=(TextView)convertView.findViewById(R.id.tv_content);
             holder.tv_comment=(TextView) convertView.findViewById(R.id.tv_comment);
-
-
+            holder.new_hospital=convertView.findViewById(R.id.new_hospital);
+            holder.tv_newsAuthor=convertView.findViewById(R.id.tv_newsAuthor);
+            holder.tv_authorDept=convertView.findViewById(R.id.tv_authorDept);
+            holder.tv_hospital=convertView.findViewById(R.id.tv_hospital);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
         holder.new_title.setText(bean.newsName);
-        holder.new_autor.setText(bean.newsAuthor);
         holder.new_time.setText(DateUtil.timeStamp2Date(bean.createDate,null));
         holder.tv_comment.setText(bean.viewedTime);
+        holder.new_hospital.setText(bean.authorHos);
+        holder.tv_newsAuthor.setText(bean.newsAuthor);
+        holder.tv_authorDept.setText(bean.authorDept);
+        holder.tv_hospital.setText(bean.authorHos);
 //        holder.tv_content.setText();
         Glide.with(mContext).load(bean.photoAddress).crossFade().into(holder.new_detail_img);
         return convertView;
@@ -51,10 +57,14 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
     public class Holder {
        public ImageView new_detail_img;
        public TextView new_title;
-       public TextView new_autor;
        public TextView new_time;
        public TextView tv_content;
        public TextView tv_comment;
+       public TextView new_hospital;
+       public TextView tv_newsAuthor;
+       public TextView tv_authorDept;
+       public TextView tv_hospital;
+
     }
 
 

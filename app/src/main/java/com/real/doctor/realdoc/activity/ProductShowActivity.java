@@ -173,16 +173,7 @@ public class ProductShowActivity extends BaseActivity  {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String token = (String) SPUtils.get(ProductShowActivity.this, "token", "");
-        Map<String, String> header = null;
-        if (EmptyUtils.isNotEmpty(token)) {
-            header = new HashMap<String, String>();
-            header.put("Authorization", token);
-        } else {
-            ToastUtil.showLong(ProductShowActivity.this, "请确定您的账户已登录!");
-            return;
-        }
-       HttpRequestClient client= HttpRequestClient.getInstance(ProductShowActivity.this,HttpNetUtil.BASE_URL,header);
+       HttpRequestClient client= HttpRequestClient.getInstance(ProductShowActivity.this,HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ProductShowActivity.this) {
@@ -242,16 +233,7 @@ public class ProductShowActivity extends BaseActivity  {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String token = (String) SPUtils.get(ProductShowActivity.this, "token", "");
-        Map<String, String> header = null;
-        if (EmptyUtils.isNotEmpty(token)) {
-            header = new HashMap<String, String>();
-            header.put("Authorization", token);
-        } else {
-            ToastUtil.showLong(ProductShowActivity.this, "请确定您的账户已登录!");
-            return;
-        }
-        HttpRequestClient client= HttpRequestClient.getInstance(ProductShowActivity.this,HttpNetUtil.BASE_URL,header);
+        HttpRequestClient client= HttpRequestClient.getInstance(ProductShowActivity.this,HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ProductShowActivity.this) {

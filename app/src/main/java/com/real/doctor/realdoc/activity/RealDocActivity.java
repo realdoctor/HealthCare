@@ -63,7 +63,7 @@ public class RealDocActivity extends BaseActivity {
     public void initData() {
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
-        readFragment = new ArticleShowFragment();
+        readFragment = ArticleShowFragment.newInstance();
         shoppintMallFragment = ShoppintMallFragment.newInstance();
         userFragment = new UserFragment();
 

@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -47,6 +49,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
+
+import static com.real.doctor.realdoc.util.DpUtils.dip2px;
 
 /**
  * Created by Administrator on 2018/4/18.
@@ -75,9 +79,10 @@ public class ArticleShowFragment extends BaseFragment  {
 
     @Override
     public void doBusiness(Context mContext) {
-        ArticleFragmentAdapter articleFragmentAdapter=new ArticleFragmentAdapter(getActivity().getSupportFragmentManager());
+        ArticleFragmentAdapter articleFragmentAdapter=new ArticleFragmentAdapter(getChildFragmentManager());
         viewPager.setAdapter(articleFragmentAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
     @Override
@@ -89,5 +94,4 @@ public class ArticleShowFragment extends BaseFragment  {
         super.onDestroyView();
         unbinder.unbind();
     }
-
 }
