@@ -15,16 +15,19 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.DocCompareActivity;
 import com.real.doctor.realdoc.activity.ProgressBarActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.table.ImageManager;
 import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
+import com.real.doctor.realdoc.greendao.table.InqueryManager;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.greendao.table.VideoManager;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.ImageListBean;
+import com.real.doctor.realdoc.model.InqueryBean;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.model.VideoBean;
@@ -35,6 +38,7 @@ import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -46,9 +50,12 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -64,32 +71,44 @@ public class UpdateService extends JobService {
     private List<SaveDocBean> mList = new ArrayList<>();
     private List<String> mImgList = new ArrayList<>();
     private List<Boolean> mFlag = new ArrayList<>();
+    private String zipEditContent;
+    private String inquery;
     private boolean zip = false;
     //从数据库中获取数据
     private ImageManager imageInstance;
     private ImageRecycleManager imageRecycleInstance;
     //数据库处理
     private SaveDocManager instance;
+    private InqueryManager inqueryInstance;
     private RecordManager recordInstance;
     private VideoManager videoInstance;
     private List<RecordBean> audioList;
     private List<VideoBean> videoList;
+    private String time;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+            //插入要咨询的内容
             mFlag.clear();
-            String time = DateUtil.timeStamp();
+            time = DateUtil.timeStamp();
             //新建doctor文件夹
             String folderName = SDCardUtils.getGlobalDir() + "doctor" + time + File.separator;
+            InqueryBean inqueryBean = new InqueryBean();
+            inqueryBean.setInquery(inquery);
+            inqueryInstance.insertPatientInquery(UpdateService.this, inqueryBean, time, folderName);
             //图片存储路径
             String imgPath = folderName + "img" + File.separator;
-            for (SaveDocBean bean : mList) {
+            for (int k = 0; k < mList.size(); k++) {
+                SaveDocBean bean = mList.get(k);
                 File file = new File(folderName);
                 if (!file.exists())
                     file.mkdirs();  //如果不存在则创建
                 String mId = bean.getId();
                 String mFolder = bean.getFolder();
+                if (k == mList.size() - 1) {
+                    bean.setDescribe(zipEditContent);
+                }
                 //数据库处理
                 //将该条数据插入到patient数据库中
                 instance.insertPatientSaveDoc(UpdateService.this, bean, time, folderName);
@@ -197,10 +216,12 @@ public class UpdateService extends JobService {
                     //动态注册广播
                     Intent intent = new Intent(ProgressBarActivity.HAVE_IMG);
                     intent.putExtra("folderName", SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
+                    uploadData();
                     LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
                 } else {
                     Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
                     intent.putExtra("folderName", SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
+                    uploadData();
                     LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
                 }
             }
@@ -219,61 +240,76 @@ public class UpdateService extends JobService {
         }
 
         private void uploadData() {
-            Gson gson = new Gson();
-            String json = gson.toJson(mList);
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-            // 封装请求体
-            MultipartBody.Part part = DocUtils.prepareFilePart(SDCardUtils.getSDCardPath() + "doctor.zip");
-            HttpRequestClient.getInstance(UpdateService.this).createBaseApi().uploadJsonFile(""
-                    , body, part, new BaseObserver<ResponseBody>(UpdateService.this) {
+            if (NetworkUtil.isNetworkAvailable(UpdateService.this)) {
+                Map<String, RequestBody> maps = new HashMap<>();
+                File file = new File(SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
+                if (file.exists()) {
+                    RequestBody requestBody = DocUtils.toRequestBodyOfImage(file);
+                    maps.put("attach\"; filename=\"" + file.getName() + "", requestBody);//head_img图片key
+                }
 
-                        @Override
-                        public void onSubscribe(Disposable d) {
+                HttpRequestClient.getInstance(UpdateService.this).createBaseApi().uploads("upload/uploadFiles/", maps, new BaseObserver<ResponseBody>(UpdateService.this) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            ToastUtil.showLong(RealDocApplication.getContext(), e.getMessage());
-                            Log.d(TAG, e.getMessage());
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-
-                        @Override
-                        protected void onHandleSuccess(ResponseBody responseBody) {
-                            String data = null;
-                            String msg = null;
-                            String code = null;
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        //上传文件成功
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
                             try {
-                                data = responseBody.string().toString();
-                                try {
-                                    JSONObject object = new JSONObject(data);
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
                                 }
-                            } catch (IOException e) {
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传成功!");
+                                } else {
+                                    ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
+                                }
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
+                    }
 
-                    });
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(UpdateService.this, e.getMessage());
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+            }
         }
     });
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         instance = SaveDocManager.getInstance(UpdateService.this);
+        inqueryInstance = InqueryManager.getInstance(UpdateService.this);
         imageInstance = ImageManager.getInstance(UpdateService.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(UpdateService.this);
         recordInstance = RecordManager.getInstance(UpdateService.this);
         videoInstance = VideoManager.getInstance(UpdateService.this);
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra("mList");
+            zipEditContent = intent.getExtras().getString("zipEdit");
+            inquery = intent.getExtras().getString("inquery");
         }
         Message m = Message.obtain();
         handler.sendMessage(m);

@@ -82,13 +82,7 @@ public interface RetrofitService {
 
     //下载接口，单个文件下载
     @Streaming
-    @POST
+    @GET
     Observable<ResponseBody> downloadFile(@Url String fileUrl);
 
-
-    @POST
-//    @Headers({"Content-Type: application/json","Accept: application/json"})//需要添加头
-    Observable<ResponseBody> upLoadjsonFile(
-            @Url String url,
-            @Body RequestBody jsonStr, @Part MultipartBody.Part file);
 }

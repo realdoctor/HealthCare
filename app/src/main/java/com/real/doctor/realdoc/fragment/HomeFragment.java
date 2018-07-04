@@ -144,6 +144,14 @@ public class HomeFragment extends BaseFragment {
         initViewFlipper();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+//        if (btnFlag) {
+//            onShowMenu();
+//        }
+    }
+
     public void initViewFlipper() {
         viewFlipper.addView(View.inflate(getActivity(), R.layout.home_ads, null));
     }
@@ -187,7 +195,7 @@ public class HomeFragment extends BaseFragment {
         isFirst = (boolean) SPUtils.get(getActivity(), "first", true);
         //1 初始化悬浮球配置，定义好悬浮球大小和icon的drawable
         final int ballSize = DensityUtil.dip2px(getActivity(), 60);
-        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
+        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
         //可以尝试使用以下几种不同的config。
         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
         mFloatballManager = new FloatBallManager(RealDocApplication.getContext(), ballCfg);
@@ -200,10 +208,16 @@ public class HomeFragment extends BaseFragment {
                 public void onFloatBallClick() {
                     if (personFlag) {
                         personFlag = false;
+                        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
+                        final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
+                        mFloatballManager.changeIcon(getActivity(), ballCfg);
                         docLayout.setVisibility(View.VISIBLE);
                         mainLayout.setVisibility(View.GONE);
                     } else {
                         personFlag = true;
+                        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
+                        final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
+                        mFloatballManager.changeIcon(getActivity(), ballCfg);
                         mainLayout.setVisibility(View.VISIBLE);
                         docLayout.setVisibility(View.GONE);
                     }

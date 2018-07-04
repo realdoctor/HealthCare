@@ -18,6 +18,7 @@ public class UserBean extends EMContact implements Parcelable {
     @Id
     @SerializedName("userId")
     private String id;
+    @SerializedName("originalImageUrl")
     private String avater;
     @SerializedName("userName")
     private String name;
@@ -42,8 +43,8 @@ public class UserBean extends EMContact implements Parcelable {
 
     @Generated(hash = 1912825958)
     public UserBean(String id, String avater, String name, String pwd,
-            String mobile, String realname, String lastTime, String address,
-            String email) {
+                    String mobile, String realname, String lastTime, String address,
+                    String email) {
         this.id = id;
         this.avater = avater;
         this.name = name;

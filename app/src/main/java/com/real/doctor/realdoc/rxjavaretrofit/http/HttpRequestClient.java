@@ -4,11 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.real.doctor.realdoc.API.AuthenticationInterceptor;
 import com.real.doctor.realdoc.rxjavaretrofit.cache.BaseInterceptor;
 import com.real.doctor.realdoc.rxjavaretrofit.cache.CacheInterceptor;
 import com.real.doctor.realdoc.rxjavaretrofit.down.DownCallBack;
-import com.real.doctor.realdoc.rxjavaretrofit.down.DownSubscriber;
+import com.real.doctor.realdoc.rxjavaretrofit.down.FileDownLoadObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.factory.ResponseConvertFactory;
 import com.real.doctor.realdoc.rxjavaretrofit.impl.RetrofitService;
@@ -22,12 +21,10 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.ConnectionPool;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -170,11 +167,11 @@ public class HttpRequestClient {
     /**
      * 获取HttpRequestClient(非单例,在token改变时使用)
      */
-    public static HttpRequestClient getNotInstance(Context context,String baseUrl,Map<String,String> header) {
+    public static HttpRequestClient getNotInstance(Context context, String baseUrl, Map<String, String> header) {
         if (context != null) {
             mContext = context;
         }
-        return  new HttpRequestClient(context,baseUrl, header);
+        return new HttpRequestClient(context, baseUrl, header);
     }
 
     /**
@@ -267,21 +264,12 @@ public class HttpRequestClient {
     }
 
     /**
-     * 上传文件,并上传json数据
-     */
-    public void uploadJsonFile(String url, RequestBody jsonStr, MultipartBody.Part file, BaseObserver<ResponseBody> subscriber) {
-        retrofitService.upLoadjsonFile(url, jsonStr, file)
-                .compose(schedulersTransformer())
-                .subscribe(subscriber);
-    }
-
-    /**
      * 下载文件
      */
-    public void download(String url, final DownCallBack callBack) {
+    public void download(String url, String dirPath, final DownCallBack callBack) {
         retrofitService.downloadFile(url)
                 .compose(schedulersTransformer())
-                .subscribe((Observer) new DownSubscriber<ResponseBody>(callBack, mContext));
+                .subscribe(new FileDownLoadObserver<ResponseBody>(callBack, dirPath, mContext));
     }
 
     private OkHttpClient getOkHttpClient() {

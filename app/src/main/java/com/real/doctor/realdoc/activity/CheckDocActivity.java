@@ -48,7 +48,7 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     private LinearLayoutManager mLinearLayoutManager;
     private boolean isSelectAll = false;
     private int index = 0;
-
+    private String inquery;
 
     @Override
     public void initEvent() {
@@ -81,6 +81,7 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
                 mList.add(mSaveDocBean);
             }
         }
+        intent.putExtra("inquery",inquery);
         intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -119,6 +120,11 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
         SaveDocManager instance = SaveDocManager.getInstance(CheckDocActivity.this);
         List<SaveDocBean> mList = instance.querySaveDocList(CheckDocActivity.this);
         mCheckDocAdapter.notifyAdapter(mList, false);
+        //获取咨询内容
+        Intent intent = getIntent();
+        if (intent != null) {
+            inquery = intent.getExtras().getString("inquery");
+        }
     }
 
     /**

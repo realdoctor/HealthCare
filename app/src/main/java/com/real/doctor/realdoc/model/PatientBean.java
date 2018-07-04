@@ -1,47 +1,99 @@
 package com.real.doctor.realdoc.model;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PatientBean extends UserBean implements Parcelable {
-    //相当于id,到时候直接用id
-    private String patientCode;
-    //    private String patientImg;
-    private String visitOrgName;
-    private String diagName;
-    private String visitDtime;
+public class PatientBean implements Parcelable {
+    private String addTime;
+    private String src;
+    private String num;
+    private String pubId;
+    private String remark;
+    private UserBean userInfo;
 
     public PatientBean() {
     }
 
-    public String getPatientCode() {
-        return patientCode;
+    protected PatientBean(Parcel in) {
+        addTime = in.readString();
+        src = in.readString();
+        num = in.readString();
+        pubId = in.readString();
+        remark = in.readString();
+        userInfo = in.readParcelable(UserBean.class.getClassLoader());
     }
 
-    public void setPatientCode(String patientCode) {
-        this.patientCode = patientCode;
+    public static final Creator<PatientBean> CREATOR = new Creator<PatientBean>() {
+        @Override
+        public PatientBean createFromParcel(Parcel in) {
+            return new PatientBean(in);
+        }
+
+        @Override
+        public PatientBean[] newArray(int size) {
+            return new PatientBean[size];
+        }
+    };
+
+    public String getAddTime() {
+        return addTime;
     }
 
-    public String getVisitOrgName() {
-        return visitOrgName;
+    public void setAddTime(String addTime) {
+        this.addTime = addTime;
     }
 
-    public void setVisitOrgName(String visitOrgName) {
-        this.visitOrgName = visitOrgName;
+    public String getSrc() {
+        return src;
     }
 
-    public String getDiagName() {
-        return diagName;
+    public void setSrc(String src) {
+        this.src = src;
     }
 
-    public void setDiagName(String diagName) {
-        this.diagName = diagName;
+    public String getNum() {
+        return num;
     }
 
-    public String getVisitDtime() {
-        return visitDtime;
+    public void setNum(String num) {
+        this.num = num;
     }
 
-    public void setVisitDtime(String visitDtime) {
-        this.visitDtime = visitDtime;
+    public String getPubId() {
+        return pubId;
+    }
+
+    public void setPubId(String pubId) {
+        this.pubId = pubId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+    public UserBean getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserBean userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(addTime);
+        dest.writeString(src);
+        dest.writeString(num);
+        dest.writeString(pubId);
+        dest.writeString(remark);
+        dest.writeParcelable(userInfo, flags);
     }
 }

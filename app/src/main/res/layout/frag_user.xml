@@ -81,7 +81,7 @@
                 android:background="@color/background_color" />
 
             <LinearLayout
-                android:id="@+id/sign_doctor"
+                android:id="@+id/inquiry_answers"
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/linearLayout_height"
                 android:background="#ffffffff"
@@ -98,13 +98,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8.0dip"
-                    android:text="签约医生"
+                    android:text="咨询解答"
                     android:textColor="@color/text_primary_color"
                     android:textSize="@dimen/text_size_14sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/invite_friend"
+                android:id="@+id/inquiry_pay_list"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/linearLayout_height"
+                android:background="#ffffffff"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25.0dip"
+                    android:layout_height="25.0dip"
+                    android:layout_marginLeft="16.0dip"
+                    android:background="@mipmap/sign_doctor" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8.0dip"
+                    android:text="咨询收费列表"
+                    android:textColor="@color/text_primary_color"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/inquiry_pay"
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/linearLayout_height"
                 android:background="#ffffffff"
@@ -121,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8.0dip"
-                    android:text="邀请好友"
+                    android:text="咨询定价"
                     android:textColor="@color/text_primary_color"
                     android:textSize="@dimen/text_size_14sp" />
             </LinearLayout>
@@ -193,7 +216,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginLeft="16.0dip"
                     android:src="@mipmap/icon_settiong" />
 
                 <TextView

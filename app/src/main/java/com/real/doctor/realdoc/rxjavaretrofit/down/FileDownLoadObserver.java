@@ -4,22 +4,24 @@ import android.content.Context;
 
 import com.real.doctor.realdoc.rxjavaretrofit.manager.DownLoadManager;
 
-import io.reactivex.subscribers.ResourceSubscriber;
-
+import io.reactivex.observers.DefaultObserver;
+import okhttp3.ResponseBody;
 
 /**
  * DownSubscriber
  *
- * @param <ResponseBody>
+ * @param <T>
  */
-public class DownSubscriber<ResponseBody> extends ResourceSubscriber<ResponseBody> {
+public class FileDownLoadObserver<T> extends DefaultObserver<T> {
 
     private DownCallBack callBack;
     private Context mContext;
+    private String dirPath;
 
-    public DownSubscriber(DownCallBack callBack, Context context) {
+    public FileDownLoadObserver(DownCallBack callBack, String path, Context context) {
         this.callBack = callBack;
         mContext = context;
+        dirPath = path;
     }
 
     @Override
@@ -28,6 +30,11 @@ public class DownSubscriber<ResponseBody> extends ResourceSubscriber<ResponseBod
         if (callBack != null) {
             callBack.onStart();
         }
+    }
+
+    @Override
+    public void onNext(T t) {
+        DownLoadManager.getInstance(callBack).writeResponseBodyToDisk(mContext, (ResponseBody) t, dirPath);
     }
 
     @Override
@@ -44,8 +51,4 @@ public class DownSubscriber<ResponseBody> extends ResourceSubscriber<ResponseBod
         }
     }
 
-    @Override
-    public void onNext(ResponseBody responseBody) {
-        DownLoadManager.getInstance(callBack).writeResponseBodyToDisk(mContext, (okhttp3.ResponseBody) responseBody);
-    }
 }

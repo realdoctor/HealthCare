@@ -75,6 +75,8 @@ public class SaveDocBean implements Parcelable {
     private String visitWay;
     //是否选中病历
     private boolean isSelect = false;
+    //时间最近的一份病历要添加一段描述
+    private String describe;
     /**
      * Used to resolve relations
      */
@@ -90,11 +92,11 @@ public class SaveDocBean implements Parcelable {
     }
 
 
-    @Generated(hash = 434754401)
-    public SaveDocBean(String id, String ill, String hospital, String doctor,
-                       String time, String folder, String imgs, String advice, String orgCode,
-                       String patientDiagId, String patientId, String visitDeptName,
-                       String visitWay, boolean isSelect) {
+    @Generated(hash = 1012777057)
+    public SaveDocBean(String id, String ill, String hospital, String doctor, String time,
+                       String folder, String imgs, String advice, String orgCode, String patientDiagId,
+                       String patientId, String visitDeptName, String visitWay, boolean isSelect,
+                       String describe) {
         this.id = id;
         this.ill = ill;
         this.hospital = hospital;
@@ -109,6 +111,7 @@ public class SaveDocBean implements Parcelable {
         this.visitDeptName = visitDeptName;
         this.visitWay = visitWay;
         this.isSelect = isSelect;
+        this.describe = describe;
     }
 
 
@@ -454,5 +457,15 @@ public class SaveDocBean implements Parcelable {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getSaveDocBeanDao() : null;
+    }
+
+
+    public String getDescribe() {
+        return this.describe;
+    }
+
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
     }
 }

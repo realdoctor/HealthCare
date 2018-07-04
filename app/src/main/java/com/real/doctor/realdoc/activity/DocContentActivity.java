@@ -8,33 +8,28 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.AudioAdapter;
-import com.real.doctor.realdoc.adapter.ContentGridAdapter;
 import com.real.doctor.realdoc.adapter.ImageCardAdapter;
 import com.real.doctor.realdoc.adapter.VideoAdapter;
-import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.PlayRecordFragment;
+import com.real.doctor.realdoc.greendao.table.DrugManager;
 import com.real.doctor.realdoc.greendao.table.ImageManager;
 import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.greendao.table.VideoManager;
-import com.real.doctor.realdoc.model.DragBean;
+import com.real.doctor.realdoc.model.DrugBean;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.ImageListBean;
 import com.real.doctor.realdoc.model.RecordBean;
@@ -46,13 +41,10 @@ import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
-import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
-import com.real.doctor.realdoc.view.DocGridView;
 import com.real.doctor.realdoc.view.TriangleDrawable;
-import com.real.doctor.realdoc.view.popup.BasePopup;
 import com.real.doctor.realdoc.view.popup.EasyPopup;
 import com.real.doctor.realdoc.view.popup.XGravity;
 import com.real.doctor.realdoc.view.popup.YGravity;
@@ -73,7 +65,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 /**
@@ -130,6 +121,7 @@ public class DocContentActivity extends BaseActivity {
     private List<ImageBean> mAllList;
     private EasyPopup mRightPop;
     private String mAdvice;
+    private DrugManager drugInstance;
 
     @Override
     public int getLayoutId() {
@@ -151,7 +143,6 @@ public class DocContentActivity extends BaseActivity {
     @Override
     public void initData() {
         pageTitle.setText("病历详情");
-        rightIcon.setVisibility(View.VISIBLE);
         imageOriganList = new ArrayList<>();
         imageOriganBean = new ArrayList<>();
         mAllList = new ArrayList<>();
@@ -160,19 +151,27 @@ public class DocContentActivity extends BaseActivity {
         videoAdapter = new VideoAdapter(R.layout.video_item, videoList);
         videoRecycleView.setAdapter(videoAdapter);
         instance = SaveDocManager.getInstance(DocContentActivity.this);
+        drugInstance = DrugManager.getInstance(DocContentActivity.this);
         recordInstance = RecordManager.getInstance(DocContentActivity.this);
         videoInstance = VideoManager.getInstance(DocContentActivity.this);
         imageInstance = ImageManager.getInstance(DocContentActivity.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(DocContentActivity.this);
         saveDocBean = (SaveDocBean) getIntent().getParcelableExtra("SaveDocBean");
+        boolean noModify= getIntent().getBooleanExtra("noModify",false);
+        if(noModify){
+            rightIcon.setVisibility(View.GONE);
+        }else{
+            rightIcon.setVisibility(View.VISIBLE);
+        }
         if (EmptyUtils.isNotEmpty(saveDocBean)) {
             String mIll = null;
             String mDoctor = null;
             String mHospital = null;
             String mTime = null;
-            String patientDiagId = saveDocBean.getPatientDiagId();
-            if (EmptyUtils.isNotEmpty(patientDiagId)) {
-                getPatientDiag(patientDiagId);
+            String mId = saveDocBean.getId();
+            if (EmptyUtils.isNotEmpty(mId)) {
+                String drug = getPatientDiag(mId);
+                advice.setText(drug);
             }
             if (saveDocBean.getIll() != null) {
                 mIll = saveDocBean.getIll().toString().trim();
@@ -258,79 +257,17 @@ public class DocContentActivity extends BaseActivity {
         initAbovePop();
     }
 
-    private void getPatientDiag(String patientDiagId) {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("patientDiagId", patientDiagId);
-        HttpRequestClient.getInstance(DocContentActivity.this).createBaseApi().get("patient/drug"
-                , map, new BaseObserver<ResponseBody>(DocContentActivity.this) {
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ToastUtil.showLong(DocContentActivity.this, "获取处方信息失败!");
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    protected void onHandleSuccess(ResponseBody responseBody) {
-                        String data = null;
-                        String msg = null;
-                        String code = null;
-                        try {
-                            data = responseBody.string().toString();
-                            try {
-                                JSONObject object = new JSONObject(data);
-                                if (DocUtils.hasValue(object, "msg")) {
-                                    msg = object.getString("msg");
-                                }
-                                if (DocUtils.hasValue(object, "code")) {
-                                    code = object.getString("code");
-                                }
-                                if (msg.equals("ok") && code.equals("0")) {
-                                    if (DocUtils.hasValue(object, "data")) {
-                                        JSONObject obj = object.getJSONObject("data");
-                                        if (DocUtils.hasValue(obj, "list")) {
-                                            List<DragBean> list = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), DragBean.class);
-                                            StringBuffer sb = new StringBuffer();
-                                            for (int i = 0; i < list.size(); i++) {
-                                                sb.append(list.get(i).getDrugName());
-                                                sb.append(";");
-                                            }
-                                            mAdvice = sb.toString().trim();
-                                            if (list.size() > 0) {
-                                                adviceText.setVisibility(View.VISIBLE);
-                                                advice.setVisibility(View.VISIBLE);
-                                                advice.setText(mAdvice);
-                                            } else {
-                                                adviceText.setVisibility(View.GONE);
-                                                advice.setVisibility(View.GONE);
-                                            }
-                                            saveDocBean.setAdvice(mAdvice);
-                                            instance.insertSaveDoc(DocContentActivity.this, saveDocBean);
-                                        }
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                });
+    private String getPatientDiag(String id) {
+        List<DrugBean> drugList = drugInstance.queryDrugList(this, id);
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < drugList.size(); i++) {
+            sb.append(drugList.get(i).getDrugName());
+            sb.append(";");
+        }
+        return sb.toString();
     }
 
     private void initAbovePop() {
-
         mRightPop = EasyPopup.create()
                 .setContext(this)
                 .setContentView(R.layout.right_pop_layout)
@@ -380,7 +317,7 @@ public class DocContentActivity extends BaseActivity {
                     intent.putExtra("saveDocBean", saveDocBean);
                     startActivity(intent);
                 } else {
-                    ToastUtil.showLong(DocContentActivity.this,"病历列表中至少有两个病历,方可进行对照!");
+                    ToastUtil.showLong(DocContentActivity.this, "病历列表中至少有两个病历,方可进行对照!");
                 }
                 mRightPop.dismiss();
             }
@@ -508,9 +445,6 @@ public class DocContentActivity extends BaseActivity {
 
                 }
                 imageOriganList.addAll(imageList);
-                //处方信息隐藏
-                adviceText.setVisibility(View.GONE);
-                advice.setVisibility(View.GONE);
                 audioList = new ArrayList<>();
                 videoList = new ArrayList<>();
                 if (EmptyUtils.isNotEmpty(mFolder)) {

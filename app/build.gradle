@@ -14,8 +14,13 @@ android {
         aaptOptions.useNewCruncher = false
         multiDexEnabled true
         ndk {
-            abiFilters "armeabi-v7a"
+            abiFilters "armeabi", "armeabi-v7a", "x86", "arm64-v8a"
         }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: "com.real.doctor.realdoc",
+                JPUSH_APPKEY : "你的appkey", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+        ]
     }
     buildTypes {
         release {
@@ -41,7 +46,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
@@ -117,18 +122,24 @@ dependencies {
     //图片识别
     compile 'com.rmtheis:tess-two:8.0.0'
     implementation project(':zxing')
+
     //环信
     implementation project(':easeui')
     compile 'com.parse:parse-android:1.13.1'
+
     // Google firebase cloud messaging
     compile 'com.google.firebase:firebase-messaging:11.4.0'
+
     //multidex
     compile 'com.android.support:multidex:1.0.3'
+
     //在线视频播放
     implementation project(':ijkplayer')
-//    //leakcanary
-//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.2'
-//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
+    //    //leakcanary
+
+    //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.2'
+
+    //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
 }
 // ADD THIS AT THE BOTTOM
 //apply plugin: 'com.google.gms.google-services'

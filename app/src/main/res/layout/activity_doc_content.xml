@@ -141,8 +141,7 @@
                         android:layout_marginTop="10.0dip"
                         android:text="@string/advice_info"
                         android:textColor="@color/text_special_color"
-                        android:typeface="monospace"
-                        android:visibility="gone" />
+                        android:typeface="monospace" />
 
                     <TextView
                         android:id="@+id/advice"
@@ -154,8 +153,7 @@
                         android:layout_marginTop="10.0dip"
                         android:textColor="@color/text_special_color"
                         android:textSize="14.0sp"
-                        android:typeface="monospace"
-                        android:visibility="gone" />
+                        android:typeface="monospace" />
                 </RelativeLayout>
 
                 <LinearLayout

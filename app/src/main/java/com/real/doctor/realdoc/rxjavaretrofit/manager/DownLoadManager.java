@@ -29,14 +29,6 @@ public class DownLoadManager {
 
     private static final String TAG = "DownLoadManager";
 
-    private static String APK_CONTENTTYPE = "application/vnd.android.package-archive";
-
-    private static String PNG_CONTENTTYPE = "image/png";
-
-    private static String JPG_CONTENTTYPE = "image/jpg";
-
-    private static String fileSuffix="";
-
     private Handler handler;
 
     public DownLoadManager(DownCallBack callBack) {
@@ -45,8 +37,10 @@ public class DownLoadManager {
 
     private static DownLoadManager sInstance;
 
+    private String name;
+
     /**
-     *DownLoadManager getInstance
+     * DownLoadManager getInstance
      */
     public static synchronized DownLoadManager getInstance(DownCallBack callBack) {
         if (sInstance == null) {
@@ -56,30 +50,13 @@ public class DownLoadManager {
     }
 
 
+    public boolean writeResponseBodyToDisk(Context context, ResponseBody body, final String dirPath) {
 
-    public boolean  writeResponseBodyToDisk(Context context, ResponseBody body) {
-
-        Log.d(TAG, "contentType:>>>>"+ body.contentType().toString());
-
-        String type = body.contentType().toString();
-
-        if (type.equals(APK_CONTENTTYPE)) {
-            fileSuffix = ".apk";
-        } else if (type.equals(PNG_CONTENTTYPE)) {
-            fileSuffix = ".png";
-        } else if (type.equals(JPG_CONTENTTYPE)) {
-            fileSuffix = ".jpg";
-        }
-
-        // 其他同上 自己判断加入
-        final String name = System.currentTimeMillis() + fileSuffix;
-        final String path = context.getExternalFilesDir(null) + File.separator + name;
-
-        Log.d(TAG, "path:>>>>"+ path);
+        name = dirPath.substring(dirPath.lastIndexOf("/") + 1, dirPath.length());
 
         try {
             // todo change the file location/name according to your needs
-            File futureStudioIconFile = new File(path);
+            File futureStudioIconFile = new File(dirPath);
 
             if (futureStudioIconFile.exists()) {
                 futureStudioIconFile.delete();
@@ -93,7 +70,7 @@ public class DownLoadManager {
 
                 final long fileSize = body.contentLength();
                 long fileSizeDownloaded = 0;
-                Log.d(TAG, "file length: "+ fileSize);
+                Log.d(TAG, "file length: " + fileSize);
                 inputStream = body.byteStream();
                 outputStream = new FileOutputStream(futureStudioIconFile);
 
@@ -129,7 +106,7 @@ public class DownLoadManager {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callBack.onSucess(path, name, fileSize);
+                            callBack.onSucess(dirPath, name, fileSize);
 
                         }
                     });

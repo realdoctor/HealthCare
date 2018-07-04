@@ -8,8 +8,11 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.real.doctor.realdoc.model.DownInfo;
+import com.real.doctor.realdoc.model.DrugBean;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.ImageListBean;
+import com.real.doctor.realdoc.model.InqueryBean;
 import com.real.doctor.realdoc.model.MessageBean;
 import com.real.doctor.realdoc.model.NewFriendsMsgs;
 import com.real.doctor.realdoc.model.PrefBean;
@@ -19,8 +22,11 @@ import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.model.VideoBean;
 
+import com.real.doctor.realdoc.greendao.DownInfoDao;
+import com.real.doctor.realdoc.greendao.DrugBeanDao;
 import com.real.doctor.realdoc.greendao.ImageBeanDao;
 import com.real.doctor.realdoc.greendao.ImageListBeanDao;
+import com.real.doctor.realdoc.greendao.InqueryBeanDao;
 import com.real.doctor.realdoc.greendao.MessageBeanDao;
 import com.real.doctor.realdoc.greendao.NewFriendsMsgsDao;
 import com.real.doctor.realdoc.greendao.PrefBeanDao;
@@ -39,8 +45,11 @@ import com.real.doctor.realdoc.greendao.VideoBeanDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig downInfoDaoConfig;
+    private final DaoConfig drugBeanDaoConfig;
     private final DaoConfig imageBeanDaoConfig;
     private final DaoConfig imageListBeanDaoConfig;
+    private final DaoConfig inqueryBeanDaoConfig;
     private final DaoConfig messageBeanDaoConfig;
     private final DaoConfig newFriendsMsgsDaoConfig;
     private final DaoConfig prefBeanDaoConfig;
@@ -50,8 +59,11 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig userBeanDaoConfig;
     private final DaoConfig videoBeanDaoConfig;
 
+    private final DownInfoDao downInfoDao;
+    private final DrugBeanDao drugBeanDao;
     private final ImageBeanDao imageBeanDao;
     private final ImageListBeanDao imageListBeanDao;
+    private final InqueryBeanDao inqueryBeanDao;
     private final MessageBeanDao messageBeanDao;
     private final NewFriendsMsgsDao newFriendsMsgsDao;
     private final PrefBeanDao prefBeanDao;
@@ -65,11 +77,20 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        downInfoDaoConfig = daoConfigMap.get(DownInfoDao.class).clone();
+        downInfoDaoConfig.initIdentityScope(type);
+
+        drugBeanDaoConfig = daoConfigMap.get(DrugBeanDao.class).clone();
+        drugBeanDaoConfig.initIdentityScope(type);
+
         imageBeanDaoConfig = daoConfigMap.get(ImageBeanDao.class).clone();
         imageBeanDaoConfig.initIdentityScope(type);
 
         imageListBeanDaoConfig = daoConfigMap.get(ImageListBeanDao.class).clone();
         imageListBeanDaoConfig.initIdentityScope(type);
+
+        inqueryBeanDaoConfig = daoConfigMap.get(InqueryBeanDao.class).clone();
+        inqueryBeanDaoConfig.initIdentityScope(type);
 
         messageBeanDaoConfig = daoConfigMap.get(MessageBeanDao.class).clone();
         messageBeanDaoConfig.initIdentityScope(type);
@@ -95,8 +116,11 @@ public class DaoSession extends AbstractDaoSession {
         videoBeanDaoConfig = daoConfigMap.get(VideoBeanDao.class).clone();
         videoBeanDaoConfig.initIdentityScope(type);
 
+        downInfoDao = new DownInfoDao(downInfoDaoConfig, this);
+        drugBeanDao = new DrugBeanDao(drugBeanDaoConfig, this);
         imageBeanDao = new ImageBeanDao(imageBeanDaoConfig, this);
         imageListBeanDao = new ImageListBeanDao(imageListBeanDaoConfig, this);
+        inqueryBeanDao = new InqueryBeanDao(inqueryBeanDaoConfig, this);
         messageBeanDao = new MessageBeanDao(messageBeanDaoConfig, this);
         newFriendsMsgsDao = new NewFriendsMsgsDao(newFriendsMsgsDaoConfig, this);
         prefBeanDao = new PrefBeanDao(prefBeanDaoConfig, this);
@@ -106,8 +130,11 @@ public class DaoSession extends AbstractDaoSession {
         userBeanDao = new UserBeanDao(userBeanDaoConfig, this);
         videoBeanDao = new VideoBeanDao(videoBeanDaoConfig, this);
 
+        registerDao(DownInfo.class, downInfoDao);
+        registerDao(DrugBean.class, drugBeanDao);
         registerDao(ImageBean.class, imageBeanDao);
         registerDao(ImageListBean.class, imageListBeanDao);
+        registerDao(InqueryBean.class, inqueryBeanDao);
         registerDao(MessageBean.class, messageBeanDao);
         registerDao(NewFriendsMsgs.class, newFriendsMsgsDao);
         registerDao(PrefBean.class, prefBeanDao);
@@ -119,8 +146,11 @@ public class DaoSession extends AbstractDaoSession {
     }
     
     public void clear() {
+        downInfoDaoConfig.clearIdentityScope();
+        drugBeanDaoConfig.clearIdentityScope();
         imageBeanDaoConfig.clearIdentityScope();
         imageListBeanDaoConfig.clearIdentityScope();
+        inqueryBeanDaoConfig.clearIdentityScope();
         messageBeanDaoConfig.clearIdentityScope();
         newFriendsMsgsDaoConfig.clearIdentityScope();
         prefBeanDaoConfig.clearIdentityScope();
@@ -131,12 +161,24 @@ public class DaoSession extends AbstractDaoSession {
         videoBeanDaoConfig.clearIdentityScope();
     }
 
+    public DownInfoDao getDownInfoDao() {
+        return downInfoDao;
+    }
+
+    public DrugBeanDao getDrugBeanDao() {
+        return drugBeanDao;
+    }
+
     public ImageBeanDao getImageBeanDao() {
         return imageBeanDao;
     }
 
     public ImageListBeanDao getImageListBeanDao() {
         return imageListBeanDao;
+    }
+
+    public InqueryBeanDao getInqueryBeanDao() {
+        return inqueryBeanDao;
     }
 
     public MessageBeanDao getMessageBeanDao() {

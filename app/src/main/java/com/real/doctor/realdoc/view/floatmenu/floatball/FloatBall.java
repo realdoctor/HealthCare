@@ -6,11 +6,13 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import com.real.doctor.realdoc.view.floatmenu.FloatBallManager;
 import com.real.doctor.realdoc.view.floatmenu.FloatBallUtil;
 import com.real.doctor.realdoc.view.floatmenu.runner.ICarrier;
@@ -63,7 +65,7 @@ public class FloatBall extends FrameLayout implements ICarrier {
 
     private void init(Context context) {
         imageView = new ImageView(context);
-        final Drawable icon = mConfig.mIcon;
+        Drawable icon = mConfig.mIcon;
         mSize = mConfig.mSize;
         Util.setBackground(imageView, icon);
         addView(imageView, new ViewGroup.LayoutParams(mSize, mSize));
@@ -71,6 +73,13 @@ public class FloatBall extends FrameLayout implements ICarrier {
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mRunner = new ScrollRunner(this);
         mVelocity = new MotionVelocityUtil(context);
+    }
+
+    public void changeIcon(Context context, FloatBallCfg config) {
+        imageView = new ImageView(context);
+        Drawable icon = config.mIcon;
+        Util.setBackground(imageView, icon);
+        addView(imageView, new ViewGroup.LayoutParams(mSize, mSize));
     }
 
     private void initLayoutParams(Context context) {
@@ -122,7 +131,7 @@ public class FloatBall extends FrameLayout implements ICarrier {
             mLayoutChanged = false;
         }
         if (height != 0 && isFirst || mLayoutChanged) {
-            if (isFirst&&height != 0) {
+            if (isFirst && height != 0) {
                 location(width, height);
             } else {
                 moveToEdge(false, sleep);

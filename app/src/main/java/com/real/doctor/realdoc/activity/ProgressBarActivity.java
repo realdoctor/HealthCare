@@ -39,8 +39,10 @@ public class ProgressBarActivity extends BaseActivity {
     @BindView(R.id.color_progress_bar)
     ColorfulProgressbar colorProgressBar;
     private List<SaveDocBean> mList;
+    private String zipEditContent;
     public static String HAVE_IMG = "android.intent.action.imgs";
     public static String HAVE_NOTHING = "android.intent.action.nothing";
+    private String inquery;
 
     @Override
     public int getLayoutId() {
@@ -72,7 +74,7 @@ public class ProgressBarActivity extends BaseActivity {
                 if (StringUtils.equals(action, HAVE_IMG)) {
                     ToastUtil.showLong(ProgressBarActivity.this, "病历资源打包成功!");
                 } else if (StringUtils.equals(action, HAVE_NOTHING)) {
-                    ToastUtil.showLong(ProgressBarActivity.this, "没有病历资源可打包!");
+                    ToastUtil.showLong(ProgressBarActivity.this, "没有病历图片,音频,视频资源可打包,但病历信息已经上传完成!");
                 }
                 Intent extras = new Intent();
                 extras.putExtra("path", path);
@@ -84,12 +86,16 @@ public class ProgressBarActivity extends BaseActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
+            inquery = intent.getExtras().getString("inquery");
             mList = intent.getParcelableArrayListExtra("mList");
+            zipEditContent = intent.getExtras().getString("zipEdit");
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             Intent startServiceIntent = new Intent(this, UpdateService.class);
             startServiceIntent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
+            startServiceIntent.putExtra("zipEdit", zipEditContent);
+            startServiceIntent.putExtra("inquery", inquery);
             startService(startServiceIntent);
             JobInfo jobInfo = new JobInfo.Builder(1, new ComponentName(getPackageName(), UpdateService.class.getName()))
                     .setPeriodic(2000)

@@ -117,7 +117,7 @@ public class AccountActivity extends BaseActivity {
         Intent intent = getIntent();
         avator = intent.getExtras().getString("avator");
         if (EmptyUtils.isNotEmpty(avator)) {
-            GlideUtils.loadImageViewLoding(AccountActivity.this, avator, userAvator,R.mipmap.ease_default_avatar,R.mipmap.ease_default_avatar);
+            GlideUtils.loadImageViewLoding(AccountActivity.this, avator, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
         }
     }
 
@@ -153,7 +153,8 @@ public class AccountActivity extends BaseActivity {
             case R.id.identify:
                 //跳转到未实名认证界面
                 if (StringUtils.equals(verifyFlag, "1")) {
-                    ToastUtil.showLong(AccountActivity.this, "您已经实名认证!");
+                    intent = new Intent(AccountActivity.this, AlreadyVertifyActivity.class);
+                    startActivity(intent);
                 } else {
                     intent = new Intent(AccountActivity.this, VerifyActivity.class);
                     startActivity(intent);
@@ -229,7 +230,7 @@ public class AccountActivity extends BaseActivity {
             //通知后台头像已改
             uploadIcon(photos.get(0));
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_TAKE_PHOTO) {
-            GlideUtils.loadImageViewLoding(this, mCurrentPhotoPath, userAvator,R.mipmap.ease_default_avatar,R.mipmap.ease_default_avatar);
+            GlideUtils.loadImageViewLoding(this, mCurrentPhotoPath, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
             //刷新需要刷新头像的界面
             Intent intent = new Intent(CHANGE_AVATOR);
             intent.putExtra("avator", mCurrentPhotoPath);

@@ -82,7 +82,6 @@ public class PatientEduActivity extends BaseActivity implements
     @Override
     public void initData() {
         pageTitle.setText("患者教育");
-        ActivityCompat.requestPermissions(PatientEduActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_NETWORK_STATE}, 0);
         playRecycler = findViewById(R.id.play_recycler);
         playRecycler.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));

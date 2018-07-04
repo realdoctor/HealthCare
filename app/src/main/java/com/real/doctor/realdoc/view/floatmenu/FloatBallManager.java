@@ -66,6 +66,10 @@ public class FloatBallManager {
         inflateMenuItem();
     }
 
+    public void changeIcon(Activity activity, FloatBallCfg ballCfg) {
+        floatBall.changeIcon(activity, ballCfg);
+    }
+
     /**
      * 添加一个菜单条目
      *
