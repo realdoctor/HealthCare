@@ -30,6 +30,16 @@
         android:textColor="@color/text_black_color"
         android:textSize="14sp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/inquery_rv_info"
+        android:textColor="@color/text_black_color"
+        android:textSize="16sp" />
+
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
