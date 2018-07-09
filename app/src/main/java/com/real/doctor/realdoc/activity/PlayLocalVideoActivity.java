@@ -30,6 +30,8 @@ public class PlayLocalVideoActivity extends BaseActivity implements SurfaceHolde
 
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
     @BindView(R.id.center_start)
@@ -73,6 +75,7 @@ public class PlayLocalVideoActivity extends BaseActivity implements SurfaceHolde
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        pageTitle.setText("视频播放");
     }
 
     @Override
