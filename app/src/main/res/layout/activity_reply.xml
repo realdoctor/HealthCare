@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/reply_text"
+        android:textColor="@color/text_black_color" />
+
+    <EditText
+        android:id="@+id/reply_edit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/audio_item_bg"
+        android:gravity="top|left"
+        android:hint="@string/reply_hint"
+        android:inputType="textMultiLine"
+        android:minLines="8"
+        android:padding="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textColorHint="#ff999999"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="14.0sp"
+        android:typeface="monospace"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30.0dip"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/confirm_charge"
+            android:layout_width="fill_parent"
+            android:layout_height="43.0dip"
+            android:layout_marginLeft="18.0dip"
+            android:layout_marginRight="18.0dip"
+            android:background="@drawable/button_selector"
+            android:text="@string/confirm_charge"
+            android:textColor="#ffffffff"
+            android:textSize="15.0sp" />
+    </RelativeLayout>
+</LinearLayout>

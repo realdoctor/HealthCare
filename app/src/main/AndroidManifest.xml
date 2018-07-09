@@ -295,6 +295,10 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.VideoOneActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.RecordImagesActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
@@ -419,6 +423,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AlreadyVertifyActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ReplyActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyRevisitActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <!--    <intent-filter>

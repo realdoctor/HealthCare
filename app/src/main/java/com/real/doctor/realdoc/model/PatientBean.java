@@ -9,6 +9,7 @@ public class PatientBean implements Parcelable {
     private String num;
     private String pubId;
     private String remark;
+    private String questionId;
     private UserBean userInfo;
 
     public PatientBean() {
@@ -20,6 +21,7 @@ public class PatientBean implements Parcelable {
         num = in.readString();
         pubId = in.readString();
         remark = in.readString();
+        questionId = in.readString();
         userInfo = in.readParcelable(UserBean.class.getClassLoader());
     }
 
@@ -74,6 +76,15 @@ public class PatientBean implements Parcelable {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+
     public UserBean getUserInfo() {
         return userInfo;
     }
@@ -94,6 +105,7 @@ public class PatientBean implements Parcelable {
         dest.writeString(num);
         dest.writeString(pubId);
         dest.writeString(remark);
+        dest.writeString(questionId);
         dest.writeParcelable(userInfo, flags);
     }
 }

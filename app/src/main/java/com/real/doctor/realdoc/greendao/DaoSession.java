@@ -16,6 +16,7 @@ import com.real.doctor.realdoc.model.InqueryBean;
 import com.real.doctor.realdoc.model.MessageBean;
 import com.real.doctor.realdoc.model.NewFriendsMsgs;
 import com.real.doctor.realdoc.model.PrefBean;
+import com.real.doctor.realdoc.model.RecieverAddressListBean;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.RobotBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
@@ -30,6 +31,7 @@ import com.real.doctor.realdoc.greendao.InqueryBeanDao;
 import com.real.doctor.realdoc.greendao.MessageBeanDao;
 import com.real.doctor.realdoc.greendao.NewFriendsMsgsDao;
 import com.real.doctor.realdoc.greendao.PrefBeanDao;
+import com.real.doctor.realdoc.greendao.RecieverAddressListBeanDao;
 import com.real.doctor.realdoc.greendao.RecordBeanDao;
 import com.real.doctor.realdoc.greendao.RobotBeanDao;
 import com.real.doctor.realdoc.greendao.SaveDocBeanDao;
@@ -53,6 +55,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig messageBeanDaoConfig;
     private final DaoConfig newFriendsMsgsDaoConfig;
     private final DaoConfig prefBeanDaoConfig;
+    private final DaoConfig recieverAddressListBeanDaoConfig;
     private final DaoConfig recordBeanDaoConfig;
     private final DaoConfig robotBeanDaoConfig;
     private final DaoConfig saveDocBeanDaoConfig;
@@ -67,6 +70,7 @@ public class DaoSession extends AbstractDaoSession {
     private final MessageBeanDao messageBeanDao;
     private final NewFriendsMsgsDao newFriendsMsgsDao;
     private final PrefBeanDao prefBeanDao;
+    private final RecieverAddressListBeanDao recieverAddressListBeanDao;
     private final RecordBeanDao recordBeanDao;
     private final RobotBeanDao robotBeanDao;
     private final SaveDocBeanDao saveDocBeanDao;
@@ -101,6 +105,9 @@ public class DaoSession extends AbstractDaoSession {
         prefBeanDaoConfig = daoConfigMap.get(PrefBeanDao.class).clone();
         prefBeanDaoConfig.initIdentityScope(type);
 
+        recieverAddressListBeanDaoConfig = daoConfigMap.get(RecieverAddressListBeanDao.class).clone();
+        recieverAddressListBeanDaoConfig.initIdentityScope(type);
+
         recordBeanDaoConfig = daoConfigMap.get(RecordBeanDao.class).clone();
         recordBeanDaoConfig.initIdentityScope(type);
 
@@ -124,6 +131,7 @@ public class DaoSession extends AbstractDaoSession {
         messageBeanDao = new MessageBeanDao(messageBeanDaoConfig, this);
         newFriendsMsgsDao = new NewFriendsMsgsDao(newFriendsMsgsDaoConfig, this);
         prefBeanDao = new PrefBeanDao(prefBeanDaoConfig, this);
+        recieverAddressListBeanDao = new RecieverAddressListBeanDao(recieverAddressListBeanDaoConfig, this);
         recordBeanDao = new RecordBeanDao(recordBeanDaoConfig, this);
         robotBeanDao = new RobotBeanDao(robotBeanDaoConfig, this);
         saveDocBeanDao = new SaveDocBeanDao(saveDocBeanDaoConfig, this);
@@ -138,6 +146,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(MessageBean.class, messageBeanDao);
         registerDao(NewFriendsMsgs.class, newFriendsMsgsDao);
         registerDao(PrefBean.class, prefBeanDao);
+        registerDao(RecieverAddressListBean.class, recieverAddressListBeanDao);
         registerDao(RecordBean.class, recordBeanDao);
         registerDao(RobotBean.class, robotBeanDao);
         registerDao(SaveDocBean.class, saveDocBeanDao);
@@ -154,6 +163,7 @@ public class DaoSession extends AbstractDaoSession {
         messageBeanDaoConfig.clearIdentityScope();
         newFriendsMsgsDaoConfig.clearIdentityScope();
         prefBeanDaoConfig.clearIdentityScope();
+        recieverAddressListBeanDaoConfig.clearIdentityScope();
         recordBeanDaoConfig.clearIdentityScope();
         robotBeanDaoConfig.clearIdentityScope();
         saveDocBeanDaoConfig.clearIdentityScope();
@@ -191,6 +201,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public PrefBeanDao getPrefBeanDao() {
         return prefBeanDao;
+    }
+
+    public RecieverAddressListBeanDao getRecieverAddressListBeanDao() {
+        return recieverAddressListBeanDao;
     }
 
     public RecordBeanDao getRecordBeanDao() {

@@ -2,14 +2,15 @@ package com.real.doctor.realdoc.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,16 +44,18 @@ import io.reactivex.disposables.Disposable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
-public class ChatPayActivity extends BaseActivity {
+public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
-    @BindView(R.id.pay_type)
-    RadioGroup rgPayType;
+    @BindView(R.id.zhi_fu_bao_linear)
+    LinearLayout zhiFuBaoLinear;
+    @BindView(R.id.weixin_linear)
+    LinearLayout weixinLinear;
     @BindView(R.id.zhi_fu_bao)
-    RadioButton rbAlipay;
+    CheckBox rbAlipay;
     @BindView(R.id.wei_xin)
-    RadioButton rbWechat;
+    CheckBox rbWechat;
     @BindView(R.id.tv_count_price)
     TextView tvCountprice;
     @BindView(R.id.bt_pay)
@@ -64,8 +67,9 @@ public class ChatPayActivity extends BaseActivity {
     private String zhifu_type = "0";
     private static final int SDK_PAY_FLAG = 0;
     private IWXAPI api;
-    public String payType;
-    public String userId;
+    private String payType;
+    private String doctorUserId;
+    private String userId;
 
     @Override
     public int getLayoutId() {
@@ -87,6 +91,7 @@ public class ChatPayActivity extends BaseActivity {
     @Override
     public void initData() {
         payType = getIntent().getStringExtra("payType");
+        doctorUserId = getIntent().getStringExtra("doctorUserId");
         if (payType.equals("1")) {
             pageTitle.setText("聊天咨询支付");
             initGetPay();
@@ -101,9 +106,8 @@ public class ChatPayActivity extends BaseActivity {
 
     private void initGetPay() {
         Map<String, String> map = new HashMap<String, String>();
-        String mobile = (String) SPUtils.get(this, "mobile", "");
-        map.put("mobilePhone", mobile);
-        HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().get("patient/revisit"
+        map.put("userId", doctorUserId);
+        HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().get("askQuestion/getAskQuestionMoney"
                 , map, new BaseObserver<ResponseBody>(ChatPayActivity.this) {
 
                     @Override
@@ -113,7 +117,7 @@ public class ChatPayActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(ChatPayActivity.this, "获取医生列表失败!");
+                        ToastUtil.showLong(ChatPayActivity.this, "获取价格失败!");
                     }
 
                     @Override
@@ -124,8 +128,8 @@ public class ChatPayActivity extends BaseActivity {
                     @Override
                     protected void onHandleSuccess(ResponseBody responseBody) {
                         String data = null;
-                        String msg = null;
-                        String code = null;
+                        String msg = "";
+                        String code = "";
                         try {
                             data = responseBody.string().toString();
                             try {
@@ -138,7 +142,17 @@ public class ChatPayActivity extends BaseActivity {
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     JSONObject obj = object.getJSONObject("data");
-//                                    tvCountprice.setText(M JK);
+                                    if (payType.equals("1")) {
+                                        if (DocUtils.hasValue(obj, "chatMoney")) {
+                                            String chatMoney = obj.getString("chatMoney");
+                                            tvCountprice.setText(chatMoney + "元");
+                                        }
+                                    } else if (payType.equals("2")) {
+                                        if (DocUtils.hasValue(obj, "questionMoney")) {
+                                            String questionMoney = obj.getString("questionMoney");
+                                            tvCountprice.setText(questionMoney + "元");
+                                        }
+                                    }
                                 } else {
                                     ToastUtil.showLong(ChatPayActivity.this, msg);
                                 }
@@ -154,18 +168,8 @@ public class ChatPayActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-        rgPayType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // TODO Auto-generated method stub
-                if (checkedId == rbAlipay.getId()) {
-                    zhifu_type = "1";
-                } else if (checkedId == rbWechat.getId()) {
-                    zhifu_type = "0";
-                }
-            }
-        });
+        rbAlipay.setOnCheckedChangeListener(this);
+        rbWechat.setOnCheckedChangeListener(this);
     }
 
     private boolean isWXAppInstalledAndSupported(Context context,
@@ -178,9 +182,8 @@ public class ChatPayActivity extends BaseActivity {
         }
         return sIsWXAppInstalledAndSupported;
     }
-
     @Override
-    @OnClick({R.id.bt_pay, R.id.finish_back})
+    @OnClick({R.id.bt_pay, R.id.finish_back,R.id.zhi_fu_bao_linear,R.id.weixin_linear})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.bt_pay:
@@ -199,6 +202,16 @@ public class ChatPayActivity extends BaseActivity {
                 break;
             case R.id.finish_back:
                 ChatPayActivity.this.finish();
+                break;
+            case R.id.zhi_fu_bao_linear:
+                zhifu_type = "1";
+                rbWechat.setChecked(false);
+                rbAlipay.setChecked(true);
+                break;
+            case R.id.weixin_linear:
+                zhifu_type = "0";
+                rbAlipay.setChecked(false);
+                rbWechat.setChecked(true);
                 break;
         }
     }
@@ -404,5 +417,20 @@ public class ChatPayActivity extends BaseActivity {
 
                 });
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            if (buttonView == rbAlipay) {
+                zhifu_type = "1";
+                rbWechat.setChecked(false);
+                rbAlipay.setChecked(true);
+            } else if (buttonView == rbWechat) {
+                zhifu_type = "0";
+                rbAlipay.setChecked(false);
+                rbWechat.setChecked(true);
+            }
+        }
     }
 }

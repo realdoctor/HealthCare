@@ -40,6 +40,7 @@ public class ProgressBarActivity extends BaseActivity {
     ColorfulProgressbar colorProgressBar;
     private List<SaveDocBean> mList;
     private String zipEditContent;
+    private String doctorUserId;
     public static String HAVE_IMG = "android.intent.action.imgs";
     public static String HAVE_NOTHING = "android.intent.action.nothing";
     private String inquery;
@@ -89,6 +90,7 @@ public class ProgressBarActivity extends BaseActivity {
             inquery = intent.getExtras().getString("inquery");
             mList = intent.getParcelableArrayListExtra("mList");
             zipEditContent = intent.getExtras().getString("zipEdit");
+            doctorUserId = intent.getExtras().getString("doctorUserId");
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
@@ -96,6 +98,7 @@ public class ProgressBarActivity extends BaseActivity {
             startServiceIntent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
             startServiceIntent.putExtra("zipEdit", zipEditContent);
             startServiceIntent.putExtra("inquery", inquery);
+            startServiceIntent.putExtra("doctorUserId", doctorUserId);
             startService(startServiceIntent);
             JobInfo jobInfo = new JobInfo.Builder(1, new ComponentName(getPackageName(), UpdateService.class.getName()))
                     .setPeriodic(2000)

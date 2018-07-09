@@ -36,12 +36,4 @@ public class ProductPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return categoryBeanArrayList.get(position).categoryName;
     }
-    public ProductShowFragment currentFragment;
-
-    @Override
-    public void setPrimaryItem(ViewGroup container, int position, Object object) {
-    currentFragment = (ProductShowFragment) object;
-    super.setPrimaryItem(container, position, object);
-    }
-
 }

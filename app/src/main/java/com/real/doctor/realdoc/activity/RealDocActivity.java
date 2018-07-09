@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.fragment.ArticleShowFragment;
 import com.real.doctor.realdoc.fragment.HomeFragment;
 import com.real.doctor.realdoc.fragment.MessageFragment;
 import com.real.doctor.realdoc.fragment.ReadFragment;
@@ -40,7 +41,7 @@ public class RealDocActivity extends BaseActivity {
     //fragments
     private ArrayList<Fragment> fragments;
     private HomeFragment homeFragment;
-    private ReadFragment readFragment;
+    private ArticleShowFragment readFragment;
     private ShoppintMallFragment shoppintMallFragment;
     private UserFragment userFragment;
     private FragmentTransaction transaction;
@@ -62,7 +63,7 @@ public class RealDocActivity extends BaseActivity {
     public void initData() {
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
-        readFragment = new ReadFragment();
+        readFragment = ArticleShowFragment.newInstance();
         shoppintMallFragment = ShoppintMallFragment.newInstance();
         userFragment = new UserFragment();
 

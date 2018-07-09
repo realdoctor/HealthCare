@@ -40,9 +40,12 @@ public class BaseInterceptor implements Interceptor {
                 builder.addHeader(headerKey, headers.get(headerKey)).build();
             }
         }
-        String token = (String) SPUtils.get(context, "token", "");
-        if (EmptyUtils.isNotEmpty(token)) {
-            builder.addHeader("Authorization", token);
+        if (EmptyUtils.isEmpty(headers)) {
+            //如果header没有token(相当于没有hearder),则添加token
+            String token = (String) SPUtils.get(context, "token", "");
+            if (EmptyUtils.isNotEmpty(token)) {
+                builder.addHeader("Authorization", token);
+            }
         }
         return chain.proceed(builder.build());
     }

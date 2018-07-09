@@ -108,6 +108,7 @@ public class RecordImagesActivity extends BaseActivity {
 
     @Override
     public void initView() {
+
         ButterKnife.bind(this);
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(RecordImagesActivity.this);

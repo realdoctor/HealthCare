@@ -62,6 +62,7 @@ public class CheckDetailActivity extends BaseActivity {
     public static final int REQUEST_CODE_PROGRESS_BAR = 0x130;
     private String path;
     private String inquery;
+    private String doctorUserId;
 
     @Override
     public int getLayoutId() {
@@ -93,6 +94,7 @@ public class CheckDetailActivity extends BaseActivity {
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra("mList");
             inquery = intent.getExtras().getString("inquery");
+            doctorUserId = intent.getExtras().getString("doctorUserId");
         }
         //创建布局管理
         checkDetailRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -120,9 +122,10 @@ public class CheckDetailActivity extends BaseActivity {
             case R.id.right_title:
                 String zipEditContent = zipEdit.getText().toString();
                 Intent intent = new Intent(CheckDetailActivity.this, ProgressBarActivity.class);
-                intent.putExtra("inquery",inquery);
+                intent.putExtra("inquery", inquery);
                 intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
                 intent.putExtra("zipEdit", zipEditContent);
+                intent.putExtra("doctorUserId", doctorUserId);
                 startActivityForResult(intent, REQUEST_CODE_PROGRESS_BAR);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.DocPayListAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
-import com.real.doctor.realdoc.model.PatientBean;
+import com.real.doctor.realdoc.model.DoctorBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
@@ -50,7 +50,7 @@ public class DocPayListActivity extends BaseActivity {
     @BindView(R.id.finish_back)
     ImageView finishBack;
     DocPayListAdapter docPayListAdapter;
-    private List<PatientBean> payList;
+    private List<DoctorBean> doctorList;
 
     @Override
     public int getLayoutId() {
@@ -67,19 +67,19 @@ public class DocPayListActivity extends BaseActivity {
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
-        pageTitle.setText("咨询收费列表");
+        pageTitle.setText("咨询解答");
     }
 
     @Override
     public void initData() {
-        payList = new ArrayList<>();
+        doctorList = new ArrayList<>();
         //创建布局管理
         payListlRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         //添加自定义分割线
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.disease_divider));
         payListlRecycleView.addItemDecoration(divider);
-        docPayListAdapter = new DocPayListAdapter(DocPayListActivity.this, R.layout.doc_pay_list_item, payList);
+        docPayListAdapter = new DocPayListAdapter(DocPayListActivity.this, R.layout.doc_pay_list_item, doctorList);
         //给RecyclerView设置适配器
         payListlRecycleView.setAdapter(docPayListAdapter);
         initPayData();
@@ -125,7 +125,7 @@ public class DocPayListActivity extends BaseActivity {
 
 
                                 } else {
-                                    ToastUtil.showLong(DocPayListActivity.this, "获取用户列表失败!");
+                                    ToastUtil.showLong(DocPayListActivity.this, "获取咨询解答列表失败!");
                                 }
 
                             } catch (JSONException e) {

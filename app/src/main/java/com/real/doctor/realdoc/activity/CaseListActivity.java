@@ -15,6 +15,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -52,6 +53,8 @@ public class CaseListActivity extends BaseActivity {
     TextView inqueryInfo;
     @BindView(R.id.line)
     View line;
+    @BindView(R.id.reply)
+    Button reply;
     DocDetailAdapter docDetailAdapter;
     @BindView(R.id.record_list_recycler)
     RecyclerView recordListRecycleView;
@@ -151,11 +154,17 @@ public class CaseListActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back})
+    @OnClick({R.id.finish_back, R.id.reply})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
                 finish();
+                break;
+            case R.id.reply:
+                //点击回复按钮
+                Intent intent = new Intent(CaseListActivity.this, ReplyActivity.class);
+                intent.putExtra("questionId", patientBean.getQuestionId());
+                startActivity(intent);
                 break;
         }
     }

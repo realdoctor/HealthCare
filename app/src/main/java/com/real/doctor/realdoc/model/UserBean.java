@@ -16,11 +16,12 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class UserBean extends EMContact implements Parcelable {
     @Id
-    @SerializedName("userId")
+    @SerializedName(value = "userId", alternate = {"doctorUserId"})
     private String id;
+    private String roleId;
     @SerializedName("originalImageUrl")
     private String avater;
-    @SerializedName("userName")
+    @SerializedName(value = "userName", alternate = {"doctorRealName", "patientRealName", "respDoctorName"})
     private String name;
     private String pwd;
     @SerializedName("mobilePhone")
@@ -33,19 +34,14 @@ public class UserBean extends EMContact implements Parcelable {
     private String address;
     private String email;
 
-    protected UserBean(Parcel in) {
-        id = in.readString();
-        avater = in.readString();
-        name = in.readString();
-        pwd = in.readString();
-        mobile = in.readString();
+    public UserBean() {
     }
 
-    @Generated(hash = 1912825958)
-    public UserBean(String id, String avater, String name, String pwd,
-                    String mobile, String realname, String lastTime, String address,
-                    String email) {
+    @Generated(hash = 885127356)
+    public UserBean(String id, String roleId, String avater, String name, String pwd,
+                    String mobile, String realname, String lastTime, String address, String email) {
         this.id = id;
+        this.roleId = roleId;
         this.avater = avater;
         this.name = name;
         this.pwd = pwd;
@@ -56,8 +52,38 @@ public class UserBean extends EMContact implements Parcelable {
         this.email = email;
     }
 
-    @Generated(hash = 1203313951)
-    public UserBean() {
+    protected UserBean(Parcel in) {
+        super();
+        id = in.readString();
+        roleId = in.readString();
+        avater = in.readString();
+        name = in.readString();
+        pwd = in.readString();
+        mobile = in.readString();
+        realname = in.readString();
+        lastTime = in.readString();
+        address = in.readString();
+        email = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(id);
+        dest.writeString(roleId);
+        dest.writeString(avater);
+        dest.writeString(name);
+        dest.writeString(pwd);
+        dest.writeString(mobile);
+        dest.writeString(realname);
+        dest.writeString(lastTime);
+        dest.writeString(address);
+        dest.writeString(email);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<UserBean> CREATOR = new Creator<UserBean>() {
@@ -73,15 +99,23 @@ public class UserBean extends EMContact implements Parcelable {
     };
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
+    public String getRoleId() {
+        return this.roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
     public String getAvater() {
-        return avater;
+        return this.avater;
     }
 
     public void setAvater(String avater) {
@@ -89,7 +123,7 @@ public class UserBean extends EMContact implements Parcelable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -97,7 +131,7 @@ public class UserBean extends EMContact implements Parcelable {
     }
 
     public String getPwd() {
-        return pwd;
+        return this.pwd;
     }
 
     public void setPwd(String pwd) {
@@ -105,21 +139,11 @@ public class UserBean extends EMContact implements Parcelable {
     }
 
     public String getMobile() {
-        return mobile;
+        return this.mobile;
     }
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-
     }
 
     public String getRealname() {
@@ -153,4 +177,5 @@ public class UserBean extends EMContact implements Parcelable {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

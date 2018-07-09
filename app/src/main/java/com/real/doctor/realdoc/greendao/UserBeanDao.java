@@ -25,14 +25,15 @@ public class UserBeanDao extends AbstractDao<UserBean, String> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, String.class, "id", true, "ID");
-        public final static Property Avater = new Property(1, String.class, "avater", false, "AVATER");
-        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Pwd = new Property(3, String.class, "pwd", false, "PWD");
-        public final static Property Mobile = new Property(4, String.class, "mobile", false, "MOBILE");
-        public final static Property Realname = new Property(5, String.class, "realname", false, "REALNAME");
-        public final static Property LastTime = new Property(6, String.class, "lastTime", false, "LAST_TIME");
-        public final static Property Address = new Property(7, String.class, "address", false, "ADDRESS");
-        public final static Property Email = new Property(8, String.class, "email", false, "EMAIL");
+        public final static Property RoleId = new Property(1, String.class, "roleId", false, "ROLE_ID");
+        public final static Property Avater = new Property(2, String.class, "avater", false, "AVATER");
+        public final static Property Name = new Property(3, String.class, "name", false, "NAME");
+        public final static Property Pwd = new Property(4, String.class, "pwd", false, "PWD");
+        public final static Property Mobile = new Property(5, String.class, "mobile", false, "MOBILE");
+        public final static Property Realname = new Property(6, String.class, "realname", false, "REALNAME");
+        public final static Property LastTime = new Property(7, String.class, "lastTime", false, "LAST_TIME");
+        public final static Property Address = new Property(8, String.class, "address", false, "ADDRESS");
+        public final static Property Email = new Property(9, String.class, "email", false, "EMAIL");
     }
 
 
@@ -49,14 +50,15 @@ public class UserBeanDao extends AbstractDao<UserBean, String> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER_BEAN\" (" + //
                 "\"ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: id
-                "\"AVATER\" TEXT," + // 1: avater
-                "\"NAME\" TEXT," + // 2: name
-                "\"PWD\" TEXT," + // 3: pwd
-                "\"MOBILE\" TEXT," + // 4: mobile
-                "\"REALNAME\" TEXT," + // 5: realname
-                "\"LAST_TIME\" TEXT," + // 6: lastTime
-                "\"ADDRESS\" TEXT," + // 7: address
-                "\"EMAIL\" TEXT);"); // 8: email
+                "\"ROLE_ID\" TEXT," + // 1: roleId
+                "\"AVATER\" TEXT," + // 2: avater
+                "\"NAME\" TEXT," + // 3: name
+                "\"PWD\" TEXT," + // 4: pwd
+                "\"MOBILE\" TEXT," + // 5: mobile
+                "\"REALNAME\" TEXT," + // 6: realname
+                "\"LAST_TIME\" TEXT," + // 7: lastTime
+                "\"ADDRESS\" TEXT," + // 8: address
+                "\"EMAIL\" TEXT);"); // 9: email
     }
 
     /** Drops the underlying database table. */
@@ -74,44 +76,49 @@ public class UserBeanDao extends AbstractDao<UserBean, String> {
             stmt.bindString(1, id);
         }
  
+        String roleId = entity.getRoleId();
+        if (roleId != null) {
+            stmt.bindString(2, roleId);
+        }
+ 
         String avater = entity.getAvater();
         if (avater != null) {
-            stmt.bindString(2, avater);
+            stmt.bindString(3, avater);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(3, name);
+            stmt.bindString(4, name);
         }
  
         String pwd = entity.getPwd();
         if (pwd != null) {
-            stmt.bindString(4, pwd);
+            stmt.bindString(5, pwd);
         }
  
         String mobile = entity.getMobile();
         if (mobile != null) {
-            stmt.bindString(5, mobile);
+            stmt.bindString(6, mobile);
         }
  
         String realname = entity.getRealname();
         if (realname != null) {
-            stmt.bindString(6, realname);
+            stmt.bindString(7, realname);
         }
  
         String lastTime = entity.getLastTime();
         if (lastTime != null) {
-            stmt.bindString(7, lastTime);
+            stmt.bindString(8, lastTime);
         }
  
         String address = entity.getAddress();
         if (address != null) {
-            stmt.bindString(8, address);
+            stmt.bindString(9, address);
         }
  
         String email = entity.getEmail();
         if (email != null) {
-            stmt.bindString(9, email);
+            stmt.bindString(10, email);
         }
     }
 
@@ -124,44 +131,49 @@ public class UserBeanDao extends AbstractDao<UserBean, String> {
             stmt.bindString(1, id);
         }
  
+        String roleId = entity.getRoleId();
+        if (roleId != null) {
+            stmt.bindString(2, roleId);
+        }
+ 
         String avater = entity.getAvater();
         if (avater != null) {
-            stmt.bindString(2, avater);
+            stmt.bindString(3, avater);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(3, name);
+            stmt.bindString(4, name);
         }
  
         String pwd = entity.getPwd();
         if (pwd != null) {
-            stmt.bindString(4, pwd);
+            stmt.bindString(5, pwd);
         }
  
         String mobile = entity.getMobile();
         if (mobile != null) {
-            stmt.bindString(5, mobile);
+            stmt.bindString(6, mobile);
         }
  
         String realname = entity.getRealname();
         if (realname != null) {
-            stmt.bindString(6, realname);
+            stmt.bindString(7, realname);
         }
  
         String lastTime = entity.getLastTime();
         if (lastTime != null) {
-            stmt.bindString(7, lastTime);
+            stmt.bindString(8, lastTime);
         }
  
         String address = entity.getAddress();
         if (address != null) {
-            stmt.bindString(8, address);
+            stmt.bindString(9, address);
         }
  
         String email = entity.getEmail();
         if (email != null) {
-            stmt.bindString(9, email);
+            stmt.bindString(10, email);
         }
     }
 
@@ -174,14 +186,15 @@ public class UserBeanDao extends AbstractDao<UserBean, String> {
     public UserBean readEntity(Cursor cursor, int offset) {
         UserBean entity = new UserBean( //
             cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // avater
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // pwd
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // mobile
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // realname
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // lastTime
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // address
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // email
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // roleId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // avater
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // name
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // pwd
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // mobile
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // realname
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // lastTime
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // address
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // email
         );
         return entity;
     }
@@ -189,14 +202,15 @@ public class UserBeanDao extends AbstractDao<UserBean, String> {
     @Override
     public void readEntity(Cursor cursor, UserBean entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setAvater(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setPwd(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setMobile(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setRealname(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setLastTime(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setAddress(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setEmail(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setRoleId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setAvater(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setPwd(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setMobile(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setRealname(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setLastTime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setAddress(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setEmail(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
      }
     
     @Override

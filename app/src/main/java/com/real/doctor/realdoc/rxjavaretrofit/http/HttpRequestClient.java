@@ -100,7 +100,6 @@ public class HttpRequestClient {
                 .addNetworkInterceptor(
                         new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .cookieJar(new HttpCookieManager(context))
-
                 .cache(cache)
                 .addInterceptor(new BaseInterceptor(context, headers))
                 .addInterceptor(new CacheInterceptor(context))

@@ -45,6 +45,7 @@ public class InqueryActivity extends BaseActivity {
     TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    private String doctorUserId;
 
     @Override
     public int getLayoutId() {
@@ -66,7 +67,7 @@ public class InqueryActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        doctorUserId = getIntent().getStringExtra("doctorUserId");
     }
 
     @Override
@@ -90,6 +91,7 @@ public class InqueryActivity extends BaseActivity {
                         //进入病历列表页面
                         Intent intent = new Intent(InqueryActivity.this, CheckDocActivity.class);
                         intent.putExtra("inquery", inqueryEditContent);
+                        intent.putExtra("doctorUserId", doctorUserId);
                         startActivity(intent);
                     } else {
                         ToastUtil.showLong(InqueryActivity.this, "咨询内容不能小于10个字符!");

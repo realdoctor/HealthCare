@@ -42,6 +42,7 @@ public class ShoppintMallFragment extends BaseFragment {
     RelativeLayout topTitle;
     @BindView(R.id.img_shop_cart)
     ImageView img_shop_cart;
+    public String categoryId="1";
     public final static int SHOPPING_EVENT_REQUEST_CODE = 3;
     public ProductPagerAdapter productPagerAdapter;
     public ArrayList<CategoryBean> categoryBeanArrayList=new ArrayList<CategoryBean>();
@@ -72,9 +73,30 @@ public class ShoppintMallFragment extends BaseFragment {
         for(CategoryBean bean:categoryBeanArrayList){
             tb_category.addTab(tb_category.newTab().setText(bean.categoryName).setText(bean.categoryId));
         }
-        productPagerAdapter=new ProductPagerAdapter(getActivity().getSupportFragmentManager(),categoryBeanArrayList);
+        productPagerAdapter=new ProductPagerAdapter(getChildFragmentManager(),categoryBeanArrayList);
         viewPager.setAdapter(productPagerAdapter);
         tb_category.setupWithViewPager(viewPager);
+        tb_category.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                  int postion=  tab.getPosition();
+                  if(postion==0){
+                      categoryId="1";
+                  }else{
+                      categoryId="2";
+                  }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
     public void virtulData(){
         CategoryBean bean=new CategoryBean();
@@ -93,7 +115,8 @@ public class ShoppintMallFragment extends BaseFragment {
             case R.id.home_search:
                 Intent intent =new Intent(getContext(),SearchHistoryListActivity.class);
                 intent.putExtra("requestCode",SHOPPING_EVENT_REQUEST_CODE);
-                startActivityForResult(intent,SHOPPING_EVENT_REQUEST_CODE);
+                intent.putExtra("categoryId",categoryId);
+                startActivity(intent);
                 break;
             case R.id.img_shop_cart:
                 Intent intentShopCart =new Intent(getContext(),ShopCartActivity.class);
@@ -110,20 +133,4 @@ public class ShoppintMallFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == getActivity().RESULT_OK){
-            String searchKey = data.getStringExtra("searchKey");
-
-            if(requestCode == SHOPPING_EVENT_REQUEST_CODE) {
-                ProductShowFragment fragment=productPagerAdapter.currentFragment;
-                if(fragment!=null){
-                    fragment.searchKey=searchKey;
-                    fragment.pageNum=1;
-                    fragment.getRefreshProducts();
-                }
-            }
-        }
-    }
 }

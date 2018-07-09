@@ -73,6 +73,7 @@ public class UpdateService extends JobService {
     private List<Boolean> mFlag = new ArrayList<>();
     private String zipEditContent;
     private String inquery;
+    private String doctorUserId;
     private boolean zip = false;
     //从数据库中获取数据
     private ImageManager imageInstance;
@@ -85,6 +86,7 @@ public class UpdateService extends JobService {
     private List<RecordBean> audioList;
     private List<VideoBean> videoList;
     private String time;
+    private File file;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -99,11 +101,14 @@ public class UpdateService extends JobService {
             inqueryInstance.insertPatientInquery(UpdateService.this, inqueryBean, time, folderName);
             //图片存储路径
             String imgPath = folderName + "img" + File.separator;
+            if (mList.size() > 0) {
+                file = new File(folderName);
+                if (!file.exists())
+                    file.mkdirs();
+            }
             for (int k = 0; k < mList.size(); k++) {
                 SaveDocBean bean = mList.get(k);
-                File file = new File(folderName);
-                if (!file.exists())
-                    file.mkdirs();  //如果不存在则创建
+                //如果不存在则创建
                 String mId = bean.getId();
                 String mFolder = bean.getFolder();
                 if (k == mList.size() - 1) {
@@ -201,30 +206,30 @@ public class UpdateService extends JobService {
                     }
                 }
             }
-            if (FileUtils.isFileExists(folderName)) {
-                zip = false;
-                //多条病历打成包
-                try {
-                    zip = ZipUtils.zipFile(folderName, SDCardUtils.getGlobalDir() + "doctor" + time + ".zip", "doctor");
-                    //删除掉原来的文件夹
-                    FileUtils.deleteDir(folderName);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (isTrue() && zip) {
-                    //动态注册广播
-                    Intent intent = new Intent(ProgressBarActivity.HAVE_IMG);
-                    intent.putExtra("folderName", SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
-                    uploadData();
-                    LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
-                } else {
-                    Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
-                    intent.putExtra("folderName", SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
-                    uploadData();
-                    LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
-                }
+//            if (FileUtils.isFileExists(folderName)) {
+            zip = false;
+            //多条病历打成包
+            try {
+                zip = ZipUtils.zipFile(folderName, SDCardUtils.getGlobalDir() + "doctor" + time + ".zip", "doctor");
+                //删除掉原来的文件夹
+                FileUtils.deleteDir(folderName);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            if (isTrue() && zip) {
+                //动态注册广播
+                Intent intent = new Intent(ProgressBarActivity.HAVE_IMG);
+                intent.putExtra("folderName", SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
+                uploadData();
+                LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
+            } else {
+                Intent intent = new Intent(ProgressBarActivity.HAVE_NOTHING);
+                intent.putExtra("folderName", SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
+                uploadData();
+                LocalBroadcastManager.getInstance(UpdateService.this).sendBroadcast(intent);
+            }
+//            }
             return true;
         }
 
@@ -247,8 +252,9 @@ public class UpdateService extends JobService {
                     RequestBody requestBody = DocUtils.toRequestBodyOfImage(file);
                     maps.put("attach\"; filename=\"" + file.getName() + "", requestBody);//head_img图片key
                 }
-
-                HttpRequestClient.getInstance(UpdateService.this).createBaseApi().uploads("upload/uploadFiles/", maps, new BaseObserver<ResponseBody>(UpdateService.this) {
+                maps.put("content", DocUtils.toRequestBodyOfText(inquery));
+                maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
+                HttpRequestClient.getInstance(UpdateService.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(UpdateService.this) {
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -310,6 +316,7 @@ public class UpdateService extends JobService {
             mList = intent.getParcelableArrayListExtra("mList");
             zipEditContent = intent.getExtras().getString("zipEdit");
             inquery = intent.getExtras().getString("inquery");
+            doctorUserId = intent.getExtras().getString("doctorUserId");
         }
         Message m = Message.obtain();
         handler.sendMessage(m);

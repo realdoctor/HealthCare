@@ -55,6 +55,7 @@ public class SearchHistoryListActivity extends BaseActivity {
 	private BaseAdapter adapter;
 
 	private int requestCode;
+	public String categoryId;
 
 
 	@Override
@@ -78,6 +79,7 @@ public class SearchHistoryListActivity extends BaseActivity {
 		}
 		Intent intent = getIntent();
 		requestCode = intent.getIntExtra("requestCode", 0);
+		categoryId=intent.getStringExtra("categoryId");
 		// 初始化控件
 		initView();
 
@@ -178,9 +180,10 @@ public class SearchHistoryListActivity extends BaseActivity {
 			startActivity(intent);
 			SearchHistoryListActivity.this.finish();
 		}else if(requestCode== ShoppintMallFragment.SHOPPING_EVENT_REQUEST_CODE){
-			Intent resultIntent = new Intent();
+			Intent resultIntent = new Intent(SearchHistoryListActivity.this,SearchProductResultActivity.class);
 			resultIntent.putExtra("searchKey", value);
-			setResult(RESULT_OK, resultIntent);
+			resultIntent.putExtra("categoryId",categoryId);
+			startActivity(resultIntent);
 			finish();
 		}
 	}

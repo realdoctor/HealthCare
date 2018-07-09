@@ -22,7 +22,9 @@ import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.model.PageModel;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -55,18 +57,19 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
     ListView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.page_title)
-    TextView page_title;
-    @BindView(R.id.title_bar)
-    RelativeLayout titleBar;
-    @BindView(R.id.finish_back)
-    ImageView finish_back;
+//    @BindView(R.id.page_title)
+//    TextView page_title;
+//    @BindView(R.id.title_bar)
+//    RelativeLayout titleBar;
+//    @BindView(R.id.finish_back)
+//    ImageView finish_back;
     public NewsAdapter newsAdapter;
     private Unbinder unbinder;
     public ArrayList<NewModel> newModels=new ArrayList<NewModel>();
     private PageModel<NewModel> baseModel = new PageModel<NewModel>();
     public int pageNum=1;
     public int pageSize=10;
+    public String userId;
 
     public static ReadFragment newInstance() {
         return new ReadFragment();
@@ -85,14 +88,15 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
     @Override
     public void doBusiness(Context mContext) {
         //加上沉浸式状态栏高度
-        int statusHeight = ScreenUtil.getStatusHeight(getActivity());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
-            lp.topMargin = statusHeight;
-            titleBar.setLayoutParams(lp);
-        }
-        page_title.setText("资讯");
-        finish_back.setVisibility(View.GONE);
+//        int statusHeight = ScreenUtil.getStatusHeight(getActivity());
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+//            lp.topMargin = statusHeight;
+//            titleBar.setLayoutParams(lp);
+//        }
+//        page_title.setText("资讯");
+//        finish_back.setVisibility(View.GONE);
+        userId= (String) SPUtils.get(getContext(), Constants.USER_KEY,"");
         newsAdapter= new NewsAdapter(getActivity(),newModels);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);
@@ -116,6 +120,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener,OnR
         HashMap<String,Object> params=new HashMap<String,Object>();
         params.put("pageNum",pageNum);
         params.put("pageSize",pageSize);
+        params.put("userId",userId);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews"
                 , params, new BaseObserver<ResponseBody>(getContext()) {
                     @Override

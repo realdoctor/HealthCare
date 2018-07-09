@@ -93,6 +93,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.refreshLayout)
+
     SmartRefreshLayout refreshLayout;
     //@BindView(R.id.dropMenu)
     DropDownMenuForResult dropDownMenu;

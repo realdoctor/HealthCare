@@ -1,10 +1,13 @@
 package com.real.doctor.realdoc.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -78,7 +81,16 @@ public class CaseControlActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        pageTitle.setText("我的患者");
+        //添加权限
+        PackageManager p = getPackageManager();
+        boolean permission = (PackageManager.PERMISSION_GRANTED ==
+                p.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.real.doctor.realdoc"));
+        if (!permission) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(CaseControlActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            }
+        }
+        pageTitle.setText("患者管理");
         patientList = new ArrayList<>();
         //添加自定义分割线
         myPatientRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -105,6 +117,7 @@ public class CaseControlActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(CaseControlActivity.this, "获取患者管理列表失败!");
                     }
 
                     @Override
@@ -138,9 +151,8 @@ public class CaseControlActivity extends BaseActivity {
                                         }
                                     }
                                 } else {
-                                    ToastUtil.showLong(CaseControlActivity.this, "获取用户信息失败.请确定是否已登录!");
+                                    ToastUtil.showLong(CaseControlActivity.this, "获取患者管理列表失败!");
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -160,7 +172,7 @@ public class CaseControlActivity extends BaseActivity {
                 Intent intent = new Intent(CaseControlActivity.this, CaseListActivity.class);
                 Bundle mBundle = new Bundle();
                 PatientBean patientBean = (PatientBean) adapter.getItem(position);
-                mBundle.putString("realName",patientBean.getUserInfo().getRealname());
+                mBundle.putString("realName", patientBean.getUserInfo().getRealname());
                 mBundle.putParcelable("patient", patientBean);
                 intent.putExtras(mBundle);
                 startActivity(intent);

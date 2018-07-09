@@ -1,64 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="15dp">
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/patient_img"
-        android:layout_width="75dp"
-        android:layout_height="68dp"
-        android:layout_marginRight="15dp"
-        android:background="#ccc" />
-
-    <RelativeLayout
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingTop="@dimen/dp_10">
 
-        <TextView
-            android:id="@+id/patient_name"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/doctor_img"
+            android:layout_width="75dp"
+            android:layout_height="68dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@mipmap/ease_default_avatar" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="5dp"
-            android:paddingRight="5dp"
-            android:textColor="@color/text_gray_color"
-            android:textSize="16sp" />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/add_time_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/add_time"
-            android:layout_below="@id/patient_name"
-            android:layout_marginBottom="5dp"
-            android:paddingRight="5dp"
-            android:text="上传时间:"
-            android:textColor="@color/text_gray_color"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/doctor_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/doctor_name"
+                android:layout_marginBottom="5dp"
+                android:paddingRight="5dp"
+                android:text="复诊医生:"
+                android:textColor="@color/text_gray_color"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/add_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/patient_name"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/add_time_tv"
-            android:textColor="@color/text_gray_color"
-            android:textSize="14sp" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/doctor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_toRightOf="@id/doctor_name_tv"
+                android:textColor="@color/text_gray_color"
+                android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/pay_btn"
-        android:layout_width="60dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/button_selector"
-        android:text="@string/not_pay"
-        android:textColor="@android:color/white"
-        android:textSize="12.0sp" />
+            <TextView
+                android:id="@+id/visit_date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/visit_date"
+                android:layout_marginBottom="5dp"
+                android:paddingRight="5dp"
+                android:text="复诊时间:"
+                android:textColor="@color/text_gray_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/visit_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/doctor_name"
+                android:layout_marginBottom="5dp"
+                android:layout_toRightOf="@id/visit_date_tv"
+                android:textColor="@color/text_gray_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/inquery_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/inquery"
+                android:layout_marginBottom="5dp"
+                android:paddingRight="5dp"
+                android:text="咨询问题:"
+                android:textColor="@color/text_gray_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/inquery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/visit_date"
+                android:layout_marginBottom="5dp"
+                android:layout_toRightOf="@id/inquery_tv"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/text_gray_color"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/revisit"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/button_selector"
+            android:text="@string/revisit"
+            android:textColor="@android:color/white"
+            android:textSize="14.0sp" />
+    </LinearLayout>
+
 </LinearLayout>

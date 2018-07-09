@@ -17,7 +17,7 @@
             android:layout_height="68dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
-            android:background="#ccc" />
+            android:background="@mipmap/ease_default_avatar" />
 
         <RelativeLayout
             android:layout_width="match_parent"

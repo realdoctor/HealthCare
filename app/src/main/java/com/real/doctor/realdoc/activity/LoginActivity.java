@@ -280,6 +280,7 @@ public class LoginActivity extends BaseActivity {
                                             if (EmptyUtils.isNotEmpty(user)) {
                                                 SPUtils.put(LoginActivity.this, "mobile", user.getMobile());
                                                 SPUtils.put(LoginActivity.this, Constants.USER_KEY, user.getId());
+                                                SPUtils.put(LoginActivity.this, Constants.ROLE_ID, user.getRoleId());
                                             }
                                         }
                                         //实名认证

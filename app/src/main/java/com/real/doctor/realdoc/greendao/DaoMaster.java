@@ -29,6 +29,7 @@ public class DaoMaster extends AbstractDaoMaster {
         MessageBeanDao.createTable(db, ifNotExists);
         NewFriendsMsgsDao.createTable(db, ifNotExists);
         PrefBeanDao.createTable(db, ifNotExists);
+        RecieverAddressListBeanDao.createTable(db, ifNotExists);
         RecordBeanDao.createTable(db, ifNotExists);
         RobotBeanDao.createTable(db, ifNotExists);
         SaveDocBeanDao.createTable(db, ifNotExists);
@@ -46,6 +47,7 @@ public class DaoMaster extends AbstractDaoMaster {
         MessageBeanDao.dropTable(db, ifExists);
         NewFriendsMsgsDao.dropTable(db, ifExists);
         PrefBeanDao.dropTable(db, ifExists);
+        RecieverAddressListBeanDao.dropTable(db, ifExists);
         RecordBeanDao.dropTable(db, ifExists);
         RobotBeanDao.dropTable(db, ifExists);
         SaveDocBeanDao.dropTable(db, ifExists);
@@ -77,6 +79,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(MessageBeanDao.class);
         registerDaoClass(NewFriendsMsgsDao.class);
         registerDaoClass(PrefBeanDao.class);
+        registerDaoClass(RecieverAddressListBeanDao.class);
         registerDaoClass(RecordBeanDao.class);
         registerDaoClass(RobotBeanDao.class);
         registerDaoClass(SaveDocBeanDao.class);

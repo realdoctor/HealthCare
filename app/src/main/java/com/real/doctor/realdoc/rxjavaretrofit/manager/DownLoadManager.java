@@ -53,21 +53,22 @@ public class DownLoadManager {
     public boolean writeResponseBodyToDisk(Context context, ResponseBody body, final String dirPath) {
 
         name = dirPath.substring(dirPath.lastIndexOf("/") + 1, dirPath.length());
-
+        String destFileDir = dirPath.substring(0, dirPath.lastIndexOf("/") + 1);
         try {
             // todo change the file location/name according to your needs
-            File futureStudioIconFile = new File(dirPath);
-
+            File dir = new File(destFileDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            File futureStudioIconFile = new File(dir, name);
             if (futureStudioIconFile.exists()) {
                 futureStudioIconFile.delete();
             }
-
             InputStream inputStream = null;
             OutputStream outputStream = null;
 
             try {
                 byte[] fileReader = new byte[4096];
-
                 final long fileSize = body.contentLength();
                 long fileSizeDownloaded = 0;
                 Log.d(TAG, "file length: " + fileSize);

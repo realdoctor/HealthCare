@@ -25,59 +25,104 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
                     android:layout_marginTop="10dp"
-                    android:padding="@dimen/dp_4"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/pay_text"
                     android:textColor="@color/text_black_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/main_bg"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/pay_way"
+                    android:textColor="@color/text_black_color"
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/dp_4"
-                    android:paddingTop="@dimen/dp_4">
+                    android:orientation="vertical">
 
-                    <RadioGroup
-                        android:id="@+id/pay_type"
+                    <LinearLayout
+                        android:id="@+id/zhi_fu_bao_linear"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingLeft="@dimen/txt_10"
-                        android:paddingRight="@dimen/txt_10">
+                        android:orientation="horizontal"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
 
-                        <RadioButton
-                            android:id="@+id/zhi_fu_bao"
-                            android:layout_width="match_parent"
+                        <ImageView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="@dimen/dp_4"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/pay_zhifubao_bg" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:layout_weight="1"
-                            android:button="@drawable/check_box_bg"
-                            android:drawableRight="@drawable/pay_zhifubao_bg"
-                            android:gravity="center"
-                            android:textSize="2dp" />
+                            android:paddingLeft="10dp"
+                            android:text="@string/zi_fu_bao"
+                            android:textColor="@color/text_gray_color" />
 
-                        <RadioButton
-                            android:id="@+id/wei_xin"
-                            android:layout_width="match_parent"
+                        <CheckBox
+                            android:id="@+id/zhi_fu_bao"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
+                            android:layout_gravity="center_vertical"
                             android:button="@drawable/check_box_bg"
-                            android:checked="true"
-                            android:drawableRight="@drawable/pay_winxin_bg"
-                            android:gravity="center"
-                            android:textSize="2dp" />
+                            android:checked="true" />
+                    </LinearLayout>
 
-                    </RadioGroup>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider_color" />
+
+                    <LinearLayout
+                        android:id="@+id/weixin_linear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="5dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/pay_winxin_bg" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:paddingLeft="10dp"
+                            android:text="@string/wei_xing"
+                            android:textColor="@color/text_gray_color" />
+
+                        <CheckBox
+                            android:id="@+id/wei_xin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:button="@drawable/check_box_bg" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
@@ -90,7 +135,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/gray"></View>
 
             <TextView
@@ -98,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/tv_count_price"
-                android:text="@string/count_price"
+                android:text="@string/payment"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
 

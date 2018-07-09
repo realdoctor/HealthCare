@@ -91,10 +91,11 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
         }
         PackageManager p = getPackageManager();
         boolean permission = (PackageManager.PERMISSION_GRANTED ==
-                p.checkPermission("android.permission.RECORD_AUDIO", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.CAMERA", "com.real.doctor.realdoc"));
+                p.checkPermission("android.permission.RECORD_AUDIO", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.CAMERA", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.real.doctor.realdoc"));
         if (!permission) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(VideoActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0);
+                ActivityCompat.requestPermissions(VideoActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        0);
             }
         }
         surfaceView = findViewById(R.id.surface_view);
@@ -155,12 +156,12 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
 
                         path = SDCardUtils.getGlobalDir();
                         if (path != null) {
-                            File file = new File(path + File.separator + mFolder + File.separator + "movie" + File.separator);
+                            File file = new File(path + mFolder + File.separator + "movie" + File.separator);
                             if (!file.exists()) {
                                 file.mkdirs();
                             }
                             name = DateUtil.timeStamp() + ".mp4";
-                            path = file + File.separator + name;
+                            path = file.getAbsolutePath() + name;
                             recorder.setOutputFile(path);
                             recorder.prepare();
                             recorder.start();
@@ -191,7 +192,9 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
             try {
                 handler.removeCallbacks(runnable);
                 recorder.setOnErrorListener(null);
-                recorder.stop();
+                recorder.setOnInfoListener(null);
+                recorder.setPreviewDisplay(null);
+//                recorder.stop();
                 recorder.reset();
                 recorder.release();
                 recorder = null;
