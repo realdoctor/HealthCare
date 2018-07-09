@@ -157,10 +157,10 @@ public class DocContentActivity extends BaseActivity {
         imageInstance = ImageManager.getInstance(DocContentActivity.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(DocContentActivity.this);
         saveDocBean = (SaveDocBean) getIntent().getParcelableExtra("SaveDocBean");
-        boolean noModify= getIntent().getBooleanExtra("noModify",false);
-        if(noModify){
+        boolean noModify = getIntent().getBooleanExtra("noModify", false);
+        if (noModify) {
             rightIcon.setVisibility(View.GONE);
-        }else{
+        } else {
             rightIcon.setVisibility(View.VISIBLE);
         }
         if (EmptyUtils.isNotEmpty(saveDocBean)) {
@@ -461,6 +461,7 @@ public class DocContentActivity extends BaseActivity {
                 audioRecycleView.setAdapter(audioAdapter);
                 videoAdapter = new VideoAdapter(R.layout.video_item, videoList);
                 videoRecycleView.setAdapter(videoAdapter);
+                initEvent();
                 ToastUtil.showLong(this, "病历修改成功!");
             }
         }
