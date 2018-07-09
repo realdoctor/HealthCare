@@ -113,7 +113,6 @@ public class RecordImagesActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
         ButterKnife.bind(this);
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(RecordImagesActivity.this);
@@ -155,8 +154,6 @@ public class RecordImagesActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_title:
-                //隐藏键盘
-                KeyBoardUtils.closeOrOpenKeybord(this);
                 //回调信息(我用广播代替)
                 dragImages.remove(dragImages.size() - 1);
                 //动态注册广播

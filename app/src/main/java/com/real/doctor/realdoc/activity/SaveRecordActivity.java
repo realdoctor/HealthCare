@@ -250,6 +250,8 @@ public class SaveRecordActivity extends BaseActivity {
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                //隐藏键盘
+                KeyBoardUtils.hideInput(SaveRecordActivity.this,recordDocRelative);
                 List<String> pictures = intent.getStringArrayListExtra("imgs");
                 String advice = intent.getStringExtra("advice");
                 AddLabelBean label = intent.getParcelableExtra("label");
