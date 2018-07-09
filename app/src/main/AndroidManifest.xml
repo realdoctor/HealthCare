@@ -415,10 +415,6 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.DocPayListActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.InqueryActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
@@ -432,6 +428,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MyRevisitActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AnswerActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <!--    <intent-filter>

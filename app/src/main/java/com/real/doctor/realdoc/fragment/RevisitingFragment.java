@@ -1,13 +1,17 @@
 package com.real.doctor.realdoc.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.AnswerActivity;
 import com.real.doctor.realdoc.adapter.DocPayListAdapter;
 import com.real.doctor.realdoc.adapter.DoctorsAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
@@ -84,6 +88,7 @@ public class RevisitingFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(getActivity(), "获取咨询列表失败!");
                     }
 
                     @Override
@@ -113,7 +118,7 @@ public class RevisitingFragment extends BaseFragment {
                                         if (doctors.size() > 0) {
                                             docPayListAdapter = new DocPayListAdapter(getActivity(), R.layout.doc_pay_list_item, doctors, true);
                                             revisitingRv.setAdapter(docPayListAdapter);
-//                                            initEvent();
+                                            initEvent();
 //                                             docPayListAdapter.notifyDataSetChanged();
                                         } else {
                                             ToastUtil.showLong(getActivity(), "获取咨询列表失败!");
@@ -132,6 +137,20 @@ public class RevisitingFragment extends BaseFragment {
                     }
 
                 });
+    }
+
+    private void initEvent() {
+        docPayListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //点击item
+                Intent intent = new Intent(getActivity(), AnswerActivity.class);
+                intent.putExtra("inquery", doctors.get(position).getInquery());
+                intent.putExtra("answer", doctors.get(position).getAnswer());
+                intent.putExtra("doctor", doctors.get(position).getName());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

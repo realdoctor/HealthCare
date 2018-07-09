@@ -16,8 +16,6 @@ import android.widget.TextView;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.DocPayActivity;
-import com.real.doctor.realdoc.activity.DocPayListActivity;
-import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
@@ -37,7 +35,6 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
-import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
 
@@ -65,6 +62,7 @@ public class UserFragment extends BaseFragment {
     private String token;
     private String mobile;
     private String verifyFlag = "";
+    private String roleId;
     @BindView(R.id.user_name)
     TextView userName;
     @BindView(R.id.title_bar)
@@ -87,8 +85,6 @@ public class UserFragment extends BaseFragment {
     RelativeLayout titleRelative;
     @BindView(R.id.page_title)
     TextView pageTitle;
-    @BindView(R.id.inquiry_answers)
-    LinearLayout inquiryAnswers;
     @BindView(R.id.inquiry_pay)
     LinearLayout inquiryPay;
     @BindView(R.id.about_us)
@@ -126,6 +122,12 @@ public class UserFragment extends BaseFragment {
         token = (String) SPUtils.get(getActivity(), "token", "");
         mobile = (String) SPUtils.get(getActivity(), "mobile", "");
         verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+        roleId = (String) SPUtils.get(getActivity(), Constants.ROLE_ID, "");
+        if (roleId.equals("0")) {
+            inquiryPay.setVisibility(View.GONE);
+        } else {
+            inquiryPay.setVisibility(View.VISIBLE);
+        }
         if (EmptyUtils.isNotEmpty(mobile)) {
             //实名认证
             checkName(mobile);
@@ -232,7 +234,7 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four, R.id.user_function_five, R.id.user_setting, R.id.inquiry_pay, R.id.inquiry_answers, R.id.suggest_submit})
+    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four, R.id.user_function_five, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
@@ -295,10 +297,6 @@ public class UserFragment extends BaseFragment {
                 //跳转到设置页面`
                 intent = new Intent(getActivity(), SettingActivity.class);
                 intent.putExtra("imgUrl", originalImageUrl);
-                startActivity(intent);
-                break;
-            case R.id.inquiry_answers:
-                intent = new Intent(getActivity(), DocPayListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.inquiry_pay:
