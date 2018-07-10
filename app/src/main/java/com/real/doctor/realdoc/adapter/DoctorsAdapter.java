@@ -39,15 +39,15 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
             @Override
             public void onClick(View view) {
                 //点击进入付款页面
-//                Intent intent = new Intent(context, ChatPayActivity.class);
-//                intent.putExtra("payType", "1");
-//                intent.putExtra("doctorUserId", item.getId());
-//                context.startActivity(intent);
-                //点击进入聊天页
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("userId", "admin");
-//                intent.putExtra("doctorUserId", item.getId());
+                Intent intent = new Intent(context, ChatPayActivity.class);
+                intent.putExtra("payType", "1");
+                intent.putExtra("doctorUserId", item.getId());
                 context.startActivity(intent);
+                //点击进入聊天页
+//                Intent intent = new Intent(context, ChatActivity.class);
+//                intent.putExtra("userId", "admin");
+////                intent.putExtra("doctorUserId", item.getId());
+//                context.startActivity(intent);
 
             }
         });
@@ -57,14 +57,14 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
             @Override
             public void onClick(View view) {
                 //点击进入付款页面
-//                Intent intent = new Intent(context, ChatPayActivity.class);
-//                intent.putExtra("payType", "2");
-//                intent.putExtra("doctorUserId", item.getId());
-//                context.startActivity(intent);
-                //点击进入病历列表页面
-                Intent intent = new Intent(context, InqueryActivity.class);
+                Intent intent = new Intent(context, ChatPayActivity.class);
+                intent.putExtra("payType", "2");
                 intent.putExtra("doctorUserId", item.getId());
                 context.startActivity(intent);
+                //点击进入病历列表页面
+         /*       Intent intent = new Intent(context, InqueryActivity.class);
+                intent.putExtra("doctorUserId", item.getId());
+                context.startActivity(intent);*/
             }
         });
     }
