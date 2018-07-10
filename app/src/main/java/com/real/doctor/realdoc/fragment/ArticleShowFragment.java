@@ -79,7 +79,7 @@ public class ArticleShowFragment extends BaseFragment  {
 
     @Override
     public void doBusiness(Context mContext) {
-        ArticleFragmentAdapter articleFragmentAdapter=new ArticleFragmentAdapter(getActivity().getSupportFragmentManager());
+        ArticleFragmentAdapter articleFragmentAdapter=new ArticleFragmentAdapter(getChildFragmentManager());
         viewPager.setAdapter(articleFragmentAdapter);
         tabLayout.setupWithViewPager(viewPager);
 

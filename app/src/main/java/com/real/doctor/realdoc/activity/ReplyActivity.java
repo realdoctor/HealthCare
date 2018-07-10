@@ -17,6 +17,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -96,6 +97,10 @@ public class ReplyActivity extends BaseActivity {
 
     private void postCharge() {
         String reply = replyEdit.getText().toString().trim();
+        if (EmptyUtils.isEmpty(reply)) {
+            ToastUtil.showLong(ReplyActivity.this, "回复内容为空,请填写咨询回复内容!");
+            return;
+        }
         JSONObject json = new JSONObject();
         try {
             json.put("content", reply);
