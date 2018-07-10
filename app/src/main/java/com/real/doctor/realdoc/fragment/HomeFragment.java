@@ -41,6 +41,7 @@ import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
@@ -119,6 +120,7 @@ public class HomeFragment extends BaseFragment {
     private boolean isHomeIn = false;
     private String verifyFlag = "";
     private boolean isFirst = true;
+    private String isRole;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -140,8 +142,21 @@ public class HomeFragment extends BaseFragment {
             titleLinear.setLayoutParams(lp);
         }
         searchText.getBackground().setAlpha(180);
-        initFloatMenu();
+        isRole = (String) SPUtils.get(getActivity(), Constants.ROLE_ID, "");
+        if (isRole.equals("1")) {
+            initFloatMenu();
+        } else if (isRole.equals("0")) {
+            //do nothing
+        }
         initViewFlipper();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        if (btnFlag) {
+//            onShowMenu();
+//        }
     }
 
     public void initViewFlipper() {
@@ -187,7 +202,7 @@ public class HomeFragment extends BaseFragment {
         isFirst = (boolean) SPUtils.get(getActivity(), "first", true);
         //1 初始化悬浮球配置，定义好悬浮球大小和icon的drawable
         final int ballSize = DensityUtil.dip2px(getActivity(), 60);
-        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
+        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
         //可以尝试使用以下几种不同的config。
         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
         mFloatballManager = new FloatBallManager(RealDocApplication.getContext(), ballCfg);
@@ -200,10 +215,16 @@ public class HomeFragment extends BaseFragment {
                 public void onFloatBallClick() {
                     if (personFlag) {
                         personFlag = false;
+                        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
+                        final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
+                        mFloatballManager.changeIcon(getActivity(), ballCfg);
                         docLayout.setVisibility(View.VISIBLE);
                         mainLayout.setVisibility(View.GONE);
                     } else {
                         personFlag = true;
+                        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
+                        final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
+                        mFloatballManager.changeIcon(getActivity(), ballCfg);
                         mainLayout.setVisibility(View.VISIBLE);
                         docLayout.setVisibility(View.GONE);
                     }
@@ -445,7 +466,9 @@ public class HomeFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mFloatballManager.hide();
+        if (EmptyUtils.isNotEmpty(mFloatballManager)) {
+            mFloatballManager.hide();
+        }
         //注册ActivityLifeCyclelistener以后要记得注销，以防内存泄漏。
         getActivity().getApplication().unregisterActivityLifecycleCallbacks(mActivityLifeCycleListener);
     }
@@ -457,8 +480,10 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void onDestroyMenu() {
-        mFloatballManager.hide();
-        //注册ActivityLifeCyclelistener以后要记得注销，以防内存泄漏。
-        getActivity().getApplication().unregisterActivityLifecycleCallbacks(mActivityLifeCycleListener);
+        if (EmptyUtils.isNotEmpty(mFloatballManager)) {
+            mFloatballManager.hide();
+            //注册ActivityLifeCyclelistener以后要记得注销，以防内存泄漏。
+            getActivity().getApplication().unregisterActivityLifecycleCallbacks(mActivityLifeCycleListener);
+        }
     }
 }

@@ -15,24 +15,26 @@ import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.AccountActivity;
-import com.real.doctor.realdoc.activity.DoctorsListActivity;
+import com.real.doctor.realdoc.activity.DocPayActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
+import com.real.doctor.realdoc.activity.MyRevisitActivity;
 import com.real.doctor.realdoc.activity.OrderListActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
 import com.real.doctor.realdoc.activity.SettingActivity;
+import com.real.doctor.realdoc.activity.UserFadeActivity;
 import com.real.doctor.realdoc.activity.VerifyActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
-import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
 
@@ -60,14 +62,13 @@ public class UserFragment extends BaseFragment {
     private String token;
     private String mobile;
     private String verifyFlag = "";
+    private String roleId;
     @BindView(R.id.user_name)
     TextView userName;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.finish_back)
     ImageView finishBack;
-    @BindView(R.id.right_icon)
-    ImageView rightIcon;
     @BindView(R.id.user_function_one)
     LinearLayout userFunctionOne;
     @BindView(R.id.user_function_two)
@@ -84,6 +85,15 @@ public class UserFragment extends BaseFragment {
     RelativeLayout titleRelative;
     @BindView(R.id.page_title)
     TextView pageTitle;
+    @BindView(R.id.inquiry_pay)
+    LinearLayout inquiryPay;
+    @BindView(R.id.about_us)
+    LinearLayout aboutUs;
+    @BindView(R.id.suggest_submit)
+    LinearLayout suggestSubmit;
+    @BindView(R.id.user_setting)
+    LinearLayout userSetting;
+
     public static String VERIFY_TEXT = "android.intent.action.record.verify.text";
     private String originalImageUrl = "";
 
@@ -107,15 +117,17 @@ public class UserFragment extends BaseFragment {
             titleBar.setLayoutParams(lp);
         }
         finishBack.setVisibility(View.GONE);
-        rightIcon.setVisibility(View.VISIBLE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            rightIcon.setBackground(getActivity().getResources().getDrawable(R.mipmap.icon_settiong, null));
-        }
         titleRelative.setBackgroundColor(Color.TRANSPARENT);
         pageTitle.setText("个人中心");
         token = (String) SPUtils.get(getActivity(), "token", "");
         mobile = (String) SPUtils.get(getActivity(), "mobile", "");
         verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+        roleId = (String) SPUtils.get(getActivity(), Constants.ROLE_ID, "");
+        if (roleId.equals("0")) {
+            inquiryPay.setVisibility(View.GONE);
+        } else {
+            inquiryPay.setVisibility(View.VISIBLE);
+        }
         if (EmptyUtils.isNotEmpty(mobile)) {
             //实名认证
             checkName(mobile);
@@ -188,6 +200,7 @@ public class UserFragment extends BaseFragment {
                                     if (DocUtils.hasValue(obj, "realName")) {
                                         realName = obj.getString("realName");
                                     }
+                                    pageTitle.setVisibility(View.GONE);
                                     if (verifyFlag.equals("1")) {
                                         if (EmptyUtils.isNotEmpty(realName)) {
                                             userName.setText(realName);
@@ -221,7 +234,7 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four, R.id.user_function_five, R.id.right_icon})
+    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four, R.id.user_function_five, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
@@ -258,7 +271,7 @@ public class UserFragment extends BaseFragment {
                 break;
             case R.id.user_function_three:
                 if (verifyFlag.equals("1")) {
-                    intent = new Intent(getActivity(), DoctorsListActivity.class);
+                    intent = new Intent(getActivity(), MyRevisitActivity.class);
                     startActivity(intent);
                 } else {
                     //跳转到实名认证页面
@@ -280,10 +293,21 @@ public class UserFragment extends BaseFragment {
                 intent = new Intent(getActivity(), MyFollowNewsActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.right_icon:
+            case R.id.user_setting:
                 //跳转到设置页面`
                 intent = new Intent(getActivity(), SettingActivity.class);
                 intent.putExtra("imgUrl", originalImageUrl);
+                startActivity(intent);
+                break;
+            case R.id.inquiry_pay:
+                intent = new Intent(getActivity(), DocPayActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.about_us:
+                break;
+            case R.id.suggest_submit:
+                //用户反馈
+                intent = new Intent(getActivity(), UserFadeActivity.class);
                 startActivity(intent);
                 break;
         }

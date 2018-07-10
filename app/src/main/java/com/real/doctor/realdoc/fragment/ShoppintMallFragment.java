@@ -73,7 +73,7 @@ public class ShoppintMallFragment extends BaseFragment {
         for(CategoryBean bean:categoryBeanArrayList){
             tb_category.addTab(tb_category.newTab().setText(bean.categoryName).setText(bean.categoryId));
         }
-        productPagerAdapter=new ProductPagerAdapter(getActivity().getSupportFragmentManager(),categoryBeanArrayList);
+        productPagerAdapter=new ProductPagerAdapter(getChildFragmentManager(),categoryBeanArrayList);
         viewPager.setAdapter(productPagerAdapter);
         tb_category.setupWithViewPager(viewPager);
         tb_category.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
