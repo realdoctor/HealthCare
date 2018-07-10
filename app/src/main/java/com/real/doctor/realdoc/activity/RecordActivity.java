@@ -1,11 +1,14 @@
 package com.real.doctor.realdoc.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -75,6 +78,14 @@ public class RecordActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        PackageManager p = getPackageManager();
+        boolean permission = (PackageManager.PERMISSION_GRANTED ==
+                p.checkPermission("android.permission.RECORD_AUDIO", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.real.doctor.realdoc"));
+        if (!permission) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(RecordActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 0);
+            }
+        }
         pageTitle.setText("音频");
         Intent intent = getIntent();
         if (intent != null) {

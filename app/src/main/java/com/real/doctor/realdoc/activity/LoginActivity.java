@@ -17,6 +17,10 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.greendao.table.DrugManager;
+import com.real.doctor.realdoc.greendao.table.SaveDocManager;
+import com.real.doctor.realdoc.model.DrugBean;
+import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
@@ -45,6 +49,7 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -95,6 +100,12 @@ public class LoginActivity extends BaseActivity {
      */
     private SsoHandler mSsoHandler;
     private String verifyFlag = "";
+    private SaveDocManager mInstance;
+    private DrugManager mDrugInstance;
+    /**
+     * 本地数据库中数据条数
+     */
+    private int count;
 
     @Override
     public int getLayoutId() {
@@ -254,7 +265,7 @@ public class LoginActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    ToastUtil.showLong(RealDocApplication.getContext(), "用户登录成功!");
+                                    ToastUtil.showLong(LoginActivity.this, "用户登录成功!");
                                     if (DocUtils.hasValue(object, "data")) {
                                         String token = "";
                                         //获取用户信息，保存token
@@ -269,6 +280,7 @@ public class LoginActivity extends BaseActivity {
                                             if (EmptyUtils.isNotEmpty(user)) {
                                                 SPUtils.put(LoginActivity.this, "mobile", user.getMobile());
                                                 SPUtils.put(LoginActivity.this, Constants.USER_KEY, user.getId());
+                                                SPUtils.put(LoginActivity.this, Constants.ROLE_ID, user.getRoleId());
                                             }
                                         }
                                         //实名认证
@@ -335,7 +347,7 @@ public class LoginActivity extends BaseActivity {
     private class LogInListener implements IUiListener {
         @Override
         public void onComplete(Object o) {
-            ToastUtil.showLong(RealDocApplication.getContext(), "授权成功!");
+            ToastUtil.showLong(LoginActivity.this, "授权成功!");
             JSONObject jsonObject = (JSONObject) o;
             //设置openid和token，否则获取不到下面的信息
             initOpenidAndToken(jsonObject);
@@ -352,12 +364,12 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onError(UiError uiError) {
-            ToastUtil.showLong(RealDocApplication.getContext(), "授权出错!");
+            ToastUtil.showLong(LoginActivity.this, "授权出错!");
         }
 
         @Override
         public void onCancel() {
-            ToastUtil.showLong(RealDocApplication.getContext(), "授权取消!");
+            ToastUtil.showLong(LoginActivity.this, "授权取消!");
         }
 
     }
@@ -394,12 +406,12 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onError(UiError uiError) {
-                ToastUtil.showLong(RealDocApplication.getContext(), "获取qq用户信息错误");
+                ToastUtil.showLong(LoginActivity.this, "获取qq用户信息错误");
             }
 
             @Override
             public void onCancel() {
-                ToastUtil.showLong(RealDocApplication.getContext(), "获取qq用户信息取消");
+                ToastUtil.showLong(LoginActivity.this, "获取qq用户信息取消");
             }
         });
     }
@@ -420,7 +432,7 @@ public class LoginActivity extends BaseActivity {
                         }
                     });
         } else {
-            ToastUtil.showLong(RealDocApplication.getContext(), "网络已断开，请检查您的网络!");
+            ToastUtil.showLong(LoginActivity.this, "网络已断开，请检查您的网络!");
         }
     }
 
@@ -434,7 +446,7 @@ public class LoginActivity extends BaseActivity {
                     if (mAccessToken.isSessionValid()) {
                         // 保存 Token 到 SharedPreferences
                         AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
-                        ToastUtil.showLong(RealDocApplication.getContext(), getResources().getString(R.string.weibosdk_demo_toast_auth_success));
+                        ToastUtil.showLong(LoginActivity.this, getResources().getString(R.string.weibosdk_demo_toast_auth_success));
                     }
                     String access_token = mAccessToken.getToken();
                     String uid = mAccessToken.getUid();
@@ -446,12 +458,12 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void cancel() {
-            ToastUtil.showLong(RealDocApplication.getContext(), getResources().getString(R.string.weibosdk_demo_toast_auth_canceled));
+            ToastUtil.showLong(LoginActivity.this, getResources().getString(R.string.weibosdk_demo_toast_auth_canceled));
         }
 
         @Override
         public void onFailure(WbConnectErrorMessage errorMessage) {
-            ToastUtil.showLong(RealDocApplication.getContext(), errorMessage.getErrorMessage());
+            ToastUtil.showLong(LoginActivity.this, errorMessage.getErrorMessage());
         }
     }
 
@@ -540,15 +552,9 @@ public class LoginActivity extends BaseActivity {
                                         verifyFlag = obj.getString("verifyFlag");
                                         SPUtils.put(LoginActivity.this, "verifyFlag", verifyFlag);
                                         if (!getList && StringUtils.equals(verifyFlag, "1")) {
-                                            //登录成功,获得列表数据
-                                            RealDocApplication.getRecordListData();
                                             loginHuanXin(mobilePhone, pwd);
-                                            //通知首页刷新界面
-                                            Intent intent = new Intent(LoginActivity.this, RealDocActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            startActivity(intent);
-                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                            finish();
+                                            //登录成功,获得列表数据
+                                            getRecordListData();
                                         } else if (getList && StringUtils.equals(verifyFlag, "0")) {
                                             loginHuanXin(mobilePhone, pwd);
                                             //跳转到实名认证页面
@@ -557,7 +563,7 @@ public class LoginActivity extends BaseActivity {
                                             startActivity(intent);
                                         } else if (getList && StringUtils.equals(verifyFlag, "1")) {
                                             //登录成功,获得列表数据
-                                            RealDocApplication.getRecordListData();
+                                            getRecordListData();
                                             loginHuanXin(mobilePhone, pwd);
                                             //通知首页刷新界面
                                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -576,6 +582,175 @@ public class LoginActivity extends BaseActivity {
                                     ToastUtil.showLong(LoginActivity.this, "获取用户信息失败.请确定是否已登录!");
                                 }
 
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
+
+    public void getRecordListData() {
+        mInstance = SaveDocManager.getInstance(LoginActivity.this);
+        mDrugInstance = DrugManager.getInstance(LoginActivity.this);
+        count = (int) mInstance.getTotalCount();
+        String token = (String) SPUtils.get(LoginActivity.this, "token", "");
+        String mobile = (String) SPUtils.get(LoginActivity.this, "mobile", "");
+        Map<String, String> header = null;
+        if (EmptyUtils.isNotEmpty(token)) {
+            header = new HashMap<String, String>();
+            header.put("Authorization", token);
+        } else {
+            ToastUtil.showLong(LoginActivity.this, "病历数据列表请求失败,请确定您的账户已登录!");
+        }
+
+        Map<String, String> map = new HashMap<String, String>();
+//        map.put("mobilePhone", "13777850036");
+        map.put("mobilePhone", mobile);
+        map.put("clientNum", String.valueOf(count));
+        HttpRequestClient.getInstance(LoginActivity.this).createBaseApi().get("patient"
+                , map, new BaseObserver<ResponseBody>(LoginActivity.this) {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(LoginActivity.this, "获取病历列表出错!");
+                    }
+
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        String total = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    if (DocUtils.hasValue(object, "data")) {
+                                        JSONObject obj = object.getJSONObject("data");
+                                        if (DocUtils.hasValue(obj, "total")) {
+                                            total = obj.getString("total");
+                                        }
+                                        //因为没有病历id,所以我们只能当前时间下病历是唯一的
+                                        List<String> time = mInstance.queryTimeList(RealDocApplication.getDaoSession(LoginActivity.this));
+                                        if (!StringUtils.equals(String.valueOf(count), total)) {
+                                            if (DocUtils.hasValue(obj, "list")) {
+                                                JSONArray jsonArray = obj.getJSONArray("list");
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                    SaveDocBean bean = new SaveDocBean();
+                                                    JSONObject jsonObj = jsonArray.getJSONObject(i);
+                                                    if (DocUtils.hasValue(jsonObj, "diagCode")) {
+                                                        String diagCode = jsonObj.getString("diagCode");
+                                                        bean.setId(diagCode);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "diagName")) {
+                                                        String diagName = jsonObj.getString("diagName");
+                                                        bean.setIll(diagName);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "orgCode")) {
+                                                        String orgCode = jsonObj.getString("orgCode");
+                                                        bean.setOrgCode(orgCode);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "diagCode")) {
+                                                        String diagCode = jsonObj.getString("diagCode");
+                                                        bean.setId(diagCode);
+                                                    }
+
+                                                    if (DocUtils.hasValue(jsonObj, "patientDiagId")) {
+                                                        String patientDiagId = jsonObj.getString("patientDiagId");
+                                                        bean.setPatientDiagId(patientDiagId);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "patientId")) {
+                                                        String patientId = jsonObj.getString("patientId");
+                                                        bean.setPatientId(patientId);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "respDoctorName")) {
+                                                        String respDoctorName = jsonObj.getString("respDoctorName");
+                                                        bean.setDoctor(respDoctorName);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "visitDeptName")) {
+                                                        String visitDeptName = jsonObj.getString("visitDeptName");
+                                                        bean.setVisitDeptName(visitDeptName);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "visitDtime")) {
+                                                        String visitDtime = jsonObj.getString("visitDtime");
+                                                        bean.setTime(visitDtime);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "visitOrgName")) {
+                                                        String visitOrgName = jsonObj.getString("visitOrgName");
+                                                        bean.setHospital(visitOrgName);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "visitWay")) {
+                                                        String visitWay = jsonObj.getString("visitWay");
+                                                        bean.setVisitWay(visitWay);
+                                                    }
+                                                    //插入到数据库中
+                                                    if (!time.contains(bean.getTime())) {
+                                                        bean.setId(String.valueOf(Math.random()));
+                                                        //插入一条病历
+                                                        mInstance.insertSaveDoc(LoginActivity.this, bean);
+                                                        //插入药物处方
+                                                        if (DocUtils.hasValue(jsonObj, "drugList")) {
+                                                            JSONArray array = jsonObj.getJSONArray("drugList");
+                                                            for (int j = 0; j < array.length(); j++) {
+                                                                DrugBean drugBean = new DrugBean();
+                                                                JSONObject jsonObject = array.getJSONObject(j);
+                                                                drugBean.setRecordId(bean.getId());
+                                                                if (DocUtils.hasValue(jsonObject, "drugCode")) {
+                                                                    String drugCode = jsonObject.getString("drugCode");
+                                                                    if (EmptyUtils.isNotEmpty(drugCode)) {
+                                                                        drugBean.setDrugCode(drugCode);
+                                                                    } else {
+                                                                        drugBean.setDrugCode("null");
+                                                                    }
+                                                                }
+                                                                if (DocUtils.hasValue(jsonObject, "drugName")) {
+                                                                    String drugName = jsonObject.getString("drugName");
+                                                                    drugBean.setDrugName(drugName);
+                                                                }
+                                                                if (DocUtils.hasValue(jsonObject, "drugStdCode")) {
+                                                                    String drugStdCode = jsonObject.getString("drugStdCode");
+                                                                    drugBean.setDrugStdCode(drugStdCode);
+                                                                }
+                                                                if (DocUtils.hasValue(jsonObject, "drugStdName")) {
+                                                                    String drugStdName = jsonObject.getString("drugStdName");
+                                                                    drugBean.setDrugStdName(drugStdName);
+                                                                }
+                                                                mDrugInstance.insertDrug(LoginActivity.this, drugBean);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    ToastUtil.showLong(LoginActivity.this, "获取病历数据列表成功!");
+                                } else {
+                                    ToastUtil.showLong(LoginActivity.this, "病历数据列表请求失败!");
+                                }
+                                //通知首页刷新界面
+                                Intent intent = new Intent(LoginActivity.this, RealDocActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

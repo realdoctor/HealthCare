@@ -11,30 +11,42 @@ public class DoctorBean extends UserBean implements Parcelable {
 
     private String doctorCode;
     //    private String doctorImg;
-    //这个字段本身来说是多余的,但后台给的数据要和这边匹配,才能解析
-    private String respDoctorName;
     private String visitOrgName;
     private String diagName;
     private String visitDtime;
+    private String questionId;
+    @SerializedName("question")
+    private String inquery;
+    private String answer;
+    private String addTime;
 
     public DoctorBean() {
+        super();
     }
 
     protected DoctorBean(Parcel in) {
+        super(in);
         doctorCode = in.readString();
-        respDoctorName = in.readString();
         visitOrgName = in.readString();
         diagName = in.readString();
         visitDtime = in.readString();
+        questionId = in.readString();
+        inquery = in.readString();
+        answer = in.readString();
+        addTime = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeString(doctorCode);
-        dest.writeString(respDoctorName);
         dest.writeString(visitOrgName);
         dest.writeString(diagName);
         dest.writeString(visitDtime);
+        dest.writeString(questionId);
+        dest.writeString(inquery);
+        dest.writeString(answer);
+        dest.writeString(addTime);
     }
 
     @Override
@@ -62,14 +74,6 @@ public class DoctorBean extends UserBean implements Parcelable {
         this.doctorCode = doctorCode;
     }
 
-    public String getRespDoctorName() {
-        return respDoctorName;
-    }
-
-    public void setRespDoctorName(String respDoctorName) {
-        this.respDoctorName = respDoctorName;
-    }
-
     public String getVisitOrgName() {
         return visitOrgName;
     }
@@ -92,5 +96,37 @@ public class DoctorBean extends UserBean implements Parcelable {
 
     public void setVisitDtime(String visitDtime) {
         this.visitDtime = visitDtime;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getInquery() {
+        return inquery;
+    }
+
+    public void setInquery(String inquery) {
+        this.inquery = inquery;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public String getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(String addTime) {
+        this.addTime = addTime;
     }
 }

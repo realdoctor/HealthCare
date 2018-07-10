@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.util;
 
 import android.content.Context;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -13,9 +14,6 @@ import android.widget.EditText;
 public class KeyBoardUtils {
     /**
      * 打开软键盘
-     *
-     * @param mEditText输入框
-     * @param mContext上下文
      */
     public static void openKeybord(EditText mEditText, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext
@@ -27,9 +25,6 @@ public class KeyBoardUtils {
 
     /**
      * 关闭软键盘
-     *
-     * @param mEditText输入框
-     * @param mContext上下文
      */
     public static void closeKeybord(EditText mEditText, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -38,14 +33,14 @@ public class KeyBoardUtils {
     }
 
     /**
-     * 打开或关闭软键盘
+     * 强制隐藏输入法键盘
      *
-     * @param mContext上下文
+     * @param context Context
+     * @param view    EditText
      */
-    public static void closeOrOpenKeybord(Context mContext) {
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    public static void hideInput(Context context, View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
 

@@ -80,9 +80,7 @@ public class AddAdviceActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra("pos", pos);
                 intent.putExtra("advice", mAdvice);
-                setResult(RESULT_OK, intent);
-                //隐藏键盘
-                KeyBoardUtils.closeOrOpenKeybord(this);
+                setResult(RESULT_OK, intent);;
                 finish();
                 break;
             case R.id.finish_back:

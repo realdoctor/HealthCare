@@ -13,7 +13,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,11 +52,17 @@ public class CheckDetailActivity extends BaseActivity {
     ImageView zipImg;
     @BindView(R.id.zip_text)
     TextView zipText;
+    @BindView(R.id.zip_edit)
+    EditText zipEdit;
+    @BindView(R.id.zip_edit_linear)
+    LinearLayout zipEditLinear;
     List<SaveDocBean> mList;
     DocDetailAdapter checkDetailAdapter;
     public static final String GET_PATH = "android.intent.action.get.path";
     public static final int REQUEST_CODE_PROGRESS_BAR = 0x130;
     private String path;
+    private String inquery;
+    private String doctorUserId;
 
     @Override
     public int getLayoutId() {
@@ -80,10 +88,13 @@ public class CheckDetailActivity extends BaseActivity {
         rightTitle.setText("上传");
         zipImg.setVisibility(View.GONE);
         zipText.setVisibility(View.GONE);
+        zipEditLinear.setVisibility(View.VISIBLE);
         mList = new ArrayList<>();
         Intent intent = getIntent();
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra("mList");
+            inquery = intent.getExtras().getString("inquery");
+            doctorUserId = intent.getExtras().getString("doctorUserId");
         }
         //创建布局管理
         checkDetailRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -109,8 +120,12 @@ public class CheckDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_title:
+                String zipEditContent = zipEdit.getText().toString();
                 Intent intent = new Intent(CheckDetailActivity.this, ProgressBarActivity.class);
+                intent.putExtra("inquery", inquery);
                 intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
+                intent.putExtra("zipEdit", zipEditContent);
+                intent.putExtra("doctorUserId", doctorUserId);
                 startActivityForResult(intent, REQUEST_CODE_PROGRESS_BAR);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
@@ -133,6 +148,7 @@ public class CheckDetailActivity extends BaseActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_PROGRESS_BAR) {
             zipImg.setVisibility(View.VISIBLE);
             zipText.setVisibility(View.VISIBLE);
+            zipEditLinear.setVisibility(View.GONE);
             rightTitle.setVisibility(View.GONE);
             path = data.getStringExtra("path");
         }

@@ -38,6 +38,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         public final static Property VisitDeptName = new Property(11, String.class, "visitDeptName", false, "VISIT_DEPT_NAME");
         public final static Property VisitWay = new Property(12, String.class, "visitWay", false, "VISIT_WAY");
         public final static Property IsSelect = new Property(13, boolean.class, "isSelect", false, "IS_SELECT");
+        public final static Property Describe = new Property(14, String.class, "describe", false, "DESCRIBE");
     }
 
     private DaoSession daoSession;
@@ -69,7 +70,8 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
                 "\"PATIENT_ID\" TEXT," + // 10: patientId
                 "\"VISIT_DEPT_NAME\" TEXT," + // 11: visitDeptName
                 "\"VISIT_WAY\" TEXT," + // 12: visitWay
-                "\"IS_SELECT\" INTEGER NOT NULL );"); // 13: isSelect
+                "\"IS_SELECT\" INTEGER NOT NULL ," + // 13: isSelect
+                "\"DESCRIBE\" TEXT);"); // 14: describe
     }
 
     /** Drops the underlying database table. */
@@ -147,6 +149,11 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
             stmt.bindString(13, visitWay);
         }
         stmt.bindLong(14, entity.getIsSelect() ? 1L: 0L);
+ 
+        String describe = entity.getDescribe();
+        if (describe != null) {
+            stmt.bindString(15, describe);
+        }
     }
 
     @Override
@@ -218,6 +225,11 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
             stmt.bindString(13, visitWay);
         }
         stmt.bindLong(14, entity.getIsSelect() ? 1L: 0L);
+ 
+        String describe = entity.getDescribe();
+        if (describe != null) {
+            stmt.bindString(15, describe);
+        }
     }
 
     @Override
@@ -247,7 +259,8 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // patientId
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // visitDeptName
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // visitWay
-            cursor.getShort(offset + 13) != 0 // isSelect
+            cursor.getShort(offset + 13) != 0, // isSelect
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14) // describe
         );
         return entity;
     }
@@ -268,6 +281,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         entity.setVisitDeptName(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setVisitWay(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
         entity.setIsSelect(cursor.getShort(offset + 13) != 0);
+        entity.setDescribe(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
      }
     
     @Override

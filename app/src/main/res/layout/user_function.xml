@@ -37,7 +37,6 @@
         <View
             android:layout_width="0.5dip"
             android:layout_height="fill_parent"
-            android:layout_marginTop="12.0dip"
             android:background="@color/divider_color" />
 
         <LinearLayout
@@ -66,7 +65,6 @@
         <View
             android:layout_width="0.5dip"
             android:layout_height="fill_parent"
-            android:layout_marginTop="12.0dip"
             android:background="@color/divider_color" />
 
         <LinearLayout
@@ -95,7 +93,6 @@
         <View
             android:layout_width="0.5dip"
             android:layout_height="fill_parent"
-            android:layout_marginTop="12.0dip"
             android:background="@color/divider_color" />
 
         <LinearLayout
@@ -124,7 +121,6 @@
         <View
             android:layout_width="0.5dip"
             android:layout_height="fill_parent"
-            android:layout_marginTop="12.0dip"
             android:background="@color/divider_color" />
 
         <LinearLayout

@@ -250,6 +250,8 @@ public class SaveRecordActivity extends BaseActivity {
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                //隐藏键盘
+                KeyBoardUtils.hideInput(SaveRecordActivity.this,recordDocRelative);
                 List<String> pictures = intent.getStringArrayListExtra("imgs");
                 String advice = intent.getStringExtra("advice");
                 AddLabelBean label = intent.getParcelableExtra("label");
@@ -749,7 +751,7 @@ public class SaveRecordActivity extends BaseActivity {
                 }
             } else if (i == R.id.add_video) {
                 if (DocUtils.isFastClick()) {
-                    Intent intent = new Intent(SaveRecordActivity.this, VideoActivity.class);
+                    Intent intent = new Intent(SaveRecordActivity.this, VideoOneActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("folder", folder);
                     intent.putExtras(bundle);

@@ -8,17 +8,17 @@
         android:id="@+id/grid_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@mipmap/img_bg" />
 
     <ImageView
         android:id="@+id/recipel_icon"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:scaleType="fitXY"
         android:layout_alignRight="@id/grid_image"
         android:layout_alignTop="@id/grid_image"
         android:clickable="false"
+        android:scaleType="fitXY"
         android:src="@mipmap/delete_icon"
         android:visibility="gone" />
 
@@ -29,10 +29,10 @@
         android:layout_below="@id/grid_image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:visibility="gone"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="#ff333333"
         android:typeface="monospace"
+        android:visibility="gone"
         tools:text="@string/save_doc_text" />
 </RelativeLayout>

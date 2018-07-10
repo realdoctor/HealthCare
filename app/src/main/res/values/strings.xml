@@ -131,8 +131,11 @@
     <string name="order_by_date">按日期预约</string>
     <string name="hospital">医院</string>
     <string name="expert">医生</string>
-    <string name="save">保存</string>
     <string name="count_price">合计：</string>
+    <string name="pay_way">支付方式</string>
+    <string name="payment">支付金额:</string>
+    <string name="zi_fu_bao">支付宝支付</string>
+    <string name="wei_xing">微信支付</string>
     <string name="advice_info">处方信息:</string>
     <string name="record_one">第一份病历</string>
     <string name="record_two">第二份病历</string>
@@ -166,11 +169,23 @@
     <string name="qq_num">qq号码</string>
     <string name="phone_num">电话号码</string>
     <string name="user_fade_txt">请留下你的宝贵意见</string>
+    <string name="record_describe_text">最后一次就诊情况:</string>
+    <string name="record_describe">请留下您最后一次就诊情况(该情况会显示在您就诊的最后一份病历中)</string>
     <string name="confirm_dialog_btn">确定</string>
     <string name="cancel_dialog_btn">取消</string>
     <string name="my_qr">我是"朱家斌"医生,这是我的二维码</string>
     <string name="my_qr_txt">请对准扫描枪</string>
     <string name="go_zip_path">点击图片进入压缩包所在文件夹 </string>
+    <string name="chat_pay">聊天咨询收费</string>
+    <string name="record_pay">病历咨询收费</string>
+    <string name="pay_unit">元</string>
+    <string name="not_pay">收费</string>
+    <string name="already_pay">已收费</string>
+    <string name="next_step">下一步</string>
+    <string name="reply">回复</string>
+    <string name="revisit">咨询</string>
+    <string name="confirm_charge">确认收费</string>
+    <string name="whether_to_save">是否保存?</string>
     <!--二维码扫描-->
     <string name="title_activity_scan_qr_code">扫一扫</string>
     <string name="close">关闭</string>
@@ -180,7 +195,12 @@
     <string name="could_not_read_qr_code_from_scanner">对不起，无法打开扫出的内容</string>
     <string name="camera_not_found">未检测到相机</string>
     <string name="is_open_flashlight">是否打开闪光灯 </string>
-
+    <string name="pay_text">请确认支付你的咨询费用(咨询费用由第三方保管,咨询成功后会自动支付给医生)</string>
+    <string name="inquery_text">请填写您要向医生咨询的内容:</string>
+    <string name="inquery_rv_info">历史就诊信息:</string>
+    <string name="question_hint">详细描述您的病情状况,曾经做过的检查、用药情况，目前病情是加重还是减缓，想要获得医生什么帮助(最少输入10个字)</string>
+    <string name="reply_text">咨询回复内容:</string>
+    <string name="reply_hint">请填写咨询回复内容</string>
     <!--环信-->
     <string name="emojicon_test_name">示例</string>
     <string name="recall">撤回</string>

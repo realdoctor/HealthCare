@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -57,6 +59,9 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import top.zibin.luban.CompressionPredicate;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 public class RecordImagesActivity extends BaseActivity {
 
@@ -149,8 +154,6 @@ public class RecordImagesActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_title:
-                //隐藏键盘
-                KeyBoardUtils.closeOrOpenKeybord(this);
                 //回调信息(我用广播代替)
                 dragImages.remove(dragImages.size() - 1);
                 //动态注册广播
@@ -314,29 +317,57 @@ public class RecordImagesActivity extends BaseActivity {
 
         @Override
         public void run() {
-            String filePath;
-            Bitmap newBitmap;
-            int addIndex = originImages.size() - 1;
+            final String[] filePath = new String[1];
+            final Bitmap[] newBitmap = new Bitmap[1];
+            final int[] addIndex = {originImages.size() - 1};
             for (int i = 0; i < images.size(); i++) {
                 if (images.get(i).contains(RealDocApplication.getContext().getString(R.string.glide_plus_icon_string))) {//说明是添加图片按钮
                     continue;
                 }
                 //压缩
-                newBitmap = ImageUtils.getSmallBitmap(images.get(i),
-                        SizeUtils.dp2px(RealDocApplication.getContext(), 100),
-                        SizeUtils.dp2px(RealDocApplication.getContext(), 100));
-                //文件地址
-                filePath = SDCardUtils.getSDCardPath() + FILE_DIR_NAME + "/"
-                        + FILE_IMG_NAME + "/" + String.format("img_%d.jpg", System.currentTimeMillis());
-                //保存图片
-                ImageUtils.save(newBitmap, filePath, Bitmap.CompressFormat.JPEG, true);
-                //设置值
-                if (!add) {
-                    images.set(i, filePath);
-                } else {//添加图片，要更新
-                    dragImages.add(addIndex, filePath);
-                    originImages.add(addIndex++, filePath);
-                }
+//                newBitmap = ImageUtils.getSmallBitmap(images.get(i),
+//                        SizeUtils.dp2px(RealDocApplication.getContext(), 100),
+//                        SizeUtils.dp2px(RealDocApplication.getContext(), 100));
+                final int finalI = i;
+                Luban.with(RealDocApplication.getContext())
+                        .load(images.get(i))
+                        .ignoreBy(100)
+                        .filter(new CompressionPredicate() {
+                            @Override
+                            public boolean apply(String path) {
+                                return !(TextUtils.isEmpty(path) || path.toLowerCase().endsWith(".gif"));
+                            }
+                        })
+                        .setCompressListener(new OnCompressListener() {
+                            @Override
+                            public void onStart() {
+                                // TODO 压缩开始前调用，可以在方法内启动 loading UI
+                            }
+
+                            @Override
+                            public void onSuccess(File file) {
+                                // TODO 压缩成功后调用，返回压缩后的图片文件
+                                newBitmap[0] = BitmapFactory.decodeFile(file.getAbsolutePath());//filePath
+                                //文件地址
+                                filePath[0] = SDCardUtils.getSDCardPath() + FILE_DIR_NAME + "/"
+                                        + FILE_IMG_NAME + "/" + String.format("img_%d.jpg", System.currentTimeMillis());
+                                //保存图片
+                                ImageUtils.save(newBitmap[0], filePath[0], Bitmap.CompressFormat.JPEG, true);
+                                //设置值
+                                if (!add) {
+                                    images.set(finalI, filePath[0]);
+                                } else {//添加图片，要更新
+                                    dragImages.add(addIndex[0], filePath[0]);
+                                    originImages.add(addIndex[0]++, filePath[0]);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                // TODO 当压缩过程出现问题时调用
+                            }
+                        }).launch();
+
             }
             Message message = new Message();
             message.what = 1;

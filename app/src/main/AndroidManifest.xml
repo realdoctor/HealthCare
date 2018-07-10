@@ -65,8 +65,13 @@
     <uses-permission android:name="com.hyphenate.chatuidemo.permission.MIPUSH_RECEIVE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+    <!-- 极光推送 -->
+    <permission
+        android:name="com.real.doctor.realdoc.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
 
-    <!--    <uses-sdk tools:overrideLibrary="com.kk.taurus.ijkplayer" />-->
+    <uses-permission android:name="com.real.doctor.realdoc.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 
     <application
         android:name=".application.RealDocApplication"
@@ -80,7 +85,7 @@
         <!-- 设置key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="4adf289c0b1805668615d0ffe583e8c6" />
+            android:value="eb4138bc7bb864b47239f960416097d1" />
         <!-- 定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService"></service>
 
@@ -172,11 +177,6 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.SearchProductResultActivity"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
             android:name=".activity.DocContentActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
@@ -250,7 +250,8 @@
         <activity
             android:name=".activity.SaveRecordActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
         <activity
             android:name=".activity.CheckCompareActivity"
             android:hardwareAccelerated="false"
@@ -281,6 +282,9 @@
         <service
             android:name=".service.UpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".service.UnzipService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service android:name=".service.RecordingService" />
 
         <activity
@@ -289,6 +293,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.VideoActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.VideoOneActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
@@ -394,6 +402,38 @@
             android:name=".activity.CheckDetailActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CaseListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChatPayActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.DocPayActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.InqueryActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AlreadyVertifyActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ReplyActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyRevisitActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AnswerActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
         <!--    <intent-filter>
                          <action android:name="android.intent.action.MAIN" />
                          <category android:name="android.intent.category.LAUNCHER" />
@@ -493,5 +533,93 @@
         <meta-data
             android:name="WEIBO_CHANNEL"
             android:value="weibo" />
+        <!-- Required SDK 核心功能-->
+        <!-- 可配置android:process参数将PushService放在其他进程中 -->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:exported="false"
+            android:process=":mult">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+            </intent-filter>
+        </service>
+        <!-- since 3.0.9 Required SDK 核心功能-->
+        <provider
+            android:name="cn.jpush.android.service.DataProvider"
+            android:authorities="com.real.doctor.realdoc.DataProvider"
+            android:exported="true" />
+
+        <!-- since 3.1.0 Required SDK 核心功能-->
+        <provider
+            android:name="cn.jpush.android.service.DownloadProvider"
+            android:authorities="cn.jpush.android.service.DownloadProvider"
+            android:exported="true" />
+        <!-- Required SDK核心功能-->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.real.doctor.realdoc" />
+            </intent-filter>
+        </activity>
+        <!-- SDK核心功能-->
+        <activity
+            android:name="cn.jpush.android.ui.PopWinActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/MyDialogStyle">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.real.doctor.realdoc" />
+            </intent-filter>
+        </activity>
+
+        <!-- Required SDK核心功能-->
+        <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <!-- Required SDK核心功能-->
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+
+        <!-- User defined. 用户自定义的广播接收器-->
+        <receiver
+            android:name="com.real.doctor.realdoc.receiver.JPushUserReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <!--Required 用户注册SDK的intent-->
+                <action android:name="cn.jpush.android.intent.REGISTRATION" />
+                <!--Required 用户接收SDK消息的intent-->
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+                <!--Required 用户接收SDK通知栏信息的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+                <!--Required 用户打开自定义通知栏的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+                <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <action android:name="cn.jpush.android.intent.CONNECTION" />
+                <category android:name="com.real.doctor.realdoc" />
+            </intent-filter>
+        </receiver>
+        <!-- Required. For publish channel feature -->
+        <!-- JPUSH_CHANNEL 是为了方便开发者统计APK分发渠道。-->
+        <!-- 例如: -->
+        <!-- 发到 Google Play 的APK可以设置为 google-play; -->
+        <!-- 发到其他市场的 APK 可以设置为 xxx-market。 -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <!-- Required. AppKey copied from Portal -->
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="您应用的Appkey" />
     </application>
 </manifest>

@@ -23,7 +23,9 @@ import com.real.doctor.realdoc.fragment.HomeFragment;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.GreenDaoContext;
+import com.real.doctor.realdoc.greendao.table.DrugManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
+import com.real.doctor.realdoc.model.DrugBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
@@ -38,6 +40,7 @@ import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.widget.HuanXinHelper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 
@@ -75,6 +79,7 @@ public class RealDocApplication extends MultiDexApplication {
     private static DaoSession daoPatientSession;
 
     private static SaveDocManager mInstance;
+    private static DrugManager mDrugInstance;
     /**
      * 本地数据库中数据条数
      */
@@ -100,12 +105,6 @@ public class RealDocApplication extends MultiDexApplication {
         super.onCreate();
         mContext = this;
         MultiDex.install(this);
-//        if (LeakCanary.isInAnalyzerProcess(this)) {
-//            // This process is dedicated to LeakCanary for heap analysis.
-//            // You should not init your app in this process.
-//            return;
-//        }
-//        LeakCanary.install(this);
         StrictMode.setThreadPolicy(new
                 StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
         StrictMode.setVmPolicy(new
@@ -126,6 +125,9 @@ public class RealDocApplication extends MultiDexApplication {
         PlayerConfig.setUseDefaultNetworkEventProducer(true);
 
         PlayerLibrary.init(this);
+        //极光推送
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
         //医生端下载病历文件后处理
 //        onGetPatientList();
 //        localBroadcast();
@@ -166,6 +168,7 @@ public class RealDocApplication extends MultiDexApplication {
 
     public static void getRecordListData() {
         mInstance = SaveDocManager.getInstance(getContext());
+        mDrugInstance = DrugManager.getInstance(getContext());
         count = (int) mInstance.getTotalCount();
         String token = (String) SPUtils.get(getContext(), "token", "");
         String mobile = (String) SPUtils.get(getContext(), "mobile", "");
@@ -218,32 +221,100 @@ public class RealDocApplication extends MultiDexApplication {
                                         if (DocUtils.hasValue(obj, "total")) {
                                             total = obj.getString("total");
                                         }
+                                        //因为没有病历id,所以我们只能当前时间下病历是唯一的
+                                        List<String> time = mInstance.queryTimeList(getDaoSession(getContext()));
                                         if (!StringUtils.equals(String.valueOf(count), total)) {
                                             if (DocUtils.hasValue(obj, "list")) {
-                                                List<SaveDocBean> list = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), SaveDocBean.class);
-                                                if (EmptyUtils.isNotEmpty(list) && list.size() > 0) {
-                                                    if (EmptyUtils.isNotEmpty(mInstance)) {
-                                                        List<SaveDocBean> mList = new ArrayList<>();
-                                                        //因为没有病历id,所以我们只能当前时间下病历是唯一的
-                                                        List<String> time = mInstance.queryTimeList(getDaoSession(getContext()));
-                                                        //因为后台传过来的数据没有病历id,所以我们给他添加一个
-                                                        for (int i = 0; i < list.size(); i++) {
-                                                            //该时间下无病历
-                                                            if (!time.contains(list.get(i).getTime())) {
-                                                                list.get(i).setId(String.valueOf(Math.random()));
-                                                                //插入一条病历
-                                                                mList.add(list.get(i));
+                                                JSONArray jsonArray = obj.getJSONArray("list");
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                    SaveDocBean bean = new SaveDocBean();
+                                                    JSONObject jsonObj = jsonArray.getJSONObject(i);
+                                                    if (DocUtils.hasValue(jsonObj, "diagCode")) {
+                                                        String diagCode = jsonObj.getString("diagCode");
+                                                        bean.setId(diagCode);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "diagName")) {
+                                                        String diagName = jsonObj.getString("diagName");
+                                                        bean.setIll(diagName);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "orgCode")) {
+                                                        String orgCode = jsonObj.getString("orgCode");
+                                                        bean.setOrgCode(orgCode);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "diagCode")) {
+                                                        String diagCode = jsonObj.getString("diagCode");
+                                                        bean.setId(diagCode);
+                                                    }
+
+                                                    if (DocUtils.hasValue(jsonObj, "patientDiagId")) {
+                                                        String patientDiagId = jsonObj.getString("patientDiagId");
+                                                        bean.setPatientDiagId(patientDiagId);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "patientId")) {
+                                                        String patientId = jsonObj.getString("patientId");
+                                                        bean.setPatientId(patientId);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "respDoctorName")) {
+                                                        String respDoctorName = jsonObj.getString("respDoctorName");
+                                                        bean.setDoctor(respDoctorName);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "visitDeptName")) {
+                                                        String visitDeptName = jsonObj.getString("visitDeptName");
+                                                        bean.setVisitDeptName(visitDeptName);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "visitDtime")) {
+                                                        String visitDtime = jsonObj.getString("visitDtime");
+                                                        bean.setTime(visitDtime);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "visitOrgName")) {
+                                                        String visitOrgName = jsonObj.getString("visitOrgName");
+                                                        bean.setHospital(visitOrgName);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "visitWay")) {
+                                                        String visitWay = jsonObj.getString("visitWay");
+                                                        bean.setVisitWay(visitWay);
+                                                    }
+                                                    //插入到数据库中
+                                                    if (!time.contains(bean.getTime())) {
+                                                        bean.setId(String.valueOf(Math.random()));
+                                                        //插入一条病历
+                                                        mInstance.insertSaveDoc(getContext(), bean);
+                                                        //插入药物处方
+                                                        if (DocUtils.hasValue(jsonObj, "drugList")) {
+                                                            JSONArray array = jsonObj.getJSONArray("drugList");
+                                                            for (int j = 0; j < array.length(); j++) {
+                                                                DrugBean drugBean = new DrugBean();
+                                                                JSONObject jsonObject = array.getJSONObject(j);
+                                                                drugBean.setRecordId(bean.getId());
+                                                                if (DocUtils.hasValue(jsonObject, "drugCode")) {
+                                                                    String drugCode = jsonObject.getString("drugCode");
+                                                                    if (EmptyUtils.isNotEmpty(drugCode)) {
+                                                                        drugBean.setDrugCode(drugCode);
+                                                                    } else {
+                                                                        drugBean.setDrugCode("null");
+                                                                    }
+                                                                }
+                                                                if (DocUtils.hasValue(jsonObject, "drugName")) {
+                                                                    String drugName = jsonObject.getString("drugName");
+                                                                    drugBean.setDrugName(drugName);
+                                                                }
+                                                                if (DocUtils.hasValue(jsonObject, "drugStdCode")) {
+                                                                    String drugStdCode = jsonObject.getString("drugStdCode");
+                                                                    drugBean.setDrugStdCode(drugStdCode);
+                                                                }
+                                                                if (DocUtils.hasValue(jsonObject, "drugStdName")) {
+                                                                    String drugStdName = jsonObject.getString("drugStdName");
+                                                                    drugBean.setDrugStdName(drugStdName);
+                                                                }
+                                                                mDrugInstance.insertDrug(getContext(), drugBean);
                                                             }
                                                         }
-                                                        if (mList.size() > 0) {
-                                                            mInstance.insertSaveDoc(getContext(), mList);
-                                                        }
-                                                        ToastUtil.showLong(getContext(), "获取病历数据列表成功!");
                                                     }
                                                 }
                                             }
                                         }
                                     }
+                                    ToastUtil.showLong(getContext(), "获取病历数据列表成功!");
                                 } else {
                                     ToastUtil.showLong(getContext(), "病历数据列表请求失败!");
                                 }
@@ -312,7 +383,6 @@ public class RealDocApplication extends MultiDexApplication {
                     .build();
             jobScheduler.schedule(jobInfo);
         }
-
     }
 
     private void localBroadcast() {

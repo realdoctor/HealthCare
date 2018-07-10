@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
-import com.real.doctor.realdoc.rxjavaretrofit.exception.ExceptionHandle;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;

@@ -23,7 +23,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/record_recycle_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/label_text_relative"
         android:clipToPadding="false"
         android:paddingLeft="15dp"
@@ -86,7 +86,6 @@
             android:id="@+id/add_label_btn"
             android:layout_width="80dp"
             android:layout_height="30dp"
-            android:layout_alignParentRight="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:background="@drawable/button_selector"
