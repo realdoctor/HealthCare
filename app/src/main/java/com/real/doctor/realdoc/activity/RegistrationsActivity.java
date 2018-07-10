@@ -31,6 +31,7 @@ import com.real.doctor.realdoc.model.SortBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DataUtil;
+import com.real.doctor.realdoc.util.DistanceUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.OnFilterDoneListener;
 import com.real.doctor.realdoc.util.ScreenUtil;
@@ -446,7 +447,12 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                                     baseModel = localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<PageModel<HospitalBean>>() {
                                             }.getType());
-                                    hospitalBeanArrayList.addAll(baseModel.list);
+
+                                    for(HospitalBean bean:baseModel.list){
+                                        bean.distance= DistanceUtil.getDistance(RegistrationsActivity.latitude,RegistrationsActivity.longitude,Double.parseDouble(bean.lat),Double.parseDouble(bean.lng));
+                                        hospitalBeanArrayList.add(bean);
+                                    }
+
                                     if(sortstr.equals("sortByDistance")){
                                         Collections.sort(hospitalBeanArrayList, comparator);
                                     }
@@ -470,8 +476,8 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
         public Comparator<HospitalBean> comparator=new Comparator<HospitalBean>() {
             @Override
             public int compare(HospitalBean o1, HospitalBean o2) {
-                int i=o1.distance-o2.distance;
-                return i;
+                double i=o1.distance-o2.distance;
+                return (int)i;
             }
         };
 }

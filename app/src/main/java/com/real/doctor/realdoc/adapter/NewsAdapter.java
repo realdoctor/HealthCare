@@ -48,7 +48,7 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
         holder.tv_authorDept.setText(bean.authorDept);
         holder.tv_hospital.setText(bean.authorHos);
 //        holder.tv_content.setText();
-        Glide.with(mContext).load(bean.photoAddress).crossFade().into(holder.new_detail_img);
+        Glide.with(mContext).load(bean.photoAddress).crossFade().error(R.drawable.timg).into(holder.new_detail_img);
         return convertView;
     }
 

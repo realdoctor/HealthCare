@@ -8,6 +8,7 @@
         android:id="@+id/new_detail_img"
         android:layout_width="85dp"
         android:layout_height="85dp"
+        android:src="@drawable/timg"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         />

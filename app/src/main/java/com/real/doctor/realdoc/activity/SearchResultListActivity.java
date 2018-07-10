@@ -40,6 +40,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DataUtil;
+import com.real.doctor.realdoc.util.DistanceUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.OnFilterDoneListener;
@@ -120,6 +121,8 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     private AMapLocationClientOption locationOption = null;
     public final static int REGISTRATION_AREA_EVENT_REQUEST_CODE = 5;
     ExpertAdapter expertAdapter;
+    public static double latitude;
+    public static double longitude;
 
 
     @Override
@@ -149,7 +152,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         init();
         initLocation();
         startLocation();
-        searchHospital(pageNum,pageSize);
+
     }
 
     @Override
@@ -225,12 +228,15 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 StringBuffer sb = new StringBuffer();
                 //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
                 if (location.getErrorCode() == 0) {
+                    latitude=location.getLatitude();
+                    longitude=location.getLongitude();
                     String city=location.getCity();
                     right_title.setText(city);
                     cityName=city;
                 } else {
 
                 }
+                searchHospital(pageNum,pageSize);
             }
         }
     };
@@ -467,7 +473,10 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                     baseModel = localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<PageModel<HospitalBean>>() {
                                             }.getType());
-                                    hospitalBeans.addAll(baseModel.list);
+                                    for(HospitalBean bean:baseModel.list){
+                                        bean.distance= DistanceUtil.getDistance(SearchResultListActivity.latitude,SearchResultListActivity.longitude,Double.parseDouble(bean.lat),Double.parseDouble(bean.lng));
+                                        hospitalBeans.add(bean);
+                                    }
                                     adapter.notifyDataSetChanged();
                                     if(rb_hospital.isChecked()){
                                         hosptial_list.setVisibility(View.VISIBLE);
@@ -524,16 +533,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String token = (String) SPUtils.get(SearchResultListActivity.this, "token", "");
-        Map<String, String> header = null;
-        if (EmptyUtils.isNotEmpty(token)) {
-            header = new HashMap<String, String>();
-            header.put("Authorization", token);
-        } else {
-            ToastUtil.showLong(SearchResultListActivity.this, "请确定您的账户已登录!");
-            return;
-        }
-        HttpRequestClient client= HttpRequestClient.getInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL,header);
+        HttpRequestClient client= HttpRequestClient.getInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("guahao/fastorder/"
                 , body, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {

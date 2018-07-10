@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -25,16 +26,35 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.adapter.QueryItemAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.ShoppintMallFragment;
+import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.RecordSQLiteOpenHelper;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.view.MyListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 public class SearchHistoryListActivity extends BaseActivity {
 
@@ -52,10 +72,11 @@ public class SearchHistoryListActivity extends BaseActivity {
 	LinearLayout search_top;
 	private RecordSQLiteOpenHelper helper = new RecordSQLiteOpenHelper(this);;
 	private SQLiteDatabase db;
-	private BaseAdapter adapter;
+	private QueryItemAdapter adapter;
 
 	private int requestCode;
 	public String categoryId;
+	public ArrayList<String> list=new ArrayList<String>();
 
 
 	@Override
@@ -82,16 +103,9 @@ public class SearchHistoryListActivity extends BaseActivity {
 		categoryId=intent.getStringExtra("categoryId");
 		// 初始化控件
 		initView();
-
-		// 清空搜索历史
-		tv_clear.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				deleteData();
-				queryData("");
-			}
-		});
-
+		// 设置适配器
+		adapter=new QueryItemAdapter(SearchHistoryListActivity.this,list);
+		listView.setAdapter(adapter);
 		// 搜索框的键盘搜索键点击回调
 		et_search.setOnKeyListener(new View.OnKeyListener() {// 输入完后按键盘上的搜索键
 
@@ -135,8 +149,9 @@ public class SearchHistoryListActivity extends BaseActivity {
 				}
 				String tempName = et_search.getText().toString();
 				// 根据tempName去模糊查询数据库中有没有数据
-				queryData(tempName);
-
+				//queryData(tempName);
+				list.clear();
+				getQuery(tempName);
 			}
 		});
 
@@ -160,11 +175,16 @@ public class SearchHistoryListActivity extends BaseActivity {
 	}
 
 	@Override
-	@OnClick({R.id.back})
+	@OnClick({R.id.back,R.id.tv_clear})
 	public void widgetClick(View v) {
 		switch (v.getId()){
 			case R.id.back:
 				SearchHistoryListActivity.this.finish();
+				break;
+			case R.id.tv_clear:
+				list.clear();
+				deleteData();
+				queryData("");
 				break;
 		}
 	}
@@ -204,10 +224,14 @@ public class SearchHistoryListActivity extends BaseActivity {
 		Cursor cursor = helper.getReadableDatabase().rawQuery(
 				"select id as _id,name from records where name like '%" + tempName + "%' order by id desc ", null);
 		// 创建adapter适配器对象
-		adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
-				new int[] { android.R.id.text1 }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-		// 设置适配器
-		listView.setAdapter(adapter);
+
+		if(cursor!=null&&cursor.moveToFirst()){
+
+			do{
+				list.add(cursor.getString(1));
+			}while(cursor.moveToNext());
+
+		}
 		adapter.notifyDataSetChanged();
 	}
 	/**
@@ -227,5 +251,64 @@ public class SearchHistoryListActivity extends BaseActivity {
 		db = helper.getWritableDatabase();
 		db.execSQL("delete from records");
 		db.close();
+	}
+	public void getQuery(final String queryStr){
+		HashMap<String,String> param=new HashMap<String,String>();
+		param.put("query",queryStr);
+		HttpRequestClient client= HttpRequestClient.getInstance(SearchHistoryListActivity.this, HttpNetUtil.SEARCH_URL);
+		client.createBaseApi().get("goods/autoComplete/"
+				, param, new BaseObserver<ResponseBody>(SearchHistoryListActivity.this) {
+					@Override
+					public void onSubscribe(Disposable d) {
+
+					}
+					@Override
+					public void onError(Throwable e) {
+						Log.d(TAG, e.getMessage());
+					}
+
+					@Override
+					public void onComplete() {
+
+					}
+
+					@Override
+					protected void onHandleSuccess(ResponseBody responseBody) {
+						String data = null;
+						String msg = null;
+						String code = null;
+						try {
+							data = responseBody.string().toString();
+							try {
+								JSONObject object = new JSONObject(data);
+								if (DocUtils.hasValue(object, "msg")) {
+									msg = object.getString("msg");
+								}
+								if (DocUtils.hasValue(object, "code")) {
+									code = object.getString("code");
+								}
+								if (msg.equals("ok") && code.equals("0")) {
+								JSONArray array= object.getJSONArray("data");
+									Gson localGson = new GsonBuilder()
+											.create();
+									for(int i=0;i<array.length();i++){
+										JSONObject oo=(JSONObject) array.get(i);
+										list.add(oo.getString("value"));
+									}
+									queryData(queryStr);
+								} else {
+
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+				});
+
+
 	}
 }
