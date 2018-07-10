@@ -30,7 +30,6 @@ public class RecieverAddressListManager {
     private Context context;
     private static RecieverAddressListManager mInstance;
     private DaoMaster.DevOpenHelper openHelper;
-    protected Map<Key, Object> valueCache = new HashMap<Key, Object>();
     public static final String COLUMN_NAME_DISABLED_IDS = "disabled_ids";
 
     public RecieverAddressListManager(Context context) {

@@ -21,38 +21,38 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
+        DownInfoDao.createTable(db, ifNotExists);
+        DrugBeanDao.createTable(db, ifNotExists);
         ImageBeanDao.createTable(db, ifNotExists);
         ImageListBeanDao.createTable(db, ifNotExists);
+        InqueryBeanDao.createTable(db, ifNotExists);
         MessageBeanDao.createTable(db, ifNotExists);
         NewFriendsMsgsDao.createTable(db, ifNotExists);
         PrefBeanDao.createTable(db, ifNotExists);
+        RecieverAddressListBeanDao.createTable(db, ifNotExists);
         RecordBeanDao.createTable(db, ifNotExists);
         RobotBeanDao.createTable(db, ifNotExists);
         SaveDocBeanDao.createTable(db, ifNotExists);
         UserBeanDao.createTable(db, ifNotExists);
         VideoBeanDao.createTable(db, ifNotExists);
-        RecieverAddressListBeanDao.createTable(db, ifNotExists);
-        DownInfoDao.createTable(db, ifNotExists);
-        DrugBeanDao.createTable(db, ifNotExists);
-        InqueryBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
+        DownInfoDao.dropTable(db, ifExists);
+        DrugBeanDao.dropTable(db, ifExists);
         ImageBeanDao.dropTable(db, ifExists);
         ImageListBeanDao.dropTable(db, ifExists);
+        InqueryBeanDao.dropTable(db, ifExists);
         MessageBeanDao.dropTable(db, ifExists);
         NewFriendsMsgsDao.dropTable(db, ifExists);
         PrefBeanDao.dropTable(db, ifExists);
+        RecieverAddressListBeanDao.dropTable(db, ifExists);
         RecordBeanDao.dropTable(db, ifExists);
         RobotBeanDao.dropTable(db, ifExists);
         SaveDocBeanDao.dropTable(db, ifExists);
         UserBeanDao.dropTable(db, ifExists);
         VideoBeanDao.dropTable(db, ifExists);
-        RecieverAddressListBeanDao.dropTable(db, ifExists);
-        DownInfoDao.dropTable(db, ifExists);
-        DrugBeanDao.dropTable(db, ifExists);
-        InqueryBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -71,20 +71,20 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
+        registerDaoClass(DownInfoDao.class);
+        registerDaoClass(DrugBeanDao.class);
         registerDaoClass(ImageBeanDao.class);
         registerDaoClass(ImageListBeanDao.class);
+        registerDaoClass(InqueryBeanDao.class);
         registerDaoClass(MessageBeanDao.class);
         registerDaoClass(NewFriendsMsgsDao.class);
         registerDaoClass(PrefBeanDao.class);
+        registerDaoClass(RecieverAddressListBeanDao.class);
         registerDaoClass(RecordBeanDao.class);
         registerDaoClass(RobotBeanDao.class);
         registerDaoClass(SaveDocBeanDao.class);
         registerDaoClass(UserBeanDao.class);
         registerDaoClass(VideoBeanDao.class);
-        registerDaoClass(RecieverAddressListBeanDao.class);
-        registerDaoClass(DownInfoDao.class);
-        registerDaoClass(DrugBeanDao.class);
-        registerDaoClass(InqueryBeanDao.class);
     }
 
     public DaoSession newSession() {
