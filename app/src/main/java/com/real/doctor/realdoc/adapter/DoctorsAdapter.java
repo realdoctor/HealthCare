@@ -8,12 +8,8 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.activity.ChatActivity;
 import com.real.doctor.realdoc.activity.ChatPayActivity;
-import com.real.doctor.realdoc.activity.CheckDocActivity;
-import com.real.doctor.realdoc.activity.InqueryActivity;
 import com.real.doctor.realdoc.model.DoctorBean;
-import com.real.doctor.realdoc.model.InqueryBean;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
 

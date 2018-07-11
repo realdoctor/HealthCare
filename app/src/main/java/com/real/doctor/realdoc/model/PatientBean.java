@@ -13,6 +13,7 @@ public class PatientBean implements Parcelable {
     private String remark;
     private String questionId;
     private String title;
+    private String question;
     private UserBean userInfo;
 
     public PatientBean() {
@@ -26,24 +27,8 @@ public class PatientBean implements Parcelable {
         remark = in.readString();
         questionId = in.readString();
         title = in.readString();
+        question = in.readString();
         userInfo = in.readParcelable(UserBean.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(addTime);
-        dest.writeString(src);
-        dest.writeString(num);
-        dest.writeString(pubId);
-        dest.writeString(remark);
-        dest.writeString(questionId);
-        dest.writeString(title);
-        dest.writeParcelable(userInfo, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<PatientBean> CREATOR = new Creator<PatientBean>() {
@@ -114,6 +99,14 @@ public class PatientBean implements Parcelable {
         this.title = title;
     }
 
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
     public UserBean getUserInfo() {
         return userInfo;
     }
@@ -122,4 +115,21 @@ public class PatientBean implements Parcelable {
         this.userInfo = userInfo;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(addTime);
+        dest.writeString(src);
+        dest.writeString(num);
+        dest.writeString(pubId);
+        dest.writeString(remark);
+        dest.writeString(questionId);
+        dest.writeString(title);
+        dest.writeString(question);
+        dest.writeParcelable(userInfo, flags);
+    }
 }

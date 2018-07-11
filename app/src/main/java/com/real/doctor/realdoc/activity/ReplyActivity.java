@@ -112,21 +112,27 @@ public class ReplyActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(ReplyActivity.this).createBaseApi().json("askQuestion/reply/"
                 , body, new BaseObserver<ResponseBody>(ReplyActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(ReplyActivity.this, "咨询回复提交失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

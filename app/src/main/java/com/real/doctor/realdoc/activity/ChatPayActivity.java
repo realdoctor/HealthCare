@@ -116,20 +116,26 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         map.put("userId", doctorUserId);
         HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().get("askQuestion/getAskQuestionMoney"
                 , map, new BaseObserver<ResponseBody>(ChatPayActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(ChatPayActivity.this, "获取价格失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -256,20 +262,25 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().json("pay/alipay/orderPay/"
                 , body, new BaseObserver<ResponseBody>(ChatPayActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -375,20 +386,25 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().json("user/regist/"
                 , body, new BaseObserver<ResponseBody>(ChatPayActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

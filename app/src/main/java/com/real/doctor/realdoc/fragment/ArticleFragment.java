@@ -41,17 +41,18 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener {
+public class ArticleFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener {
     @BindView(R.id.lv_news)
     ListView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     public NewsAdapter newsAdapter;
     private Unbinder unbinder;
-    public ArrayList<NewModel> newModels=new ArrayList<NewModel>();
+    public ArrayList<NewModel> newModels = new ArrayList<NewModel>();
     private PageModel<NewModel> baseModel = new PageModel<NewModel>();
-    public int pageNum=1;
-    public int pageSize=10;
+    public int pageNum = 1;
+    public int pageSize = 10;
+
     public static ArticleFragment newInstance() {
         return new ArticleFragment();
     }
@@ -68,10 +69,10 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
 
     @Override
     public void doBusiness(Context mContext) {
-        newsAdapter= new NewsAdapter(getContext(),newModels);
+        newsAdapter = new NewsAdapter(getContext(), newModels);
         listView.setAdapter(newsAdapter);
         ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         getData();
@@ -81,29 +82,38 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
     public void widgetClick(View v) {
 
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
+
     private void getData() {
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("pageNum",pageNum);
-        params.put("pageSize",pageSize);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews"
                 , params, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -122,7 +132,7 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel = localGson.fromJson(jsonObject.toString(),
@@ -146,8 +156,8 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        if(pageSize*pageNum>newModels.size()){
-            ToastUtil.show(getContext(),"已经是最后一页", Toast.LENGTH_SHORT);
+        if (pageSize * pageNum > newModels.size()) {
+            ToastUtil.show(getContext(), "已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
             return;
         }
@@ -158,7 +168,7 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        pageNum=1;
+        pageNum = 1;
         newModels.clear();
         getData();
         refreshLayout.finishRefresh();

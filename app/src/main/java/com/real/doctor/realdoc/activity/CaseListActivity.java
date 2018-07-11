@@ -54,6 +54,8 @@ public class CaseListActivity extends BaseActivity {
     TextView inquery;
     @BindView(R.id.inquery_info)
     TextView inqueryInfo;
+    @BindView(R.id.record_list_title)
+    TextView recordListTitle;
     @BindView(R.id.line)
     View line;
     @BindView(R.id.reply)
@@ -63,6 +65,7 @@ public class CaseListActivity extends BaseActivity {
     RecyclerView recordListRecycleView;
     private List<SaveDocBean> recordList;
     private String disease;
+    private String inqueryText;
 
     @Override
     public int getLayoutId() {
@@ -86,7 +89,19 @@ public class CaseListActivity extends BaseActivity {
         patientBean = getIntent().getParcelableExtra("patient");
         realName = getIntent().getStringExtra("realName");
         disease = patientBean.getTitle();
+        inqueryText = patientBean.getQuestion();
         pageTitle.setText(realName);
+        //获取患者咨询
+        if (EmptyUtils.isNotEmpty(inqueryText)) {
+            inquery.setText(inqueryText);
+            line.setVisibility(View.VISIBLE);
+            inqueryInfo.setVisibility(View.VISIBLE);
+            inqueryInfo.setText("患者" + realName + "咨询的问题:");
+        } else {
+            inquery.setVisibility(View.GONE);
+            line.setVisibility(View.GONE);
+            inqueryInfo.setVisibility(View.GONE);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             Intent startServiceIntent = new Intent(this, UnzipService.class);
@@ -108,49 +123,44 @@ public class CaseListActivity extends BaseActivity {
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                //获取患者咨询
-                String inqueryText = intent.getExtras().getString("inquery");
-                if (EmptyUtils.isNotEmpty(inqueryText)) {
-                    inquery.setText(inqueryText);
-                    line.setVisibility(View.VISIBLE);
-                    inqueryInfo.setVisibility(View.VISIBLE);
-                    inqueryInfo.setText("患者" + realName + "咨询的问题:");
-                } else {
-                    inquery.setVisibility(View.GONE);
-                    line.setVisibility(View.GONE);
-                    inqueryInfo.setVisibility(View.GONE);
-                }
                 //获得列表数据
-                recordList = intent.getExtras().getParcelableArrayList("list");
-                //倒序排列
-//                Collections.reverse(recordList);
-                List<SaveDocBean> mList = new ArrayList<>();
-                List<SaveDocBean> oneList = new ArrayList<>();
-                List<SaveDocBean> twoList = new ArrayList<>();
-                int i;
-                for (i = 0; i < recordList.size(); i++) {
-                    if (disease.equals(recordList.get(i).getIll())) {
-                        oneList.add(recordList.get(i));
-                    } else {
-                        twoList.add(recordList.get(i));
-                    }
+                if (EmptyUtils.isEmpty(intent.getExtras())) {
+                    line.setVisibility(View.GONE);
+                    recordListTitle.setVisibility(View.GONE);
+                    return;
                 }
-                mList.addAll(oneList);
-                SaveDocBean bean = new SaveDocBean();
-                bean.setType(2);
-                mList.add(bean);
-                mList.addAll(twoList);
-                //创建布局管理
-                recordListRecycleView.setLayoutManager(new LinearLayoutManager(CaseListActivity.this, LinearLayoutManager.VERTICAL, false));
-                //添加自定义分割线
-                DividerItemDecoration divider = new DividerItemDecoration(CaseListActivity.this, DividerItemDecoration.VERTICAL);
-                divider.setDrawable(ContextCompat.getDrawable(CaseListActivity.this, R.drawable.disease_divider));
-                recordListRecycleView.addItemDecoration(divider);
-                //创建适配器
-                multilDetailAdapter = new MultilDetailAdapter(mList);
-                //给RecyclerView设置适配器
-                recordListRecycleView.setAdapter(multilDetailAdapter);
-                initListEvent();
+                recordList = intent.getExtras().getParcelableArrayList("list");
+                if (EmptyUtils.isNotEmpty(recordList)) {
+                    List<SaveDocBean> mList = new ArrayList<>();
+                    List<SaveDocBean> oneList = new ArrayList<>();
+                    List<SaveDocBean> twoList = new ArrayList<>();
+                    int i;
+                    for (i = 0; i < recordList.size(); i++) {
+                        if (disease.equals(recordList.get(i).getIll())) {
+                            oneList.add(recordList.get(i));
+                        } else {
+                            twoList.add(recordList.get(i));
+                        }
+                    }
+                    mList.addAll(oneList);
+                    if (oneList.size() > 0 && twoList.size() > 0) {
+                        SaveDocBean bean = new SaveDocBean();
+                        bean.setType(2);
+                        mList.add(bean);
+                    }
+                    mList.addAll(twoList);
+                    //创建布局管理
+                    recordListRecycleView.setLayoutManager(new LinearLayoutManager(CaseListActivity.this, LinearLayoutManager.VERTICAL, false));
+                    //添加自定义分割线
+                    DividerItemDecoration divider = new DividerItemDecoration(CaseListActivity.this, DividerItemDecoration.VERTICAL);
+                    divider.setDrawable(ContextCompat.getDrawable(CaseListActivity.this, R.drawable.disease_divider));
+                    recordListRecycleView.addItemDecoration(divider);
+                    //创建适配器
+                    multilDetailAdapter = new MultilDetailAdapter(mList);
+                    //给RecyclerView设置适配器
+                    recordListRecycleView.setAdapter(multilDetailAdapter);
+                    initListEvent();
+                }
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);

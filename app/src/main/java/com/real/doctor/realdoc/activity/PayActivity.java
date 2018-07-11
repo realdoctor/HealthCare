@@ -178,7 +178,7 @@ public class PayActivity extends BaseActivity {
 
         if (resultCode == RESULT_OK && requestCode == ADDRESS_EVENT_REQUEST_CODE) {
             RecieverAddressListBean bean = (RecieverAddressListBean) data.getParcelableExtra("item");
-            select_address.setText(bean.addressStr+"  "+bean.daddress);
+            select_address.setText(bean.addressStr + "  " + bean.daddress);
         }
     }
 
@@ -211,20 +211,25 @@ public class PayActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(PayActivity.this).createBaseApi().json("pay/alipay/orderPay/"
                 , body, new BaseObserver<ResponseBody>(PayActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -290,20 +295,25 @@ public class PayActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(PayActivity.this).createBaseApi().json("user/regist/"
                 , body, new BaseObserver<ResponseBody>(PayActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

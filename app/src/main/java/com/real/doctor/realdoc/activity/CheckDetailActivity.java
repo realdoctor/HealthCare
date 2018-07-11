@@ -65,7 +65,7 @@ public class CheckDetailActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        pageTitle.setText("打包详情");
+        pageTitle.setText("相关资料详情");
         zipImg.setVisibility(View.VISIBLE);
         mList = new ArrayList<>();
         Intent intent = getIntent();

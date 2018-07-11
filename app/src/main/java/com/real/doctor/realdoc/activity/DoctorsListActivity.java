@@ -72,10 +72,10 @@ public class DoctorsListActivity extends BaseActivity {
             titleBar.setLayoutParams(lp);
         }
         pageTitle.setText("在线复诊");
-        rightIcon.setVisibility(View.VISIBLE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            rightIcon.setBackground(getResources().getDrawable(R.mipmap.map_icon, null));
-        }
+        rightIcon.setVisibility(View.GONE);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            rightIcon.setBackground(getResources().getDrawable(R.mipmap.map_icon, null));
+//        }
     }
 
     public void initData() {
@@ -97,20 +97,26 @@ public class DoctorsListActivity extends BaseActivity {
         map.put("pageNum", pageNum);
         HttpRequestClient.getInstance(DoctorsListActivity.this).createBaseApi().get("patient/revisit"
                 , map, new BaseObserver<ResponseBody>(DoctorsListActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(DoctorsListActivity.this, "获取医生列表失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

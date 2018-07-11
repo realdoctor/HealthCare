@@ -63,7 +63,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/20.
  */
 
-public class RegistrationsActivity extends CheckPermissionsActivity  implements OnFilterDoneListener,OnLoadmoreListener,OnRefreshListener {
+public class RegistrationsActivity extends CheckPermissionsActivity implements OnFilterDoneListener, OnLoadmoreListener, OnRefreshListener {
 
     @BindView(R.id.right_title)
     TextView right_title;
@@ -81,15 +81,15 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
     private DropMenuAdapter dropMenuAdapter;
     private ClassicsHeader mClassicsHeader;
     private String[] titleList;//标题
-    public ArrayList<HospitalBean> hospitalBeanArrayList=new ArrayList<HospitalBean>();
+    public ArrayList<HospitalBean> hospitalBeanArrayList = new ArrayList<HospitalBean>();
     private PageModel<HospitalBean> baseModel = new PageModel<HospitalBean>();
     public HospitalAdapter hospitalAdapter;
-    public int pageNum=1;
-    public int pageSize=10;
-    public String hospitalLevel="";
-    public String sortstr="";
-    public String cityName="";
-    public String searchstr="";
+    public int pageNum = 1;
+    public int pageSize = 10;
+    public String hospitalLevel = "";
+    public String sortstr = "";
+    public String cityName = "";
+    public String searchstr = "";
     public static double latitude;
     public static double longitude;
     //定位相关类
@@ -111,7 +111,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
 
     @Override
     public void initData() {
-        dropDownMenu=(DropDownMenu) this.findViewById(R.id.dropMenu);
+        dropDownMenu = (DropDownMenu) this.findViewById(R.id.dropMenu);
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(RegistrationsActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -139,36 +139,36 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
 
     }
 
-    public void init(){
-        titleList = new String[]{"默认排序","医院等级"};
-        filterBean=new FilterBean();
+    public void init() {
+        titleList = new String[]{"默认排序", "医院等级"};
+        filterBean = new FilterBean();
         filterBean.setSortList(DataUtil.sortBeans);
         filterBean.setHospitalLevelBeans(DataUtil.hospitalLevelBeans);
         initFilterDropDownView();
         mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
-        hospitalAdapter=new HospitalAdapter(RegistrationsActivity.this,hospitalBeanArrayList);
+        hospitalAdapter = new HospitalAdapter(RegistrationsActivity.this, hospitalBeanArrayList);
         lv_list.setAdapter(hospitalAdapter);
         lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HospitalBean bean= (HospitalBean) parent.getAdapter().getItem(position);
-                Intent intent =new Intent(RegistrationsActivity.this,DeptListActivity.class);
-                intent.putExtra("hospitalId",bean.hospitalId);
+                HospitalBean bean = (HospitalBean) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(RegistrationsActivity.this, DeptListActivity.class);
+                intent.putExtra("hospitalId", bean.hospitalId);
                 startActivity(intent);
             }
         });
     }
+
     /**
      * 初始化定位
      *
-     * @since 2.8.0
      * @author hongming.wang
-     *
+     * @since 2.8.0
      */
-    private void initLocation(){
+    private void initLocation() {
         //初始化client
         locationClient = new AMapLocationClient(this.getApplicationContext());
         locationOption = getDefaultOption();
@@ -177,13 +177,14 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
         // 设置定位监听
         locationClient.setLocationListener(locationListener);
     }
+
     /**
      * 默认的定位参数
-     * @since 2.8.0
-     * @author hongming.wang
      *
+     * @author hongming.wang
+     * @since 2.8.0
      */
-    private AMapLocationClientOption getDefaultOption(){
+    private AMapLocationClientOption getDefaultOption() {
         AMapLocationClientOption mOption = new AMapLocationClientOption();
         mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
         mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
@@ -199,6 +200,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
         mOption.setGeoLanguage(AMapLocationClientOption.GeoLanguage.DEFAULT);//可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
         return mOption;
     }
+
     /**
      * 定位监听
      */
@@ -210,11 +212,11 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                 StringBuffer sb = new StringBuffer();
                 //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
                 if (location.getErrorCode() == 0) {
-                    latitude=location.getLatitude();
-                    longitude=location.getLongitude();
-                    String city=location.getCity();
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                    String city = location.getCity();
                     right_title.setText(city);
-                    cityName=city;
+                    cityName = city;
 
                 } else {
 
@@ -223,14 +225,14 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
             }
         }
     };
+
     /**
      * 开始定位
      *
-     * @since 2.8.0
      * @author hongming.wang
-     *
+     * @since 2.8.0
      */
-    private void startLocation(){
+    private void startLocation() {
         // 设置定位参数
         locationClient.setLocationOption(locationOption);
         // 启动定位
@@ -240,11 +242,10 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
     /**
      * 停止定位
      *
-     * @since 2.8.0
      * @author hongming.wang
-     *
+     * @since 2.8.0
      */
-    private void stopLocation(){
+    private void stopLocation() {
         // 停止定位
         locationClient.stopLocation();
     }
@@ -252,11 +253,10 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
     /**
      * 销毁定位
      *
-     * @since 2.8.0
      * @author hongming.wang
-     *
+     * @since 2.8.0
      */
-    private void destroyLocation(){
+    private void destroyLocation() {
         if (null != locationClient) {
             /**
              * 如果AMapLocationClient是在当前Activity实例化的，
@@ -267,47 +267,49 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
             locationOption = null;
         }
     }
-    public void initEvents(){
+
+    public void initEvents() {
     }
-    @OnClick({R.id.finish_back,R.id.home_search,R.id.right_title})
-    public void onClick(View view){
-        switch (view.getId()){
+
+    @OnClick({R.id.finish_back, R.id.home_search, R.id.right_title})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.finish_back:
                 RegistrationsActivity.this.finish();
                 break;
             case R.id.home_search:
                 Intent intent = new Intent(RegistrationsActivity.this, SearchHistoryListActivity.class);
-                intent.putExtra("requestCode", REGISTRATION_EVENT_REQUEST_CODE);;
+                intent.putExtra("requestCode", REGISTRATION_EVENT_REQUEST_CODE);
+                ;
                 startActivity(intent);
                 break;
             case R.id.right_title:
                 Intent intentArea = new Intent(RegistrationsActivity.this, AppointmentAddressActivity.class);
-                intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);;
-                startActivityForResult(intentArea,REGISTRATION_AREA_EVENT_REQUEST_CODE);
+                intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);
+                ;
+                startActivityForResult(intentArea, REGISTRATION_AREA_EVENT_REQUEST_CODE);
                 break;
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             String province = data.getStringExtra("province");
-            String city= data.getStringExtra("city");
+            String city = data.getStringExtra("city");
 
-            if(requestCode == REGISTRATION_AREA_EVENT_REQUEST_CODE) {
+            if (requestCode == REGISTRATION_AREA_EVENT_REQUEST_CODE) {
                 // 地区回传
-                cityName=city;
+                cityName = city;
                 right_title.setText(cityName);
-                pageNum=1;
+                pageNum = 1;
                 hospitalBeanArrayList.clear();
                 getData();
                 refreshLayout.finishRefresh();
             }
         }
-
-
-
 
 
     }
@@ -326,17 +328,15 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
         dropMenuAdapter.setOnSortCallbackListener(new DropMenuAdapter.OnSortCallbackListener() {
             @Override
             public void onSortCallbackListener(SortBean item) {
-                if(item==null||item.sortName.equals("离我最近"))
-                {
-                    sortstr="sortByDistance";
+                if (item == null || item.sortName.equals("离我最近")) {
+                    sortstr = "sortByDistance";
                     Collections.sort(hospitalBeanArrayList, comparator);
                     hospitalAdapter.notifyDataSetChanged();
 
-                }else
-                {
-                    sortstr=item.SortId;
+                } else {
+                    sortstr = item.SortId;
                     hospitalBeanArrayList.clear();
-                    pageNum=1;
+                    pageNum = 1;
                     getData();
                     refreshLayout.finishRefresh();
                 }
@@ -347,14 +347,12 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
         dropMenuAdapter.setOnLevelCallbackListener(new DropMenuAdapter.OnLevelCallbackListener() {
             @Override
             public void onLevelCallbackListener(HospitalLevelBean item) {
-                if(item==null||item.LevelName.equals("不限"))
-                {
-                    hospitalLevel="";
-                }else
-                {
-                    hospitalLevel=item.LevelName;
+                if (item == null || item.LevelName.equals("不限")) {
+                    hospitalLevel = "";
+                } else {
+                    hospitalLevel = item.LevelName;
                     hospitalBeanArrayList.clear();
-                    pageNum=1;
+                    pageNum = 1;
                     getData();
                     refreshLayout.finishRefresh();
                 }
@@ -383,8 +381,8 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        if(pageSize*pageNum>hospitalBeanArrayList.size()){
-            ToastUtil.show(RegistrationsActivity.this,"已经是最后一页", Toast.LENGTH_SHORT);
+        if (pageSize * pageNum > hospitalBeanArrayList.size()) {
+            ToastUtil.show(RegistrationsActivity.this, "已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
             return;
         }
@@ -395,34 +393,42 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        pageNum=1;
+        pageNum = 1;
         hospitalBeanArrayList.clear();
         getData();
         refreshLayout.finishRefresh();
     }
+
     private void getData() {
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("pageNum",pageNum);
-        params.put("pageSize",pageSize);
-        params.put("hospitalLevel",hospitalLevel);
-        params.put("sortstr",sortstr);
-        params.put("cityName",cityName);
-        params.put("searchstr",searchstr);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        params.put("hospitalLevel", hospitalLevel);
+        params.put("sortstr", sortstr);
+        params.put("cityName", cityName);
+        params.put("searchstr", searchstr);
         HttpRequestClient.getInstance(RegistrationsActivity.this).createBaseApi().get("guahao/hospital"
                 , params, new BaseObserver<ResponseBody>(RegistrationsActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(RegistrationsActivity.this, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -441,19 +447,19 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel = localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<PageModel<HospitalBean>>() {
                                             }.getType());
 
-                                    for(HospitalBean bean:baseModel.list){
-                                        bean.distance= DistanceUtil.getDistance(RegistrationsActivity.latitude,RegistrationsActivity.longitude,Double.parseDouble(bean.lat),Double.parseDouble(bean.lng));
+                                    for (HospitalBean bean : baseModel.list) {
+                                        bean.distance = DistanceUtil.getDistance(RegistrationsActivity.latitude, RegistrationsActivity.longitude, Double.parseDouble(bean.lat), Double.parseDouble(bean.lng));
                                         hospitalBeanArrayList.add(bean);
                                     }
 
-                                    if(sortstr.equals("sortByDistance")){
+                                    if (sortstr.equals("sortByDistance")) {
                                         Collections.sort(hospitalBeanArrayList, comparator);
                                     }
                                     hospitalAdapter.notifyDataSetChanged();
@@ -473,11 +479,11 @@ public class RegistrationsActivity extends CheckPermissionsActivity  implements 
                 });
     }
 
-        public Comparator<HospitalBean> comparator=new Comparator<HospitalBean>() {
-            @Override
-            public int compare(HospitalBean o1, HospitalBean o2) {
-                double i=o1.distance-o2.distance;
-                return (int)i;
-            }
-        };
+    public Comparator<HospitalBean> comparator = new Comparator<HospitalBean>() {
+        @Override
+        public int compare(HospitalBean o1, HospitalBean o2) {
+            double i = o1.distance - o2.distance;
+            return (int) i;
+        }
+    };
 }

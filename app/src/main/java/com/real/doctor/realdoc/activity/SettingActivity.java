@@ -202,21 +202,27 @@ public class SettingActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), "");
         HttpRequestClient.getInstance(SettingActivity.this).createBaseApi().json(" user/logout/"
                 , body, new BaseObserver<ResponseBody>(SettingActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(SettingActivity.this, e.getMessage());
+                        ToastUtil.showLong(SettingActivity.this, "用户退出失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

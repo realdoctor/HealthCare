@@ -80,20 +80,26 @@ public class DocPayActivity extends BaseActivity {
         param.put("userId", userId);
         HttpRequestClient.getInstance(DocPayActivity.this).createBaseApi().get("askQuestion/getAskQuestionMoney"
                 , param, new BaseObserver<ResponseBody>(DocPayActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(DocPayActivity.this, "获取咨询定价信息失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -183,20 +189,26 @@ public class DocPayActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(DocPayActivity.this).createBaseApi().json("askQuestion/setAskQuestionMoney/"
                 , body, new BaseObserver<ResponseBody>(DocPayActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(RealDocApplication.getContext(), "咨询费用提交失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

@@ -16,13 +16,11 @@ import com.real.doctor.realdoc.activity.ProgressBarActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.table.ImageManager;
 import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
-import com.real.doctor.realdoc.greendao.table.InqueryManager;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.greendao.table.VideoManager;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.ImageListBean;
-import com.real.doctor.realdoc.model.InqueryBean;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.model.VideoBean;
@@ -32,10 +30,8 @@ import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
-import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SDCardUtils;
-import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.util.ZipUtils;
 
@@ -75,7 +71,6 @@ public class UpdateService extends JobService {
     private ImageRecycleManager imageRecycleInstance;
     //数据库处理
     private SaveDocManager instance;
-    private InqueryManager inqueryInstance;
     private RecordManager recordInstance;
     private VideoManager videoInstance;
     private List<RecordBean> audioList;
@@ -91,9 +86,6 @@ public class UpdateService extends JobService {
             time = DateUtil.timeStamp();
             //新建doctor文件夹
             String folderName = SDCardUtils.getGlobalDir() + "doctor" + time + File.separator;
-            InqueryBean inqueryBean = new InqueryBean();
-            inqueryBean.setInquery(inquery);
-            inqueryInstance.insertPatientInquery(UpdateService.this, inqueryBean, time, folderName);
             //图片存储路径
             String imgPath = folderName + "img" + File.separator;
             if (mList.size() > 0) {
@@ -248,9 +240,11 @@ public class UpdateService extends JobService {
                 maps.put("title", DocUtils.toRequestBodyOfText(desease));
                 maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
                 HttpRequestClient.getInstance(UpdateService.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(UpdateService.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
@@ -284,13 +278,18 @@ public class UpdateService extends JobService {
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(UpdateService.this, e.getMessage());
+                        ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
                 });
             }
@@ -300,7 +299,6 @@ public class UpdateService extends JobService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         instance = SaveDocManager.getInstance(UpdateService.this);
-        inqueryInstance = InqueryManager.getInstance(UpdateService.this);
         imageInstance = ImageManager.getInstance(UpdateService.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(UpdateService.this);
         recordInstance = RecordManager.getInstance(UpdateService.this);

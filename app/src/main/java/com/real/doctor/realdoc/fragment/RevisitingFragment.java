@@ -84,20 +84,26 @@ public class RevisitingFragment extends BaseFragment {
         param.put("userId", userId);
         HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/list"
                 , param, new BaseObserver<ResponseBody>(getActivity()) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(getActivity(), "获取咨询列表失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -135,12 +141,12 @@ public class RevisitingFragment extends BaseFragment {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-        });
+                });
     }
 
     private void initEvent() {

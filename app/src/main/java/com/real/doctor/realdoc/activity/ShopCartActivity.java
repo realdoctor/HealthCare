@@ -56,7 +56,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/20.
  */
 
-public class ShopCartActivity extends BaseActivity implements ShopcartExpandableListViewAdapter.CheckInterface, ShopcartExpandableListViewAdapter.ModifyCountInterface, View.OnClickListener{
+public class ShopCartActivity extends BaseActivity implements ShopcartExpandableListViewAdapter.CheckInterface, ShopcartExpandableListViewAdapter.ModifyCountInterface, View.OnClickListener {
 
     @BindView(R.id.exListView)
     ExpandableListView exListView;
@@ -225,13 +225,13 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
                 if (selva != null) {
                     if (right_title.getText().equals("编辑")) {
                         right_title.setText("完成");
-                        flag=true;
+                        flag = true;
                         selva.setEdit(true);
                         ll_content.setVisibility(View.INVISIBLE);
                         tvDelete.setVisibility(View.VISIBLE);
                     } else {
                         right_title.setText("编辑");
-                        flag=false;
+                        flag = false;
                         selva.setEdit(false);
                         ll_content.setVisibility(View.VISIBLE);
                         tvDelete.setVisibility(View.GONE);
@@ -281,20 +281,25 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
         HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().json("cart/deleteCartItem/"
                 , body, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -445,33 +450,41 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
     }
 
     //添加到购物车
-    public void addToCart(String goodsId){
-        JSONObject object=new JSONObject();
+    public void addToCart(String goodsId) {
+        JSONObject object = new JSONObject();
         try {
-            object.put("goodsId",goodsId);
-            object.put("num",1);
-            object.put("userId",userId);
+            object.put("goodsId", goodsId);
+            object.put("num", 1);
+            object.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpRequestClient client= HttpRequestClient.getInstance(ShopCartActivity.this, HttpNetUtil.BASE_URL);
+        HttpRequestClient client = HttpRequestClient.getInstance(ShopCartActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
+
                     @Override
                     public void onError(Throwable e) {
 //                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
                         ToastUtil.showLong(ShopCartActivity.this, "加入购物车失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -502,27 +515,33 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
 
                 });
     }
+
     private void getCartData() {
         HashMap<String, String> param = new HashMap<>();
         param.put("userId", userId);
         HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().get("cart/"
                 , param, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
 //                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

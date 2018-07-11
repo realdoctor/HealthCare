@@ -232,21 +232,27 @@ public class LoginActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(LoginActivity.this).createBaseApi().json("user/login/"
                 , body, new BaseObserver<ResponseBody>(LoginActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(LoginActivity.this, e.getMessage());
+                        ToastUtil.showLong(LoginActivity.this, "用户登录失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -516,19 +522,26 @@ public class LoginActivity extends BaseActivity {
         }
         HttpRequestClient.getNotInstance(LoginActivity.this, HttpNetUtil.BASE_URL, header).createBaseApi().get("user/certification/check"
                 , param, new BaseObserver<ResponseBody>(LoginActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(LoginActivity.this, "获取用户信息失败.请确定是否已登录!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -613,15 +626,19 @@ public class LoginActivity extends BaseActivity {
         map.put("clientNum", String.valueOf(count));
         HttpRequestClient.getInstance(LoginActivity.this).createBaseApi().get("patient"
                 , map, new BaseObserver<ResponseBody>(LoginActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(LoginActivity.this, "获取病历列表出错!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
 

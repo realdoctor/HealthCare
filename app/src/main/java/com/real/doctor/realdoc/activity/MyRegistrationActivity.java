@@ -52,8 +52,9 @@ public class MyRegistrationActivity extends BaseActivity {
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     RegistrationAdapter registrationAdapter;
-    ArrayList<RegistrationModel> registrationModelArrayList=new ArrayList<RegistrationModel>();
+    ArrayList<RegistrationModel> registrationModelArrayList = new ArrayList<RegistrationModel>();
     public String userid;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_my_registration;
@@ -74,8 +75,8 @@ public class MyRegistrationActivity extends BaseActivity {
             titleBar.setLayoutParams(lp);
         }
         page_title.setText("我的预约");
-        userid= (String)SPUtils.get(MyRegistrationActivity.this, Constants.USER_KEY,"");
-        registrationAdapter=new RegistrationAdapter(MyRegistrationActivity.this,registrationModelArrayList);
+        userid = (String) SPUtils.get(MyRegistrationActivity.this, Constants.USER_KEY, "");
+        registrationAdapter = new RegistrationAdapter(MyRegistrationActivity.this, registrationModelArrayList);
         lv_registration.setAdapter(registrationAdapter);
     }
 
@@ -87,7 +88,7 @@ public class MyRegistrationActivity extends BaseActivity {
     @Override
     @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.finish_back:
                 MyRegistrationActivity.this.finish();
                 break;
@@ -99,26 +100,32 @@ public class MyRegistrationActivity extends BaseActivity {
     public void doBusiness(Context mContext) {
         getData();
     }
-    private void getData(){
-        HashMap<String,Object> param=new HashMap<>();
-        param.put("userid",userid);
+
+    private void getData() {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("userid", userid);
         HttpRequestClient.getInstance(MyRegistrationActivity.this).createBaseApi().get(" user/myGuahaoOrder/"
                 , param, new BaseObserver<ResponseBody>(MyRegistrationActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -137,10 +144,10 @@ public class MyRegistrationActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONArray jsonObject=object.getJSONArray("data");
+                                    JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    registrationModelArrayList.addAll((ArrayList<RegistrationModel>)localGson.fromJson(jsonObject.toString(),
+                                    registrationModelArrayList.addAll((ArrayList<RegistrationModel>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<RegistrationModel>>() {
                                             }.getType()));
                                     registrationAdapter.notifyDataSetChanged();

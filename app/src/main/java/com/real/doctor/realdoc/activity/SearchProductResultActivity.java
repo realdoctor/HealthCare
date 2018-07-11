@@ -56,7 +56,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/23.
  */
 
-public class SearchProductResultActivity extends BaseActivity implements OnLoadmoreListener,OnRefreshListener,AdapterView.OnItemClickListener,ProductAdapter.ClickListener {
+public class SearchProductResultActivity extends BaseActivity implements OnLoadmoreListener, OnRefreshListener, AdapterView.OnItemClickListener, ProductAdapter.ClickListener {
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.lv_products)
@@ -65,12 +65,12 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.page_title)
     TextView page_title;
-    public int pageNum=1;
-    public int pageSize=10;
+    public int pageNum = 1;
+    public int pageSize = 10;
     public String userId;
     public ProductAdapter productAdapter;
     private PageModel<ProductBean> baseModel = new PageModel<ProductBean>();
-    public ArrayList<ProductBean> productList=new ArrayList<ProductBean>();
+    public ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
     public String searchKey;
     public String categoryId;
 
@@ -93,12 +93,12 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
-        userId= (String)SPUtils.get(SearchProductResultActivity.this, Constants.USER_KEY,"");
-        searchKey=getIntent().getStringExtra("searchKey");
-        categoryId=getIntent().getStringExtra("categoryId");
+        userId = (String) SPUtils.get(SearchProductResultActivity.this, Constants.USER_KEY, "");
+        searchKey = getIntent().getStringExtra("searchKey");
+        categoryId = getIntent().getStringExtra("categoryId");
         page_title.setText("搜索结果");
         ClassicsHeader mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         productAdapter = new ProductAdapter(SearchProductResultActivity.this, productList);
@@ -118,7 +118,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     @Override
     @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.finish_back:
                 SearchProductResultActivity.this.finish();
                 break;
@@ -129,29 +129,35 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     public void doBusiness(Context mContext) {
 
     }
-    public  void getRefreshProducts(){
-        HashMap<String,Object> param=new HashMap<>();
-        param.put("categoryId",categoryId);
-        param.put("pageNum",pageNum);
-        param.put("pageSize",pageSize);
-        param.put("searchstr",searchKey);
+
+    public void getRefreshProducts() {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("categoryId", categoryId);
+        param.put("pageNum", pageNum);
+        param.put("pageSize", pageSize);
+        param.put("searchstr", searchKey);
         HttpRequestClient.getInstance(SearchProductResultActivity.this).createBaseApi().get(" goods/"
                 , param, new BaseObserver<ResponseBody>(SearchProductResultActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -170,7 +176,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel = localGson.fromJson(jsonObject.toString(),
@@ -191,10 +197,11 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
 
                 });
     }
+
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        if(pageSize*pageNum>productList.size()){
-            ToastUtil.show(SearchProductResultActivity.this,"已经是最后一页",Toast.LENGTH_SHORT);
+        if (pageSize * pageNum > productList.size()) {
+            ToastUtil.show(SearchProductResultActivity.this, "已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
             return;
         }
@@ -205,7 +212,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        pageNum=1;
+        pageNum = 1;
         productList.clear();
         getRefreshProducts();
         refreshLayout.finishRefresh();
@@ -213,51 +220,60 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ProductBean bean =(ProductBean) parent.getAdapter().getItem(position);
-        Intent intent =new Intent(SearchProductResultActivity.this, ProductShowActivity.class);
-        intent.putExtra("model",bean);
+        ProductBean bean = (ProductBean) parent.getAdapter().getItem(position);
+        Intent intent = new Intent(SearchProductResultActivity.this, ProductShowActivity.class);
+        intent.putExtra("model", bean);
         startActivity(intent);
     }
 
     @Override
     public void clickListener(View v) {
-        if(userId==null||userId.length()==0){
-            Intent intent=new Intent(SearchProductResultActivity.this, LoginActivity.class);
+        if (userId == null || userId.length() == 0) {
+            Intent intent = new Intent(SearchProductResultActivity.this, LoginActivity.class);
             startActivity(intent);
-        }else{
-            ProductBean bean=(ProductBean) v.getTag();
-            addToCart(bean.getGoodsId(),1);
+        } else {
+            ProductBean bean = (ProductBean) v.getTag();
+            addToCart(bean.getGoodsId(), 1);
         }
 
     }
+
     //添加到购物车
-    public void addToCart(String goodsId,int num){
-        JSONObject object=new JSONObject();
+    public void addToCart(String goodsId, int num) {
+        JSONObject object = new JSONObject();
         try {
-            object.put("goodsId",goodsId);
-            object.put("num",num);
-            object.put("userId",userId);
+            object.put("goodsId", goodsId);
+            object.put("num", num);
+            object.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpRequestClient client= HttpRequestClient.getInstance(SearchProductResultActivity.this, HttpNetUtil.BASE_URL);
+        HttpRequestClient client = HttpRequestClient.getInstance(SearchProductResultActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(SearchProductResultActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
+
                     @Override
                     public void onError(Throwable e) {
 //                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
                         ToastUtil.showLong(SearchProductResultActivity.this, "加入购物车失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -294,6 +310,6 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     @Override
     protected void onResume() {
         super.onResume();
-        userId= (String)SPUtils.get(SearchProductResultActivity.this, Constants.USER_KEY,"");
+        userId = (String) SPUtils.get(SearchProductResultActivity.this, Constants.USER_KEY, "");
     }
 }

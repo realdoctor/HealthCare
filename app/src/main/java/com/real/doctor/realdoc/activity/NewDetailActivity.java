@@ -63,6 +63,7 @@ public class NewDetailActivity extends BaseActivity {
     public boolean flag;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_article_detail;
@@ -82,8 +83,8 @@ public class NewDetailActivity extends BaseActivity {
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
-        userId= (String)SPUtils.get(NewDetailActivity.this, Constants.USER_KEY,"");
-        newsId= getIntent().getStringExtra("newsId");
+        userId = (String) SPUtils.get(NewDetailActivity.this, Constants.USER_KEY, "");
+        newsId = getIntent().getStringExtra("newsId");
         getData();
     }
 
@@ -93,16 +94,16 @@ public class NewDetailActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back,R.id.tv_focus})
+    @OnClick({R.id.finish_back, R.id.tv_focus})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.finish_back:
                 NewDetailActivity.this.finish();
                 break;
             case R.id.tv_focus:
-                if(!flag){
+                if (!flag) {
                     postFocus();
-                }else{
+                } else {
                     postUnFocus();
                 }
                 break;
@@ -113,23 +114,31 @@ public class NewDetailActivity extends BaseActivity {
     public void doBusiness(Context mContext) {
 
     }
+
     private void getData() {
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("newsId",newsId);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("newsId", newsId);
         HttpRequestClient.getInstance(NewDetailActivity.this).createBaseApi().get("healthnews/info"
                 , params, new BaseObserver<ResponseBody>(NewDetailActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -148,15 +157,15 @@ public class NewDetailActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    NewModel model=(NewModel)localGson.fromJson(jsonObject.toString(), NewModel.class);
+                                    NewModel model = (NewModel) localGson.fromJson(jsonObject.toString(), NewModel.class);
                                     page_title.setText(model.newsName);
                                     new_detail.setText(model.article);
                                     tv_autor.setText(model.newsAuthor);
                                     tv_profer.setText(model.authorProfer);
-                                    tv_time.setText(DateUtil.timeStamp2Date(model.createDate,null));
+                                    tv_time.setText(DateUtil.timeStamp2Date(model.createDate, null));
                                     tv_type.setText(model.newsType);
 
                                 } else {
@@ -172,11 +181,12 @@ public class NewDetailActivity extends BaseActivity {
 
                 });
     }
+
     private void postFocus() {
-        JSONObject json=new JSONObject();
+        JSONObject json = new JSONObject();
         try {
-            json.put("newsId",newsId);
-            json.put("userId",userId);
+            json.put("newsId", newsId);
+            json.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -184,18 +194,25 @@ public class NewDetailActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(NewDetailActivity.this).createBaseApi().json("healthnews/focus/"
                 , body, new BaseObserver<ResponseBody>(NewDetailActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -214,7 +231,7 @@ public class NewDetailActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    flag=true;
+                                    flag = true;
                                     tv_focus.setText("取消关注");
 
                                 } else {
@@ -230,11 +247,12 @@ public class NewDetailActivity extends BaseActivity {
 
                 });
     }
+
     private void postUnFocus() {
-        JSONObject json=new JSONObject();
+        JSONObject json = new JSONObject();
         try {
-            json.put("newsId",newsId);
-            json.put("userId",userId);
+            json.put("newsId", newsId);
+            json.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -242,18 +260,25 @@ public class NewDetailActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(NewDetailActivity.this).createBaseApi().json("healthnews/focus/off/"
                 , body, new BaseObserver<ResponseBody>(NewDetailActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -272,7 +297,7 @@ public class NewDetailActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    flag=false;
+                                    flag = false;
                                     tv_focus.setText("关注");
 
                                 } else {

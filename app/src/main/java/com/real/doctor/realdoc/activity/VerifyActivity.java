@@ -180,21 +180,27 @@ public class VerifyActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(VerifyActivity.this).createBaseApi().json("user/certification/"
                 , body, new BaseObserver<ResponseBody>(VerifyActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(VerifyActivity.this, e.getMessage());
+                        ToastUtil.showLong(RealDocApplication.getContext(), "实名认证失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

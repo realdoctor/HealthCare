@@ -60,19 +60,20 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
     HorizontalListView horizontalListView;
     @BindView(R.id.lv_expert)
     ListView lv_expert;
-    ArrayList<ExpertBean> arrayList=new ArrayList<ExpertBean>();
+    ArrayList<ExpertBean> arrayList = new ArrayList<ExpertBean>();
     ExpertByDateAdapter expertAdapter;
-    ArrayList<WeekModel> weekList=new ArrayList<WeekModel>();
+    ArrayList<WeekModel> weekList = new ArrayList<WeekModel>();
     OrderDateAdapter orderDateAdapter;
     String hospitalId;
     String deptName;
     String userId;
     private Unbinder unbinder;
+
     public static OrderExpertByDateFragment newInstance(String hospitalId, String deptName) {
-        OrderExpertByDateFragment fragment=new OrderExpertByDateFragment();
-        Bundle bundel=new Bundle();
-        bundel.putString("hospitalId",hospitalId);
-        bundel.putString("deptName",deptName);
+        OrderExpertByDateFragment fragment = new OrderExpertByDateFragment();
+        Bundle bundel = new Bundle();
+        bundel.putString("hospitalId", hospitalId);
+        bundel.putString("deptName", deptName);
         fragment.setArguments(bundel);
         return fragment;
     }
@@ -89,13 +90,13 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
 
     @Override
     public void doBusiness(Context mContext) {
-        if(getArguments()!=null) {
-            userId=(String) SPUtils.get(getContext(), Constants.USER_KEY,"");
-            hospitalId =(String)getArguments().get("hospitalId");
-            deptName=(String)getArguments().get("deptName");
-            expertAdapter=new ExpertByDateAdapter(getContext(),arrayList,this);
+        if (getArguments() != null) {
+            userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
+            hospitalId = (String) getArguments().get("hospitalId");
+            deptName = (String) getArguments().get("deptName");
+            expertAdapter = new ExpertByDateAdapter(getContext(), arrayList, this);
             lv_expert.setAdapter(expertAdapter);
-            orderDateAdapter=new OrderDateAdapter(getContext(),weekList);
+            orderDateAdapter = new OrderDateAdapter(getContext(), weekList);
             horizontalListView.setAdapter(orderDateAdapter);
             horizontalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -103,11 +104,11 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                     final int location = position;
                     orderDateAdapter.setSelectedPosition(position);
                     orderDateAdapter.notifyDataSetInvalidated();
-                    WeekModel model=(WeekModel) parent.getAdapter().getItem(position);
-                    getExpert(hospitalId,deptName,model.worktimeWeek.split("\\|")[0]);
+                    WeekModel model = (WeekModel) parent.getAdapter().getItem(position);
+                    getExpert(hospitalId, deptName, model.worktimeWeek.split("\\|")[0]);
                 }
             });
-            getExpertDate(hospitalId,deptName);
+            getExpertDate(hospitalId, deptName);
         }
     }
 
@@ -115,33 +116,40 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
     public void widgetClick(View v) {
 
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
-    private void getExpert(String hospitalId,String deptName,String orderDay){
-        HashMap<String,Object> param=new HashMap<>();
-        param.put("hospitalId",hospitalId);
-        param.put("deptName",deptName);
-        param.put("orderDay",orderDay);
+
+    private void getExpert(String hospitalId, String deptName, String orderDay) {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("hospitalId", hospitalId);
+        param.put("deptName", deptName);
+        param.put("orderDay", orderDay);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get(" guahao/hospital/orderDateExpert/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -161,10 +169,10 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     arrayList.clear();
-                                    JSONArray jsonObject=object.getJSONArray("data");
+                                    JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    arrayList.addAll((ArrayList<ExpertBean>)localGson.fromJson(jsonObject.toString(),
+                                    arrayList.addAll((ArrayList<ExpertBean>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<ExpertBean>>() {
                                             }.getType()));
                                     expertAdapter.notifyDataSetChanged();
@@ -181,27 +189,33 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
 
                 });
     }
-    private void getExpertDate(String hospitalId,String deptName){
-        HashMap<String,Object> param=new HashMap<>();
-        param.put("hospitalId",hospitalId);
-        param.put("deptName",deptName);
+
+    private void getExpertDate(String hospitalId, String deptName) {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("hospitalId", hospitalId);
+        param.put("deptName", deptName);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get(" guahao/hospital/orderDate/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -220,10 +234,10 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONArray jsonObject=object.getJSONArray("data");
+                                    JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    weekList.addAll((ArrayList<WeekModel>)localGson.fromJson(jsonObject.toString(),
+                                    weekList.addAll((ArrayList<WeekModel>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<WeekModel>>() {
                                             }.getType()));
                                     orderDateAdapter.notifyDataSetChanged();
@@ -240,30 +254,32 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
 
                 });
     }
+
     //默认选中
-    private void selectDefault(){
-        final int location=0;
+    private void selectDefault() {
+        final int location = 0;
         orderDateAdapter.setSelectedPosition(0);
         orderDateAdapter.notifyDataSetInvalidated();
-        final WeekModel bean=	(WeekModel) orderDateAdapter.getItem(0);
-        String orderDate=bean.worktimeWeek.split("\\|")[0];
-        getExpert(hospitalId,deptName,orderDate);
+        final WeekModel bean = (WeekModel) orderDateAdapter.getItem(0);
+        String orderDate = bean.worktimeWeek.split("\\|")[0];
+        getExpert(hospitalId, deptName, orderDate);
     }
 
     @Override
     public void clickListener(View v) {
-       ExpertBean bean= (ExpertBean)v.getTag();
-       orderExpert(bean);
+        ExpertBean bean = (ExpertBean) v.getTag();
+        orderExpert(bean);
     }
-    public void orderExpert(ExpertBean bean){
-        JSONObject object=new JSONObject();
+
+    public void orderExpert(ExpertBean bean) {
+        JSONObject object = new JSONObject();
         try {
-            object.put("deptId",bean.deptId);
-            object.put("doctorCode",bean.doctorCode);
-            object.put("hospitalDoctorDutyId",bean.hospitalDoctorDutyId);
-            object.put("hospitalId",bean.hospitalId);
-            object.put("orderDay",bean.dutyDtime);
-            object.put("userId",userId);
+            object.put("deptId", bean.deptId);
+            object.put("doctorCode", bean.doctorCode);
+            object.put("hospitalDoctorDutyId", bean.hospitalDoctorDutyId);
+            object.put("hospitalId", bean.hospitalId);
+            object.put("orderDay", bean.dutyDtime);
+            object.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -276,22 +292,30 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
             ToastUtil.showLong(getContext(), "请确定您的账户已登录!");
             return;
         }
-        HttpRequestClient client= HttpRequestClient.getInstance(getContext(), HttpNetUtil.BASE_URL,header);
+        HttpRequestClient client = HttpRequestClient.getInstance(getContext(), HttpNetUtil.BASE_URL, header);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("guahao/fastorder/"
                 , body, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

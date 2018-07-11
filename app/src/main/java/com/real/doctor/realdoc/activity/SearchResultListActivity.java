@@ -74,7 +74,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/23.
  */
 
-public class SearchResultListActivity extends BaseActivity implements OnFilterDoneListener,ExpertAdapter.MyClickListener,OnLoadmoreListener,OnRefreshListener {
+public class SearchResultListActivity extends BaseActivity implements OnFilterDoneListener, ExpertAdapter.MyClickListener, OnLoadmoreListener, OnRefreshListener {
     @BindView(R.id.right_title)
     TextView right_title;
     @BindView(R.id.rg)
@@ -98,24 +98,24 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     SmartRefreshLayout refreshLayout;
     //@BindView(R.id.dropMenu)
     DropDownMenuForResult dropDownMenu;
-    public String hospitalLevel="";
-    public String sortstr="";
-    public String cityName="";
-    public String positional="";
-    public String searchstr="";
+    public String hospitalLevel = "";
+    public String sortstr = "";
+    public String cityName = "";
+    public String positional = "";
+    public String searchstr = "";
     public FilterBean filterBean;
-    public int pageNum=1;
-    public int pageSize=10;
-    public int pageNum2=1;
-    public String tag="1";
+    public int pageNum = 1;
+    public int pageSize = 10;
+    public int pageNum2 = 1;
+    public String tag = "1";
     public String userId;
     private String[] titleList;//标题
     private DropMenuAdapterForResult dropMenuAdapter;
     private PageModel<HospitalBean> baseModel = new PageModel<HospitalBean>();
-    public ArrayList<HospitalBean> hospitalBeans=new ArrayList<HospitalBean>();
+    public ArrayList<HospitalBean> hospitalBeans = new ArrayList<HospitalBean>();
     HospitalAdapter adapter;
     private PageModel<ExpertBean> baseModel1 = new PageModel<ExpertBean>();
-    public ArrayList<ExpertBean> expertBeans=new ArrayList<ExpertBean>();
+    public ArrayList<ExpertBean> expertBeans = new ArrayList<ExpertBean>();
     //定位相关类
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
@@ -137,7 +137,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
     @Override
     public void initData() {
-        userId=(String) SPUtils.get(SearchResultListActivity.this, Constants.USER_KEY,"");
+        userId = (String) SPUtils.get(SearchResultListActivity.this, Constants.USER_KEY, "");
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(SearchResultListActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -145,8 +145,8 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
-        dropDownMenu=findViewById(R.id.dropMenu);
-        searchstr= getIntent().getStringExtra("searchKey");
+        dropDownMenu = findViewById(R.id.dropMenu);
+        searchstr = getIntent().getStringExtra("searchKey");
         right_title.setVisibility(View.VISIBLE);
         right_title.setText("定位中");
         init();
@@ -161,16 +161,17 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     }
 
     @Override
-    @OnClick({R.id.finish_back,R.id.right_title})
+    @OnClick({R.id.finish_back, R.id.right_title})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.finish_back:
                 SearchResultListActivity.this.finish();
                 break;
             case R.id.right_title:
                 Intent intentArea = new Intent(SearchResultListActivity.this, AppointmentAddressActivity.class);
-                intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);;
-                startActivityForResult(intentArea,REGISTRATION_AREA_EVENT_REQUEST_CODE);
+                intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);
+                ;
+                startActivityForResult(intentArea, REGISTRATION_AREA_EVENT_REQUEST_CODE);
                 break;
         }
     }
@@ -179,14 +180,14 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     public void doBusiness(Context mContext) {
 
     }
+
     /**
      * 初始化定位
      *
-     * @since 2.8.0
      * @author hongming.wang
-     *
+     * @since 2.8.0
      */
-    private void initLocation(){
+    private void initLocation() {
         //初始化client
         locationClient = new AMapLocationClient(this.getApplicationContext());
         locationOption = getDefaultOption();
@@ -195,13 +196,14 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         // 设置定位监听
         locationClient.setLocationListener(locationListener);
     }
+
     /**
      * 默认的定位参数
-     * @since 2.8.0
-     * @author hongming.wang
      *
+     * @author hongming.wang
+     * @since 2.8.0
      */
-    private AMapLocationClientOption getDefaultOption(){
+    private AMapLocationClientOption getDefaultOption() {
         AMapLocationClientOption mOption = new AMapLocationClientOption();
         mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
         mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
@@ -217,6 +219,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         mOption.setGeoLanguage(AMapLocationClientOption.GeoLanguage.DEFAULT);//可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
         return mOption;
     }
+
     /**
      * 定位监听
      */
@@ -228,26 +231,26 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 StringBuffer sb = new StringBuffer();
                 //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
                 if (location.getErrorCode() == 0) {
-                    latitude=location.getLatitude();
-                    longitude=location.getLongitude();
-                    String city=location.getCity();
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                    String city = location.getCity();
                     right_title.setText(city);
-                    cityName=city;
+                    cityName = city;
                 } else {
 
                 }
-                searchHospital(pageNum,pageSize);
+                searchHospital(pageNum, pageSize);
             }
         }
     };
+
     /**
      * 开始定位
      *
-     * @since 2.8.0
      * @author hongming.wang
-     *
+     * @since 2.8.0
      */
-    private void startLocation(){
+    private void startLocation() {
         // 设置定位参数
         locationClient.setLocationOption(locationOption);
         // 启动定位
@@ -257,11 +260,10 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     /**
      * 停止定位
      *
-     * @since 2.8.0
      * @author hongming.wang
-     *
+     * @since 2.8.0
      */
-    private void stopLocation(){
+    private void stopLocation() {
         // 停止定位
         locationClient.stopLocation();
     }
@@ -269,11 +271,10 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     /**
      * 销毁定位
      *
-     * @since 2.8.0
      * @author hongming.wang
-     *
+     * @since 2.8.0
      */
-    private void destroyLocation(){
+    private void destroyLocation() {
         if (null != locationClient) {
             /**
              * 如果AMapLocationClient是在当前Activity实例化的，
@@ -284,16 +285,17 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
             locationOption = null;
         }
     }
+
     public void init() {
         page_title.setText("搜索结果");
-        titleList = new String[]{"排序","筛选"};
-        filterBean=new FilterBean();
+        titleList = new String[]{"排序", "筛选"};
+        filterBean = new FilterBean();
         filterBean.setSortList(DataUtil.sortBeans);
         filterBean.setHospitalLevelBeans(DataUtil.hospitalLevelBeans);
         filterBean.setExpertPostionalBeans(DataUtil.expertPostionalBeans);
         initFilterDropDownView();
         ClassicsHeader mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -303,30 +305,30 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                     case R.id.rb_hospital:// first
                         hosptial_list.setVisibility(View.VISIBLE);
                         expert_list.setVisibility(View.GONE);
-                        tag="1";
+                        tag = "1";
                         break;
                     case R.id.rb_expert:// 第二个
                         hosptial_list.setVisibility(View.GONE);
                         expert_list.setVisibility(View.VISIBLE);
-                        tag="2";
+                        tag = "2";
                         break;
                     default:
                         break;
                 }
             }
         });
-        adapter=new HospitalAdapter(SearchResultListActivity.this,hospitalBeans);
+        adapter = new HospitalAdapter(SearchResultListActivity.this, hospitalBeans);
         hosptial_list.setAdapter(adapter);
         hosptial_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                HospitalBean bean= (HospitalBean) adapterView.getAdapter().getItem(i);
-                Intent intent =new Intent(SearchResultListActivity.this,DeptListActivity.class);
-                intent.putExtra("hospitalId",bean.hospitalId);
+                HospitalBean bean = (HospitalBean) adapterView.getAdapter().getItem(i);
+                Intent intent = new Intent(SearchResultListActivity.this, DeptListActivity.class);
+                intent.putExtra("hospitalId", bean.hospitalId);
                 startActivity(intent);
             }
         });
-        expertAdapter=new ExpertAdapter(SearchResultListActivity.this,expertBeans,this);
+        expertAdapter = new ExpertAdapter(SearchResultListActivity.this, expertBeans, this);
         expert_list.setAdapter(expertAdapter);
     }
 /**
@@ -344,7 +346,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         dropMenuAdapter.setOnSortCallbackListener(new DropMenuAdapterForResult.OnSortCallbackListener() {
             @Override
             public void onSortCallbackListener(SortBean item) {
-                sortstr=item.SortId;
+                sortstr = item.SortId;
 
             }
         });
@@ -353,94 +355,102 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
             @Override
             public void onMultiCallbackListener(HospitalLevelBean bean, SortBean bean2, ExpertPostionalBean bean3) {
-                if(bean==null||bean.LevelName.equals("不限")){
-                    hospitalLevel="";
-                }else{
-                    hospitalLevel=bean.LevelName;
+                if (bean == null || bean.LevelName.equals("不限")) {
+                    hospitalLevel = "";
+                } else {
+                    hospitalLevel = bean.LevelName;
                 }
-                if(bean2==null||bean2.sortName.equals("不限")){
-                    sortstr="";
-                }else{
-                    sortstr=bean2.sortName;
+                if (bean2 == null || bean2.sortName.equals("不限")) {
+                    sortstr = "";
+                } else {
+                    sortstr = bean2.sortName;
                 }
-                if(bean3==null||bean3.postional.equals("不限")){
-                    positional="";
-                }else{
-                    positional=bean3.postional;
+                if (bean3 == null || bean3.postional.equals("不限")) {
+                    positional = "";
+                } else {
+                    positional = bean3.postional;
                 }
-                if(tag.equals("1")){
-                    searchHospital(pageNum,pageSize);
-                }else {
-                    searchHospital(pageNum2,pageSize);
+                if (tag.equals("1")) {
+                    searchHospital(pageNum, pageSize);
+                } else {
+                    searchHospital(pageNum2, pageSize);
                 }
             }
         });
 
 
     }
+
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        if(tag.equals("1")){
-        if(pageSize*pageNum>hospitalBeans.size()){
-            ToastUtil.show(SearchResultListActivity.this,"已经是最后一页", Toast.LENGTH_SHORT);
+        if (tag.equals("1")) {
+            if (pageSize * pageNum > hospitalBeans.size()) {
+                ToastUtil.show(SearchResultListActivity.this, "已经是最后一页", Toast.LENGTH_SHORT);
+                refreshlayout.finishLoadmore();
+                return;
+            }
+            pageNum++;
+            searchHospital(pageNum, pageSize);
             refreshlayout.finishLoadmore();
-            return;
-        }
-        pageNum++;
-        searchHospital(pageNum,pageSize);
-        refreshlayout.finishLoadmore();
-        }else{
-            if(pageSize*pageNum2>expertBeans.size()){
-                ToastUtil.show(SearchResultListActivity.this,"已经是最后一页", Toast.LENGTH_SHORT);
+        } else {
+            if (pageSize * pageNum2 > expertBeans.size()) {
+                ToastUtil.show(SearchResultListActivity.this, "已经是最后一页", Toast.LENGTH_SHORT);
                 refreshlayout.finishLoadmore();
                 return;
             }
             pageNum2++;
-            searchHospital(pageNum2,pageSize);
+            searchHospital(pageNum2, pageSize);
             refreshlayout.finishLoadmore();
         }
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        if(tag.equals("1")){
-            pageNum=1;
+        if (tag.equals("1")) {
+            pageNum = 1;
             hospitalBeans.clear();
-            searchHospital(pageNum,pageSize);
+            searchHospital(pageNum, pageSize);
             refreshLayout.finishRefresh();
-        }else{
-            pageNum2=1;
+        } else {
+            pageNum2 = 1;
             expertBeans.clear();
-            searchHospital(pageNum2,pageSize);
+            searchHospital(pageNum2, pageSize);
             refreshLayout.finishRefresh();
         }
 
     }
 
-    private void searchHospital(int pageNum,int pageSize) {
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("pageNum",pageNum);
-        params.put("pageSize",pageSize);
-        params.put("tag",tag);
-        params.put("sortstr",sortstr);
-        params.put("cityName",cityName);
-        params.put("positional",positional);
-        params.put("searchstr",searchstr);
+    private void searchHospital(int pageNum, int pageSize) {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        params.put("tag", tag);
+        params.put("sortstr", sortstr);
+        params.put("cityName", cityName);
+        params.put("positional", positional);
+        params.put("searchstr", searchstr);
         HttpRequestClient.getInstance(SearchResultListActivity.this).createBaseApi().get("guahao/search"
                 , params, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(SearchResultListActivity.this, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -461,7 +471,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                 if (msg.equals("ok") && code.equals("0")) {
                                     expertBeans.clear();
                                     hospitalBeans.clear();
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel1 = localGson.fromJson(jsonObject.toString(),
@@ -473,16 +483,15 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                     baseModel = localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<PageModel<HospitalBean>>() {
                                             }.getType());
-                                    for(HospitalBean bean:baseModel.list){
-                                        bean.distance= DistanceUtil.getDistance(SearchResultListActivity.latitude,SearchResultListActivity.longitude,Double.parseDouble(bean.lat),Double.parseDouble(bean.lng));
+                                    for (HospitalBean bean : baseModel.list) {
+                                        bean.distance = DistanceUtil.getDistance(SearchResultListActivity.latitude, SearchResultListActivity.longitude, Double.parseDouble(bean.lat), Double.parseDouble(bean.lng));
                                         hospitalBeans.add(bean);
                                     }
                                     adapter.notifyDataSetChanged();
-                                    if(rb_hospital.isChecked()){
+                                    if (rb_hospital.isChecked()) {
                                         hosptial_list.setVisibility(View.VISIBLE);
                                         expert_list.setVisibility(View.GONE);
-                                    }else if(rb_expert.isChecked())
-                                    {
+                                    } else if (rb_expert.isChecked()) {
                                         hosptial_list.setVisibility(View.GONE);
                                         expert_list.setVisibility(View.VISIBLE);
                                     }
@@ -518,37 +527,46 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
     @Override
     public void clickListener(View v) {
-        ExpertBean bean= (ExpertBean)v.getTag();
+        ExpertBean bean = (ExpertBean) v.getTag();
         orderExpert(bean);
     }
-    public void orderExpert(ExpertBean bean){
-        JSONObject object=new JSONObject();
+
+    public void orderExpert(ExpertBean bean) {
+        JSONObject object = new JSONObject();
         try {
-            object.put("deptId",bean.deptId);
-            object.put("doctorCode",bean.doctorCode);
-            object.put("hospitalDoctorDutyId",bean.hospitalDoctorDutyId);
-            object.put("hospitalId",bean.hospitalId);
-            object.put("orderDay",bean.dutyDtime);
-            object.put("userId",userId);
+            object.put("deptId", bean.deptId);
+            object.put("doctorCode", bean.doctorCode);
+            object.put("hospitalDoctorDutyId", bean.hospitalDoctorDutyId);
+            object.put("hospitalId", bean.hospitalId);
+            object.put("orderDay", bean.dutyDtime);
+            object.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpRequestClient client= HttpRequestClient.getInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL);
+        HttpRequestClient client = HttpRequestClient.getInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("guahao/fastorder/"
                 , body, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -583,6 +601,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

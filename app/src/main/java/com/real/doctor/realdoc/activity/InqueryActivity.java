@@ -12,12 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
-import com.real.doctor.realdoc.model.InqueryBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CommonDialog;
@@ -26,6 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +52,7 @@ public class InqueryActivity extends BaseActivity {
     private String doctorUserId;
     private String desease;
     private CommonDialog dialog;
+    private String inqueryEditContent;
 
     @Override
     public int getLayoutId() {
@@ -87,7 +91,7 @@ public class InqueryActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.next_step:
-                final String inqueryEditContent = inqueryEdit.getText().toString();
+                inqueryEditContent = inqueryEdit.getText().toString();
                 if (EmptyUtils.isNotEmpty(inqueryEditContent)) {
                     if (inqueryEditContent.length() > 10) {
                         //弹出是否需要添加相关病历资料对话框
@@ -101,7 +105,7 @@ public class InqueryActivity extends BaseActivity {
                                     @Override
                                     public void onCancelListener() {
                                         //调用接口,上传咨询信息
-                                        dialog.dismiss();
+                                        postInquery();
                                     }
                                 }).setConfirmClickBtn(new CommonDialog.ConfirmListener() {
 
@@ -127,60 +131,70 @@ public class InqueryActivity extends BaseActivity {
     }
 
     private void postInquery() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("inquery", "inquery");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        HttpRequestClient.getInstance(InqueryActivity.this).createBaseApi().json("user/login/"
-                , body, new BaseObserver<ResponseBody>(InqueryActivity.this) {
+        if (NetworkUtil.isNetworkAvailable(InqueryActivity.this)) {
+            Map<String, RequestBody> maps = new HashMap<>();
+            maps.put("content", DocUtils.toRequestBodyOfText(inqueryEditContent));
+            maps.put("title", DocUtils.toRequestBodyOfText(desease));
+            maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
+            HttpRequestClient.getInstance(InqueryActivity.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(InqueryActivity.this) {
+                protected Disposable disposable;
 
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    disposable = d;
+                }
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ToastUtil.showLong(InqueryActivity.this, "咨询内容提交失败!");
-                        Log.d(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    protected void onHandleSuccess(ResponseBody responseBody) {
-                        String data = null;
-                        String msg = "";
-                        String code = "";
+                @Override
+                protected void onHandleSuccess(ResponseBody responseBody) {
+                    //上传文件成功
+                    String data = null;
+                    String msg = null;
+                    String code = null;
+                    try {
+                        data = responseBody.string().toString();
                         try {
-                            data = responseBody.string().toString();
-                            try {
-                                JSONObject object = new JSONObject(data);
-                                if (DocUtils.hasValue(object, "msg")) {
-                                    msg = object.getString("msg");
-                                }
-                                if (DocUtils.hasValue(object, "code")) {
-                                    code = object.getString("code");
-                                }
-                                if (msg.equals("ok") && code.equals("0")) {
-                                    //跳转到病历打包页面
-                                    ToastUtil.showLong(InqueryActivity.this, "咨询内容提交成功!");
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            JSONObject object = new JSONObject(data);
+                            if (DocUtils.hasValue(object, "msg")) {
+                                msg = object.getString("msg");
                             }
-                        } catch (IOException e) {
+                            if (DocUtils.hasValue(object, "code")) {
+                                code = object.getString("code");
+                            }
+                            if (msg.equals("ok") && code.equals("0")) {
+                                ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传成功!");
+                            } else {
+                                ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
+                            }
+                            dialog.dismiss();
+                            Intent intent = new Intent(InqueryActivity.this, DoctorsListActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            finish();
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                }
 
-                });
+                @Override
+                public void onError(Throwable e) {
+                    ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
+                    if (disposable != null && !disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
+                }
+
+                @Override
+                public void onComplete() {
+                    if (disposable != null && !disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
+                }
+            });
+        }
     }
 
     @Override
