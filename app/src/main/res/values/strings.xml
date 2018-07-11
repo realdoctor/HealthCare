@@ -136,6 +136,7 @@
     <string name="payment">支付金额:</string>
     <string name="zi_fu_bao">支付宝支付</string>
     <string name="wei_xing">微信支付</string>
+    <string name="social_security">社保支付</string>
     <string name="advice_info">处方信息:</string>
     <string name="record_one">第一份病历</string>
     <string name="record_two">第二份病历</string>
@@ -169,8 +170,6 @@
     <string name="qq_num">qq号码</string>
     <string name="phone_num">电话号码</string>
     <string name="user_fade_txt">请留下你的宝贵意见</string>
-    <string name="record_describe_text">最后一次就诊情况:</string>
-    <string name="record_describe">请留下您最后一次就诊情况(该情况会显示在您就诊的最后一份病历中)</string>
     <string name="confirm_dialog_btn">确定</string>
     <string name="cancel_dialog_btn">取消</string>
     <string name="my_qr">我是"朱家斌"医生,这是我的二维码</string>
@@ -186,6 +185,7 @@
     <string name="revisit">咨询</string>
     <string name="confirm_charge">确认收费</string>
     <string name="whether_to_save">是否保存?</string>
+    <string name="other_record">其他病历</string>
     <!--二维码扫描-->
     <string name="title_activity_scan_qr_code">扫一扫</string>
     <string name="close">关闭</string>

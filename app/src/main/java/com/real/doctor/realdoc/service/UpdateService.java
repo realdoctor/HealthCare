@@ -3,20 +3,15 @@ package com.real.doctor.realdoc.service;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.SyncStateContract;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.real.doctor.realdoc.activity.AccountActivity;
-import com.real.doctor.realdoc.activity.DocCompareActivity;
 import com.real.doctor.realdoc.activity.ProgressBarActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.table.ImageManager;
@@ -71,9 +66,9 @@ public class UpdateService extends JobService {
     private List<SaveDocBean> mList = new ArrayList<>();
     private List<String> mImgList = new ArrayList<>();
     private List<Boolean> mFlag = new ArrayList<>();
-    private String zipEditContent;
     private String inquery;
     private String doctorUserId;
+    private String desease;
     private boolean zip = false;
     //从数据库中获取数据
     private ImageManager imageInstance;
@@ -111,9 +106,6 @@ public class UpdateService extends JobService {
                 //如果不存在则创建
                 String mId = bean.getId();
                 String mFolder = bean.getFolder();
-                if (k == mList.size() - 1) {
-                    bean.setDescribe(zipEditContent);
-                }
                 //数据库处理
                 //将该条数据插入到patient数据库中
                 instance.insertPatientSaveDoc(UpdateService.this, bean, time, folderName);
@@ -253,6 +245,7 @@ public class UpdateService extends JobService {
                     maps.put("attach\"; filename=\"" + file.getName() + "", requestBody);//head_img图片key
                 }
                 maps.put("content", DocUtils.toRequestBodyOfText(inquery));
+                maps.put("title", DocUtils.toRequestBodyOfText(desease));
                 maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
                 HttpRequestClient.getInstance(UpdateService.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(UpdateService.this) {
                     @Override
@@ -314,8 +307,8 @@ public class UpdateService extends JobService {
         videoInstance = VideoManager.getInstance(UpdateService.this);
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra("mList");
-            zipEditContent = intent.getExtras().getString("zipEdit");
             inquery = intent.getExtras().getString("inquery");
+            desease = intent.getExtras().getString("desease");
             doctorUserId = intent.getExtras().getString("doctorUserId");
         }
         Message m = Message.obtain();

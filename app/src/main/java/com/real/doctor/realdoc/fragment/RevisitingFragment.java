@@ -20,6 +20,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -43,6 +44,7 @@ public class RevisitingFragment extends BaseFragment {
     private Unbinder unbinder;
     private String mobile;
     private String userId;
+    private String roleChangeId;
     private List<DoctorBean> doctors;
     @BindView(R.id.revisiting_recycler)
     RecyclerView revisitingRv;
@@ -63,7 +65,8 @@ public class RevisitingFragment extends BaseFragment {
     public void doBusiness(Context mContext) {
         //获得后台正在进行咨询的数据
         mobile = (String) SPUtils.get(getActivity(), "mobile", "");
-        userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
+        userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "0");
+        roleChangeId = (String) SPUtils.get(getActivity(), Constants.ROLE_CHANGE_ID, "");
         doctors = new ArrayList<>();
         revisitingRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         //添加分割线
@@ -77,6 +80,7 @@ public class RevisitingFragment extends BaseFragment {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("pageNum", pageNum);
         param.put("pageSize", "10");
+        param.put("roleId", "roleChangeId");
         param.put("userId", userId);
         HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/list"
                 , param, new BaseObserver<ResponseBody>(getActivity()) {
@@ -131,24 +135,30 @@ public class RevisitingFragment extends BaseFragment {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
-                });
+        });
     }
 
     private void initEvent() {
         docPayListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                //点击item
-                Intent intent = new Intent(getActivity(), AnswerActivity.class);
-                intent.putExtra("inquery", doctors.get(position).getInquery());
-                intent.putExtra("answer", doctors.get(position).getAnswer());
-                intent.putExtra("doctor", doctors.get(position).getName());
-                startActivity(intent);
+                String answer = doctors.get(position).getAnswer();
+                if (EmptyUtils.isEmpty(answer)) {
+                    ToastUtil.showLong(getActivity(), "医生还未回答您咨询的问题,请耐心等待!");
+                    return;
+                } else {
+                    //点击item
+                    Intent intent = new Intent(getActivity(), AnswerActivity.class);
+                    intent.putExtra("inquery", doctors.get(position).getInquery());
+                    intent.putExtra("answer", doctors.get(position).getAnswer());
+                    intent.putExtra("doctor", doctors.get(position).getName());
+                    startActivity(intent);
+                }
             }
         });
     }

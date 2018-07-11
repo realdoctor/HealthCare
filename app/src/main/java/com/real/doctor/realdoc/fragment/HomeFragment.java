@@ -215,6 +215,7 @@ public class HomeFragment extends BaseFragment {
                 public void onFloatBallClick() {
                     if (personFlag) {
                         personFlag = false;
+                        SPUtils.put(getActivity(), Constants.ROLE_CHANGE_ID, "1");
                         final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
                         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
                         mFloatballManager.changeIcon(getActivity(), ballCfg);
@@ -222,6 +223,7 @@ public class HomeFragment extends BaseFragment {
                         mainLayout.setVisibility(View.GONE);
                     } else {
                         personFlag = true;
+                        SPUtils.put(getActivity(), Constants.ROLE_CHANGE_ID, "0");
                         final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
                         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
                         mFloatballManager.changeIcon(getActivity(), ballCfg);

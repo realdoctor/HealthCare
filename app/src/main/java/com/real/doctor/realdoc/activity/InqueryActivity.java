@@ -20,6 +20,7 @@ import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.view.CommonDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +47,8 @@ public class InqueryActivity extends BaseActivity {
     @BindView(R.id.finish_back)
     ImageView finishBack;
     private String doctorUserId;
+    private String desease;
+    private CommonDialog dialog;
 
     @Override
     public int getLayoutId() {
@@ -68,6 +71,7 @@ public class InqueryActivity extends BaseActivity {
     @Override
     public void initData() {
         doctorUserId = getIntent().getStringExtra("doctorUserId");
+        desease = getIntent().getStringExtra("desease");
     }
 
     @Override
@@ -83,16 +87,35 @@ public class InqueryActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.next_step:
-                String inqueryEditContent = inqueryEdit.getText().toString();
+                final String inqueryEditContent = inqueryEdit.getText().toString();
                 if (EmptyUtils.isNotEmpty(inqueryEditContent)) {
                     if (inqueryEditContent.length() > 10) {
-                        //将问题传输给服务器端
-//                        postInquery();
-                        //进入病历列表页面
-                        Intent intent = new Intent(InqueryActivity.this, CheckDocActivity.class);
-                        intent.putExtra("inquery", inqueryEditContent);
-                        intent.putExtra("doctorUserId", doctorUserId);
-                        startActivity(intent);
+                        //弹出是否需要添加相关病历资料对话框
+                        //弹出框界面
+                        dialog = new CommonDialog(this).builder()
+                                .setCancelable(false)
+                                .setContent("是否需要添加相关病历资料？")
+                                .setCanceledOnTouchOutside(true)
+                                .setCancelClickBtn(new CommonDialog.CancelListener() {
+
+                                    @Override
+                                    public void onCancelListener() {
+                                        //调用接口,上传咨询信息
+                                        dialog.dismiss();
+                                    }
+                                }).setConfirmClickBtn(new CommonDialog.ConfirmListener() {
+
+                                    @Override
+                                    public void onConfrimClick() {
+                                        //进入病历列表页面
+                                        Intent intent = new Intent(InqueryActivity.this, CheckDocActivity.class);
+                                        intent.putExtra("inquery", inqueryEditContent);
+                                        intent.putExtra("doctorUserId", doctorUserId);
+                                        intent.putExtra("desease", desease);
+                                        startActivity(intent);
+                                    }
+                                }).show();
+
                     } else {
                         ToastUtil.showLong(InqueryActivity.this, "咨询内容不能小于10个字符!");
                     }

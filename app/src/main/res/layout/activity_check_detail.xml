@@ -25,43 +25,6 @@
                 android:cacheColorHint="@null"
                 android:scrollbars="vertical" />
 
-            <LinearLayout
-                android:id="@+id/zip_edit_linear"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/record_describe_text"
-                    android:textColor="@color/text_black_color" />
-
-                <EditText
-                    android:id="@+id/zip_edit"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10.0dip"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/audio_item_bg"
-                    android:gravity="top|left"
-                    android:hint="@string/record_describe"
-                    android:inputType="textMultiLine"
-                    android:minLines="8"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
-                    android:textColorHint="#ff999999"
-                    android:textCursorDrawable="@drawable/color_cursor"
-                    android:textSize="14.0sp"
-                    android:typeface="monospace" />
-            </LinearLayout>
-
             <ImageView
                 android:id="@+id/zip_img"
                 android:layout_width="48dp"
@@ -69,8 +32,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25dp"
                 android:background="@mipmap/icon_app"
-                android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:scaleType="centerInside" />
 
             <TextView
                 android:id="@+id/zip_text"
@@ -81,8 +43,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/go_zip_path"
                 android:textColor="@color/gray_normal"
-                android:textSize="14sp"
-                android:visibility="gone" />
+                android:textSize="14sp" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

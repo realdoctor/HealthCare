@@ -105,9 +105,10 @@ public class CaseControlActivity extends BaseActivity {
     private void init() {
         HashMap<String, String> param = new HashMap<>();
         param.put("pageNum", String.valueOf(pageNum));
+        param.put("roleId", "1");
         param.put("pageSize", "10");
         param.put("userId", mUserId);
-        HttpRequestClient.getInstance(CaseControlActivity.this).createBaseApi().get("patient/upload/list"
+        HttpRequestClient.getInstance(CaseControlActivity.this).createBaseApi().get("askQuestion/reply/list"
                 , param, new BaseObserver<ResponseBody>(CaseControlActivity.this) {
 
                     @Override

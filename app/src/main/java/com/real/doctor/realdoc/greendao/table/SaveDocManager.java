@@ -238,13 +238,36 @@ public class SaveDocManager {
     }
 
     /**
-     * 查询规定时间内的病历list列表
+     * 模糊查询该疾病的的病历list列表
      */
     public List<SaveDocBean> queryRecordByDiseaseList(Context context, String disease) {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
         List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.like("%" + disease + "%")).list();
+        return list;
+    }
+
+
+    /**
+     * 查询该疾病的病历list列表
+     */
+    public List<SaveDocBean> queryRecordByEqDiseaseList(Context context, String disease) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.eq(disease)).list();
+        return list;
+    }
+
+    /**
+     * 查询非该疾病的病历list列表
+     */
+    public List<SaveDocBean> queryRecordByNotDiseaseList(Context context, String disease) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.notEq(disease)).list();
         return list;
     }
 

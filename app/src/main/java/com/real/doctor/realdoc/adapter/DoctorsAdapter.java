@@ -42,13 +42,8 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 Intent intent = new Intent(context, ChatPayActivity.class);
                 intent.putExtra("payType", "1");
                 intent.putExtra("doctorUserId", item.getId());
+                intent.putExtra("desease", item.getDiagName());
                 context.startActivity(intent);
-                //点击进入聊天页
-//                Intent intent = new Intent(context, ChatActivity.class);
-//                intent.putExtra("userId", "admin");
-////                intent.putExtra("doctorUserId", item.getId());
-//                context.startActivity(intent);
-
             }
         });
 
@@ -60,11 +55,8 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 Intent intent = new Intent(context, ChatPayActivity.class);
                 intent.putExtra("payType", "2");
                 intent.putExtra("doctorUserId", item.getId());
+                intent.putExtra("desease", item.getDiagName());
                 context.startActivity(intent);
-                //点击进入病历列表页面
-         /*       Intent intent = new Intent(context, InqueryActivity.class);
-                intent.putExtra("doctorUserId", item.getId());
-                context.startActivity(intent);*/
             }
         });
     }

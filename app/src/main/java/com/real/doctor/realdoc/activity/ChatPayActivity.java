@@ -2,6 +2,7 @@ package com.real.doctor.realdoc.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -52,10 +53,14 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     LinearLayout zhiFuBaoLinear;
     @BindView(R.id.weixin_linear)
     LinearLayout weixinLinear;
+    @BindView(R.id.social_security_linear)
+    LinearLayout socialSecurityLinear;
     @BindView(R.id.zhi_fu_bao)
     CheckBox rbAlipay;
     @BindView(R.id.wei_xin)
     CheckBox rbWechat;
+    @BindView(R.id.social_security)
+    CheckBox socialSecurity;
     @BindView(R.id.tv_count_price)
     TextView tvCountprice;
     @BindView(R.id.bt_pay)
@@ -69,6 +74,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     private IWXAPI api;
     private String payType;
     private String doctorUserId;
+    private String desease;
     private String userId;
 
     @Override
@@ -92,6 +98,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     public void initData() {
         payType = getIntent().getStringExtra("payType");
         doctorUserId = getIntent().getStringExtra("doctorUserId");
+        desease = getIntent().getStringExtra("desease");
         if (payType.equals("1")) {
             pageTitle.setText("聊天咨询支付");
             initGetPay();
@@ -170,6 +177,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     public void initEvent() {
         rbAlipay.setOnCheckedChangeListener(this);
         rbWechat.setOnCheckedChangeListener(this);
+        socialSecurity.setOnCheckedChangeListener(this);
     }
 
     private boolean isWXAppInstalledAndSupported(Context context,
@@ -182,8 +190,9 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         }
         return sIsWXAppInstalledAndSupported;
     }
+
     @Override
-    @OnClick({R.id.bt_pay, R.id.finish_back,R.id.zhi_fu_bao_linear,R.id.weixin_linear})
+    @OnClick({R.id.bt_pay, R.id.finish_back, R.id.zhi_fu_bao_linear, R.id.weixin_linear, R.id.social_security_linear})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.bt_pay:
@@ -191,13 +200,26 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                     ToastUtil.showLong(this, "请选择支付方式");
                     return;
                 } else {
-                    if (zhifu_type.equals("1")) {
-                        payOrderByAlipay();
-                    } else if (zhifu_type.equals("0")) {
-                        if (isWXAppInstalledAndSupported(ChatPayActivity.this, api)) {
-                            payOrderByWechat();
-                        }
+                    if (payType.equals("1")) {
+                        //点击进入聊天页
+                        Intent intent = new Intent(ChatPayActivity.this, ChatActivity.class);
+                        intent.putExtra("userId", "admin");
+                        intent.putExtra("doctorUserId", doctorUserId);
+                        intent.putExtra("desease", desease);
+                        startActivity(intent);
+                    } else if (payType.equals("2")) {
+                        Intent intent = new Intent(ChatPayActivity.this, InqueryActivity.class);
+                        intent.putExtra("doctorUserId", doctorUserId);
+                        intent.putExtra("desease", desease);
+                        startActivity(intent);
                     }
+//                    if (zhifu_type.equals("1")) {
+//                        payOrderByAlipay();
+//                    } else if (zhifu_type.equals("0")) {
+//                        if (isWXAppInstalledAndSupported(ChatPayActivity.this, api)) {
+//                            payOrderByWechat();
+//                        }
+//                    }
                 }
                 break;
             case R.id.finish_back:
@@ -207,11 +229,18 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                 zhifu_type = "1";
                 rbWechat.setChecked(false);
                 rbAlipay.setChecked(true);
+                socialSecurity.setChecked(false);
                 break;
             case R.id.weixin_linear:
                 zhifu_type = "0";
                 rbAlipay.setChecked(false);
                 rbWechat.setChecked(true);
+                socialSecurity.setChecked(false);
+                break;
+            case R.id.social_security_linear:
+                rbAlipay.setChecked(false);
+                rbWechat.setChecked(false);
+                socialSecurity.setChecked(true);
                 break;
         }
     }
@@ -426,10 +455,16 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                 zhifu_type = "1";
                 rbWechat.setChecked(false);
                 rbAlipay.setChecked(true);
+                socialSecurity.setChecked(false);
             } else if (buttonView == rbWechat) {
                 zhifu_type = "0";
                 rbAlipay.setChecked(false);
                 rbWechat.setChecked(true);
+                socialSecurity.setChecked(false);
+            } else if (buttonView == socialSecurity) {
+                rbAlipay.setChecked(false);
+                rbWechat.setChecked(false);
+                socialSecurity.setChecked(true);
             }
         }
     }

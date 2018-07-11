@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.DocDetailAdapter;
+import com.real.doctor.realdoc.adapter.MultilDetailAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.PatientBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
@@ -30,6 +31,8 @@ import com.real.doctor.realdoc.service.UnzipService;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,10 +58,11 @@ public class CaseListActivity extends BaseActivity {
     View line;
     @BindView(R.id.reply)
     Button reply;
-    DocDetailAdapter docDetailAdapter;
+    MultilDetailAdapter multilDetailAdapter;
     @BindView(R.id.record_list_recycler)
     RecyclerView recordListRecycleView;
     private List<SaveDocBean> recordList;
+    private String disease;
 
     @Override
     public int getLayoutId() {
@@ -81,6 +85,7 @@ public class CaseListActivity extends BaseActivity {
     public void initData() {
         patientBean = getIntent().getParcelableExtra("patient");
         realName = getIntent().getStringExtra("realName");
+        disease = patientBean.getTitle();
         pageTitle.setText(realName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
@@ -117,15 +122,34 @@ public class CaseListActivity extends BaseActivity {
                 }
                 //获得列表数据
                 recordList = intent.getExtras().getParcelableArrayList("list");
+                //倒序排列
+//                Collections.reverse(recordList);
+                List<SaveDocBean> mList = new ArrayList<>();
+                List<SaveDocBean> oneList = new ArrayList<>();
+                List<SaveDocBean> twoList = new ArrayList<>();
+                int i;
+                for (i = 0; i < recordList.size(); i++) {
+                    if (disease.equals(recordList.get(i).getIll())) {
+                        oneList.add(recordList.get(i));
+                    } else {
+                        twoList.add(recordList.get(i));
+                    }
+                }
+                mList.addAll(oneList);
+                SaveDocBean bean = new SaveDocBean();
+                bean.setType(2);
+                mList.add(bean);
+                mList.addAll(twoList);
                 //创建布局管理
                 recordListRecycleView.setLayoutManager(new LinearLayoutManager(CaseListActivity.this, LinearLayoutManager.VERTICAL, false));
                 //添加自定义分割线
                 DividerItemDecoration divider = new DividerItemDecoration(CaseListActivity.this, DividerItemDecoration.VERTICAL);
                 divider.setDrawable(ContextCompat.getDrawable(CaseListActivity.this, R.drawable.disease_divider));
                 recordListRecycleView.addItemDecoration(divider);
-                docDetailAdapter = new DocDetailAdapter(CaseListActivity.this, R.layout.doc_detail_item, recordList);
+                //创建适配器
+                multilDetailAdapter = new MultilDetailAdapter(mList);
                 //给RecyclerView设置适配器
-                recordListRecycleView.setAdapter(docDetailAdapter);
+                recordListRecycleView.setAdapter(multilDetailAdapter);
                 initListEvent();
             }
         };
@@ -137,7 +161,7 @@ public class CaseListActivity extends BaseActivity {
     }
 
     public void initListEvent() {
-        docDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        multilDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //传过去一个值,删除标题栏上的更改按钮

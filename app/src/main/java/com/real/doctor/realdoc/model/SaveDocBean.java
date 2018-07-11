@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
+import org.greenrobot.greendao.annotation.Transient;
 
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.VideoBeanDao;
@@ -28,7 +29,10 @@ import com.real.doctor.realdoc.greendao.SaveDocBeanDao;
  */
 @SuppressLint("ParcelCreator")
 @Entity
-public class SaveDocBean implements Parcelable {
+public class SaveDocBean implements Parcelable, MultiItemEntity {
+
+    public static final int TYPE_ONE = 1;
+    public static final int TYPE_TWO = 2;
 
     @Id
     @SerializedName("diagCode")
@@ -75,8 +79,8 @@ public class SaveDocBean implements Parcelable {
     private String visitWay;
     //是否选中病历
     private boolean isSelect = false;
-    //时间最近的一份病历要添加一段描述
-    private String describe;
+    @Transient
+    private int type = 1;
     /**
      * Used to resolve relations
      */
@@ -88,15 +92,16 @@ public class SaveDocBean implements Parcelable {
     @Generated(hash = 225895165)
     private transient SaveDocBeanDao myDao;
 
+
     public SaveDocBean() {
     }
 
 
-    @Generated(hash = 1012777057)
-    public SaveDocBean(String id, String ill, String hospital, String doctor, String time,
-                       String folder, String imgs, String advice, String orgCode, String patientDiagId,
-                       String patientId, String visitDeptName, String visitWay, boolean isSelect,
-                       String describe) {
+    @Generated(hash = 434754401)
+    public SaveDocBean(String id, String ill, String hospital, String doctor,
+                       String time, String folder, String imgs, String advice, String orgCode,
+                       String patientDiagId, String patientId, String visitDeptName,
+                       String visitWay, boolean isSelect) {
         this.id = id;
         this.ill = ill;
         this.hospital = hospital;
@@ -111,7 +116,6 @@ public class SaveDocBean implements Parcelable {
         this.visitDeptName = visitDeptName;
         this.visitWay = visitWay;
         this.isSelect = isSelect;
-        this.describe = describe;
     }
 
 
@@ -123,6 +127,7 @@ public class SaveDocBean implements Parcelable {
         time = in.readString();
         folder = in.readString();
         imgs = in.readString();
+        imageListBeans = in.createTypedArrayList(ImageListBean.CREATOR);
         audioList = in.createTypedArrayList(RecordBean.CREATOR);
         videoList = in.createTypedArrayList(VideoBean.CREATOR);
         advice = in.readString();
@@ -145,32 +150,6 @@ public class SaveDocBean implements Parcelable {
             return new SaveDocBean[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(ill);
-        dest.writeString(hospital);
-        dest.writeString(doctor);
-        dest.writeString(time);
-        dest.writeString(folder);
-        dest.writeString(imgs);
-        dest.writeTypedList(audioList);
-        dest.writeTypedList(videoList);
-        dest.writeString(advice);
-        dest.writeString(orgCode);
-        dest.writeString(patientDiagId);
-        dest.writeString(patientId);
-        dest.writeString(visitDeptName);
-        dest.writeString(visitWay);
-        dest.writeByte((byte) (isSelect ? 1 : 0));
-    }
-
 
     public String getId() {
         return this.id;
@@ -311,6 +290,21 @@ public class SaveDocBean implements Parcelable {
         this.isSelect = isSelect;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public static int getTypeTwo() {
+        return TYPE_TWO;
+    }
+
+    public static int getTypeOne() {
+        return TYPE_ONE;
+    }
 
     /**
      * To-many relationship, resolved on first access (and after reset).
@@ -460,12 +454,38 @@ public class SaveDocBean implements Parcelable {
     }
 
 
-    public String getDescribe() {
-        return this.describe;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(ill);
+        dest.writeString(hospital);
+        dest.writeString(doctor);
+        dest.writeString(time);
+        dest.writeString(folder);
+        dest.writeString(imgs);
+        dest.writeTypedList(imageListBeans);
+        dest.writeTypedList(audioList);
+        dest.writeTypedList(videoList);
+        dest.writeString(advice);
+        dest.writeString(orgCode);
+        dest.writeString(patientDiagId);
+        dest.writeString(patientId);
+        dest.writeString(visitDeptName);
+        dest.writeString(visitWay);
+        dest.writeByte((byte) (isSelect ? 1 : 0));
+    }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    @Override
+    public int getItemType() {
+        return type;
+    }
+
+    public void setItemType(int itemType) {
+        this.type = itemType;
     }
 }

@@ -1,8 +1,10 @@
 package com.real.doctor.realdoc.model;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@SuppressLint("ParcelCreator")
 public class PatientBean implements Parcelable {
     private String addTime;
     private String src;
@@ -10,6 +12,7 @@ public class PatientBean implements Parcelable {
     private String pubId;
     private String remark;
     private String questionId;
+    private String title;
     private UserBean userInfo;
 
     public PatientBean() {
@@ -22,7 +25,25 @@ public class PatientBean implements Parcelable {
         pubId = in.readString();
         remark = in.readString();
         questionId = in.readString();
+        title = in.readString();
         userInfo = in.readParcelable(UserBean.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(addTime);
+        dest.writeString(src);
+        dest.writeString(num);
+        dest.writeString(pubId);
+        dest.writeString(remark);
+        dest.writeString(questionId);
+        dest.writeString(title);
+        dest.writeParcelable(userInfo, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<PatientBean> CREATOR = new Creator<PatientBean>() {
@@ -85,6 +106,14 @@ public class PatientBean implements Parcelable {
         this.questionId = questionId;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public UserBean getUserInfo() {
         return userInfo;
     }
@@ -93,19 +122,4 @@ public class PatientBean implements Parcelable {
         this.userInfo = userInfo;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(addTime);
-        dest.writeString(src);
-        dest.writeString(num);
-        dest.writeString(pubId);
-        dest.writeString(remark);
-        dest.writeString(questionId);
-        dest.writeParcelable(userInfo, flags);
-    }
 }
