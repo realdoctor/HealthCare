@@ -96,6 +96,11 @@ public class DocUtils {
         RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), pFile);
         return fileBody;
     }
+    public static RequestBody toRequestBodyOfVideo(File pFile) {
+        RequestBody fileBody = RequestBody.create( MediaType.parse("application/octet-stream"), pFile);
+        return fileBody;
+    }
+
 
     // 封装请求体，可以看到这里和OkHttp的请求体封装基本上是一样的
     @NonNull

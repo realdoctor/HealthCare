@@ -89,6 +89,7 @@ public class VideoOneActivity extends BaseActivity implements
     private String mFolder;
     private String fileName;
     private VideoManager instance = null;
+    public int key;
 
     @Override
     public int getLayoutId() {
@@ -125,6 +126,7 @@ public class VideoOneActivity extends BaseActivity implements
         Intent intent = getIntent();
         if (intent != null) {
             mFolder = intent.getStringExtra("folder");
+            key      =intent.getIntExtra("key",0);
         }
         instance = VideoManager.getInstance(this);
     }
@@ -266,9 +268,15 @@ public class VideoOneActivity extends BaseActivity implements
         bean.setElapsedMillis(chronometer.getFormat());
         bean.setFolder(mFolder);
         instance.insertVideo(VideoOneActivity.this, bean);
+        if(key==0){
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
+        }else if(key==1){
+            Intent intent = new Intent(VideoOneActivity.this,PublicVideosActivity.class);
+            intent.putExtra("folder",mFolder);
+            startActivity(intent);
+        }
     }
 
     @Override

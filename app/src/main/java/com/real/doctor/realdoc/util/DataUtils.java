@@ -33,7 +33,7 @@ public class DataUtils {
         videoList.add(new VideoListBean(
                 "你欠缺的也许并不是能力",
                 "http://open-image.nosdn.127.net/image/snapshot_movie/2016/11/b/a/c36e048e284c459686133e66a79e2eba.jpg",
-                "https://mov.bn.netease.com/open-movie/nos/mp4/2016/06/22/SBP8G92E3_hd.mp4"));
+                "http://47.98.156.204/static/files/video/20180712/20180712151513_yyqNtKeVm4.mp4"));
 
         videoList.add(new VideoListBean(
                 "坚持与放弃",

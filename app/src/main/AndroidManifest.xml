@@ -199,6 +199,19 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.PatientEduListActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PublicImagesActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PublicVideosActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.ShopCartActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
