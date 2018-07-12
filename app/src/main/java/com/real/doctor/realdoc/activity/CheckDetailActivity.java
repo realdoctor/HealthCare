@@ -45,6 +45,7 @@ public class CheckDetailActivity extends BaseActivity {
     List<SaveDocBean> mList;
     DocDetailAdapter checkDetailAdapter;
     private String path;
+    private String questionId;
 
     @Override
     public int getLayoutId() {
@@ -71,6 +72,7 @@ public class CheckDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             path = intent.getStringExtra("path");
+            questionId = intent.getStringExtra("questionId");
             mList = intent.getParcelableArrayListExtra("mList");
         }
         //倒序排列
@@ -108,7 +110,12 @@ public class CheckDetailActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.finish_back:
                 //跳转到在线复诊页面
-                Intent intent = new Intent(CheckDetailActivity.this, DoctorsListActivity.class);
+                Intent intent = null;
+                if (EmptyUtils.isEmpty(questionId)) {
+                    intent = new Intent(CheckDetailActivity.this, DoctorsListActivity.class);
+                } else {
+                    intent = new Intent(CheckDetailActivity.this, MyRevisitActivity.class);
+                }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

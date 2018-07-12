@@ -44,6 +44,7 @@ public class ProgressBarActivity extends BaseActivity {
     public static String HAVE_NOTHING = "android.intent.action.nothing";
     private String inquery;
     private String desease;
+    private String questionId;
 
     @Override
     public int getLayoutId() {
@@ -79,6 +80,7 @@ public class ProgressBarActivity extends BaseActivity {
                 }
                 Intent extras = new Intent(ProgressBarActivity.this, CheckDetailActivity.class);
                 extras.putExtra("path", path);
+                extras.putExtra("questionId", questionId);
                 extras.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
                 extras.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(extras);
@@ -88,11 +90,12 @@ public class ProgressBarActivity extends BaseActivity {
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
 
         Intent intent = getIntent();
-        if (intent != null) {
+        if (intent != null && intent.getExtras() != null) {
             inquery = intent.getExtras().getString("inquery");
             desease = intent.getExtras().getString("desease");
             mList = intent.getParcelableArrayListExtra("mList");
             doctorUserId = intent.getExtras().getString("doctorUserId");
+            questionId = intent.getExtras().getString("questionId");
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
@@ -101,6 +104,7 @@ public class ProgressBarActivity extends BaseActivity {
             startServiceIntent.putExtra("desease", desease);
             startServiceIntent.putExtra("inquery", inquery);
             startServiceIntent.putExtra("doctorUserId", doctorUserId);
+            startServiceIntent.putExtra("questionId", questionId);
             startService(startServiceIntent);
             JobInfo jobInfo = new JobInfo.Builder(1, new ComponentName(getPackageName(), UpdateService.class.getName()))
                     .setPeriodic(2000)

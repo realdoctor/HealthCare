@@ -1,28 +1,22 @@
 package com.real.doctor.realdoc.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.adapter.CaseControlAdapter;
+import com.real.doctor.realdoc.adapter.InfoAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
-import com.real.doctor.realdoc.model.PatientBean;
+import com.real.doctor.realdoc.model.InfoBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
@@ -42,11 +36,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 
-public class CaseControlActivity extends BaseActivity {
+public class InfoActivity extends BaseActivity {
 
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
@@ -54,63 +47,52 @@ public class CaseControlActivity extends BaseActivity {
     TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
-    @BindView(R.id.search_patient)
-    EditText searchPatient;
-    @BindView(R.id.my_patient_rv)
-    RecyclerView myPatientRv;
-    CaseControlAdapter caseControlAdapter;
-    private List<PatientBean> patientList;
-    private static int pageNum = 1;
-    private String mUserId;
+    @BindView(R.id.info_recycle_view)
+    RecyclerView infoRv;
+    private List<InfoBean> infoBeanList;
+    private String userId;
+    InfoAdapter infoAdapter;
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_case_control;
+        return R.layout.activity_info;
     }
 
     @Override
     public void initView() {
         ButterKnife.bind(this);
         //加上沉浸式状态栏高度
-        int statusHeight = ScreenUtil.getStatusHeight(CaseControlActivity.this);
+        int statusHeight = ScreenUtil.getStatusHeight(InfoActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        pageTitle.setText("系统消息");
     }
 
     @Override
     public void initData() {
-        //添加权限
-        PackageManager p = getPackageManager();
-        boolean permission = (PackageManager.PERMISSION_GRANTED ==
-                p.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.real.doctor.realdoc"));
-        if (!permission) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(CaseControlActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-            }
-        }
-        pageTitle.setText("患者管理");
-        patientList = new ArrayList<>();
+        userId = (String) SPUtils.get(InfoActivity.this, Constants.USER_KEY, "");
+        infoBeanList = new ArrayList<>();
+        //创建布局管理
+        infoRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         //添加自定义分割线
-        myPatientRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.disease_divider));
-        myPatientRv.addItemDecoration(divider);
-        caseControlAdapter = new CaseControlAdapter(R.layout.case_control_item, patientList);
-        mUserId = (String) SPUtils.get(CaseControlActivity.this, Constants.USER_KEY, "");
-        init();
+        infoRv.addItemDecoration(divider);
+        infoAdapter = new InfoAdapter(R.layout.info_item, infoBeanList);
+        //给RecyclerView设置适配器
+        infoRv.setAdapter(infoAdapter);
+        //后台获得消息数据
+        getInfoData();
     }
 
-    private void init() {
-        HashMap<String, String> param = new HashMap<>();
-        param.put("pageNum", String.valueOf(pageNum));
-        param.put("roleId", "1");
-        param.put("pageSize", "10");
-        param.put("userId", mUserId);
-        HttpRequestClient.getInstance(CaseControlActivity.this).createBaseApi().get("askQuestion/reply/list"
-                , param, new BaseObserver<ResponseBody>(CaseControlActivity.this) {
+    private void getInfoData() {
+        HashMap<String, String> param = new HashMap<String, String>();
+        param.put("userId", userId);
+        HttpRequestClient.getInstance(InfoActivity.this).createBaseApi().get(""
+                , param, new BaseObserver<ResponseBody>(InfoActivity.this) {
                     protected Disposable disposable;
 
                     @Override
@@ -120,7 +102,7 @@ public class CaseControlActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(CaseControlActivity.this, "获取患者管理列表失败!");
+                        ToastUtil.showLong(InfoActivity.this, "获取系统消息失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -149,17 +131,13 @@ public class CaseControlActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    if (DocUtils.hasValue(object, "data")) {
-                                        JSONObject obj = object.getJSONObject("data");
-                                        if (DocUtils.hasValue(obj, "list")) {
-                                            patientList = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), PatientBean.class);
-                                            caseControlAdapter = new CaseControlAdapter(R.layout.case_control_item, patientList);
-                                            myPatientRv.setAdapter(caseControlAdapter);
-                                            initEvent();
-                                        }
+                                    JSONObject obj = object.getJSONObject("data");
+                                    if (DocUtils.hasValue(obj, "list")) {
+                                        infoBeanList = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), InfoBean.class);
+                                        infoAdapter.notifyDataSetChanged();
                                     }
                                 } else {
-                                    ToastUtil.showLong(CaseControlActivity.this, "获取患者管理列表失败!");
+                                    ToastUtil.showLong(InfoActivity.this, "获取系统消息失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -168,35 +146,34 @@ public class CaseControlActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                     }
-
                 });
     }
 
     @Override
     public void initEvent() {
-        caseControlAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        infoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(CaseControlActivity.this, CaseListActivity.class);
-                Bundle mBundle = new Bundle();
-                PatientBean patientBean = (PatientBean) adapter.getItem(position);
-                mBundle.putString("realName", patientBean.getUserInfo().getRealname());
-                mBundle.putParcelable("patient", patientBean);
-                intent.putExtras(mBundle);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                int notifactionId = Integer.valueOf(infoBeanList.get(position).getNotificationId());
+                if (notifactionId == 0) {
+                    //病人,当病人接收到医生的回复后,跳转到我的复诊界面看答案
+                    Intent i = new Intent(InfoActivity.this, MyRevisitActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                } else if (notifactionId == 1) {
+                    //医生,当病人上传了病历文件后,通知医生到患者管理界面
+                    Intent i = new Intent(InfoActivity.this, CaseControlActivity.class);
+                    //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }
             }
         });
     }
 
     @Override
-    @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
-        switch (v.getId()) {
-            case R.id.finish_back:
-                finish();
-                break;
-        }
+
     }
 
     @Override

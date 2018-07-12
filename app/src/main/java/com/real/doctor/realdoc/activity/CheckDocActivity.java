@@ -51,6 +51,7 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     private String inquery;
     private String doctorUserId;
     private String desease;
+    private String questionId;
 
     @Override
     public void initEvent() {
@@ -86,6 +87,7 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
         intent.putExtra("desease", desease);
         intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
         intent.putExtra("doctorUserId", doctorUserId);
+        intent.putExtra("questionId", questionId);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
@@ -118,10 +120,11 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     public void initData() {
         //获取咨询内容
         Intent intent = getIntent();
-        if (intent != null) {
+        if (intent != null && intent.getExtras() != null) {
             inquery = intent.getExtras().getString("inquery");
             doctorUserId = intent.getExtras().getString("doctorUserId");
             desease = intent.getExtras().getString("desease");
+            questionId = intent.getExtras().getString("questionId");
         }
         mCheckDocAdapter = new CheckDocAdapter(this);
         mLinearLayoutManager = new LinearLayoutManager(this);

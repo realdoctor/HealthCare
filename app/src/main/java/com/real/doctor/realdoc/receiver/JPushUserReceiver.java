@@ -4,8 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.real.doctor.realdoc.activity.CaseControlActivity;
+import com.real.doctor.realdoc.activity.MyRevisitActivity;
+import com.real.doctor.realdoc.fragment.HomeFragment;
+import com.real.doctor.realdoc.util.EmptyUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,14 +28,14 @@ import cn.jpush.android.api.JPushInterface;
  * 2) 接收不到自定义消息
  */
 public class JPushUserReceiver extends BroadcastReceiver {
-    private static final String TAG = "JIGUANG-Example";
+    private static final String TAG = "JPushUserReceiver";
+    private int notifactionId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
             Bundle bundle = intent.getExtras();
             Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
-
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
                 String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
                 Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
@@ -37,23 +43,25 @@ public class JPushUserReceiver extends BroadcastReceiver {
 
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-                processCustomMessage(context, bundle);
-
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
-                Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
-                int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
-                Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
-
+                notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
+                //通知HomeFragment显示红点
+                process(context);
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-                Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
-
-//                //打开自定义的Activity
-//                Intent i = new Intent(context, TestActivity.class);
-//                i.putExtras(bundle);
-//                //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-//                context.startActivity(i);
-
+                if (notifactionId == 0) {
+                    //病人,当病人接收到医生的回复后,跳转到我的复诊界面看答案
+                    Intent i = new Intent(context, MyRevisitActivity.class);
+                    i.putExtras(bundle);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(i);
+                } else if (notifactionId == 1) {
+                    //医生,当病人上传了病历文件后,通知医生到患者管理界面
+                    Intent i = new Intent(context, CaseControlActivity.class);
+                    i.putExtras(bundle);
+                    //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(i);
+                }
             } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
                 //在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity， 打开一个网页等..
@@ -104,25 +112,9 @@ public class JPushUserReceiver extends BroadcastReceiver {
         return sb.toString();
     }
 
-    //send msg to MainActivity
-    private void processCustomMessage(Context context, Bundle bundle) {
-//        if (MainActivity.isForeground) {
-//            String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-//            String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-//            Intent msgIntent = new Intent(MainActivity.MESSAGE_RECEIVED_ACTION);
-//            msgIntent.putExtra(MainActivity.KEY_MESSAGE, message);
-//            if (!ExampleUtil.isEmpty(extras)) {
-//                try {
-//                    JSONObject extraJson = new JSONObject(extras);
-//                    if (extraJson.length() > 0) {
-//                        msgIntent.putExtra(MainActivity.KEY_EXTRAS, extras);
-//                    }
-//                } catch (JSONException e) {
-//
-//                }
-//
-//            }
-//            LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
-//        }
+    //send msg to HomeFragment
+    private void process(Context context) {
+        Intent msgIntent = new Intent(HomeFragment.SHOW_RED_ICON);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }
 }

@@ -48,7 +48,11 @@ public class DocPayListAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHold
         Glide.with(mContext).load(item.getAvater()).crossFade().into((ImageView) helper.getView(R.id.doctor_img));
         Button btn = helper.getView(R.id.revisit);
         if (btnFlag) {
-            btn.setVisibility(View.VISIBLE);
+            if (item.getRetryNum().equals("0")) {
+                btn.setVisibility(View.GONE);
+            } else {
+                btn.setVisibility(View.VISIBLE);
+            }
         } else {
             btn.setVisibility(View.GONE);
         }
@@ -59,6 +63,8 @@ public class DocPayListAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHold
                 //点击进入病历列表页面
                 Intent intent = new Intent(context, InqueryActivity.class);
                 intent.putExtra("doctorUserId", item.getId());
+                intent.putExtra("questionId", item.getQuestionId());
+                intent.putExtra("desease", item.getDiagName());
                 context.startActivity(intent);
             }
         });

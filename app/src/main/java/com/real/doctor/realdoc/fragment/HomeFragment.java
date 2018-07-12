@@ -23,10 +23,9 @@ import android.widget.ViewFlipper;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.CaseControlActivity;
 import com.real.doctor.realdoc.activity.DoctorsListActivity;
-import com.real.doctor.realdoc.activity.LoginActivity;
+import com.real.doctor.realdoc.activity.InfoActivity;
 import com.real.doctor.realdoc.activity.MyQrActivity;
 import com.real.doctor.realdoc.activity.PatientEduActivity;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
@@ -105,6 +104,10 @@ public class HomeFragment extends BaseFragment {
     LinearLayout docLayout;
     @BindView(R.id.viewFlipper)
     ViewFlipper viewFlipper;
+    @BindView(R.id.info_icon)
+    ImageView infoIcon;
+    @BindView(R.id.info_red_icon)
+    TextView infoRedInfo;
     private HomeRecordAdapter adapter;
     private SaveDocManager instance = null;
     private String token;
@@ -121,6 +124,7 @@ public class HomeFragment extends BaseFragment {
     private String verifyFlag = "";
     private boolean isFirst = true;
     private String isRole;
+    public static String SHOW_RED_ICON = "android.intent.action.show.red.icon";
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -322,16 +326,20 @@ public class HomeFragment extends BaseFragment {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(VERIFY_TEXT);
+        intentFilter.addAction(SHOW_RED_ICON);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                instance = SaveDocManager.getInstance(getActivity());
                 if (action.equals(VERIFY_TEXT)) {
+                    instance = SaveDocManager.getInstance(getActivity());
                     verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
                     if (StringUtils.equals(verifyFlag, "1")) {
                         recordList();
                     }
+                } else if (action.equals(SHOW_RED_ICON)) {
+                    //显示红色标记
+                    infoRedInfo.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -370,7 +378,7 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.home_search, R.id.save_doc_linear, R.id.base_cure, R.id.doctor_online, R.id.scan_icon, R.id.appoint_icon, R.id.case_control, R.id.patient_education, R.id.telemedicine, R.id.my_qr})
+    @OnClick({R.id.home_search, R.id.save_doc_linear, R.id.base_cure, R.id.doctor_online, R.id.scan_icon, R.id.appoint_icon, R.id.case_control, R.id.patient_education, R.id.telemedicine, R.id.my_qr, R.id.info_icon})
     @Override
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
@@ -443,6 +451,15 @@ public class HomeFragment extends BaseFragment {
                         ToastUtil.showLong(getActivity(), "请登录您的账户!");
                     }
                     break;
+                case R.id.info_icon:
+                    if (EmptyUtils.isNotEmpty(token)) {
+                        isHomeIn = true;
+                        intent = new Intent(getActivity(), InfoActivity.class);
+                        startActivity(intent);
+                    } else {
+                        ToastUtil.showLong(getActivity(), "请登录您的账户!");
+                    }
+                    break;
             }
         }
     }
@@ -476,9 +493,11 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void onShowMenu() {
-        mFloatballManager.show();
-        //如果想做成应用内悬浮球，可以添加以下代码。
-        getActivity().getApplication().registerActivityLifecycleCallbacks(mActivityLifeCycleListener);
+        if (EmptyUtils.isNotEmpty(mFloatballManager)) {
+            mFloatballManager.show();
+            //如果想做成应用内悬浮球，可以添加以下代码。
+            getActivity().getApplication().registerActivityLifecycleCallbacks(mActivityLifeCycleListener);
+        }
     }
 
     public void onDestroyMenu() {

@@ -65,6 +65,7 @@ public class UpdateService extends JobService {
     private String inquery;
     private String doctorUserId;
     private String desease;
+    private String questionId;
     private boolean zip = false;
     //从数据库中获取数据
     private ImageManager imageInstance;
@@ -239,6 +240,9 @@ public class UpdateService extends JobService {
                 maps.put("content", DocUtils.toRequestBodyOfText(inquery));
                 maps.put("title", DocUtils.toRequestBodyOfText(desease));
                 maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
+                if (EmptyUtils.isNotEmpty(questionId)) {
+                    maps.put("questionId", DocUtils.toRequestBodyOfText(questionId));
+                }
                 HttpRequestClient.getInstance(UpdateService.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(UpdateService.this) {
                     protected Disposable disposable;
 
@@ -303,11 +307,12 @@ public class UpdateService extends JobService {
         imageRecycleInstance = ImageRecycleManager.getInstance(UpdateService.this);
         recordInstance = RecordManager.getInstance(UpdateService.this);
         videoInstance = VideoManager.getInstance(UpdateService.this);
-        if (intent != null) {
+        if (intent != null && intent.getExtras() != null) {
             mList = intent.getParcelableArrayListExtra("mList");
             inquery = intent.getExtras().getString("inquery");
             desease = intent.getExtras().getString("desease");
             doctorUserId = intent.getExtras().getString("doctorUserId");
+            questionId = intent.getExtras().getString("questionId");
         }
         Message m = Message.obtain();
         handler.sendMessage(m);

@@ -80,7 +80,8 @@ public class RevisitingFragment extends BaseFragment {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("pageNum", pageNum);
         param.put("pageSize", "10");
-        param.put("roleId", "roleChangeId");
+        param.put("type", "1");
+        param.put("roleId", roleChangeId);
         param.put("userId", userId);
         HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/list"
                 , param, new BaseObserver<ResponseBody>(getActivity()) {
@@ -163,6 +164,8 @@ public class RevisitingFragment extends BaseFragment {
                     intent.putExtra("inquery", doctors.get(position).getInquery());
                     intent.putExtra("answer", doctors.get(position).getAnswer());
                     intent.putExtra("doctor", doctors.get(position).getName());
+                    intent.putExtra("questionId", doctors.get(position).getQuestionId());
+                    intent.putExtra("retryNum", doctors.get(position).getRetryNum());
                     startActivity(intent);
                 }
             }

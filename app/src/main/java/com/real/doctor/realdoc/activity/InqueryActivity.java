@@ -51,6 +51,7 @@ public class InqueryActivity extends BaseActivity {
     ImageView finishBack;
     private String doctorUserId;
     private String desease;
+    private String questionId;
     private CommonDialog dialog;
     private String inqueryEditContent;
 
@@ -76,6 +77,7 @@ public class InqueryActivity extends BaseActivity {
     public void initData() {
         doctorUserId = getIntent().getStringExtra("doctorUserId");
         desease = getIntent().getStringExtra("desease");
+        questionId = getIntent().getStringExtra("questionId");
     }
 
     @Override
@@ -116,6 +118,7 @@ public class InqueryActivity extends BaseActivity {
                                         intent.putExtra("inquery", inqueryEditContent);
                                         intent.putExtra("doctorUserId", doctorUserId);
                                         intent.putExtra("desease", desease);
+                                        intent.putExtra("questionId", questionId);
                                         startActivity(intent);
                                     }
                                 }).show();
@@ -136,6 +139,9 @@ public class InqueryActivity extends BaseActivity {
             maps.put("content", DocUtils.toRequestBodyOfText(inqueryEditContent));
             maps.put("title", DocUtils.toRequestBodyOfText(desease));
             maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
+            if (EmptyUtils.isNotEmpty(questionId)) {
+                maps.put("questionId", DocUtils.toRequestBodyOfText(questionId));
+            }
             HttpRequestClient.getInstance(InqueryActivity.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(InqueryActivity.this) {
                 protected Disposable disposable;
 

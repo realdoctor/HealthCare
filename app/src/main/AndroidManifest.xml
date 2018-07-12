@@ -376,7 +376,8 @@
         <activity
             android:name=".activity.CaseControlActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
         <activity
             android:name=".activity.SearchPatientActivity"
             android:hardwareAccelerated="false"
@@ -432,6 +433,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AnswerActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.InfoActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <!--    <intent-filter>
@@ -533,6 +538,28 @@
         <meta-data
             android:name="WEIBO_CHANNEL"
             android:value="weibo" />
+
+
+        <!-- Required SDK核心功能-->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
+                <category android:name="com.real.doctor.realdoc" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
         <!-- Required SDK 核心功能-->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <service
@@ -620,6 +647,6 @@
         <!-- Required. AppKey copied from Portal -->
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="您应用的Appkey" />
+            android:value="a24f70afad0f2571a3e661a9" />
     </application>
 </manifest>
