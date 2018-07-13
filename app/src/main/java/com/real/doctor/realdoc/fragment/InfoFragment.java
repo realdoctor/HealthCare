@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.InfoDetailActivity;
 import com.real.doctor.realdoc.activity.NewDetailActivity;
 import com.real.doctor.realdoc.adapter.InfoAdapter;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
@@ -182,7 +183,8 @@ public class InfoFragment extends BaseFragment implements OnLoadmoreListener,OnR
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
          InfoModel model=   (InfoModel)parent.getAdapter().getItem(position);
-         Intent intent =new Intent(getContext(), NewDetailActivity.class);
+         Intent intent =new Intent(getContext(), InfoDetailActivity.class);
+         intent.putExtra("pubId",model.pubId);
          startActivity(intent);
     }
 }

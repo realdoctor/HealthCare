@@ -210,6 +210,10 @@
             android:name=".activity.PublicVideosActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.InfoDetailActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.ShopCartActivity"
