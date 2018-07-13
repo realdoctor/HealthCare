@@ -14,6 +14,7 @@
     <color name="regularTextColor">#969696</color>
     <color name="boldTextColor">#646464</color>
     <color name="faintTextColor">#C8C8C8</color>
+    <color name="TextTranColor">#80C8C8C8</color>
 
     <color name="white">#fff</color>
     <color name="black">#000</color>

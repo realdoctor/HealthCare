@@ -28,6 +28,7 @@ import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.InfoActivity;
 import com.real.doctor.realdoc.activity.MyQrActivity;
 import com.real.doctor.realdoc.activity.PatientEduActivity;
+import com.real.doctor.realdoc.activity.PatientEduListActivity;
 import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.DocContentActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
@@ -439,7 +440,8 @@ public class HomeFragment extends BaseFragment {
                     break;
                 case R.id.patient_education:
                     isHomeIn = true;
-                    intent = new Intent(getActivity(), PatientEduActivity.class);
+                    //intent = new Intent(getActivity(), PatientEduActivity.class);
+                    intent = new Intent(getActivity(), PatientEduListActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.telemedicine:
