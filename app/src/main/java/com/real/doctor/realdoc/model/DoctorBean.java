@@ -12,7 +12,7 @@ public class DoctorBean extends UserBean implements Parcelable {
     private String doctorCode;
     //    private String doctorImg;
     private String visitOrgName;
-    @SerializedName("title")
+    @SerializedName(value = "diagName", alternate = {"title"})
     private String diagName;
     private String visitDtime;
     private String questionId;

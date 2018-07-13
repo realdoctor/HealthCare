@@ -39,8 +39,6 @@ public class JPushUserReceiver extends BroadcastReceiver {
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
                 String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
                 Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-                //send the Registration Id to your server...
-
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
@@ -73,7 +71,7 @@ public class JPushUserReceiver extends BroadcastReceiver {
                 Log.d(TAG, "[MyReceiver] Unhandled intent - " + intent.getAction());
             }
         } catch (Exception e) {
-
+            System.out.print(e);
         }
 
     }

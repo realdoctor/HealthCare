@@ -40,6 +40,7 @@ import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.VideoManager;
 import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -87,6 +88,7 @@ public class VideoOneActivity extends BaseActivity implements
     SurfaceHolder mSurfaceHolder;
     int defaultVideoFrameRate = -1;
     private String mFolder;
+    private String mModifyId;
     private String fileName;
     private VideoManager instance = null;
     public int key;
@@ -126,7 +128,8 @@ public class VideoOneActivity extends BaseActivity implements
         Intent intent = getIntent();
         if (intent != null) {
             mFolder = intent.getStringExtra("folder");
-            key      =intent.getIntExtra("key",0);
+            mModifyId = intent.getStringExtra("modifyId");
+            key = intent.getIntExtra("key", 0);
         }
         instance = VideoManager.getInstance(this);
     }
@@ -263,18 +266,21 @@ public class VideoOneActivity extends BaseActivity implements
     private void saveVideo(Object o) {
         //存储数据进数据库
         VideoBean bean = new VideoBean();
+        if (EmptyUtils.isNotEmpty(mModifyId)) {
+            bean.setRecordId(mModifyId);
+        }
         bean.setFileName(fileName);
         bean.setFilePath(localPath);
         bean.setElapsedMillis(chronometer.getFormat());
         bean.setFolder(mFolder);
         instance.insertVideo(VideoOneActivity.this, bean);
-        if(key==0){
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
-        finish();
-        }else if(key==1){
-            Intent intent = new Intent(VideoOneActivity.this,PublicVideosActivity.class);
-            intent.putExtra("folder",mFolder);
+        if (key == 0) {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        } else if (key == 1) {
+            Intent intent = new Intent(VideoOneActivity.this, PublicVideosActivity.class);
+            intent.putExtra("folder", mFolder);
             startActivity(intent);
         }
     }

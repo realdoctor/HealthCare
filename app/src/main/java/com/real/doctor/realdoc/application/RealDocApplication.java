@@ -1,6 +1,5 @@
 package com.real.doctor.realdoc.application;
 
-import android.app.Application;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
@@ -18,8 +17,6 @@ import com.kk.taurus.ijkplayer.IjkPlayer;
 import com.kk.taurus.playerbase.config.PlayerConfig;
 import com.kk.taurus.playerbase.config.PlayerLibrary;
 import com.kk.taurus.playerbase.entity.DecoderPlan;
-import com.real.doctor.realdoc.activity.LoginActivity;
-import com.real.doctor.realdoc.fragment.HomeFragment;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.GreenDaoContext;
@@ -28,12 +25,10 @@ import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.DrugBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
-import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.service.PatientListService;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
-import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.StringUtils;
@@ -45,7 +40,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

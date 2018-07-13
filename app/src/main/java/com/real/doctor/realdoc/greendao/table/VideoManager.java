@@ -112,7 +112,21 @@ public class VideoManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
-        List<VideoBean> list = qb.where(VideoBeanDao.Properties.Folder.eq(folder)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
+        List<VideoBean> list = null;
+        if (EmptyUtils.isNotEmpty(folder)) {
+            list = qb.where(VideoBeanDao.Properties.Folder.eq(folder)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
+        }
+        return list;
+    }
+
+    /**
+     * 查询视频list列表
+     */
+    public List<VideoBean> queryVideoWithRecordId(Context context, String recordId) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
+        List<VideoBean> list = qb.where(VideoBeanDao.Properties.RecordId.eq(recordId)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
         return list;
     }
 
@@ -124,6 +138,17 @@ public class VideoManager {
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
         List<VideoBean> list = qb.where(VideoBeanDao.Properties.Folder.eq(folder)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
+        return list;
+    }
+
+    /**
+     * 为每一个病人上传病历时查询视频list列表
+     */
+    public List<VideoBean> queryPatientVideoWithRecordId(Context context, String recordId, String time, String folderName) {
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
+        List<VideoBean> list = qb.where(VideoBeanDao.Properties.RecordId.eq(recordId)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
         return list;
     }
 
