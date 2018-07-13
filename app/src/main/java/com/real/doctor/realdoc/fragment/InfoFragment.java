@@ -15,6 +15,7 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.InfoDetailActivity;
 import com.real.doctor.realdoc.activity.NewDetailActivity;
 import com.real.doctor.realdoc.adapter.InfoAdapter;
+import com.real.doctor.realdoc.adapter.InfoShowAdapter;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.model.InfoModel;
@@ -56,7 +57,7 @@ public class InfoFragment extends BaseFragment implements OnLoadmoreListener,OnR
     ListView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    public InfoAdapter newsAdapter;
+    public InfoShowAdapter newsAdapter;
     private Unbinder unbinder;
     public ArrayList<InfoModel> newModels=new ArrayList<InfoModel>();
     private PageModel<InfoModel> baseModel = new PageModel<InfoModel>();
@@ -81,7 +82,7 @@ public class InfoFragment extends BaseFragment implements OnLoadmoreListener,OnR
     @Override
     public void doBusiness(Context mContext) {
         userId= (String) SPUtils.get(getContext(), Constants.USER_KEY,"");
-        newsAdapter= new InfoAdapter(getActivity(),newModels);
+        newsAdapter= new InfoShowAdapter(getActivity(),newModels);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);
         ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
