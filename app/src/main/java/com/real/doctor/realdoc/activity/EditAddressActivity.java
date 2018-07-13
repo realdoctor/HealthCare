@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.fragment.AddressDialogFragment;
+import com.real.doctor.realdoc.fragment.OrderExpertByNameFragment;
 import com.real.doctor.realdoc.greendao.table.RecieverAddressListManager;
 import com.real.doctor.realdoc.model.AddressBean;
 import com.real.doctor.realdoc.model.RecieverAddressListBean;
@@ -35,6 +38,8 @@ public class EditAddressActivity extends AppCompatActivity {
     EditText reciever;
     @BindView(R.id.address)
     TextView address;
+    @BindView(R.id.finish_back)
+    ImageView finish_back;
     public int requestCode;
     RecieverAddressListBean model;
     public void setAddress(String address){
@@ -90,6 +95,12 @@ public class EditAddressActivity extends AppCompatActivity {
         addressInstance= RecieverAddressListManager.getInstance(EditAddressActivity.this);
         // get data from AddressListActivity
         Intent intent = getIntent();
+        finish_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditAddressActivity.this.finish();
+            }
+        });
          requestCode = intent.getIntExtra("requestCode", 0);
         // if edit address - set the data from the previous screen;
         // if add address - leave the fields blank

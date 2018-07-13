@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -165,6 +166,8 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.address_set:
                 //地址设置
+                intent =new Intent(SettingActivity.this,AddressListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.clean_cache:
                 //清除缓存

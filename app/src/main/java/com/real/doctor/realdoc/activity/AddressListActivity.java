@@ -16,6 +16,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,6 +48,8 @@ public class AddressListActivity extends AppCompatActivity {
     RelativeLayout titleBar;
     @BindView(R.id.page_title)
     TextView page_title;
+    @BindView(R.id.finish_back)
+    ImageView finish_back;
     public RecieverAddressListManager addressInstance;
     AddressListAsapter mAddressListAsapter;
 
@@ -71,6 +74,12 @@ public class AddressListActivity extends AppCompatActivity {
             titleBar.setLayoutParams(lp);
         }
         page_title.setText("我的收货地址");
+        finish_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddressListActivity.this.finish();
+            }
+        });
         addressInstance= RecieverAddressListManager.getInstance(AddressListActivity.this);
         mRecieverAddressListBean = new ArrayList<>();
         addresses_list_rv.setLayoutManager(new LinearLayoutManager(this));
