@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
  */
 public class RomUtils {
     private static final String TAG = "RomUtils";
-
     /**
      * 获取 emui 版本号
      * @return

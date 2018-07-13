@@ -126,6 +126,7 @@ public class HomeFragment extends BaseFragment {
     private boolean isFirst = true;
     private String isRole;
     public static String SHOW_RED_ICON = "android.intent.action.show.red.icon";
+    public static String SHOW_WINDOW_ICON = "android.intent.action.show.window.icon";
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -159,9 +160,24 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-//        if (btnFlag) {
-//            onShowMenu();
-//        }
+        //从新监听下是否有悬浮窗权限
+        if (EmptyUtils.isNotEmpty(mFloatPermissionManager)) {
+            mFloatPermissionManager.checkPermission(getActivity());
+        }
+        showBroadcast();
+    }
+
+    private void showBroadcast() {
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SHOW_WINDOW_ICON);
+        BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onShowMenu();
+            }
+        };
+        broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 
     public void initViewFlipper() {

@@ -11,13 +11,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.real.doctor.realdoc.fragment.HomeFragment;
 
 import java.lang.reflect.Method;
 
 public class HuaweiUtils {
     private static final String TAG = "HuaweiUtils";
+    private static boolean flag = false;
 
     /**
      * 检测 Huawei 悬浮窗权限
@@ -25,6 +29,12 @@ public class HuaweiUtils {
     public static boolean checkFloatWindowPermission(Context context) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 19) {
+            if (flag) {
+                //发送广播
+                Intent msgIntent = new Intent(HomeFragment.SHOW_WINDOW_ICON);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
+                flag = false;
+            }
             return checkOp(context, 24); //OP_SYSTEM_ALERT_WINDOW = 24;
         }
         return true;
@@ -35,6 +45,7 @@ public class HuaweiUtils {
      */
     public static void applyPermission(Context context) {
         try {
+            flag = true;
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //   ComponentName comp = new ComponentName("com.huawei.systemmanager","com.huawei.permissionmanager.ui.MainActivity");//华为权限管理

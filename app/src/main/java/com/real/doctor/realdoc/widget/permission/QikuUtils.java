@@ -10,12 +10,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.real.doctor.realdoc.fragment.HomeFragment;
 
 import java.lang.reflect.Method;
 
 public class QikuUtils {
     private static final String TAG = "QikuUtils";
+    private static boolean flag = false;
 
     /**
      * 检测 360 悬浮窗权限
@@ -23,6 +27,12 @@ public class QikuUtils {
     public static boolean checkFloatWindowPermission(Context context) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 19) {
+            if (flag) {
+                //发送广播
+                Intent msgIntent = new Intent(HomeFragment.SHOW_WINDOW_ICON);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
+                flag = false;
+            }
             return checkOp(context, 24); //OP_SYSTEM_ALERT_WINDOW = 24;
         }
         return true;
@@ -36,7 +46,7 @@ public class QikuUtils {
             try {
                 Class clazz = AppOpsManager.class;
                 Method method = clazz.getDeclaredMethod("checkOp", int.class, int.class, String.class);
-                return AppOpsManager.MODE_ALLOWED == (int)method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
+                return AppOpsManager.MODE_ALLOWED == (int) method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
             } catch (Exception e) {
                 Log.e(TAG, Log.getStackTraceString(e));
             }
@@ -50,6 +60,7 @@ public class QikuUtils {
      * 去360权限申请页面
      */
     public static void applyPermission(Context context) {
+        flag = true;
         Intent intent = new Intent();
         intent.setClassName("com.android.settings", "com.android.settings.Settings$OverlaySettingsActivity");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

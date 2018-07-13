@@ -12,12 +12,16 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.real.doctor.realdoc.fragment.HomeFragment;
 
 import java.lang.reflect.Method;
 
 public class MiuiUtils {
     private static final String TAG = "MiuiUtils";
+    private static boolean flag = false;
 
     /**
      * 获取小米 rom 版本号，获取失败返回 -1
@@ -44,6 +48,12 @@ public class MiuiUtils {
         final int version = Build.VERSION.SDK_INT;
 
         if (version >= 19) {
+            if (flag) {
+                //发送广播
+                Intent msgIntent = new Intent(HomeFragment.SHOW_WINDOW_ICON);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
+                flag = false;
+            }
             return checkOp(context, 24); //OP_SYSTEM_ALERT_WINDOW = 24;
         } else {
 //            if ((context.getApplicationInfo().flags & 1 << 27) == 1) {
@@ -77,6 +87,7 @@ public class MiuiUtils {
      * 小米 ROM 权限申请
      */
     public static void applyMiuiPermission(Context context) {
+        flag = true;
         int versionCode = getMiuiVersion();
         if (versionCode == 5) {
             goToMiuiPermissionActivity_V5(context);
