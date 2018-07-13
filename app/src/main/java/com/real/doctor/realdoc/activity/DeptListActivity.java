@@ -137,19 +137,24 @@ public class DeptListActivity extends BaseActivity {
         HashMap<String, String> param = new HashMap<String, String>();
         HttpRequestClient.getInstance(DeptListActivity.this).createBaseApi().get("guahao/hospital/deptCategory/"
                 , param, new BaseObserver<ResponseBody>(DeptListActivity.this) {
-
+                    protected Disposable disposable;
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

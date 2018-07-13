@@ -29,11 +29,22 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/disease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/patient_name"
+            android:layout_marginBottom="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/text_gray_color"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/add_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/add_time"
-            android:layout_below="@id/patient_name"
+            android:layout_below="@id/disease"
             android:layout_marginBottom="5dp"
             android:paddingRight="5dp"
             android:text="上传时间:"
@@ -44,7 +55,7 @@
             android:id="@+id/add_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/patient_name"
+            android:layout_below="@id/disease"
             android:layout_marginBottom="5dp"
             android:layout_toRightOf="@id/add_time_tv"
             android:textColor="@color/text_gray_color"

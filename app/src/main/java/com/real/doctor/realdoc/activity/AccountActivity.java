@@ -251,9 +251,11 @@ public class AccountActivity extends BaseActivity {
             }
 
             HttpRequestClient.getInstance(AccountActivity.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(AccountActivity.this) {
+                protected Disposable disposable;
+
                 @Override
                 public void onSubscribe(Disposable d) {
-
+                    disposable = d;
                 }
 
                 @Override
@@ -287,13 +289,18 @@ public class AccountActivity extends BaseActivity {
 
                 @Override
                 public void onError(Throwable e) {
-                    ToastUtil.showLong(AccountActivity.this, e.getMessage());
+                    ToastUtil.showLong(RealDocApplication.getContext(), "图片上传失败!");
                     Log.d(TAG, e.getMessage());
+                    if (disposable != null && !disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
                 }
 
                 @Override
                 public void onComplete() {
-
+                    if (disposable != null && !disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
                 }
             });
         }
@@ -318,19 +325,26 @@ public class AccountActivity extends BaseActivity {
         param.put("mobilePhone", mMobile);
         HttpRequestClient.getInstance(AccountActivity.this).createBaseApi().get("user/certification/check"
                 , param, new BaseObserver<ResponseBody>(AccountActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(AccountActivity.this, "获取用户信息失败.请确定是否已登录!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

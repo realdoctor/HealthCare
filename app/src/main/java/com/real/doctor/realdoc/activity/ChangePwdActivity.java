@@ -124,21 +124,26 @@ public class ChangePwdActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(ChangePwdActivity.this).createBaseApi().json("user/updatePwd/"
                 , body, new BaseObserver<ResponseBody>(ChangePwdActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(ChangePwdActivity.this, e.getMessage());
-                        Log.d(TAG, e.getMessage());
+                        ToastUtil.showLong(ChangePwdActivity.this, "密码修改失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

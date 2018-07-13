@@ -13,6 +13,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -54,7 +55,7 @@ public class CaseControlActivity extends BaseActivity {
     @BindView(R.id.finish_back)
     ImageView finishBack;
     @BindView(R.id.search_patient)
-    TextView searchPatient;
+    EditText searchPatient;
     @BindView(R.id.my_patient_rv)
     RecyclerView myPatientRv;
     CaseControlAdapter caseControlAdapter;
@@ -105,24 +106,31 @@ public class CaseControlActivity extends BaseActivity {
     private void init() {
         HashMap<String, String> param = new HashMap<>();
         param.put("pageNum", String.valueOf(pageNum));
+        param.put("roleId", "1");
         param.put("pageSize", "10");
         param.put("userId", mUserId);
-        HttpRequestClient.getInstance(CaseControlActivity.this).createBaseApi().get("patient/upload/list"
+        HttpRequestClient.getInstance(CaseControlActivity.this).createBaseApi().get("askQuestion/reply/list"
                 , param, new BaseObserver<ResponseBody>(CaseControlActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(CaseControlActivity.this, "获取患者管理列表失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -182,15 +190,11 @@ public class CaseControlActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back, R.id.search_patient})
+    @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
                 finish();
-                break;
-            case R.id.search_patient:
-                Intent intent = new Intent(this, SearchPatientActivity.class);
-                startActivity(intent);
                 break;
         }
     }

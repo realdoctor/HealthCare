@@ -54,16 +54,16 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener,AdapterView.OnItemClickListener  {
+public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener, AdapterView.OnItemClickListener {
     @BindView(R.id.lv_news)
     ListView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     public NewsAdapter newsAdapter;
-    public ArrayList<NewModel> newModels=new ArrayList<NewModel>();
+    public ArrayList<NewModel> newModels = new ArrayList<NewModel>();
     private PageModel<NewModel> baseModel = new PageModel<NewModel>();
-    public int pageNum=1;
-    public int pageSize=10;
+    public int pageNum = 1;
+    public int pageSize = 10;
     public String userId;
     private Unbinder unbinder;
 
@@ -85,13 +85,14 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
     public void doBusiness(Context mContext) {
         initData();
     }
+
     public void initData() {
-        userId= (String) SPUtils.get(getContext(), Constants.USER_KEY,"");
-        newsAdapter= new NewsAdapter(getContext(),newModels);
+        userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
+        newsAdapter = new NewsAdapter(getContext(), newModels);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);
         ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         getData();
@@ -101,15 +102,17 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
     public void widgetClick(View v) {
 
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
+
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        if(pageSize*pageNum>newModels.size()){
-            ToastUtil.show(getContext(),"已经是最后一页", Toast.LENGTH_SHORT);
+        if (pageSize * pageNum > newModels.size()) {
+            ToastUtil.show(getContext(), "已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
             return;
         }
@@ -120,7 +123,7 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        pageNum=1;
+        pageNum = 1;
         newModels.clear();
         getData();
         refreshLayout.finishRefresh();
@@ -128,30 +131,38 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        NewModel model=   (NewModel)parent.getAdapter().getItem(position);
-        Intent intent =new Intent(getContext(), NewDetailActivity.class);
-        intent.putExtra("newsId",model.newsId);
+        NewModel model = (NewModel) parent.getAdapter().getItem(position);
+        Intent intent = new Intent(getContext(), NewDetailActivity.class);
+        intent.putExtra("newsId", model.newsId);
         startActivity(intent);
     }
+
     private void getData() {
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("userId",userId);
-        params.put("pageNum",pageNum);
-        params.put("pageSize",pageSize);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews/myFocusList"
                 , params, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -170,7 +181,7 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel = localGson.fromJson(jsonObject.toString(),

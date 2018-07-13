@@ -186,15 +186,19 @@ public class RealDocApplication extends MultiDexApplication {
         map.put("clientNum", String.valueOf(count));
         HttpRequestClient.getInstance(getContext()).createBaseApi().get("patient"
                 , map, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(getContext(), "获取病历列表出错!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
 

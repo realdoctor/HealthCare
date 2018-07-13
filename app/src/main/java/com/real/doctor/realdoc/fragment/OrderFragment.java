@@ -60,7 +60,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class OrderFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener {
+public class OrderFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener {
     private Unbinder unbinder;
     public OrderStatusModel bean;
     @BindView(R.id.lv_orders)
@@ -69,16 +69,17 @@ public class OrderFragment extends BaseFragment implements OnLoadmoreListener,On
     SmartRefreshLayout refreshLayout;
     public OrderShowAdapter orderAdapter;
     private ClassicsHeader mClassicsHeader;
-    public String  userId;
-    public int pageNum=1;
-    public int pageSize=10;
-    public boolean isFirstEnter=true;
+    public String userId;
+    public int pageNum = 1;
+    public int pageSize = 10;
+    public boolean isFirstEnter = true;
     private PageModel<OrderModel> baseModel = new PageModel<OrderModel>();
-    public ArrayList<OrderModel> orderModels =new ArrayList<OrderModel>();
+    public ArrayList<OrderModel> orderModels = new ArrayList<OrderModel>();
+
     public static OrderFragment newInstance(OrderStatusModel bean) {
-        OrderFragment fragment=new OrderFragment();
-        Bundle bundel=new Bundle();
-        bundel.putSerializable("model",bean);
+        OrderFragment fragment = new OrderFragment();
+        Bundle bundel = new Bundle();
+        bundel.putSerializable("model", bean);
         fragment.setArguments(bundel);
         return fragment;
     }
@@ -95,11 +96,11 @@ public class OrderFragment extends BaseFragment implements OnLoadmoreListener,On
 
     @Override
     public void doBusiness(final Context mContext) {
-        if(getArguments()!=null) {
-            userId= (String)SPUtils.get(getContext(), Constants.USER_KEY,"");
-            bean=(OrderStatusModel) getArguments().get("model");
+        if (getArguments() != null) {
+            userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
+            bean = (OrderStatusModel) getArguments().get("model");
             mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-            ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+            ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
             refreshLayout.setOnLoadmoreListener(this);
             refreshLayout.setOnRefreshListener(this);
             orderAdapter = new OrderShowAdapter(mContext, orderModels);
@@ -107,7 +108,7 @@ public class OrderFragment extends BaseFragment implements OnLoadmoreListener,On
             listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                    String name=orderModels.get(groupPosition).orderList.get(childPosition).goodsPrice;
+                    String name = orderModels.get(groupPosition).orderList.get(childPosition).goodsPrice;
                     return false;
                 }
             });
@@ -117,29 +118,34 @@ public class OrderFragment extends BaseFragment implements OnLoadmoreListener,On
         }
     }
 
-    private void getRefreshOrders(){
-        HashMap<String,Object> param=new HashMap<>();
-        param.put("tradeStatus",bean.orderstatus);
-        param.put("pageNum",pageNum);
-        param.put("pageSize",pageSize);
-        param.put("userId",userId);
+    private void getRefreshOrders() {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("tradeStatus", bean.orderstatus);
+        param.put("pageNum", pageNum);
+        param.put("pageSize", pageSize);
+        param.put("userId", userId);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get(" goods/order/orderList/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -158,7 +164,7 @@ public class OrderFragment extends BaseFragment implements OnLoadmoreListener,On
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel = localGson.fromJson(jsonObject.toString(),
@@ -166,10 +172,11 @@ public class OrderFragment extends BaseFragment implements OnLoadmoreListener,On
                                             }.getType());
                                     orderModels.addAll(baseModel.list);
                                     orderAdapter.notifyDataSetChanged();
-                                    int count=orderAdapter.getGroupCount();
-                                    for (int i=0; i<count; i++) {
+                                    int count = orderAdapter.getGroupCount();
+                                    for (int i = 0; i < count; i++) {
                                         listView.expandGroup(i);
-                                    };
+                                    }
+                                    ;
                                 } else {
                                 }
                             } catch (JSONException e) {
@@ -182,10 +189,12 @@ public class OrderFragment extends BaseFragment implements OnLoadmoreListener,On
 
                 });
     }
+
     @Override
     public void widgetClick(View v) {
 
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -194,22 +203,22 @@ public class OrderFragment extends BaseFragment implements OnLoadmoreListener,On
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-            if(pageSize*pageNum> orderModels.size()){
-                ToastUtil.show(getContext(),"已经是最后一页",Toast.LENGTH_SHORT);
-                refreshlayout.finishLoadmore();
-                return;
-            }
-            pageNum++;
-            getRefreshOrders();
+        if (pageSize * pageNum > orderModels.size()) {
+            ToastUtil.show(getContext(), "已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
+            return;
+        }
+        pageNum++;
+        getRefreshOrders();
+        refreshlayout.finishLoadmore();
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-            pageNum=1;
-            orderModels.clear();
-            getRefreshOrders();
-            refreshlayout.finishRefresh();
+        pageNum = 1;
+        orderModels.clear();
+        getRefreshOrders();
+        refreshlayout.finishRefresh();
     }
 
 

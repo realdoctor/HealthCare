@@ -25,7 +25,6 @@ public class DaoMaster extends AbstractDaoMaster {
         DrugBeanDao.createTable(db, ifNotExists);
         ImageBeanDao.createTable(db, ifNotExists);
         ImageListBeanDao.createTable(db, ifNotExists);
-        InqueryBeanDao.createTable(db, ifNotExists);
         MessageBeanDao.createTable(db, ifNotExists);
         NewFriendsMsgsDao.createTable(db, ifNotExists);
         PrefBeanDao.createTable(db, ifNotExists);
@@ -43,7 +42,6 @@ public class DaoMaster extends AbstractDaoMaster {
         DrugBeanDao.dropTable(db, ifExists);
         ImageBeanDao.dropTable(db, ifExists);
         ImageListBeanDao.dropTable(db, ifExists);
-        InqueryBeanDao.dropTable(db, ifExists);
         MessageBeanDao.dropTable(db, ifExists);
         NewFriendsMsgsDao.dropTable(db, ifExists);
         PrefBeanDao.dropTable(db, ifExists);
@@ -75,7 +73,6 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(DrugBeanDao.class);
         registerDaoClass(ImageBeanDao.class);
         registerDaoClass(ImageListBeanDao.class);
-        registerDaoClass(InqueryBeanDao.class);
         registerDaoClass(MessageBeanDao.class);
         registerDaoClass(NewFriendsMsgsDao.class);
         registerDaoClass(PrefBeanDao.class);

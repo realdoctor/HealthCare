@@ -13,13 +13,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.real.doctor.realdoc.activity.CaseListActivity;
 import com.real.doctor.realdoc.greendao.table.ImageManager;
 import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
-import com.real.doctor.realdoc.greendao.table.InqueryManager;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.greendao.table.VideoManager;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.ImageListBean;
-import com.real.doctor.realdoc.model.InqueryBean;
 import com.real.doctor.realdoc.model.PatientBean;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
@@ -50,18 +48,22 @@ public class UnzipService extends JobService {
     private ImageRecycleManager imageRecycleInstance;
     //数据库处理
     private SaveDocManager instance;
-    private InqueryManager inqueryInstance;
     private RecordManager recordInstance;
     private VideoManager videoInstance;
     private List<SaveDocBean> list;
-    private String inquery;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             srcUrl = patientBean.getSrc();
-            //下载zip
-            downLoadData();
+            if (EmptyUtils.isNotEmpty(srcUrl)) {
+                //下载zip
+                downLoadData();
+            } else {
+                //通知页面刷新数据
+                Intent intent = new Intent(CaseListActivity.GET_LIST);
+                LocalBroadcastManager.getInstance(UnzipService.this).sendBroadcast(intent);
+            }
             return true;
         }
     });
@@ -82,7 +84,7 @@ public class UnzipService extends JobService {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        ToastUtil.showLong(UnzipService.this, "文件下载失败,请返回列表重新进入病历列表!");
                     }
 
                     @Override
@@ -112,10 +114,6 @@ public class UnzipService extends JobService {
                                 String str = names.get(0);
                                 str = str.substring(7, str.lastIndexOf(".db"));
                                 String folderName = SDCardUtils.getGlobalDir() + name + File.separator;
-                                List<InqueryBean> inqueryBeans = inqueryInstance.queryPatientInqueryList(UnzipService.this, str, folderName);
-                                if (inqueryBeans.size() == 1) {
-                                    inquery = inqueryBeans.get(0).getInquery();
-                                }
                                 //将子数据库数据导入到本地数据库文件中,然后删除子数据文件
                                 list = instance.queryPatientSaveDocList(UnzipService.this, str, folderName);
                                 System.out.print(list.size());
@@ -152,7 +150,6 @@ public class UnzipService extends JobService {
                         //通知页面刷新数据
                         Intent intent = new Intent(CaseListActivity.GET_LIST);
                         intent.putParcelableArrayListExtra("list", (ArrayList<? extends Parcelable>) list);
-                        intent.putExtra("inquery",inquery);
                         LocalBroadcastManager.getInstance(UnzipService.this).sendBroadcast(intent);
                     }
                 });
@@ -163,7 +160,6 @@ public class UnzipService extends JobService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         instance = SaveDocManager.getInstance(UnzipService.this);
-        inqueryInstance = InqueryManager.getInstance(UnzipService.this);
         imageInstance = ImageManager.getInstance(UnzipService.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(UnzipService.this);
         recordInstance = RecordManager.getInstance(UnzipService.this);

@@ -58,7 +58,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class ProductShowFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener,AdapterView.OnItemClickListener,ProductAdapter.ClickListener {
+public class ProductShowFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener, AdapterView.OnItemClickListener, ProductAdapter.ClickListener {
     private Unbinder unbinder;
     public CategoryBean bean;
     @BindView(R.id.lv_brands)
@@ -71,17 +71,18 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
     public ProductAdapter productAdapter;
     public String categoryId;
     private ClassicsHeader mClassicsHeader;
-    public int pageNum=1;
-    public int pageSize=10;
-    public boolean isFirstEnter=true;
-    public String searchKey="";
-    public String  userId;
+    public int pageNum = 1;
+    public int pageSize = 10;
+    public boolean isFirstEnter = true;
+    public String searchKey = "";
+    public String userId;
     private PageModel<ProductBean> baseModel = new PageModel<ProductBean>();
-    public ArrayList<ProductBean> productList=new ArrayList<ProductBean>();
+    public ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
+
     public static ProductShowFragment newInstance(CategoryBean bean) {
-        ProductShowFragment fragment=new ProductShowFragment();
-        Bundle bundel=new Bundle();
-        bundel.putSerializable("model",bean);
+        ProductShowFragment fragment = new ProductShowFragment();
+        Bundle bundel = new Bundle();
+        bundel.putSerializable("model", bean);
         fragment.setArguments(bundel);
         return fragment;
     }
@@ -98,9 +99,9 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
 
     @Override
     public void doBusiness(final Context mContext) {
-        if(getArguments()!=null) {
-            userId=(String)SPUtils.get(getContext(),  Constants.USER_KEY,"");
-            bean=(CategoryBean)getArguments().get("model");
+        if (getArguments() != null) {
+            userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
+            bean = (CategoryBean) getArguments().get("model");
             brandAdapter = new BrandAdapter(mContext, DataUtil.brandBeans);
             brandListView.setAdapter(brandAdapter);
             brandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -133,7 +134,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
             selectDefault();
             int deta = new Random().nextInt(7 * 24 * 60 * 60 * 1000);
             mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-            ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+            ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
             refreshLayout.setOnLoadmoreListener(this);
             refreshLayout.setOnRefreshListener(this);
             productAdapter = new ProductAdapter(mContext, productList);
@@ -144,29 +145,34 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
         }
     }
 
-    public  void getRefreshProducts(){
-        HashMap<String,Object> param=new HashMap<>();
-        param.put("categoryId",bean.categoryId);
-        param.put("pageNum",pageNum);
-        param.put("pageSize",pageSize);
-        param.put("searchstr",searchKey);
+    public void getRefreshProducts() {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("categoryId", bean.categoryId);
+        param.put("pageNum", pageNum);
+        param.put("pageSize", pageSize);
+        param.put("searchstr", searchKey);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get(" goods/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -186,7 +192,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     productList.clear();
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel = localGson.fromJson(jsonObject.toString(),
@@ -207,29 +213,35 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
 
                 });
     }
-    public void getLoadProducts(){
-        HashMap<String,Object> param=new HashMap<>();
-        param.put("categoryId",bean.categoryId);
-        param.put("pageNum",pageNum);
-        param.put("pageSize",pageSize);
-        param.put("searchstr",searchKey);
+
+    public void getLoadProducts() {
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("categoryId", bean.categoryId);
+        param.put("pageNum", pageNum);
+        param.put("pageSize", pageSize);
+        param.put("searchstr", searchKey);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get("goods/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -248,7 +260,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel = localGson.fromJson(jsonObject.toString(),
@@ -269,18 +281,21 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
 
                 });
     }
+
     @Override
     public void widgetClick(View v) {
 
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
+
     //默认选中
-    private void selectDefault(){
-        final int location=0;
+    private void selectDefault() {
+        final int location = 0;
         brandAdapter.setSelectedPosition(0);
         brandAdapter.notifyDataSetInvalidated();
 //        final BrandBean breadBean=	(BrandBean) brandAdapter.getItem(0);
@@ -302,48 +317,49 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-            if(pageSize*pageNum>productList.size()){
-                ToastUtil.show(getContext(),"已经是最后一页",Toast.LENGTH_SHORT);
-                refreshlayout.finishLoadmore();
-                return;
-            }
-            pageNum++;
-            getLoadProducts();
+        if (pageSize * pageNum > productList.size()) {
+            ToastUtil.show(getContext(), "已经是最后一页", Toast.LENGTH_SHORT);
+            refreshlayout.finishLoadmore();
+            return;
+        }
+        pageNum++;
+        getLoadProducts();
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-            pageNum=1;
-            searchKey="";
-            getRefreshProducts();
+        pageNum = 1;
+        searchKey = "";
+        getRefreshProducts();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ProductBean bean =(ProductBean) parent.getAdapter().getItem(position);
-        Intent intent =new Intent(getContext(), ProductShowActivity.class);
-        intent.putExtra("model",bean);
+        ProductBean bean = (ProductBean) parent.getAdapter().getItem(position);
+        Intent intent = new Intent(getContext(), ProductShowActivity.class);
+        intent.putExtra("model", bean);
         startActivity(intent);
     }
 
     @Override
     public void clickListener(View v) {
-        if(userId==null||userId.length()==0){
-            Intent intent=new Intent(getContext(), LoginActivity.class);
+        if (userId == null || userId.length() == 0) {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
-        }else{
-            ProductBean bean=(ProductBean) v.getTag();
-            addToCart(bean.getGoodsId(),1);
+        } else {
+            ProductBean bean = (ProductBean) v.getTag();
+            addToCart(bean.getGoodsId(), 1);
         }
 
     }
+
     //添加到购物车
-    public void addToCart(String goodsId,int num){
-        JSONObject object=new JSONObject();
+    public void addToCart(String goodsId, int num) {
+        JSONObject object = new JSONObject();
         try {
-            object.put("goodsId",goodsId);
-            object.put("num",num);
-            object.put("userId",userId);
+            object.put("goodsId", goodsId);
+            object.put("num", num);
+            object.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -356,24 +372,32 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
             ToastUtil.showLong(getContext(), "请确定您的账户已登录!");
             return;
         }
-        HttpRequestClient client= HttpRequestClient.getInstance(getContext(), HttpNetUtil.BASE_URL,header);
+        HttpRequestClient client = HttpRequestClient.getInstance(getContext(), HttpNetUtil.BASE_URL, header);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
+
                     @Override
                     public void onError(Throwable e) {
 //                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
                         ToastUtil.showLong(getContext(), "加入购物车失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

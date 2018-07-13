@@ -7,7 +7,7 @@
 
     <include layout="@layout/title_bar" />
 
-    <TextView
+    <EditText
         android:id="@+id/search_patient"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -20,8 +20,12 @@
         android:drawablePadding="10.0dip"
         android:gravity="center_vertical"
         android:hint="@string/search_patient_hint"
+        android:imeOptions="actionSearch"
         android:paddingLeft="10.0dip"
-        android:textColorHint="@android:color/darker_gray" />
+        android:singleLine="true"
+        android:textColorHint="@android:color/darker_gray"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="@dimen/sp_14" />
 
     <include layout="@layout/divider_line" />
 

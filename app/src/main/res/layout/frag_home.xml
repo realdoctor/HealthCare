@@ -59,14 +59,27 @@
                 android:layout_marginLeft="10dp"
                 android:background="@mipmap/scanner_icon" />
 
-            <ImageView
-                android:id="@+id/info_icon"
+            <RelativeLayout
                 android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
-                android:background="@mipmap/info_icon" />
+                android:layout_marginRight="15dp">
+
+                <ImageView
+                    android:id="@+id/info_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/info_icon" />
+
+                <TextView
+                    android:id="@+id/info_red_icon"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/info_circle_bg"
+                    android:visibility="gone" />
+            </RelativeLayout>
         </LinearLayout>
 
     </RelativeLayout>

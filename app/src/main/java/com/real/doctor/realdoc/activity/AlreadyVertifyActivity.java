@@ -86,19 +86,26 @@ public class AlreadyVertifyActivity extends BaseActivity {
         param.put("userId", userId);
         HttpRequestClient.getInstance(AlreadyVertifyActivity.this).createBaseApi().get("user/certification/info"
                 , param, new BaseObserver<ResponseBody>(AlreadyVertifyActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(AlreadyVertifyActivity.this, "获取用户信息失败.请确定是否已登录!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

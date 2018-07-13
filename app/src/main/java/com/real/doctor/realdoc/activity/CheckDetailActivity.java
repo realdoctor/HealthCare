@@ -1,24 +1,19 @@
 package com.real.doctor.realdoc.activity;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
-import android.os.Parcelable;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.DocDetailAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
@@ -26,10 +21,9 @@ import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
-import com.real.doctor.realdoc.util.ToastUtil;
-import com.tencent.tauth.Tencent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,25 +38,14 @@ public class CheckDetailActivity extends BaseActivity {
     TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
-    @BindView(R.id.right_title)
-    TextView rightTitle;
     @BindView(R.id.check_detail_rv)
     RecyclerView checkDetailRv;
     @BindView(R.id.zip_img)
     ImageView zipImg;
-    @BindView(R.id.zip_text)
-    TextView zipText;
-    @BindView(R.id.zip_edit)
-    EditText zipEdit;
-    @BindView(R.id.zip_edit_linear)
-    LinearLayout zipEditLinear;
     List<SaveDocBean> mList;
     DocDetailAdapter checkDetailAdapter;
-    public static final String GET_PATH = "android.intent.action.get.path";
-    public static final int REQUEST_CODE_PROGRESS_BAR = 0x130;
     private String path;
-    private String inquery;
-    private String doctorUserId;
+    private String questionId;
 
     @Override
     public int getLayoutId() {
@@ -83,19 +66,17 @@ public class CheckDetailActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        pageTitle.setText("打包详情");
-        rightTitle.setVisibility(View.VISIBLE);
-        rightTitle.setText("上传");
-        zipImg.setVisibility(View.GONE);
-        zipText.setVisibility(View.GONE);
-        zipEditLinear.setVisibility(View.VISIBLE);
+        pageTitle.setText("相关资料详情");
+        zipImg.setVisibility(View.VISIBLE);
         mList = new ArrayList<>();
         Intent intent = getIntent();
         if (intent != null) {
+            path = intent.getStringExtra("path");
+            questionId = intent.getStringExtra("questionId");
             mList = intent.getParcelableArrayListExtra("mList");
-            inquery = intent.getExtras().getString("inquery");
-            doctorUserId = intent.getExtras().getString("doctorUserId");
         }
+        //倒序排列
+        Collections.reverse(mList);
         //创建布局管理
         checkDetailRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         //添加自定义分割线
@@ -109,25 +90,36 @@ public class CheckDetailActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-
+        checkDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                SaveDocBean bean = (SaveDocBean) adapter.getItem(position);
+                Intent intent = new Intent(CheckDetailActivity.this, DocContentActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putParcelable("SaveDocBean", bean);
+                intent.putExtras(mBundle);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
     }
 
     @Override
-    @OnClick({R.id.finish_back, R.id.right_title, R.id.zip_img})
+    @OnClick({R.id.finish_back, R.id.zip_img})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                finish();
-                break;
-            case R.id.right_title:
-                String zipEditContent = zipEdit.getText().toString();
-                Intent intent = new Intent(CheckDetailActivity.this, ProgressBarActivity.class);
-                intent.putExtra("inquery", inquery);
-                intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
-                intent.putExtra("zipEdit", zipEditContent);
-                intent.putExtra("doctorUserId", doctorUserId);
-                startActivityForResult(intent, REQUEST_CODE_PROGRESS_BAR);
+                //跳转到在线复诊页面
+                Intent intent = null;
+                if (EmptyUtils.isEmpty(questionId)) {
+                    intent = new Intent(CheckDetailActivity.this, DoctorsListActivity.class);
+                } else {
+                    intent = new Intent(CheckDetailActivity.this, MyRevisitActivity.class);
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                finish();
                 break;
             case R.id.zip_img:
                 if (EmptyUtils.isNotEmpty(path)) {
@@ -140,18 +132,6 @@ public class CheckDetailActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_PROGRESS_BAR) {
-            zipImg.setVisibility(View.VISIBLE);
-            zipText.setVisibility(View.VISIBLE);
-            zipEditLinear.setVisibility(View.GONE);
-            rightTitle.setVisibility(View.GONE);
-            path = data.getStringExtra("path");
-        }
     }
 
 }

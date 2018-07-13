@@ -12,6 +12,7 @@ public class DoctorBean extends UserBean implements Parcelable {
     private String doctorCode;
     //    private String doctorImg;
     private String visitOrgName;
+    @SerializedName("title")
     private String diagName;
     private String visitDtime;
     private String questionId;
@@ -19,6 +20,7 @@ public class DoctorBean extends UserBean implements Parcelable {
     private String inquery;
     private String answer;
     private String addTime;
+    private String retryNum;
 
     public DoctorBean() {
         super();
@@ -34,6 +36,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         inquery = in.readString();
         answer = in.readString();
         addTime = in.readString();
+        retryNum = in.readString();
     }
 
     @Override
@@ -47,6 +50,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         dest.writeString(inquery);
         dest.writeString(answer);
         dest.writeString(addTime);
+        dest.writeString(retryNum);
     }
 
     @Override
@@ -128,5 +132,13 @@ public class DoctorBean extends UserBean implements Parcelable {
 
     public void setAddTime(String addTime) {
         this.addTime = addTime;
+    }
+
+    public String getRetryNum() {
+        return retryNum;
+    }
+
+    public void setRetryNum(String retryNum) {
+        this.retryNum = retryNum;
     }
 }

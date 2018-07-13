@@ -134,20 +134,26 @@ public class RegisterActivity extends BaseActivity {
         map.put("mobilePhone", mobilePhone);
         HttpRequestClient.getInstance(RegisterActivity.this).createBaseApi().get("user/sendCode"
                 , map, new BaseObserver<ResponseBody>(RegisterActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         ToastUtil.showLong(RegisterActivity.this, "获取验证码失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -225,11 +231,11 @@ public class RegisterActivity extends BaseActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         HttpRequestClient.getInstance(RegisterActivity.this).createBaseApi().json("user/regist/"
                 , body, new BaseObserver<ResponseBody>(RegisterActivity.this) {
+                    protected Disposable disposable;
 
                     @Override
-
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
@@ -237,11 +243,16 @@ public class RegisterActivity extends BaseActivity {
 //                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
                         ToastUtil.showLong(RegisterActivity.this, "用户注册失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override

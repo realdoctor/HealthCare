@@ -8,12 +8,8 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.activity.ChatActivity;
 import com.real.doctor.realdoc.activity.ChatPayActivity;
-import com.real.doctor.realdoc.activity.CheckDocActivity;
-import com.real.doctor.realdoc.activity.InqueryActivity;
 import com.real.doctor.realdoc.model.DoctorBean;
-import com.real.doctor.realdoc.model.InqueryBean;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
 
@@ -42,13 +38,8 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 Intent intent = new Intent(context, ChatPayActivity.class);
                 intent.putExtra("payType", "1");
                 intent.putExtra("doctorUserId", item.getId());
+                intent.putExtra("desease", item.getDiagName());
                 context.startActivity(intent);
-                //点击进入聊天页
-//                Intent intent = new Intent(context, ChatActivity.class);
-//                intent.putExtra("userId", "admin");
-////                intent.putExtra("doctorUserId", item.getId());
-//                context.startActivity(intent);
-
             }
         });
 
@@ -60,11 +51,8 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 Intent intent = new Intent(context, ChatPayActivity.class);
                 intent.putExtra("payType", "2");
                 intent.putExtra("doctorUserId", item.getId());
+                intent.putExtra("desease", item.getDiagName());
                 context.startActivity(intent);
-                //点击进入病历列表页面
-         /*       Intent intent = new Intent(context, InqueryActivity.class);
-                intent.putExtra("doctorUserId", item.getId());
-                context.startActivity(intent);*/
             }
         });
     }

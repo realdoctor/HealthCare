@@ -46,7 +46,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/20.
  */
 
-public class ProductShowActivity extends BaseActivity  {
+public class ProductShowActivity extends BaseActivity {
     @BindView(R.id.banner_id_show)
     com.youth.banner.Banner banner;
     @BindView(R.id.tv_pName)
@@ -72,9 +72,9 @@ public class ProductShowActivity extends BaseActivity  {
     @BindView(R.id.tv_num)
     TextView tv_num;
     private ProductBean bean;
-    private String  userId;
+    private String userId;
     String goodId;
-    int num=1;
+    int num = 1;
 
 
     @Override
@@ -89,7 +89,7 @@ public class ProductShowActivity extends BaseActivity  {
 
     @Override
     public void initData() {
-        banner=findViewById(R.id.banner_id_show);
+        banner = findViewById(R.id.banner_id_show);
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(ProductShowActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -98,19 +98,19 @@ public class ProductShowActivity extends BaseActivity  {
             topTitle.setLayoutParams(lp);
         }
         page_title_ll.setText("商品详情");
-        userId=(String)SPUtils.get(ProductShowActivity.this, Constants.USER_KEY,"");
-        bean=(ProductBean) getIntent().getSerializableExtra("model");
+        userId = (String) SPUtils.get(ProductShowActivity.this, Constants.USER_KEY, "");
+        bean = (ProductBean) getIntent().getSerializableExtra("model");
         bean.setNum(1);
         banner.setBannerStyle(Banner.CIRCLE_INDICATOR_TITLE);
         banner.setIndicatorGravity(Banner.CENTER);
-        banner.isAutoPlay(false) ;
+        banner.isAutoPlay(false);
         banner.setImages(new String[]{bean.getBigPic()});
-        goodId=bean.getGoodsId();
+        goodId = bean.getGoodsId();
         tv_pName.setText(bean.getName());
-        tv_price.setText("￥"+bean.getCost());
+        tv_price.setText("￥" + bean.getCost());
         tv_proproty.setText(bean.getAttribute());
         description.setText(bean.getGoodsDescription());
-        tv_num.setText("库存："+bean.getStore());
+        tv_num.setText("库存：" + bean.getStore());
     }
 
     @Override
@@ -120,14 +120,14 @@ public class ProductShowActivity extends BaseActivity  {
 
 
     @Override
-    @OnClick({R.id.tv_buy,R.id.img_cart,R.id.tv_incart,R.id.finish_back})
+    @OnClick({R.id.tv_buy, R.id.img_cart, R.id.tv_incart, R.id.finish_back})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_buy:
-                if(userId==null||userId.length()==0){
-                    Intent intent=new Intent(ProductShowActivity.this,LoginActivity.class);
+                if (userId == null || userId.length() == 0) {
+                    Intent intent = new Intent(ProductShowActivity.this, LoginActivity.class);
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(ProductShowActivity.this, PayActivity.class);
                     intent.putExtra("totalPrice", String.valueOf(bean.getCost()));
                     ArrayList<ProductBean> list = new ArrayList<ProductBean>();
@@ -137,18 +137,18 @@ public class ProductShowActivity extends BaseActivity  {
                 }
                 break;
             case R.id.tv_incart:
-                if(userId==null||userId.length()==0){
-                    Intent intent=new Intent(ProductShowActivity.this,LoginActivity.class);
+                if (userId == null || userId.length() == 0) {
+                    Intent intent = new Intent(ProductShowActivity.this, LoginActivity.class);
                     startActivity(intent);
-                }else {
+                } else {
                     addToCart(goodId, num);
                 }
                 break;
             case R.id.img_cart:
-                if(userId==null||userId.length()==0){
-                    Intent intent=new Intent(ProductShowActivity.this,LoginActivity.class);
+                if (userId == null || userId.length() == 0) {
+                    Intent intent = new Intent(ProductShowActivity.this, LoginActivity.class);
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intentCart = new Intent(ProductShowActivity.this, ShopCartActivity.class);
                     startActivity(intentCart);
                 }
@@ -163,34 +163,43 @@ public class ProductShowActivity extends BaseActivity  {
     public void doBusiness(Context mContext) {
 
     }
+
     //添加到购物车
-    public void addToCart(String goodsId,int num){
-        JSONObject object=new JSONObject();
+    public void addToCart(String goodsId, int num) {
+        JSONObject object = new JSONObject();
         try {
-            object.put("goodsId",goodsId);
-            object.put("num",num);
-            object.put("userId",userId);
+            object.put("goodsId", goodsId);
+            object.put("num", num);
+            object.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-       HttpRequestClient client= HttpRequestClient.getInstance(ProductShowActivity.this,HttpNetUtil.BASE_URL);
+        HttpRequestClient client = HttpRequestClient.getInstance(ProductShowActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ProductShowActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
+
                     @Override
                     public void onError(Throwable e) {
 //                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
                         ToastUtil.showLong(ProductShowActivity.this, "加入购物车失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -223,34 +232,43 @@ public class ProductShowActivity extends BaseActivity  {
 
                 });
     }
+
     //立即购买
-    public void payCart(String goodsId,int num){
-        JSONObject object=new JSONObject();
+    public void payCart(String goodsId, int num) {
+        JSONObject object = new JSONObject();
         try {
-            object.put("goodsId",goodsId);
-            object.put("num",num);
-            object.put("userId",userId);
+            object.put("goodsId", goodsId);
+            object.put("num", num);
+            object.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpRequestClient client= HttpRequestClient.getInstance(ProductShowActivity.this,HttpNetUtil.BASE_URL);
+        HttpRequestClient client = HttpRequestClient.getInstance(ProductShowActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ProductShowActivity.this) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
+
                     @Override
                     public void onError(Throwable e) {
 //                        ToastUtil.showLong(RegisterActivity.this, e.getMessage());
                         ToastUtil.showLong(ProductShowActivity.this, "加入购物车失败!");
                         Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -269,7 +287,7 @@ public class ProductShowActivity extends BaseActivity  {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    Intent intent =new Intent(ProductShowActivity.this,ShopCartActivity.class);
+                                    Intent intent = new Intent(ProductShowActivity.this, ShopCartActivity.class);
                                     startActivity(intent);
                                 } else {
                                     ToastUtil.showLong(ProductShowActivity.this, "加入购物车失败!");
@@ -288,7 +306,7 @@ public class ProductShowActivity extends BaseActivity  {
     @Override
     protected void onResume() {
         super.onResume();
-        userId=(String)SPUtils.get(ProductShowActivity.this, Constants.USER_KEY,"");
+        userId = (String) SPUtils.get(ProductShowActivity.this, Constants.USER_KEY, "");
     }
 }
 
