@@ -409,8 +409,7 @@ public class HomeFragment extends BaseFragment {
                     break;
                 case R.id.appoint_icon:
                     isHomeIn = true;
-                    //intent = new Intent(getActivity(), RegistrationsActivity.class);
-                    intent = new Intent(getActivity(), PatientEduListActivity.class);
+                    intent = new Intent(getActivity(), RegistrationsActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.scan_icon:
