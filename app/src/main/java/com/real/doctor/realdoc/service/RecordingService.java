@@ -43,6 +43,7 @@ public class RecordingService extends Service {
     private TimerTask mIncrementTimerTask = null;
     private RecordManager instance = null;
     private String mFolder;
+    private String mModifyId;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -62,6 +63,7 @@ public class RecordingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mFolder = intent.getStringExtra("folder");
+        mModifyId = intent.getStringExtra("modifyId");
         startRecording();
         return START_STICKY;
     }
@@ -149,6 +151,9 @@ public class RecordingService extends Service {
 
         try {
             RecordBean bean = new RecordBean();
+            if (EmptyUtils.isNotEmpty(mModifyId)) {
+                bean.setRecordId(mModifyId);
+            }
             bean.setFileName(mFileName);
             bean.setFilePath(mFilePath);
             bean.setDate(String.valueOf(mStartingTimeMillis));

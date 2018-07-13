@@ -40,6 +40,7 @@ import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.VideoManager;
 import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -87,6 +88,7 @@ public class VideoOneActivity extends BaseActivity implements
     SurfaceHolder mSurfaceHolder;
     int defaultVideoFrameRate = -1;
     private String mFolder;
+    private String mModifyId;
     private String fileName;
     private VideoManager instance = null;
 
@@ -125,6 +127,7 @@ public class VideoOneActivity extends BaseActivity implements
         Intent intent = getIntent();
         if (intent != null) {
             mFolder = intent.getStringExtra("folder");
+            mModifyId = intent.getStringExtra("modifyId");
         }
         instance = VideoManager.getInstance(this);
     }
@@ -261,6 +264,9 @@ public class VideoOneActivity extends BaseActivity implements
     private void saveVideo(Object o) {
         //存储数据进数据库
         VideoBean bean = new VideoBean();
+        if (EmptyUtils.isNotEmpty(mModifyId)) {
+            bean.setRecordId(mModifyId);
+        }
         bean.setFileName(fileName);
         bean.setFilePath(localPath);
         bean.setElapsedMillis(chronometer.getFormat());

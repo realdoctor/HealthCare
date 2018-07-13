@@ -105,7 +105,7 @@ public class DocContentActivity extends BaseActivity {
     RecyclerView videoRecycleView;
     private List<String> mImgPaths;
     private Bitmap[] newImgs;
-    private String mFolder;
+    private String mId;
     private SaveDocManager instance;
     private RecordManager recordInstance;
     private VideoManager videoInstance;
@@ -168,7 +168,7 @@ public class DocContentActivity extends BaseActivity {
             String mDoctor = null;
             String mHospital = null;
             String mTime = null;
-            String mId = saveDocBean.getId();
+            mId = saveDocBean.getId();
             if (EmptyUtils.isNotEmpty(mId)) {
                 String drug = getPatientDiag(mId);
                 advice.setText(drug);
@@ -184,9 +184,6 @@ public class DocContentActivity extends BaseActivity {
             }
             if (saveDocBean.getTime() != null) {
                 mTime = saveDocBean.getTime().toString().trim();
-            }
-            if (saveDocBean.getFolder() != null) {
-                mFolder = saveDocBean.getFolder().trim();
             }
             if (EmptyUtils.isNotEmpty(mIll)) {
                 ill.setText(mIll);
@@ -240,15 +237,16 @@ public class DocContentActivity extends BaseActivity {
             //给RecyclerView设置适配器
             gridRecycleView.setAdapter(imageCardAdapter);
 
-            if (EmptyUtils.isNotEmpty(mFolder)) {
+            if (EmptyUtils.isNotEmpty(mId)) {
+                audioList = recordInstance.queryRecordWithRecordId(this, mId);
                 //获取录音的列表
-                audioList = recordInstance.queryRecordWithFolder(this, mFolder);
+//                audioList = recordInstance.queryRecordWithFolder(this, mFolder);
                 audioRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
                 audioAdapter = new AudioAdapter(R.layout.audio_item, audioList);
                 audioRecycleView.setAdapter(audioAdapter);
 
                 //获取视频的列表
-                videoList = videoInstance.queryVideoWithFolder(this, mFolder);
+                videoList = videoInstance.queryVideoWithRecordId(this, mId);
                 videoRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
                 videoAdapter = new VideoAdapter(R.layout.video_item, videoList);
                 videoRecycleView.setAdapter(videoAdapter);
@@ -326,7 +324,7 @@ public class DocContentActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-        if (EmptyUtils.isNotEmpty(mFolder)) {
+        if (EmptyUtils.isNotEmpty(mId)) {
             audioAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -339,7 +337,7 @@ public class DocContentActivity extends BaseActivity {
                 }
             });
         }
-        if (EmptyUtils.isNotEmpty(mFolder)) {
+        if (EmptyUtils.isNotEmpty(mId)) {
             videoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -447,11 +445,11 @@ public class DocContentActivity extends BaseActivity {
                 imageOriganList.addAll(imageList);
                 audioList = new ArrayList<>();
                 videoList = new ArrayList<>();
-                if (EmptyUtils.isNotEmpty(mFolder)) {
+                if (EmptyUtils.isNotEmpty(mId)) {
                     //获取录音的列表
-                    audioList.addAll(recordInstance.queryRecordWithFolder(this, mFolder));
+                    audioList.addAll(recordInstance.queryRecordWithRecordId(this, mId));
                     //获取视频的列表
-                    videoList.addAll(videoInstance.queryVideoWithFolder(this, mFolder));
+                    videoList.addAll(videoInstance.queryVideoWithRecordId(this, mId));
                 }
                 //此处不能用notifycation,因为图片放大的顺序要重新分配过
                 imageCardAdapter = new ImageCardAdapter(this, R.layout.image_card_item, imageOriganList, newImgs, mImgPaths, true);

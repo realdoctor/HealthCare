@@ -339,7 +339,9 @@ public class HomeFragment extends BaseFragment {
                     }
                 } else if (action.equals(SHOW_RED_ICON)) {
                     //显示红色标记
-                    infoRedInfo.setVisibility(View.VISIBLE);
+                    if (EmptyUtils.isNotEmpty(infoRedInfo)) {
+                        infoRedInfo.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         };

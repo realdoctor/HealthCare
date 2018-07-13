@@ -55,6 +55,7 @@ public class RecordActivity extends BaseActivity {
     private boolean startRecording = true;
     private boolean pauseRecording = true;
     private String mFolder;
+    private String mModifyId;
     private Intent intent = null;
 
     long timeWhenPaused = 0; //stores time when user clicks pause button
@@ -90,6 +91,7 @@ public class RecordActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mFolder = intent.getStringExtra("folder");
+            mModifyId = intent.getStringExtra("modifyId");
         }
         recordButton.setColorNormal(getResources().getColor(R.color.appthemecolor));
         recordButton.setColorPressed(getResources().getColor(R.color.search_bgcolor));
@@ -148,6 +150,9 @@ public class RecordActivity extends BaseActivity {
                 }
             });
             Bundle bundle = new Bundle();
+            if (EmptyUtils.isNotEmpty(mModifyId)) {
+                bundle.putString("modifyId", mModifyId);
+            }
             bundle.putString("folder", mFolder);
             intent.putExtras(bundle);
             //start RecordingService

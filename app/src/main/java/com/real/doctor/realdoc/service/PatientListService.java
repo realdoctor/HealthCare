@@ -105,12 +105,11 @@ public class PatientListService extends JobService {
                         List<ImageBean> images = imageInstance.queryPatientImageByImageId(PatientListService.this, imageId, str, folderName);
                         imageInstance.insertImageList(PatientListService.this, images);
                     }
-                    String folderStr = list.get(i).getFolder();
                     //通过folder查询视频数据
-                    List<VideoBean> videoList = videoInstance.queryPatientVideoWithFolder(PatientListService.this, folderStr, str, folderName);
+                    List<VideoBean> videoList = videoInstance.queryPatientVideoWithRecordId(PatientListService.this, id, str, folderName);
                     videoInstance.insertVideoList(PatientListService.this, videoList);
                     //通过folder查询音频频数据
-                    List<RecordBean> recordList = recordInstance.queryPatientRecordWithFolder(PatientListService.this, folderStr, str, folderName);
+                    List<RecordBean> recordList = recordInstance.queryPatientRecordWithRecordId(PatientListService.this, id, str, folderName);
                     recordInstance.insertRecordList(PatientListService.this, recordList);
                 }
                 instance.insertSaveDoc(PatientListService.this, list);

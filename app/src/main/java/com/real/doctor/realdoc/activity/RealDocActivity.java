@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.app.Notification;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.jpush.android.api.BasicPushNotificationBuilder;
+import cn.jpush.android.api.JPushInterface;
 
 public class RealDocActivity extends BaseActivity {
 
@@ -57,6 +60,15 @@ public class RealDocActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //极光推送初始化
+        BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(RealDocActivity.this);
+        builder.statusBarDrawable = R.mipmap.icon_app;
+        builder.notificationFlags = Notification.FLAG_AUTO_CANCEL
+                | Notification.FLAG_SHOW_LIGHTS;  //设置为自动消失和呼吸灯闪烁
+        builder.notificationDefaults = Notification.DEFAULT_SOUND
+                | Notification.DEFAULT_VIBRATE
+                | Notification.DEFAULT_LIGHTS;  // 设置为铃声、震动、呼吸灯闪烁都要
+        JPushInterface.setPushNotificationBuilder(1, builder);
     }
 
     @Override

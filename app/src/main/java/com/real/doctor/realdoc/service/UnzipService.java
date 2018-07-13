@@ -128,13 +128,12 @@ public class UnzipService extends JobService {
                                         List<ImageBean> images = imageInstance.queryPatientImageByImageId(UnzipService.this, imageId, str, folderName);
                                         imageInstance.insertImageList(UnzipService.this, images);
                                     }
-                                    String folderStr = list.get(i).getFolder();
-                                    if (EmptyUtils.isNotEmpty(folderStr)) {
+                                    if (EmptyUtils.isNotEmpty(id)) {
                                         //通过folder查询视频数据
-                                        List<VideoBean> videoList = videoInstance.queryPatientVideoWithFolder(UnzipService.this, folderStr, str, folderName);
+                                        List<VideoBean> videoList = videoInstance.queryPatientVideoWithRecordId(UnzipService.this, id, str, folderName);
                                         videoInstance.insertVideoList(UnzipService.this, videoList);
                                         //通过folder查询音频频数据
-                                        List<RecordBean> recordList = recordInstance.queryPatientRecordWithFolder(UnzipService.this, folderStr, str, folderName);
+                                        List<RecordBean> recordList = recordInstance.queryPatientRecordWithRecordId(UnzipService.this, id, str, folderName);
                                         recordInstance.insertRecordList(UnzipService.this, recordList);
                                     }
                                 }

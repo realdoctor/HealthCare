@@ -251,7 +251,7 @@ public class SaveRecordActivity extends BaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 //隐藏键盘
-                KeyBoardUtils.hideInput(SaveRecordActivity.this,recordDocRelative);
+                KeyBoardUtils.hideInput(SaveRecordActivity.this, recordDocRelative);
                 List<String> pictures = intent.getStringArrayListExtra("imgs");
                 String advice = intent.getStringExtra("advice");
                 AddLabelBean label = intent.getParcelableExtra("label");
@@ -579,13 +579,11 @@ public class SaveRecordActivity extends BaseActivity {
                         int audioLength = audioList.size();
                         for (int j = 0; j < audioLength; j++) {
                             audioList.get(j).setRecordId(mModifyId);
-                            audioList.get(j).setFolder(folder);
                         }
                         recordInstance.insertRecordList(this, audioList);
                         int videoLength = videoList.size();
                         for (int i = 0; i < videoLength; i++) {
-                            videoList.get(i).setRecordId(mRecordId);
-                            videoList.get(i).setFolder(folder);
+                            videoList.get(i).setRecordId(mModifyId);
                         }
                         videoInstance.insertVideoList(this, videoList);
                         //删除原先的item
@@ -745,6 +743,7 @@ public class SaveRecordActivity extends BaseActivity {
                 if (DocUtils.isFastClick()) {
                     Intent intent = new Intent(SaveRecordActivity.this, RecordActivity.class);
                     Bundle bundle = new Bundle();
+                    bundle.putString("modifyId", mModifyId);
                     bundle.putString("folder", folder);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, 111);
@@ -753,6 +752,7 @@ public class SaveRecordActivity extends BaseActivity {
                 if (DocUtils.isFastClick()) {
                     Intent intent = new Intent(SaveRecordActivity.this, VideoOneActivity.class);
                     Bundle bundle = new Bundle();
+                    bundle.putString("modifyId", mModifyId);
                     bundle.putString("folder", folder);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, 112);
@@ -819,7 +819,11 @@ public class SaveRecordActivity extends BaseActivity {
             hospital.setSelection(hospital.getText().length());
         } else if (resultCode == RESULT_OK && requestCode == 111) {
             // 从数据库中取出音频列表,并展示
-            audioList = recordInstance.queryRecordWithFolder(SaveRecordActivity.this, folder);
+            if (isModify) {
+                audioList = recordInstance.queryRecordWithRecordId(SaveRecordActivity.this, mModifyId);
+            } else {
+                audioList = recordInstance.queryRecordWithFolder(SaveRecordActivity.this, folder);
+            }
             if (EmptyUtils.isNotEmpty(audioList) && audioList.size() > 0) {
                 audioRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
                 //notifyDataSetChanged()
@@ -829,7 +833,11 @@ public class SaveRecordActivity extends BaseActivity {
             }
         } else if (resultCode == RESULT_OK && requestCode == 112) {
             // 从数据库中取出视频列表,并展示
-            videoList = videoInstance.queryVideoWithFolder(SaveRecordActivity.this, folder);
+            if (isModify) {
+                videoList = videoInstance.queryVideoWithRecordId(SaveRecordActivity.this, mModifyId);
+            } else {
+                videoList = videoInstance.queryVideoWithFolder(SaveRecordActivity.this, folder);
+            }
             if (EmptyUtils.isNotEmpty(videoList) && videoList.size() > 0) {
                 videoRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
                 //notifyDataSetChanged()
