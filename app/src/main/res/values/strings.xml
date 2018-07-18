@@ -131,6 +131,7 @@
     <string name="order_by_date">按日期预约</string>
     <string name="hospital">医院</string>
     <string name="expert">医生</string>
+    <string name="ad">广告</string>
     <string name="info_price">收费金额</string>
     <string name="count_price">合计：</string>
     <string name="pay_way">支付方式</string>

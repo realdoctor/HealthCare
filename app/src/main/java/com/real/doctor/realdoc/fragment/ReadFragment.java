@@ -16,8 +16,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.NewDetailActivity;
+import com.real.doctor.realdoc.adapter.MultiNewsAdapter;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
+import com.real.doctor.realdoc.model.AdBean;
 import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.model.PageModel;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
@@ -34,6 +36,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,9 +66,10 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
 //    RelativeLayout titleBar;
 //    @BindView(R.id.finish_back)
 //    ImageView finish_back;
-    public NewsAdapter newsAdapter;
+    public MultiNewsAdapter newsAdapter;
     private Unbinder unbinder;
-    public ArrayList<NewModel> newModels = new ArrayList<NewModel>();
+    public ArrayList<Object> newModels = new ArrayList<>();
+    public ArrayList<Object> ads = new ArrayList<>();
     private PageModel<NewModel> baseModel = new PageModel<NewModel>();
     public int pageNum = 1;
     public int pageSize = 10;
@@ -97,13 +101,14 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
 //        page_title.setText("资讯");
 //        finish_back.setVisibility(View.GONE);
         userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
-        newsAdapter = new NewsAdapter(getActivity(), newModels);
+        newsAdapter = new MultiNewsAdapter(getActivity(), newModels,ads);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);
         ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
         ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
+        getAdData();
         getData();
     }
 
@@ -116,6 +121,66 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+    private void getAdData() {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews/ad/list"
+                , params, new BaseObserver<ResponseBody>(getContext()) {
+                    protected Disposable disposable;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONArray jsonObject = object.getJSONArray("data");
+                                    Gson localGson = new GsonBuilder()
+                                            .create();
+                                    ads.addAll((ArrayList<Object>)localGson.fromJson(jsonObject.toString(),
+                                            new TypeToken<ArrayList<AdBean>>() {
+                                            }.getType()));
+                                } else {
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
     }
 
     private void getData() {
@@ -169,6 +234,8 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
                                             new TypeToken<PageModel<NewModel>>() {
                                             }.getType());
                                     newModels.addAll(baseModel.list);
+                                    newsAdapter = new MultiNewsAdapter(getActivity(), newModels,ads);
+                                    listView.setAdapter(newsAdapter);
                                     newsAdapter.notifyDataSetChanged();
                                 } else {
 
