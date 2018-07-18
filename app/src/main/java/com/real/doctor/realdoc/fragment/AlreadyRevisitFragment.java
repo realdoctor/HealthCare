@@ -129,8 +129,6 @@ public class AlreadyRevisitFragment extends BaseFragment {
                                             revisitingRv.setAdapter(docPayListAdapter);
                                             initEvent();
 //                                             docPayListAdapter.notifyDataSetChanged();
-                                        } else {
-                                            ToastUtil.showLong(getActivity(), "获取咨询列表失败!");
                                         }
                                     }
 

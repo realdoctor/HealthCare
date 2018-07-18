@@ -94,11 +94,35 @@ public class ImageManager {
         imageBeanDao.insertOrReplaceInTx(beanList);
     }
 
-    public void insertPatientImageList(Context context, List<ImageBean> beanList,String time ,String folderName) {
+    /**
+     * 插入病历list
+     *
+     * @param beanList
+     */
+    public void insertGlobedImageList(Context context, List<ImageBean> beanList) {
         if (EmptyUtils.isEmpty(beanList)) {
             return;
         }
-        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context,time,folderName);
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        daoSession.deleteAll(ImageBean.class);
+        ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
+        imageBeanDao.insertOrReplaceInTx(beanList);
+    }
+
+    public void insertPatientImageList(Context context, List<ImageBean> beanList, String time, String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
+        imageBeanDao.insertOrReplaceInTx(beanList);
+    }
+
+    public void insertGlobeImageList(Context context, List<ImageBean> beanList, String mobile, String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
         imageBeanDao.insertOrReplaceInTx(beanList);
     }
@@ -124,6 +148,7 @@ public class ImageManager {
         List<ImageBean> list = qb.where(ImageBeanDao.Properties.ImageId.eq(imageListId)).list();
         return list;
     }
+
     /**
      * 为每一个病人上传病历时查询Imagelist列表
      */
@@ -132,6 +157,17 @@ public class ImageManager {
         ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
         QueryBuilder<ImageBean> qb = imageBeanDao.queryBuilder();
         List<ImageBean> list = qb.where(ImageBeanDao.Properties.ImageId.eq(imageListId)).list();
+        return list;
+    }
+
+    /**
+     * 为查询Imagelist列表
+     */
+    public List<ImageBean> queryGlobeImage(Context context, String mobile, String folderName) {
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
+        ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
+        QueryBuilder<ImageBean> qb = imageBeanDao.queryBuilder();
+        List<ImageBean> list = qb.list();
         return list;
     }
 
@@ -170,7 +206,7 @@ public class ImageManager {
     public void deleteImagesByImageId(String imageId) {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
-        imageBeanDao.queryBuilder().where( ImageBeanDao.Properties.ImageId.eq(imageId)).buildDelete().executeDeleteWithoutDetachingEntities();
+        imageBeanDao.queryBuilder().where(ImageBeanDao.Properties.ImageId.eq(imageId)).buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
     /**

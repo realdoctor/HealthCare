@@ -74,6 +74,17 @@ public class RecordManager {
     }
 
     /**
+     * 查询音频list列表
+     */
+    public List<RecordBean> queryRecordList(Context context) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
+        QueryBuilder<RecordBean> qb = recordBeanDao.queryBuilder();
+        List<RecordBean> list = qb.list();
+        return list;
+    }
+
+    /**
      * 插入一条记录
      *
      * @param bean
@@ -99,6 +110,21 @@ public class RecordManager {
     }
 
     /**
+     * 插入音频list
+     *
+     * @param beanList
+     */
+    public void insertGlobedRecordList(Context context, List<RecordBean> beanList) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        daoSession.deleteAll(RecordBean.class);
+        RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
+        recordBeanDao.insertOrReplaceInTx(beanList);
+    }
+
+    /**
      * 插入每一个病人上传病历时的音频list
      *
      * @param beanList
@@ -108,6 +134,20 @@ public class RecordManager {
             return;
         }
         DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
+        recordBeanDao.insertOrReplaceInTx(beanList);
+    }
+
+    /**
+     * 插入音频list
+     *
+     * @param beanList
+     */
+    public void insertGlobeRecordList(Context context, List<RecordBean> beanList, String mobile, String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
         recordBeanDao.insertOrReplaceInTx(beanList);
     }
@@ -147,9 +187,19 @@ public class RecordManager {
     }
 
     /**
+     * 查询音频list列表
+     */
+    public List<RecordBean> queryGlobeRecord(Context context, String
+            mobile, String folderName) {
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
+        RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
+        QueryBuilder<RecordBean> qb = recordBeanDao.queryBuilder();
+        List<RecordBean> list = qb.list();
+        return list;
+    }
+
+    /**
      * 删除一条记录
-     *
-     * @param bean
      */
     public void deleteRecordByName(Context context, String name) {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);

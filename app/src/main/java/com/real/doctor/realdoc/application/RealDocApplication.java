@@ -68,10 +68,13 @@ public class RealDocApplication extends MultiDexApplication {
 
     private static DaoMaster daoPatientMaster;
 
+    private static DaoMaster daoGlobeMaster;
+
     private static DaoSession daoSession;
 
     private static DaoSession daoPatientSession;
 
+    private static DaoSession daoGlobeSession;
     private static SaveDocManager mInstance;
     private static DrugManager mDrugInstance;
     /**
@@ -362,6 +365,37 @@ public class RealDocApplication extends MultiDexApplication {
         daoPatientSession = daoPatientMaster.newSession();
 //        }
         return daoPatientSession;
+    }
+    /**
+     * 为每一个病人上传病历时创建一个数据库
+     * */
+    /**
+     * 获取DaoMaster
+     *
+     * @param context
+     * @return
+     */
+    public static DaoMaster getGlobeDaoMaster(Context context, String mobile, String folderName) {
+        try {
+            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(new GreenDaoContext(folderName), mobile + ".db", null);
+            daoGlobeMaster = new DaoMaster(helper.getWritableDatabase()); //获取未加密的数据库
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return daoGlobeMaster;
+    }
+
+    /**
+     * 获取DaoSession对象
+     *
+     * @param context
+     * @return
+     */
+    public static DaoSession getGlobeDaoSession(Context context, String mobile, String folderName) {
+        //为了数据库与打包文件不冲突,条件必须去掉,否则数据库将出现问题
+        getGlobeDaoMaster(context, mobile, folderName);
+        daoGlobeSession = daoGlobeMaster.newSession();
+        return daoGlobeSession;
     }
 
     public static Context getContext() {
