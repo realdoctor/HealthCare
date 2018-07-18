@@ -69,6 +69,17 @@ public class ImageRecycleManager {
     }
 
     /**
+     * 查询list列表
+     */
+    public List<ImageListBean> queryImageListList(Context context) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        QueryBuilder<ImageListBean> qb = imageBeanListDao.queryBuilder();
+        List<ImageListBean> list = qb.list();
+        return list;
+    }
+
+    /**
      * 插入一条记录
      *
      * @param bean
@@ -94,6 +105,20 @@ public class ImageRecycleManager {
     }
 
     /**
+     * 插入图片item的list
+     *
+     * @param beanList
+     */
+    public void insertGlobedImageListList(Context context, List<ImageListBean> beanList) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        daoSession.deleteAll(ImageListBean.class);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        imageBeanListDao.insertOrReplaceInTx(beanList);
+    }
+    /**
      * 插入每一个病人上传病历时的图片item的list
      *
      * @param beanList
@@ -103,6 +128,20 @@ public class ImageRecycleManager {
             return;
         }
         DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        imageBeanListDao.insertOrReplaceInTx(beanList);
+    }
+
+    /**
+     * 插入item的list
+     *
+     * @param beanList
+     */
+    public void insertGlobelImageListList(Context context, List<ImageListBean> beanList, String mobile, String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         imageBeanListDao.insertOrReplaceInTx(beanList);
     }
@@ -137,6 +176,16 @@ public class ImageRecycleManager {
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         QueryBuilder<ImageListBean> qb = imageBeanListDao.queryBuilder();
         List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.RecordId.eq(recordId)).list();
+        return list;
+    }
+    /**
+     * 查询列表list
+     */
+    public List<ImageListBean> queryGlobeImageList(Context context, String mobile, String folderName) {
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context,mobile, folderName);
+        ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
+        QueryBuilder<ImageListBean> qb = imageBeanListDao.queryBuilder();
+        List<ImageListBean> list = qb.list();
         return list;
     }
 

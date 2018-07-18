@@ -78,6 +78,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/icon_app"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -300,7 +301,13 @@
             android:name=".service.UpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
+            android:name=".service.RecordUploadService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
             android:name=".service.UnzipService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".service.GlobeUnzipService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service android:name=".service.RecordingService" />
 
@@ -454,6 +461,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.InfoActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.RecordUploadActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.GlobeUnzipActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <!--    <intent-filter>

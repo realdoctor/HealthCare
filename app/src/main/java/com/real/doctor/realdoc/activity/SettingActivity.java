@@ -20,7 +20,25 @@ import com.hyphenate.chat.EMClient;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.greendao.DaoSession;
+import com.real.doctor.realdoc.greendao.ImageBeanDao;
+import com.real.doctor.realdoc.greendao.ImageListBeanDao;
+import com.real.doctor.realdoc.greendao.RecordBeanDao;
+import com.real.doctor.realdoc.greendao.SaveDocBeanDao;
+import com.real.doctor.realdoc.greendao.VideoBeanDao;
+import com.real.doctor.realdoc.greendao.table.ImageManager;
+import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
+import com.real.doctor.realdoc.greendao.table.RecordManager;
+import com.real.doctor.realdoc.greendao.table.SaveDocManager;
+import com.real.doctor.realdoc.greendao.table.VideoManager;
+import com.real.doctor.realdoc.model.ImageBean;
+import com.real.doctor.realdoc.model.ImageListBean;
+import com.real.doctor.realdoc.model.RecordBean;
+import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.FileUtils;
+import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
@@ -34,7 +52,9 @@ import com.real.doctor.realdoc.view.CommonDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -60,6 +80,8 @@ public class SettingActivity extends BaseActivity {
     LinearLayout accountSet;
     @BindView(R.id.address_set)
     LinearLayout addressSet;
+    @BindView(R.id.record_upload)
+    LinearLayout recordUpload;
     @BindView(R.id.clean_cache)
     LinearLayout cleanCache;
     @BindView(R.id.user_fade)
@@ -75,6 +97,14 @@ public class SettingActivity extends BaseActivity {
 
     private CommonDialog dialog;
     private String avator;
+    private String mobile;
+    private String path;
+    private SaveDocManager instance;
+    //从数据库中获取数据
+    private ImageManager imageInstance;
+    private ImageRecycleManager imageRecycleInstance;
+    private RecordManager recordInstance;
+    private VideoManager videoInstance;
 
     @Override
     public int getLayoutId() {
@@ -109,6 +139,12 @@ public class SettingActivity extends BaseActivity {
         if (EmptyUtils.isNotEmpty(avator)) {
             GlideUtils.loadImageViewLoding(RealDocApplication.getContext(), avator, icon, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
         }
+        instance = SaveDocManager.getInstance(SettingActivity.this);
+        imageInstance = ImageManager.getInstance(SettingActivity.this);
+        imageRecycleInstance = ImageRecycleManager.getInstance(SettingActivity.this);
+        recordInstance = RecordManager.getInstance(SettingActivity.this);
+        videoInstance = VideoManager.getInstance(SettingActivity.this);
+        mobile = (String) SPUtils.get(SettingActivity.this, "mobile", "");
     }
 
     @Override
@@ -131,7 +167,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back, R.id.login_out, R.id.account_set, R.id.address_set, R.id.clean_cache, R.id.user_fade, R.id.about_us})
+    @OnClick({R.id.finish_back, R.id.login_out, R.id.account_set, R.id.address_set, R.id.clean_cache, R.id.user_fade, R.id.about_us, R.id.record_upload})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
@@ -164,9 +200,14 @@ public class SettingActivity extends BaseActivity {
                 intent.putExtra("avator", avator);
                 startActivity(intent);
                 break;
+            case R.id.record_upload:
+                //病历上传
+                intent = new Intent(SettingActivity.this, RecordUploadActivity.class);
+                startActivity(intent);
+                break;
             case R.id.address_set:
                 //地址设置
-                intent =new Intent(SettingActivity.this,AddressListActivity.class);
+                intent = new Intent(SettingActivity.this, AddressListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.clean_cache:
@@ -245,12 +286,17 @@ public class SettingActivity extends BaseActivity {
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(RealDocApplication.getContext(), "用户退出成功!");
-                                    SPUtils.clear(SettingActivity.this);
                                     //环信登出
                                     loginOutHuanXin();
+                                    setExternalData(mobile);
+                                    //删除掉里面添加的,删除掉有folder的
+                                    deleteInsideData();
+                                    //插入外面已经添加的
+                                    getExternalData("external");
                                     //跳转到首页
                                     Intent intent = new Intent(SettingActivity.this, RealDocActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    SPUtils.clear(SettingActivity.this);
                                     startActivity(intent);
                                     finish();
                                 } else {
@@ -265,6 +311,60 @@ public class SettingActivity extends BaseActivity {
                     }
 
                 });
+    }
+
+    private void deleteInsideData() {
+        //将数据库导出到文件夹中,并且覆盖文件夹中的数据库
+        List<SaveDocBean> list = instance.querySaveDocListByFolder(SettingActivity.this);
+        SaveDocBeanDao saveDocDao = RealDocApplication.getDaoSession(SettingActivity.this).getSaveDocBeanDao();
+        saveDocDao.deleteInTx(list);
+        ImageListBeanDao imageListBeanDao = RealDocApplication.getDaoSession(SettingActivity.this).getImageListBeanDao();
+        imageListBeanDao.deleteAll();
+        ImageBeanDao imageBeanDao = RealDocApplication.getDaoSession(SettingActivity.this).getImageBeanDao();
+        imageBeanDao.deleteAll();
+        VideoBeanDao videoBeanDao = RealDocApplication.getDaoSession(SettingActivity.this).getVideoBeanDao();
+        videoBeanDao.deleteAll();
+        RecordBeanDao recordBeanDao = RealDocApplication.getDaoSession(SettingActivity.this).getRecordBeanDao();
+        recordBeanDao.deleteAll();
+    }
+
+    private void setExternalData(String mobile) {
+        //将数据库导出到文件夹中,并且覆盖文件夹中的数据库
+        List<SaveDocBean> list = instance.querySaveDocList(SettingActivity.this);
+        instance.insertGlobeSaveDoc(SettingActivity.this, list, mobile, SDCardUtils.getGlobalDir());
+        List<ImageBean> beanList = imageInstance.queryImageList(SettingActivity.this);
+        imageInstance.insertGlobeImageList(SettingActivity.this, beanList, mobile, SDCardUtils.getGlobalDir());
+        List<ImageListBean> imageList = imageRecycleInstance.queryImageListList(SettingActivity.this);
+        imageRecycleInstance.insertGlobelImageListList(SettingActivity.this, imageList, mobile, SDCardUtils.getGlobalDir());
+        List<RecordBean> recordList = recordInstance.queryRecordList(SettingActivity.this);
+        recordInstance.insertGlobeRecordList(SettingActivity.this, recordList, mobile, SDCardUtils.getGlobalDir());
+        List<VideoBean> videoList = videoInstance.queryVideoList(SettingActivity.this);
+        videoInstance.insertGlobeVideoList(SettingActivity.this, videoList, mobile, SDCardUtils.getGlobalDir());
+    }
+
+    private void getExternalData(String mobile) {
+        //是否该账号有外部数据库，如果有则将外部数据库导入现在的数据库中,否则就不做处理
+        StringBuffer sb = new StringBuffer();
+        sb.append(SDCardUtils.getGlobalDir());
+        sb.append("datebases");
+        sb.append(File.separator);
+        sb.append(mobile + ".db");
+        path = sb.toString();
+        if (FileUtils.isFileExists(path)) {
+            //将外部数据库导入内部,并删除内部数据库
+            List<SaveDocBean> list = instance.queryGlobeSaveDocList(SettingActivity.this, mobile, SDCardUtils.getGlobalDir());
+            instance.insertSaveDoc(SettingActivity.this, list);
+            List<ImageBean> beanList = imageInstance.queryGlobeImage(SettingActivity.this, mobile, SDCardUtils.getGlobalDir());
+            imageInstance.insertImageList(SettingActivity.this, beanList);
+            List<ImageListBean> imageList = imageRecycleInstance.queryGlobeImageList(SettingActivity.this, mobile, SDCardUtils.getGlobalDir());
+            imageRecycleInstance.insertImageListList(SettingActivity.this, imageList);
+            List<RecordBean> recordList = recordInstance.queryGlobeRecord(SettingActivity.this, mobile, SDCardUtils.getGlobalDir());
+            recordInstance.insertRecordList(SettingActivity.this, recordList);
+            List<VideoBean> videoList = videoInstance.queryGlobeVideo(SettingActivity.this, mobile, SDCardUtils.getGlobalDir());
+            videoInstance.insertVideoList(SettingActivity.this, videoList);
+            //删除数据库
+            FileUtils.deleteDir(path);
+        }
     }
 
     private void loginOutHuanXin() {

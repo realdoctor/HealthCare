@@ -46,7 +46,6 @@ public class UnzipService extends JobService {
     //从数据库中获取数据
     private ImageManager imageInstance;
     private ImageRecycleManager imageRecycleInstance;
-    //数据库处理
     private SaveDocManager instance;
     private RecordManager recordInstance;
     private VideoManager videoInstance;

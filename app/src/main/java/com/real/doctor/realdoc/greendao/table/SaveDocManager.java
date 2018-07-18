@@ -11,6 +11,9 @@ import com.real.doctor.realdoc.greendao.SaveDocBeanDao;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.FileUtils;
+import com.real.doctor.realdoc.util.SDCardUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -95,6 +98,20 @@ public class SaveDocManager {
     }
 
     /**
+     * 插入病历list,并将数据保存在外部文件夹中
+     *
+     * @param beanList
+     */
+    public void insertGlobeSaveDoc(Context context, List<SaveDocBean> beanList, String mobile, String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        saveDocDao.insertOrReplaceInTx(beanList);
+    }
+
+    /**
      * 插入病历list
      *
      * @param beanList
@@ -104,7 +121,21 @@ public class SaveDocManager {
             return;
         }
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
-//        daoSession.deleteAll(SaveDocBean.class);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        saveDocDao.insertOrReplaceInTx(beanList);
+    }
+
+    /**
+     * 插入病历list
+     *
+     * @param beanList
+     */
+    public void insertGlobedSaveDoc(Context context, List<SaveDocBean> beanList) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        daoSession.deleteAll(SaveDocBean.class);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         saveDocDao.insertOrReplaceInTx(beanList);
     }
@@ -132,6 +163,17 @@ public class SaveDocManager {
     }
 
     /**
+     * 查询databases中list列表
+     */
+    public List<SaveDocBean> queryGlobeSaveDocList(Context context, String mobile, String folderName) {
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        List<SaveDocBean> list = qb.orderDesc(SaveDocBeanDao.Properties.Time).list();
+        return list;
+    }
+
+    /**
      * 查询病历list列表其中一条病历
      */
     public List<SaveDocBean> querySaveDocList(Context context, String id) {
@@ -139,6 +181,17 @@ public class SaveDocManager {
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
         List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Id.notEq(id)).orderDesc(SaveDocBeanDao.Properties.Time).list();
+        return list;
+    }
+
+    /**
+     * 查询病历list列表其中一条病历
+     */
+    public List<SaveDocBean> querySaveDocListByFolder(Context context) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Folder.isNotNull()).orderDesc(SaveDocBeanDao.Properties.Time).list();
         return list;
     }
 
@@ -299,6 +352,50 @@ public class SaveDocManager {
             c.close();
         }
         return result;
+    }
+
+    private static final String SQL_GLOBE_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Id.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " WHERE " + SaveDocBeanDao.Properties.Folder.columnName + " IS NOT NULL ";
+
+    /**
+     * 查询病历时间一列列表
+     */
+    public static List<String> queryGlobeList(DaoSession session) {
+        ArrayList<String> result = new ArrayList<String>();
+        Cursor c = session.getDatabase().rawQuery(SQL_GLOBE_ILL, null);
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    result.add(c.getString(0));
+                } while (c.moveToNext());
+            }
+        } finally {
+            c.close();
+        }
+        return result;
+    }
+
+    /**
+     * 删除所有记录
+     *
+     * @return
+     */
+    public boolean deleteAll(Context context) {
+        boolean flag = false;
+        try {
+            DaoSession daoSession = RealDocApplication.getDaoSession(context);
+            daoSession.deleteAll(Context.class);
+            flag = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    public void deleSQL() {
+        SQLiteDatabase db = getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoMaster.dropAllTables(daoMaster.getDatabase(), true);
+        DaoMaster.createAllTables(daoMaster.getDatabase(), true);
     }
 }
 

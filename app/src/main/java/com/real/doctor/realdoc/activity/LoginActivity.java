@@ -1,9 +1,15 @@
 package com.real.doctor.realdoc.activity;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.AlphabeticIndex;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -18,23 +24,40 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.greendao.ImageBeanDao;
+import com.real.doctor.realdoc.greendao.ImageListBeanDao;
+import com.real.doctor.realdoc.greendao.RecordBeanDao;
+import com.real.doctor.realdoc.greendao.SaveDocBeanDao;
+import com.real.doctor.realdoc.greendao.VideoBeanDao;
 import com.real.doctor.realdoc.greendao.table.DrugManager;
+import com.real.doctor.realdoc.greendao.table.ImageManager;
+import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
+import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
+import com.real.doctor.realdoc.greendao.table.VideoManager;
 import com.real.doctor.realdoc.model.DrugBean;
+import com.real.doctor.realdoc.model.ImageBean;
+import com.real.doctor.realdoc.model.ImageListBean;
+import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.model.UserBean;
+import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.service.GlobeUnzipService;
 import com.real.doctor.realdoc.util.CheckPhoneUtils;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.NetworkUtil;
+import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.view.CommonDialog;
 import com.real.doctor.realdoc.widget.EditTextPassword;
 import com.real.doctor.realdoc.widget.HuanXinHelper;
 import com.sina.weibo.sdk.auth.AccessTokenKeeper;
@@ -54,6 +77,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +134,19 @@ public class LoginActivity extends BaseActivity {
      * 本地数据库中数据条数
      */
     private int count;
-
+    private String path;
+    private SaveDocManager instance;
+    private ImageManager imageInstance;
+    private ImageRecycleManager imageRecycleInstance;
+    private RecordManager recordInstance;
+    private VideoManager videoInstance;
+    //外部新增的病历
+    private List<SaveDocBean> lastList;
+    private List<RecordBean> lastRecordList;
+    private List<VideoBean> lastVideoList;
+    private List<ImageListBean> lastImageRvList;
+    private List<ImageBean> lastImageList;
+    private CommonDialog dialog;
     private static final int MSG_SET_ALIAS = 1001;
     private final Handler mHandler = new Handler() {
         @Override
@@ -181,6 +217,11 @@ public class LoginActivity extends BaseActivity {
                 getList = bundle.getBoolean("get_list", false);
             }
         }
+        instance = SaveDocManager.getInstance(LoginActivity.this);
+        imageInstance = ImageManager.getInstance(LoginActivity.this);
+        imageRecycleInstance = ImageRecycleManager.getInstance(LoginActivity.this);
+        recordInstance = RecordManager.getInstance(LoginActivity.this);
+        videoInstance = VideoManager.getInstance(LoginActivity.this);
     }
 
     @Override
@@ -321,14 +362,18 @@ public class LoginActivity extends BaseActivity {
                                     if (DocUtils.hasValue(object, "data")) {
                                         String token = "";
                                         //获取用户信息，保存token
-                                        JSONObject jsonObject = object.getJSONObject("data");
+                                        final JSONObject jsonObject = object.getJSONObject("data");
+//                                        if (DocUtils.hasValue(jsonObject, "url")) {
+//                                            String url = jsonObject.getString("url");
+//                                            SPUtils.put(LoginActivity.this, "url", url);
+//                                        }
                                         if (DocUtils.hasValue(jsonObject, "token")) {
                                             token = jsonObject.getString("token");
                                             if (EmptyUtils.isNotEmpty(token)) {
                                                 SPUtils.put(LoginActivity.this, "token", token);
                                             }
                                             //获取用户信息
-                                            UserBean user = GsonUtil.GsonToBean(jsonObject.getJSONObject("user").toString(), UserBean.class);
+                                            final UserBean user = GsonUtil.GsonToBean(jsonObject.getJSONObject("user").toString(), UserBean.class);
                                             if (EmptyUtils.isNotEmpty(user)) {
                                                 SPUtils.put(LoginActivity.this, "mobile", user.getMobile());
                                                 SPUtils.put(LoginActivity.this, Constants.USER_KEY, user.getId());
@@ -336,10 +381,48 @@ public class LoginActivity extends BaseActivity {
                                                 //设置极光推送别名
                                                 // 调用 Handler 来异步设置别名
                                                 mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, user.getId()));
+                                                //从主数据中提取出新增的数据,如果有数据的话,弹出对话框,没有则不弹出
+                                                lastList = instance.querySaveDocListByFolder(LoginActivity.this);
+                                                //是否该账号有外部数据库，如果有则将外部数据库导入现在的数据库中,否则就不做处理
+                                                StringBuffer sb = new StringBuffer();
+                                                sb.append(SDCardUtils.getGlobalDir());
+                                                sb.append("datebases");
+                                                sb.append(File.separator);
+                                                sb.append(user.getMobile() + ".db");
+                                                path = sb.toString();
+                                                List<String> idList = null;
+                                                boolean isNotContains = false;
+                                                if (FileUtils.isFileExists(path)) {
+                                                    //将外部数据库导入内部,并删除内部数据库
+                                                    idList = instance.queryGlobeList(RealDocApplication.getGlobeDaoSession(LoginActivity.this, user.getMobile(), SDCardUtils.getGlobalDir()));
+                                                    for (int i = 0; i < lastList.size(); i++) {
+                                                        if (!idList.contains(lastList.get(i).getId())) {
+                                                            isNotContains = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (lastList.size() > 0 && isNotContains) {
+                                                        isShowDialog(token, mobilePhone, pwd);
+                                                    } else {
+                                                        getExternalData(user.getMobile());
+                                                        //融合下载下来的病历
+//                                                    getDownData(jsonObject);
+                                                        //实名认证
+                                                        checkName(mobilePhone, pwd, token);
+                                                    }
+                                                } else {
+                                                    if (lastList.size() > 0) {
+                                                        isShowDialog(token, mobilePhone, pwd);
+                                                    } else {
+                                                        getExternalData(user.getMobile());
+                                                        //融合下载下来的病历
+//                                                    getDownData(jsonObject);
+                                                        //实名认证
+                                                        checkName(mobilePhone, pwd, token);
+                                                    }
+                                                }
                                             }
                                         }
-                                        //实名认证
-                                        checkName(mobilePhone, pwd, token);
                                     }
                                 } else {
                                     ToastUtil.showLong(LoginActivity.this, "用户登录失败!");
@@ -353,6 +436,117 @@ public class LoginActivity extends BaseActivity {
                     }
 
                 });
+    }
+
+    private void isShowDialog(String token, final String mobilePhone, final String pwd) {
+        //弹出框界面
+        final String finalToken = token;
+        dialog = new CommonDialog(LoginActivity.this).builder()
+                .setCancelable(false)
+                .setContent("病历列表中有新增的病历,是否添加到该账户中？")
+                .setCanceledOnTouchOutside(true)
+                .setCancelClickBtn(new CommonDialog.CancelListener() {
+
+                    @Override
+                    public void onCancelListener() {
+
+                        getExternalData(mobilePhone);
+                        //融合下载下来的病历
+                        //getDownData(jsonObject);
+                        //实名认证
+                        checkName(mobilePhone, pwd, finalToken);
+                        dialog.dismiss();
+                    }
+                }).setConfirmClickBtn(new CommonDialog.ConfirmListener() {
+
+                    @Override
+                    public void onConfrimClick() {
+                        //在这种情况下,视频,音频,图片只有未登录时的数据库才会有,所以无脑地查询就行了
+                        lastRecordList = recordInstance.queryRecordList(LoginActivity.this);
+                        lastVideoList = videoInstance.queryVideoList(LoginActivity.this);
+                        lastImageRvList = imageRecycleInstance.queryImageListList(LoginActivity.this);
+                        lastImageList = imageInstance.queryImageList(LoginActivity.this);
+                        //将该数据放到外部数据库中,退出的时候要归还给未登录时候的数据库的
+                        setExternalData("external");
+                        getExternalData(mobilePhone);
+                        //融合新增数据库中的病历
+                        instance.insertSaveDoc(LoginActivity.this, lastList);
+                        imageInstance.insertImageList(LoginActivity.this, lastImageList);
+                        imageRecycleInstance.insertImageListList(LoginActivity.this, lastImageRvList);
+                        recordInstance.insertRecordList(LoginActivity.this, lastRecordList);
+                        videoInstance.insertVideoList(LoginActivity.this, lastVideoList);
+                        //融合下载下来的病历
+                        //getDownData(jsonObject);
+                        //实名认证
+                        checkName(mobilePhone, pwd, finalToken);
+                    }
+                }).show();
+    }
+
+    private void getExternalData(String mobile) {
+        //是否该账号有外部数据库，如果有则将外部数据库导入现在的数据库中,否则就不做处理
+//        StringBuffer sb = new StringBuffer();
+//        sb.append(SDCardUtils.getGlobalDir());
+//        sb.append("datebases");
+//        sb.append(File.separator);
+//        sb.append(mobile + ".db");
+//        path = sb.toString();
+        if (FileUtils.isFileExists(path)) {
+            //将外部数据库导入内部,并删除内部数据库
+            List<SaveDocBean> list = instance.queryGlobeSaveDocList(LoginActivity.this, mobile, SDCardUtils.getGlobalDir());
+            instance.insertGlobedSaveDoc(LoginActivity.this, list);
+            List<ImageBean> beanList = imageInstance.queryGlobeImage(LoginActivity.this, mobile, SDCardUtils.getGlobalDir());
+            imageInstance.insertGlobedImageList(LoginActivity.this, beanList);
+            List<ImageListBean> imageList = imageRecycleInstance.queryGlobeImageList(LoginActivity.this, mobile, SDCardUtils.getGlobalDir());
+            imageRecycleInstance.insertGlobedImageListList(LoginActivity.this, imageList);
+            List<RecordBean> recordList = recordInstance.queryGlobeRecord(LoginActivity.this, mobile, SDCardUtils.getGlobalDir());
+            recordInstance.insertGlobedRecordList(LoginActivity.this, recordList);
+            List<VideoBean> videoList = videoInstance.queryGlobeVideo(LoginActivity.this, mobile, SDCardUtils.getGlobalDir());
+            videoInstance.insertGlobedVideoList(LoginActivity.this, videoList);
+            //删除数据库
+            FileUtils.deleteDir(path);
+        } else {
+            SaveDocBeanDao saveDocDao = RealDocApplication.getDaoSession(LoginActivity.this).getSaveDocBeanDao();
+            saveDocDao.deleteAll();
+            ImageListBeanDao imageListBeanDao = RealDocApplication.getDaoSession(LoginActivity.this).getImageListBeanDao();
+            imageListBeanDao.deleteAll();
+            ImageBeanDao imageBeanDao = RealDocApplication.getDaoSession(LoginActivity.this).getImageBeanDao();
+            imageBeanDao.deleteAll();
+            VideoBeanDao videoBeanDao = RealDocApplication.getDaoSession(LoginActivity.this).getVideoBeanDao();
+            videoBeanDao.deleteAll();
+            RecordBeanDao recordBeanDao = RealDocApplication.getDaoSession(LoginActivity.this).getRecordBeanDao();
+            recordBeanDao.deleteAll();
+        }
+    }
+
+    private void setExternalData(String external) {
+        //将数据库导出到文件夹中,并且覆盖文件夹中的数据库
+        List<SaveDocBean> list = instance.querySaveDocListByFolder(LoginActivity.this);
+        instance.insertGlobeSaveDoc(LoginActivity.this, list, external, SDCardUtils.getGlobalDir());
+        //外部数据库如果是上面的话,没有这些文件存在的,所以可以全部一起插入
+        List<ImageBean> beanList = imageInstance.queryImageList(LoginActivity.this);
+        imageInstance.insertGlobeImageList(LoginActivity.this, beanList, external, SDCardUtils.getGlobalDir());
+        List<ImageListBean> imageList = imageRecycleInstance.queryImageListList(LoginActivity.this);
+        imageRecycleInstance.insertGlobelImageListList(LoginActivity.this, imageList, external, SDCardUtils.getGlobalDir());
+        List<RecordBean> recordList = recordInstance.queryRecordList(LoginActivity.this);
+        recordInstance.insertGlobeRecordList(LoginActivity.this, recordList, external, SDCardUtils.getGlobalDir());
+        List<VideoBean> videoList = videoInstance.queryVideoList(LoginActivity.this);
+        videoInstance.insertGlobeVideoList(LoginActivity.this, videoList, external, SDCardUtils.getGlobalDir());
+    }
+
+    private void getDownData(JSONObject jsonObject) {
+        //融合下载下来的数据,在GlobeUnzipService中处理
+        if (DocUtils.hasValue(jsonObject, "url")) {
+            String url = null;
+            try {
+                url = jsonObject.getString("url");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(LoginActivity.this, GlobeUnzipActivity.class);
+            intent.putExtra("url", url);
+            startActivity(intent);
+        }
     }
 
     private void loginHuanXin(String currentUsername, String currentPassword) {
@@ -471,7 +665,8 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void submitThirdLogin(String access_token, String openid, String nickname, String headimgurl, final String third) {
+    private void submitThirdLogin(String access_token, String openid, String nickname, String
+            headimgurl, final String third) {
         if (NetworkUtil.isNetworkAvailable(LoginActivity.this)) {
             Map<String, String> maps = new HashMap<String, String>();
             maps.put("access_token", access_token);
@@ -520,6 +715,7 @@ public class LoginActivity extends BaseActivity {
         public void onFailure(WbConnectErrorMessage errorMessage) {
             ToastUtil.showLong(LoginActivity.this, errorMessage.getErrorMessage());
         }
+
     }
 
     /**

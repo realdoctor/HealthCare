@@ -67,6 +67,16 @@ public class VideoManager {
     }
 
     /**
+     * 查询视频list列表
+     */
+    public List<VideoBean> queryVideoList(Context context) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
+        List<VideoBean> list = qb.list();
+        return list;
+    }
+    /**
      * 插入一条记录
      *
      * @param bean
@@ -92,6 +102,21 @@ public class VideoManager {
     }
 
     /**
+     * 插入视频list
+     *
+     * @param beanList
+     */
+    public void insertGlobedVideoList(Context context, List<VideoBean> beanList) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        daoSession.deleteAll(VideoBean.class);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        videoBeanDao.insertOrReplaceInTx(beanList);
+    }
+
+    /**
      * 插入每一个病人上传病历时的视频list
      *
      * @param beanList
@@ -101,6 +126,20 @@ public class VideoManager {
             return;
         }
         DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        videoBeanDao.insertOrReplaceInTx(beanList);
+    }
+
+    /**
+     * 插入视频list
+     *
+     * @param beanList
+     */
+    public void insertGlobeVideoList(Context context, List<VideoBean> beanList, String mobile, String folderName) {
+        if (EmptyUtils.isEmpty(beanList)) {
+            return;
+        }
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         videoBeanDao.insertOrReplaceInTx(beanList);
     }
@@ -149,6 +188,18 @@ public class VideoManager {
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
         List<VideoBean> list = qb.where(VideoBeanDao.Properties.RecordId.eq(recordId)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
+        return list;
+    }
+
+
+    /**
+     * 查询视频list列表
+     */
+    public List<VideoBean> queryGlobeVideo(Context context, String mobile, String folderName) {
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
+        VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
+        QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
+        List<VideoBean> list = qb.orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
         return list;
     }
 

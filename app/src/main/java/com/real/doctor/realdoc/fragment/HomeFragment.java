@@ -63,6 +63,7 @@ import butterknife.Unbinder;
 import cn.bingoogolapple.bgabanner.BGABanner;
 import cn.bingoogolapple.bgabanner.BGABannerUtil;
 
+import static com.real.doctor.realdoc.activity.RecordListActivity.RECORD_LIST_TEXT;
 import static com.real.doctor.realdoc.fragment.UserFragment.VERIFY_TEXT;
 
 /**
@@ -171,10 +172,21 @@ public class HomeFragment extends BaseFragment {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SHOW_WINDOW_ICON);
+        intentFilter.addAction(RECORD_LIST_TEXT);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                onShowMenu();
+                String action = intent.getAction();
+                if (action.equals(SHOW_WINDOW_ICON)) {
+                    onShowMenu();
+                } else if (action.equals(RECORD_LIST_TEXT)) {
+                    if (EmptyUtils.isNotEmpty(instance)) {
+                        recordList = instance.querySaveDocList(getActivity());
+                        adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
+                        recycleView.setAdapter(adapter);
+                        initEvent();
+                    }
+                }
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
