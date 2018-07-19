@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class MultiNewsAdapter extends BaseAdapter{
     //itemA类的type标志
-    private static final int TYPE_A = 0;
+    public static final int TYPE_A = 0;
     //itemB类的type标志
     private static final int TYPE_B = 1;
 
@@ -59,12 +60,13 @@ public class MultiNewsAdapter extends BaseAdapter{
                     holder1.new_detail_img = (ImageView) convertView.findViewById(R.id.new_detail_img);
                     holder1.new_title=(TextView) convertView.findViewById(R.id.new_title);
                     holder1.new_time=(TextView) convertView.findViewById(R.id.new_time);
-                    holder1.tv_content=(TextView)convertView.findViewById(R.id.tv_content);
+                    holder1.ll_content=(LinearLayout) convertView.findViewById(R.id.ll_content);
                     holder1.tv_comment=(TextView) convertView.findViewById(R.id.tv_comment);
                     holder1.new_hospital=convertView.findViewById(R.id.new_hospital);
                     holder1.tv_newsAuthor=convertView.findViewById(R.id.tv_newsAuthor);
                     holder1.tv_authorDept=convertView.findViewById(R.id.tv_authorDept);
                     holder1.tv_hospital=convertView.findViewById(R.id.tv_hospital);
+                    holder1.tv_price=convertView.findViewById(R.id.tv_price);
                     convertView.setTag(R.id.tag_first, holder1);
                     break;
                 case TYPE_B:
@@ -99,6 +101,18 @@ public class MultiNewsAdapter extends BaseAdapter{
                 holder1.tv_newsAuthor.setText(bean.newsAuthor);
                 holder1.tv_authorDept.setText(bean.authorDept);
                 holder1.tv_hospital.setText(bean.authorHos);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                for (int i = 0; i < bean.tagsList.size(); i++) {
+                    TextView textView = new TextView(context);
+                    layoutParams.setMargins(0, 5, 10, 5);
+                    textView.setTextSize(12);
+                    textView.setBackgroundResource(R.drawable.order_bg); //设置背景
+                    textView.setText(bean.tagsList.get(i).newsTag);
+                    textView.setLayoutParams(layoutParams);
+                    holder1.ll_content.addView(textView);
+                }
+                holder1.tv_price.setText("收费金额："+bean.price);
                 Glide.with(context).load(bean.photoAddress).crossFade().error(R.drawable.timg).into(holder1.new_detail_img);
                 break;
 
@@ -158,12 +172,13 @@ public class MultiNewsAdapter extends BaseAdapter{
         public ImageView new_detail_img;
         public TextView new_title;
         public TextView new_time;
-        public TextView tv_content;
+        public LinearLayout ll_content;
         public TextView tv_comment;
         public TextView new_hospital;
         public TextView tv_newsAuthor;
         public TextView tv_authorDept;
         public TextView tv_hospital;
+        public TextView tv_price;
 
     }
     /**

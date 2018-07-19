@@ -26,11 +26,10 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
         final Holder holder;
         if (convertView == null) {
             holder = new Holder();
-            convertView = mInflater.inflate(R.layout.news_item, parent, false);
+            convertView = mInflater.inflate(R.layout.my_news_item, parent, false);
             holder.new_detail_img = (ImageView) convertView.findViewById(R.id.new_detail_img);
             holder.new_title=(TextView) convertView.findViewById(R.id.new_title);
             holder.new_time=(TextView) convertView.findViewById(R.id.new_time);
-            holder.tv_content=(TextView)convertView.findViewById(R.id.tv_content);
             holder.tv_comment=(TextView) convertView.findViewById(R.id.tv_comment);
             holder.new_hospital=convertView.findViewById(R.id.new_hospital);
             holder.tv_newsAuthor=convertView.findViewById(R.id.tv_newsAuthor);
@@ -58,7 +57,6 @@ public class NewsAdapter extends RdBaseAdapter<NewModel>{
        public ImageView new_detail_img;
        public TextView new_title;
        public TextView new_time;
-       public TextView tv_content;
        public TextView tv_comment;
        public TextView new_hospital;
        public TextView tv_newsAuthor;

@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by ZFT on 2018/5/29.
@@ -35,4 +36,6 @@ public class NewModel implements Serializable {
     public String photoAddress="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1526975425&di=74dfd10b301a448bbaf8a318a0f04d71&src=http://pic.58pic.com/58pic/15/26/31/29y58PIChz7_1024.jpg";
     public String putOn;
     public String viewedTime;
+    public ArrayList<TagModel> tagsList=new ArrayList<TagModel>();
+    public String price;
 }
