@@ -156,13 +156,16 @@ public class RecordUploadService extends JobService {
                             }
                             if (msg.equals("ok") && code.equals("0")) {
                                 ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传成功!");
-                                //通知病历上传成功
                             } else {
                                 ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
                             }
-                            //动态注册广播
+                            //动态注册广播,通知病历上传成功
                             Intent intent = new Intent(RecordUploadActivity.UPLOAD_RECORD);
                             LocalBroadcastManager.getInstance(RecordUploadService.this).sendBroadcast(intent);
+                            //删除压缩文件
+                            if (zip) {
+                                FileUtils.deleteDir(SDCardUtils.getGlobalDir() + "globe" + mobile + ".zip");
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -173,6 +176,10 @@ public class RecordUploadService extends JobService {
 
                 @Override
                 public void onError(Throwable e) {
+                    if (zip) {
+                        //删除压缩文件
+                        FileUtils.deleteDir(SDCardUtils.getGlobalDir() + "globe" + mobile + ".zip");
+                    }
                     ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
                     Log.d(TAG, e.getMessage());
                     if (disposable != null && !disposable.isDisposed()) {

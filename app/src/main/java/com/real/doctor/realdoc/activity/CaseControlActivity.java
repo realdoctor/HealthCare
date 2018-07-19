@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;

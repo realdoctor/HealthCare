@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.util;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,14 @@ import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 
 import org.json.JSONObject;
@@ -96,8 +104,9 @@ public class DocUtils {
         RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), pFile);
         return fileBody;
     }
+
     public static RequestBody toRequestBodyOfVideo(File pFile) {
-        RequestBody fileBody = RequestBody.create( MediaType.parse("application/octet-stream"), pFile);
+        RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), pFile);
         return fileBody;
     }
 
@@ -154,5 +163,25 @@ public class DocUtils {
         intent.setDataAndType(Uri.fromFile(parentFlie), "*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         context.startActivity(intent);
+    }
+
+    /**
+     * 进度条对话框
+     *
+     * @param context
+     * @return
+     */
+    public static Dialog getProgressDialog(Context context, String str) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_progress, null);
+        TextView textView = layout.findViewById(R.id.progress_txt);
+        textView.setText(str);
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setCancelable(false)
+                .setView(layout)
+                .create();
+        //此处设置位置窗体大小
+        dialog.getWindow().setLayout(SizeUtils.dip2px(context, 300), LinearLayout.LayoutParams.WRAP_CONTENT);
+        return dialog;
     }
 }

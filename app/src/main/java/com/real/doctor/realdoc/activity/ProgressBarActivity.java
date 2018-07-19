@@ -13,12 +13,16 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.service.UpdateService;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -36,6 +40,12 @@ import butterknife.ButterKnife;
 
 public class ProgressBarActivity extends BaseActivity {
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
+    @BindView(R.id.finish_back)
+    ImageView finishBack;
     @BindView(R.id.color_progress_bar)
     ColorfulProgressbar colorProgressBar;
     private List<SaveDocBean> mList;
@@ -55,6 +65,15 @@ public class ProgressBarActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(ProgressBarActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
+        finishBack.setVisibility(View.GONE);
+        pageTitle.setText("病历资料上传");
         colorProgressBar.setHeight(SizeUtils.dip2px(this, 20));
         colorProgressBar.setProgress(100);
         colorProgressBar.setSecondProgress(100);
@@ -64,6 +83,19 @@ public class ProgressBarActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        Intent intent = getIntent();
+        if (intent != null && intent.getExtras() != null) {
+            inquery = intent.getExtras().getString("inquery");
+            desease = intent.getExtras().getString("desease");
+            mList = intent.getParcelableArrayListExtra("mList");
+            doctorUserId = intent.getExtras().getString("doctorUserId");
+            questionId = intent.getExtras().getString("questionId");
+        }
+        localBroadcast();
+        startService();
+    }
+
+    private void localBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HAVE_IMG);
@@ -88,15 +120,9 @@ public class ProgressBarActivity extends BaseActivity {
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
+    }
 
-        Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            inquery = intent.getExtras().getString("inquery");
-            desease = intent.getExtras().getString("desease");
-            mList = intent.getParcelableArrayListExtra("mList");
-            doctorUserId = intent.getExtras().getString("doctorUserId");
-            questionId = intent.getExtras().getString("questionId");
-        }
+    private void startService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             Intent startServiceIntent = new Intent(this, UpdateService.class);

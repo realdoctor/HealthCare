@@ -45,7 +45,6 @@ import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
-import com.real.doctor.realdoc.service.GlobeUnzipService;
 import com.real.doctor.realdoc.util.CheckPhoneUtils;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
@@ -363,10 +362,10 @@ public class LoginActivity extends BaseActivity {
                                         String token = "";
                                         //获取用户信息，保存token
                                         final JSONObject jsonObject = object.getJSONObject("data");
-//                                        if (DocUtils.hasValue(jsonObject, "url")) {
-//                                            String url = jsonObject.getString("url");
-//                                            SPUtils.put(LoginActivity.this, "url", url);
-//                                        }
+                                        if (DocUtils.hasValue(jsonObject, "url")) {
+                                            String url = jsonObject.getString("url");
+                                            SPUtils.put(LoginActivity.this, "url", url);
+                                        }
                                         if (DocUtils.hasValue(jsonObject, "token")) {
                                             token = jsonObject.getString("token");
                                             if (EmptyUtils.isNotEmpty(token)) {
@@ -534,20 +533,20 @@ public class LoginActivity extends BaseActivity {
         videoInstance.insertGlobeVideoList(LoginActivity.this, videoList, external, SDCardUtils.getGlobalDir());
     }
 
-    private void getDownData(JSONObject jsonObject) {
-        //融合下载下来的数据,在GlobeUnzipService中处理
-        if (DocUtils.hasValue(jsonObject, "url")) {
-            String url = null;
-            try {
-                url = jsonObject.getString("url");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Intent intent = new Intent(LoginActivity.this, GlobeUnzipActivity.class);
-            intent.putExtra("url", url);
-            startActivity(intent);
-        }
-    }
+//    private void getDownData(JSONObject jsonObject) {
+//        //融合下载下来的数据,在GlobeUnzipService中处理
+//        if (DocUtils.hasValue(jsonObject, "url")) {
+//            String url = null;
+//            try {
+//                url = jsonObject.getString("url");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            Intent intent = new Intent(LoginActivity.this, GlobeUnzipActivity.class);
+//            intent.putExtra("url", url);
+//            startActivity(intent);
+//        }
+//    }
 
     private void loginHuanXin(String currentUsername, String currentPassword) {
         EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {

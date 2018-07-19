@@ -60,66 +60,62 @@ public class GlobeUnzipService extends JobService {
 
     private void downLoadData() {
         if (NetworkUtil.isNetworkAvailable(GlobeUnzipService.this)) {
-            File file = new File(srcUrl);
-            if (file.exists()) {
-                return;
-            } else {
-                String dirPath = SDCardUtils.getGlobalDir() + srcUrl.substring(srcUrl.lastIndexOf("/") + 1, srcUrl.length());
-                HttpRequestClient.getInstance(GlobeUnzipService.this).createBaseApi().download(srcUrl, dirPath, new DownCallBack() {
-                    @Override
-                    public void onProgress(long fileSizeDownloaded) {
-                        super.onProgress(fileSizeDownloaded);
-                        //显示下载进度
-                    }
+            String dirPath = SDCardUtils.getGlobalDir() + srcUrl.substring(srcUrl.lastIndexOf("/") + 1, srcUrl.length());
+            HttpRequestClient.getInstance(GlobeUnzipService.this).createBaseApi().download(srcUrl, dirPath, new DownCallBack() {
+                @Override
+                public void onProgress(long fileSizeDownloaded) {
+                    super.onProgress(fileSizeDownloaded);
+                    //显示下载进度
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        ToastUtil.showLong(GlobeUnzipService.this, "文件下载失败,请返回列表重新进入病历列表!");
-                    }
+                @Override
+                public void onError(Throwable e) {
+                    ToastUtil.showLong(GlobeUnzipService.this, "文件下载失败,请返回列表重新进入病历列表!");
+                }
 
-                    @Override
-                    public void onSucess(String filePath, String fileName, long fileSize) {
-                        //zip包解压
-                        try {
-                            boolean zipFile = ZipUtils.unzipFile(filePath, SDCardUtils.getGlobalDir());
-                            //插入数据库
-                            if (zipFile) {
-                                StringBuffer sb = new StringBuffer();
-                                sb.append(SDCardUtils.getGlobalDir());
-                                sb.append("globe");
-                                sb.append(mobile);
-                                String folderName = sb.toString();
-                                sb.append(File.separator);
-                                sb.append("datebases");
-                                sb.append(File.separator);
-                                sb.append(mobile);
-                                sb.append(".db");
-                                String path = sb.toString();
-                                //将外部数据库导入内部,并删除内部数据库
-                                List<SaveDocBean> list = instance.queryGlobeSaveDocList(GlobeUnzipService.this, mobile, folderName);
-                                instance.insertSaveDoc(GlobeUnzipService.this, list);
-                                List<ImageBean> beanList = imageInstance.queryGlobeImage(GlobeUnzipService.this, mobile, folderName);
-                                imageInstance.insertImageList(GlobeUnzipService.this, beanList);
-                                List<ImageListBean> imageList = imageRecycleInstance.queryGlobeImageList(GlobeUnzipService.this, mobile, folderName);
-                                imageRecycleInstance.insertImageListList(GlobeUnzipService.this, imageList);
-                                List<RecordBean> recordList = recordInstance.queryGlobeRecord(GlobeUnzipService.this, mobile, folderName);
-                                recordInstance.insertRecordList(GlobeUnzipService.this, recordList);
-                                List<VideoBean> videoList = videoInstance.queryGlobeVideo(GlobeUnzipService.this, mobile, folderName);
-                                videoInstance.insertVideoList(GlobeUnzipService.this, videoList);
-                                //删除数据库
-                                FileUtils.deleteDir(path);
-                            } else {
-                                ToastUtil.showLong(GlobeUnzipService.this, "解压文件失败,请返回列表重新进入病历列表!");
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                @Override
+                public void onSucess(String filePath, String fileName, long fileSize) {
+                    //zip包解压
+                    try {
+                        boolean zipFile = ZipUtils.unzipFile(filePath, SDCardUtils.getGlobalDir());
+                        //插入数据库
+                        if (zipFile) {
+                            StringBuffer sb = new StringBuffer();
+                            sb.append(SDCardUtils.getGlobalDir());
+                            sb.append("globe");
+                            sb.append(mobile);
+                            String folderName = sb.toString();
+                            sb.append(File.separator);
+                            sb.append("datebases");
+                            sb.append(File.separator);
+                            sb.append(mobile);
+                            sb.append(".db");
+                            String path = sb.toString();
+                            //将外部数据库导入内部,并删除内部数据库
+                            List<SaveDocBean> list = instance.queryGlobeSaveDocList(GlobeUnzipService.this, mobile, folderName);
+                            instance.insertSaveDoc(GlobeUnzipService.this, list);
+                            List<ImageBean> beanList = imageInstance.queryGlobeImage(GlobeUnzipService.this, mobile, folderName);
+                            imageInstance.insertImageList(GlobeUnzipService.this, beanList);
+                            List<ImageListBean> imageList = imageRecycleInstance.queryGlobeImageList(GlobeUnzipService.this, mobile, folderName);
+                            imageRecycleInstance.insertImageListList(GlobeUnzipService.this, imageList);
+                            List<RecordBean> recordList = recordInstance.queryGlobeRecord(GlobeUnzipService.this, mobile, folderName);
+                            recordInstance.insertRecordList(GlobeUnzipService.this, recordList);
+                            List<VideoBean> videoList = videoInstance.queryGlobeVideo(GlobeUnzipService.this, mobile, folderName);
+                            videoInstance.insertVideoList(GlobeUnzipService.this, videoList);
+                            //删除压缩包
+                            FileUtils.deleteDir(SDCardUtils.getGlobalDir() + "globe" + mobile + ".zip");
+                            ToastUtil.showLong(GlobeUnzipService.this, "病历下载完成!");
+                        } else {
+                            ToastUtil.showLong(GlobeUnzipService.this, "解压文件失败,请返回列表重新进入病历列表!");
                         }
-                        //通知页面刷新数据(两处页面刷新,精度条finish)
-                        Intent intent = new Intent(GlobeUnzipActivity.IS_UNZIP);
-                        LocalBroadcastManager.getInstance(GlobeUnzipService.this).sendBroadcast(intent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                });
-            }
+                    //通知页面刷新数据(两处页面刷新,精度条finish)
+                    Intent intent = new Intent(GlobeUnzipActivity.IS_UNZIP);
+                    LocalBroadcastManager.getInstance(GlobeUnzipService.this).sendBroadcast(intent);
+                }
+            });
         }
     }
 
@@ -134,7 +130,6 @@ public class GlobeUnzipService extends JobService {
         if (intent != null && intent.getExtras() != null) {
             srcUrl = intent.getExtras().getString("url");
         }
-        srcUrl = "";
         Message m = Message.obtain();
         handler.sendMessage(m);
         return START_STICKY;

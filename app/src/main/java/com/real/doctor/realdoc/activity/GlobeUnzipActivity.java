@@ -11,15 +11,22 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.service.GlobeUnzipService;
+import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.view.ColorfulProgressbar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.real.doctor.realdoc.activity.RecordListActivity.RECORD_LIST_TEXT;
 
 /**
  * Created by Administrator on 2018/4/26.
@@ -29,6 +36,12 @@ public class GlobeUnzipActivity extends BaseActivity {
 
     @BindView(R.id.color_progress_bar)
     ColorfulProgressbar colorProgressBar;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
+    @BindView(R.id.finish_back)
+    ImageView finishBack;
     public static String IS_UNZIP = "android.intent.is.unzip";
     private String url;
 
@@ -37,10 +50,18 @@ public class GlobeUnzipActivity extends BaseActivity {
         return R.layout.activity_globe_unzip;
     }
 
-
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(GlobeUnzipActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
+        pageTitle.setText("从服务端病历下载");
+        finishBack.setVisibility(View.GONE);
         colorProgressBar.setHeight(SizeUtils.dip2px(this, 20));
         colorProgressBar.setProgress(100);
         colorProgressBar.setSecondProgress(100);
@@ -50,31 +71,28 @@ public class GlobeUnzipActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            url = intent.getExtras().getString("url");
-        }
+        url = (String) SPUtils.get(GlobeUnzipActivity.this, "url", "");
+        localBroadcast();
+        startService();
+    }
+
+    private void localBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(IS_UNZIP);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-//                if (StringUtils.equals(action, HAVE_IMG)) {
-//                    ToastUtil.showLong(GlobeUnzipActivity.this, "病历资源打包成功!");
-//                } else if (StringUtils.equals(action, HAVE_NOTHING)) {
-//                    ToastUtil.showLong(GlobeUnzipActivity.this, "没有病历图片,音频,视频资源可打包,但病历信息已经上传完成!");
-//                }
-//                Intent extras = new Intent(GlobeUnzipActivity.this, CheckDetailActivity.class);
-//                extras.putExtra("path", path);
-//                extras.putExtra("questionId", questionId);
-//                extras.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
-//                extras.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(extras);
+                //通知页面刷新数据(两处页面刷新,精度条finish)
+                Intent refreshIntent = new Intent(RECORD_LIST_TEXT);
+                LocalBroadcastManager.getInstance(GlobeUnzipActivity.this).sendBroadcast(refreshIntent);
                 finish();
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
+    }
 
+    private void startService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //启动服务
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
