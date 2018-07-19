@@ -14,4 +14,6 @@
     <item name="encode_succeeded" type="id" />
     <item name="quit" type="id" />
     <item name="restart_preview" type="id" />
+    <item name="tag_first" type="id" />
+    <item name="tag_second" type="id" />
 </resources>
