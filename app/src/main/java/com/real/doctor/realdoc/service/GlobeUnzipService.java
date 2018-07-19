@@ -104,6 +104,7 @@ public class GlobeUnzipService extends JobService {
                             videoInstance.insertVideoList(GlobeUnzipService.this, videoList);
                             //删除压缩包
                             FileUtils.deleteDir(SDCardUtils.getGlobalDir() + "globe" + mobile + ".zip");
+                            ToastUtil.showLong(GlobeUnzipService.this, "病历下载完成!");
                         } else {
                             ToastUtil.showLong(GlobeUnzipService.this, "解压文件失败,请返回列表重新进入病历列表!");
                         }
