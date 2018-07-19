@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -151,6 +152,7 @@ public class SaveRecordActivity extends BaseActivity {
     public static String RECORD_IMAGES_TEXT = "android.intent.action.record.images.text";
 
     public boolean isModify = false;
+    private Dialog mProgressDialog;
 
     @Override
     public int getLayoutId() {
@@ -167,6 +169,7 @@ public class SaveRecordActivity extends BaseActivity {
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        mProgressDialog = DocUtils.getProgressDialog(SaveRecordActivity.this, "正在保存数据....");
     }
 
     @Override
@@ -549,6 +552,7 @@ public class SaveRecordActivity extends BaseActivity {
             case R.id.button_save_doc:
                 if (DocUtils.isFastClick()) {
                     //保存文字,图片，录音，录像信息
+                    mProgressDialog.show();
                     if (isModify) {
                         SaveDocBean bean = new SaveDocBean();
                         bean.setId(mModifyId);
@@ -625,6 +629,7 @@ public class SaveRecordActivity extends BaseActivity {
                             }
                         }
                         imageRecycleInstance.insertImageListList(this, imageBeanList);
+                        mProgressDialog.dismiss();
                         //病历详情回调
                         intent = new Intent();
                         setResult(RESULT_OK, intent);
@@ -679,7 +684,7 @@ public class SaveRecordActivity extends BaseActivity {
                         //保存到病历表中
                         instance.insertSaveDoc(this, bean);
                         ToastUtil.showLong(this, "数据保存成功");
-
+                        mProgressDialog.dismiss();
                     }
                     //广播通知刷新列表
                     intent = new Intent(RecordListActivity.RECORD_LIST_TEXT);

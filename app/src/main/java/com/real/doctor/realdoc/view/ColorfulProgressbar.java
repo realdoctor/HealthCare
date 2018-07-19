@@ -46,8 +46,8 @@ public class ColorfulProgressbar extends ViewGroup {
     private long maxProgress = 100;  //默然最大进度100
     private int backgroundColor = getResources().getColor(R.color.progressBg);    //背景颜色
     private int secondProgressColor = getResources().getColor(R.color.secondProgressColor);  //第二进度条颜色
-    private int progressColor = getResources().getColor(R.color.colorAccent);    //进度条颜色一
-    private int progressColor2 = getResources().getColor(R.color.ltcolorAccent);  //进度条颜色二
+    private int progressColor = getResources().getColor(R.color.tab_nor_color);    //进度条颜色一
+    private int progressColor2 = getResources().getColor(R.color.appthemecolor);  //进度条颜色二
     private int percentColor = Color.YELLOW;          //进度文字的颜色，默认黄色
     private int percentShaderColor = Color.DKGRAY;   //进度文字的阴影颜色，默认暗灰色
 
@@ -121,15 +121,15 @@ public class ColorfulProgressbar extends ViewGroup {
         heightSize = heightMode == MeasureSpec.EXACTLY ? heightSize : SizeUtils.dip2px(getContext(), 4);
 
         /*
-        * 当你设置高度大于20dp时，强制高度变为20dp,太高了不美观。
-        * */
+         * 当你设置高度大于20dp时，强制高度变为20dp,太高了不美观。
+         * */
         maxHeight = SizeUtils.dip2px(getContext(), 20);
         if (mHeight > maxHeight) {
             mHeight = maxHeight;
         }
         /*
-        * 设置高度
-        * */
+         * 设置高度
+         * */
         if (mHeight > 0) {
             heightSize = mHeight;
         } else {
@@ -137,15 +137,15 @@ public class ColorfulProgressbar extends ViewGroup {
         }
 
         /*
-        * 在高度小于10dp时，强制不能使用文字显示进度，因为高度实在是太小了，在这个高度下字体看不清楚，放在进度条外又不美观，只好折中设计了。
-        * */
+         * 在高度小于10dp时，强制不能使用文字显示进度，因为高度实在是太小了，在这个高度下字体看不清楚，放在进度条外又不美观，只好折中设计了。
+         * */
         if (heightSize < SizeUtils.dip2px(getContext(), 10)) {
             showPercent = false;
         }
 
         /*
-        * 设置宽度
-        * */
+         * 设置宽度
+         * */
         if (mWidth > 0) {
             widthSize = mWidth;
         }
@@ -199,7 +199,7 @@ public class ColorfulProgressbar extends ViewGroup {
             maskView.setHeight(getMeasuredHeight() * 2 / 3);
             maskView.setBackgroundResource(R.drawable.progress_mask);
 
-             /*
+            /*
              * 依次添加第二进度条，背景罩，双色进度条（第一进度条），白色渐变层，百分比文字显示层等四个子View
              * */
             addView(progressView);
@@ -213,7 +213,7 @@ public class ColorfulProgressbar extends ViewGroup {
 
             int ChildHeight = getMeasuredWidth();
             getChildAt(2).layout(0, -ChildHeight + getMeasuredHeight(), getMeasuredWidth(), getMeasuredWidth()); //布局双色进度条
-             /*
+            /*
              * 根据标识位，为双色进度条设置位移动画（无限上下移动，视觉上达到斜条移动的效果）
              * */
             if (animationOn) {
@@ -229,7 +229,7 @@ public class ColorfulProgressbar extends ViewGroup {
             getChildAt(3).layout(0, 0, getMeasuredWidth(), getMeasuredHeight() * 2 / 3); //布局白色渐变层
 
             getChildAt(4).layout(0, 0, textWidth, textHeight); //布局百分比文字显示层
-             /*
+            /*
              * 根据标志位，确定是否显示百分比文字显示层。
              * */
             if (showPercent) {
@@ -238,7 +238,7 @@ public class ColorfulProgressbar extends ViewGroup {
                 getChildAt(4).setVisibility(GONE);
             }
 
-             /*
+            /*
              *  设置默认背景图，你当然也可以使用纯色的资源。这里我用了一个黑色透明渐变的背景，呈现一个由阴影效果的凹槽
              * */
             setBackgroundResource(R.drawable.progress_bg);
@@ -406,9 +406,9 @@ public class ColorfulProgressbar extends ViewGroup {
             }
             percentView.setText((int) ((float) partition2 * 100) + "%");
 
-                 /*
-                 * 根据标志位，确定是否显示百分比文字显示层。
-                 * */
+            /*
+             * 根据标志位，确定是否显示百分比文字显示层。
+             * */
             if (showPercent) {
                 getChildAt(4).setVisibility(VISIBLE);
             } else {

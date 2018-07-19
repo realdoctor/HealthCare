@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.app.Dialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
@@ -28,6 +29,7 @@ import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.PatientBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.service.UnzipService;
+import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 
@@ -66,6 +68,7 @@ public class CaseListActivity extends BaseActivity {
     private List<SaveDocBean> recordList;
     private String disease;
     private String inqueryText;
+    private Dialog mProgressDialog;
 
     @Override
     public int getLayoutId() {
@@ -82,6 +85,7 @@ public class CaseListActivity extends BaseActivity {
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        mProgressDialog = DocUtils.getProgressDialog(CaseListActivity.this, "正在加载数据....");
     }
 
     @Override
@@ -117,6 +121,7 @@ public class CaseListActivity extends BaseActivity {
                 if (EmptyUtils.isEmpty(intent.getExtras())) {
                     line.setVisibility(View.GONE);
                     recordListTitle.setVisibility(View.GONE);
+                    mProgressDialog.dismiss();
                     return;
                 }
                 recordList = intent.getExtras().getParcelableArrayList("list");
@@ -150,6 +155,7 @@ public class CaseListActivity extends BaseActivity {
                     //给RecyclerView设置适配器
                     recordListRecycleView.setAdapter(multilDetailAdapter);
                     initListEvent();
+                    mProgressDialog.dismiss();
                 }
             }
         };
@@ -158,6 +164,7 @@ public class CaseListActivity extends BaseActivity {
 
     private void startService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mProgressDialog.show();
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             Intent startServiceIntent = new Intent(this, UnzipService.class);
             startServiceIntent.putExtra("patientBean", patientBean);

@@ -11,12 +11,16 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.service.RecordUploadService;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -29,6 +33,12 @@ import butterknife.ButterKnife;
 
 public class RecordUploadActivity extends BaseActivity {
 
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+    @BindView(R.id.page_title)
+    TextView pageTitle;
+    @BindView(R.id.finish_back)
+    ImageView finishBack;
     @BindView(R.id.color_progress_bar)
     ColorfulProgressbar colorProgressBar;
     private String mobile;
@@ -42,6 +52,15 @@ public class RecordUploadActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(RecordUploadActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            titleBar.setLayoutParams(lp);
+        }
+        finishBack.setVisibility(View.GONE);
+        pageTitle.setText("上传病历至服务器");
         colorProgressBar.setHeight(SizeUtils.dip2px(this, 20));
         colorProgressBar.setProgress(100);
         colorProgressBar.setSecondProgress(100);
