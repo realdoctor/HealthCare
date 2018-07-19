@@ -102,17 +102,7 @@ public class CaseListActivity extends BaseActivity {
             line.setVisibility(View.GONE);
             inqueryInfo.setVisibility(View.GONE);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-            Intent startServiceIntent = new Intent(this, UnzipService.class);
-            startServiceIntent.putExtra("patientBean", patientBean);
-            startService(startServiceIntent);
-            JobInfo jobInfo = new JobInfo.Builder(1, new ComponentName(getPackageName(), UnzipService.class.getName()))
-                    .setPeriodic(2000)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .build();
-            jobScheduler.schedule(jobInfo);
-        }
+        startService();
         loadBroadCast();
     }
 
@@ -164,6 +154,20 @@ public class CaseListActivity extends BaseActivity {
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
+    }
+
+    private void startService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            Intent startServiceIntent = new Intent(this, UnzipService.class);
+            startServiceIntent.putExtra("patientBean", patientBean);
+            startService(startServiceIntent);
+            JobInfo jobInfo = new JobInfo.Builder(1, new ComponentName(getPackageName(), UnzipService.class.getName()))
+                    .setPeriodic(2000)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .build();
+            jobScheduler.schedule(jobInfo);
+        }
     }
 
     @Override

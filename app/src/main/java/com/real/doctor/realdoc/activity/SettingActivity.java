@@ -80,8 +80,6 @@ public class SettingActivity extends BaseActivity {
     LinearLayout accountSet;
     @BindView(R.id.address_set)
     LinearLayout addressSet;
-    @BindView(R.id.record_upload)
-    LinearLayout recordUpload;
     @BindView(R.id.clean_cache)
     LinearLayout cleanCache;
     @BindView(R.id.user_fade)
@@ -167,7 +165,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back, R.id.login_out, R.id.account_set, R.id.address_set, R.id.clean_cache, R.id.user_fade, R.id.about_us, R.id.record_upload})
+    @OnClick({R.id.finish_back, R.id.login_out, R.id.account_set, R.id.address_set, R.id.clean_cache, R.id.user_fade, R.id.about_us})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
@@ -198,11 +196,6 @@ public class SettingActivity extends BaseActivity {
                 //账号设置
                 intent = new Intent(SettingActivity.this, AccountActivity.class);
                 intent.putExtra("avator", avator);
-                startActivity(intent);
-                break;
-            case R.id.record_upload:
-                //病历上传
-                intent = new Intent(SettingActivity.this, RecordUploadActivity.class);
                 startActivity(intent);
                 break;
             case R.id.address_set:

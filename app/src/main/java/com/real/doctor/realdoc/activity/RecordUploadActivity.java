@@ -32,7 +32,7 @@ public class RecordUploadActivity extends BaseActivity {
     @BindView(R.id.color_progress_bar)
     ColorfulProgressbar colorProgressBar;
     private String mobile;
-    public static String UPLOAD_RECORD= "android.intent.action.upload.record";
+    public static String UPLOAD_RECORD = "android.intent.action.upload.record";
 
     @Override
     public int getLayoutId() {
@@ -52,6 +52,11 @@ public class RecordUploadActivity extends BaseActivity {
     @Override
     public void initData() {
         mobile = (String) SPUtils.get(RecordUploadActivity.this, "mobile", "");
+        localBroadcast();
+        startService();
+    }
+
+    private void localBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UPLOAD_RECORD);
@@ -62,7 +67,9 @@ public class RecordUploadActivity extends BaseActivity {
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
+    }
 
+    private void startService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             Intent startServiceIntent = new Intent(this, RecordUploadService.class);

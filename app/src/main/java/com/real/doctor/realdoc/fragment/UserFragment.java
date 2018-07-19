@@ -16,12 +16,14 @@ import android.widget.TextView;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.DocPayActivity;
+import com.real.doctor.realdoc.activity.GlobeUnzipActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
 import com.real.doctor.realdoc.activity.MyRevisitActivity;
 import com.real.doctor.realdoc.activity.OrderListActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
+import com.real.doctor.realdoc.activity.RecordUploadActivity;
 import com.real.doctor.realdoc.activity.SettingActivity;
 import com.real.doctor.realdoc.activity.UserFadeActivity;
 import com.real.doctor.realdoc.activity.VerifyActivity;
@@ -63,6 +65,7 @@ public class UserFragment extends BaseFragment {
     private String mobile;
     private String verifyFlag = "";
     private String roleId;
+    private String url;
     @BindView(R.id.user_name)
     TextView userName;
     @BindView(R.id.title_bar)
@@ -93,6 +96,14 @@ public class UserFragment extends BaseFragment {
     LinearLayout suggestSubmit;
     @BindView(R.id.user_setting)
     LinearLayout userSetting;
+    @BindView(R.id.down_record)
+    LinearLayout downRecord;
+    @BindView(R.id.down_record_line)
+    View downRecordLine;
+    @BindView(R.id.record_upload)
+    LinearLayout recordUpload;
+    @BindView(R.id.record_upload_line)
+    View recordUploadLine;
 
     public static String VERIFY_TEXT = "android.intent.action.record.verify.text";
     private String originalImageUrl = "";
@@ -123,6 +134,21 @@ public class UserFragment extends BaseFragment {
         mobile = (String) SPUtils.get(getActivity(), "mobile", "");
         verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
         roleId = (String) SPUtils.get(getActivity(), Constants.ROLE_ID, "");
+        url = (String) SPUtils.get(getActivity(), "url", "");
+        if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
+            downRecord.setVisibility(View.VISIBLE);
+            downRecordLine.setVisibility(View.VISIBLE);
+        } else {
+            downRecord.setVisibility(View.GONE);
+            downRecordLine.setVisibility(View.GONE);
+        }
+        if (EmptyUtils.isNotEmpty(token)) {
+            recordUpload.setVisibility(View.VISIBLE);
+            recordUploadLine.setVisibility(View.VISIBLE);
+        } else {
+            recordUpload.setVisibility(View.GONE);
+            recordUploadLine.setVisibility(View.GONE);
+        }
         if (roleId.equals("0")) {
             inquiryPay.setVisibility(View.GONE);
         } else {
@@ -240,7 +266,7 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four, R.id.user_function_five, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit})
+    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four, R.id.user_function_five, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit, R.id.down_record, R.id.record_upload})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
@@ -316,6 +342,23 @@ public class UserFragment extends BaseFragment {
                 intent = new Intent(getActivity(), UserFadeActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.down_record:
+                if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
+                    intent = new Intent(getActivity(), GlobeUnzipActivity.class);
+                    startActivity(intent);
+                } else {
+                    ToastUtil.showLong(getActivity(), "请确定是否已登录!");
+                }
+                break;
+            case R.id.record_upload:
+                if (EmptyUtils.isNotEmpty(token)) {
+                    //病历上传
+                    intent = new Intent(getActivity(), RecordUploadActivity.class);
+                    startActivity(intent);
+                } else {
+                    ToastUtil.showLong(getActivity(), "请确定是否已登录!");
+                }
+                break;
         }
     }
 
@@ -333,7 +376,7 @@ public class UserFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");
+                        ToastUtil.showLong(getActivity(), "获取用户信息失败,请确定是否已登录!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -368,7 +411,7 @@ public class UserFragment extends BaseFragment {
                                         SPUtils.put(getActivity(), "verifyFlag", verifyFlag);
                                     }
                                 } else {
-                                    ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");
+                                    ToastUtil.showLong(getActivity(), "获取用户信息失败,请确定是否已登录!");
                                 }
 
                             } catch (JSONException e) {

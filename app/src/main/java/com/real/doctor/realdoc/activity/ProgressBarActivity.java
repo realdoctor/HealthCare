@@ -64,6 +64,19 @@ public class ProgressBarActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        Intent intent = getIntent();
+        if (intent != null && intent.getExtras() != null) {
+            inquery = intent.getExtras().getString("inquery");
+            desease = intent.getExtras().getString("desease");
+            mList = intent.getParcelableArrayListExtra("mList");
+            doctorUserId = intent.getExtras().getString("doctorUserId");
+            questionId = intent.getExtras().getString("questionId");
+        }
+        localBroadcast();
+        startService();
+    }
+
+    private void localBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HAVE_IMG);
@@ -88,15 +101,9 @@ public class ProgressBarActivity extends BaseActivity {
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
+    }
 
-        Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            inquery = intent.getExtras().getString("inquery");
-            desease = intent.getExtras().getString("desease");
-            mList = intent.getParcelableArrayListExtra("mList");
-            doctorUserId = intent.getExtras().getString("doctorUserId");
-            questionId = intent.getExtras().getString("questionId");
-        }
+    private void startService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             Intent startServiceIntent = new Intent(this, UpdateService.class);
