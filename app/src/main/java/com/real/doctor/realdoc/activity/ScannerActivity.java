@@ -4,11 +4,13 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -24,18 +26,30 @@ import com.google.zxing.Result;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 
+import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
+import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.scanner.ScannerFinderView;
 import com.real.doctor.realdoc.view.scanner.camera.CameraManager;
 import com.real.doctor.realdoc.view.scanner.decode.CaptureActivityHandler;
 import com.real.doctor.realdoc.view.scanner.decode.DecodeManager;
 import com.real.doctor.realdoc.view.scanner.decode.InactivityTimer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callback {
 
@@ -56,6 +70,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     private DecodeManager decodeManager = new DecodeManager();
     @BindView(R.id.light_switch)
     Switch lightSwitch;
+    public String userId;
 
     @Override
     public int getLayoutId() {
@@ -103,7 +118,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
 
     @Override
     public void doBusiness(Context mContext) {
-
+        userId = (String) SPUtils.get(ScannerActivity.this, Constants.USER_KEY, "");
     }
 
 
@@ -260,7 +275,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     }
 
 
-    private void qrSucceed(String result) {
+    private void qrSucceed(final  String result) {
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.notification)
                 .setMessage(result)
                 .setPositiveButton(R.string.positive_button_confirm, new DialogInterface.OnClickListener() {
@@ -268,6 +283,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         restartPreview();
+                        focusDoctor(result);
                     }
                 })
                 .show();
@@ -277,6 +293,75 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                 restartPreview();
             }
         });
+
+
+    }
+    private void focusDoctor(String doctorId) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("doctorId", doctorId);
+            json.put("userId", userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        HttpRequestClient.getInstance(ScannerActivity.this).createBaseApi().json("user/mydoctor/add/"
+                , body, new BaseObserver<ResponseBody>(ScannerActivity.this) {
+                    protected Disposable disposable;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //do nothing 通知后台开始计时失败
+                        Log.d(TAG, e.getMessage());
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = "";
+                        String code = "";
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    ToastUtil.showLong(ScannerActivity.this, "关注成功");
+                                    Intent intent=new Intent(ScannerActivity.this,MyFollowDoctorsActivity.class);
+                                    startActivity(intent);
+                                    ScannerActivity.this.finish();
+                                } else {
+                                    ToastUtil.showLong(ScannerActivity.this, msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
     }
 
 }

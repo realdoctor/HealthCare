@@ -13,6 +13,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,6 +162,9 @@ public class AddressDialogFragment extends DialogFragment {
         populateProvinceList();
 
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).setView(view).create();
+        WindowManager windowManager=getActivity().getWindowManager();
+        Display d=windowManager.getDefaultDisplay();
+
 
         // dialog properties
         Window window = alertDialog.getWindow();
@@ -168,7 +172,7 @@ public class AddressDialogFragment extends DialogFragment {
 
         wlp.gravity = Gravity.BOTTOM;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-
+        wlp.height= (int) (d.getWidth() * 1.0);
         window.setAttributes(wlp);
 
 
