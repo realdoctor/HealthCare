@@ -221,6 +221,11 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.MyFollowDoctorsActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.ProductShowActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />

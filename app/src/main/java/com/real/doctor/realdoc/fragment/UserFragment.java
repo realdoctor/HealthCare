@@ -18,6 +18,7 @@ import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.DocPayActivity;
 import com.real.doctor.realdoc.activity.GlobeUnzipActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
+import com.real.doctor.realdoc.activity.MyFollowDoctorsActivity;
 import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
 import com.real.doctor.realdoc.activity.MyRevisitActivity;
@@ -339,7 +340,7 @@ public class UserFragment extends BaseFragment {
                 break;
             case R.id.user_function_five:
                 isUserIn = true;
-                intent = new Intent(getActivity(), MyFollowNewsActivity.class);
+                intent = new Intent(getActivity(), MyFollowDoctorsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.user_setting:
