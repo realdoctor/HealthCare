@@ -273,9 +273,14 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        NewModel model = (NewModel) parent.getAdapter().getItem(position);
-        Intent intent = new Intent(getContext(), NewDetailActivity.class);
-        intent.putExtra("newsId", model.newsId);
-        startActivity(intent);
+        int Type=parent.getAdapter().getItemViewType(position);
+        if(Type==MultiNewsAdapter.TYPE_A) {
+            NewModel model = (NewModel) parent.getAdapter().getItem(position);
+            Intent intent = new Intent(getContext(), NewDetailActivity.class);
+            intent.putExtra("newsId", model.newsId);
+            startActivity(intent);
+        }else{
+
+        }
     }
 }

@@ -91,6 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:textSize="@dimen/sp_16"
                 android:layout_weight="1"/>
 
         </LinearLayout>
@@ -113,6 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
+                android:textSize="@dimen/sp_16"
                 android:background="@null"
                 android:layout_weight="1"/>
         </LinearLayout>
@@ -137,7 +139,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/phone"
                 android:layout_toRightOf="@id/address_text"
-                android:text="没有"
+                android:text="无"
+                android:textSize="@dimen/sp_16"
                 android:layout_weight="1"/>
         </LinearLayout>
         <LinearLayout
@@ -159,6 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:textSize="@dimen/sp_16"
                 android:hint="详细地址"
                 android:layout_weight="1"/>
         </LinearLayout>

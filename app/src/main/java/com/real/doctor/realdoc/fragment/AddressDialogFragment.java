@@ -91,9 +91,9 @@ public class AddressDialogFragment extends DialogFragment {
     @OnClick(R.id.province)
     void showProvinceList(){
         // set background to province, reset background on the rest
-        address_province.setBackgroundColor(Color.parseColor("#BDE8D6"));
-        address_city.setBackgroundColor(Color.parseColor("#E2EEE9"));
-        address_district.setBackgroundColor(Color.parseColor("#E2EEE9"));
+        address_province.setBackgroundColor(getActivity().getResources().getColor(R.color.appthemecolor));
+        address_city.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+        address_district.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
 
         // args: province, city, district
         screenSwitch(true, false, false);
@@ -102,9 +102,9 @@ public class AddressDialogFragment extends DialogFragment {
     @OnClick(R.id.city)
     void showCityList(){
         // set background to city, reset background on the rest
-        address_city.setBackgroundColor(Color.parseColor("#BDE8D6"));
-        address_province.setBackgroundColor(Color.parseColor("#E2EEE9"));
-        address_district.setBackgroundColor(Color.parseColor("#E2EEE9"));
+        address_city.setBackgroundColor(getActivity().getResources().getColor(R.color.appthemecolor));
+        address_province.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+        address_district.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
 
         // args: province, city, district
         screenSwitch(false, true, false);
@@ -113,9 +113,9 @@ public class AddressDialogFragment extends DialogFragment {
     @OnClick(R.id.district)
     void showDistrictList(){
         // set background to district, reset background on the rest
-        address_district.setBackgroundColor(Color.parseColor("#BDE8D6"));
-        address_city.setBackgroundColor(Color.parseColor("#E2EEE9"));
-        address_province.setBackgroundColor(Color.parseColor("#E2EEE9"));
+        address_district.setBackgroundColor(getActivity().getResources().getColor(R.color.appthemecolor));
+        address_city.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+        address_province.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
 
         // args: province, city, district
         screenSwitch(false, false, true);
@@ -260,7 +260,7 @@ public class AddressDialogFragment extends DialogFragment {
 
     /** Display data **/
     public void displayProvince(final RecyclerView.ViewHolder holder, final int position){
-        address_province.setBackgroundColor(Color.parseColor("#BDE8D6"));
+        address_province.setBackgroundColor(getActivity().getResources().getColor(R.color.appthemecolor));
 
 
         // reset the selected city
