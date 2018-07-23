@@ -18,10 +18,13 @@ import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
+import com.real.doctor.realdoc.widget.progress.processutil.ProcessManager;
+import com.real.doctor.realdoc.widget.progress.processutil.models.AndroidAppProcess;
 
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -183,5 +186,16 @@ public class DocUtils {
         //此处设置位置窗体大小
         dialog.getWindow().setLayout(SizeUtils.dip2px(context, 300), LinearLayout.LayoutParams.WRAP_CONTENT);
         return dialog;
+    }
+
+    public static boolean getLinuxCoreInfo(Context context, String packageName) {
+
+        List<AndroidAppProcess> processes = ProcessManager.getRunningForegroundApps(context);
+        for (AndroidAppProcess appProcess : processes) {
+            if (appProcess.getPackageName().equals(packageName) && appProcess.foreground) {
+                return true;
+            }
+        }
+        return false;
     }
 }

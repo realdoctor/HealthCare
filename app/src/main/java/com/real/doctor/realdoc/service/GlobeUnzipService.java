@@ -85,12 +85,6 @@ public class GlobeUnzipService extends JobService {
                             sb.append("globe");
                             sb.append(mobile);
                             String folderName = sb.toString();
-                            sb.append(File.separator);
-                            sb.append("datebases");
-                            sb.append(File.separator);
-                            sb.append(mobile);
-                            sb.append(".db");
-                            String path = sb.toString();
                             //将外部数据库导入内部,并删除内部数据库
                             List<SaveDocBean> list = instance.queryGlobeSaveDocList(GlobeUnzipService.this, mobile, folderName);
                             instance.insertSaveDoc(GlobeUnzipService.this, list);

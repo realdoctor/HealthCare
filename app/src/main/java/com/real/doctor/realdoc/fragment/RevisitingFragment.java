@@ -2,8 +2,10 @@ package com.real.doctor.realdoc.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,10 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,9 +51,12 @@ public class RevisitingFragment extends BaseFragment {
     private String mobile;
     private String userId;
     private String roleChangeId;
+    private static int mPageNum = 1;
     private List<DoctorBean> doctors;
     @BindView(R.id.revisiting_recycler)
     RecyclerView revisitingRv;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     private DividerItemDecoration divider;
     DocPayListAdapter docPayListAdapter;
 
@@ -74,9 +83,10 @@ public class RevisitingFragment extends BaseFragment {
         divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.disease_divider));
         revisitingRv.addItemDecoration(divider);
         getRevisitingList("1");
+        swipeRefresh();
     }
 
-    private void getRevisitingList(String pageNum) {
+    private void getRevisitingList(final String pageNum) {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("pageNum", pageNum);
         param.put("pageSize", "10");
@@ -94,6 +104,11 @@ public class RevisitingFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        if (mPageNum == 1) {
+                            refreshLayout.finishRefresh();
+                        } else {
+                            refreshLayout.finishLoadmore();
+                        }
                         ToastUtil.showLong(getActivity(), "获取咨询列表失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
@@ -127,15 +142,23 @@ public class RevisitingFragment extends BaseFragment {
                                     if (DocUtils.hasValue(obj, "list")) {
                                         doctors = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), DoctorBean.class);
                                         if (doctors.size() > 0) {
-                                            docPayListAdapter = new DocPayListAdapter(getActivity(), R.layout.doc_pay_list_item, doctors, true);
-                                            revisitingRv.setAdapter(docPayListAdapter);
+                                            if (EmptyUtils.isEmpty(docPayListAdapter)) {
+                                                docPayListAdapter = new DocPayListAdapter(getActivity(), R.layout.doc_pay_list_item, doctors, true);
+                                                revisitingRv.setAdapter(docPayListAdapter);
+                                            } else {
+                                                docPayListAdapter.notifyDataSetChanged();
+                                            }
                                             initEvent();
-//                                             docPayListAdapter.notifyDataSetChanged();
                                         }
                                     }
-
                                 } else {
                                     ToastUtil.showLong(getActivity(), "获取咨询列表失败!");
+                                }
+                                if (mPageNum == 1) {
+                                    refreshLayout.finishRefresh();
+                                } else {
+                                    refreshLayout.finishRefresh();
+                                    refreshLayout.finishLoadmore();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -146,6 +169,22 @@ public class RevisitingFragment extends BaseFragment {
                     }
 
                 });
+    }
+
+    private void swipeRefresh() {
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                //处理刷新列表逻辑
+                getRevisitingList("1");
+            }
+        });
+        refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                getRevisitingList(String.valueOf(mPageNum++));
+            }
+        });
     }
 
     private void initEvent() {
@@ -169,6 +208,7 @@ public class RevisitingFragment extends BaseFragment {
             }
         });
     }
+
 
     @Override
     public void widgetClick(View v) {

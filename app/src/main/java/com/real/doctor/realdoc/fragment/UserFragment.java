@@ -107,6 +107,7 @@ public class UserFragment extends BaseFragment {
 
     public static String VERIFY_TEXT = "android.intent.action.record.verify.text";
     private String originalImageUrl = "";
+    private boolean isUserIn = false;
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -259,6 +260,16 @@ public class UserFragment extends BaseFragment {
                 });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //发送广播，关闭悬浮窗
+        if (isUserIn) {
+            Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(msgIntent);
+            isUserIn = false;
+        }
+    }
 
     @Override
     public void doBusiness(Context mContext) {
@@ -271,6 +282,7 @@ public class UserFragment extends BaseFragment {
         Intent intent = null;
         switch (v.getId()) {
             case R.id.user_name:
+                isUserIn = true;
                 if (verifyFlag.equals("0")) {
                     //跳转到未实名认证界面
                     intent = new Intent(getActivity(), VerifyActivity.class);
@@ -282,6 +294,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.user_function_one:
+                isUserIn = true;
                 if (verifyFlag.equals("1")) {
                     intent = new Intent(getActivity(), MyRegistrationActivity.class);
                     startActivity(intent);
@@ -292,6 +305,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.user_function_two:
+                isUserIn = true;
                 if (verifyFlag.equals("1")) {
                     intent = new Intent(getActivity(), RecordListActivity.class);
                     startActivity(intent);
@@ -302,6 +316,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.user_function_three:
+                isUserIn = true;
                 if (verifyFlag.equals("1")) {
                     intent = new Intent(getActivity(), MyRevisitActivity.class);
                     startActivity(intent);
@@ -312,6 +327,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.user_function_four:
+                isUserIn = true;
                 if (verifyFlag.equals("1")) {
                     intent = new Intent(getActivity(), OrderListActivity.class);
                     startActivity(intent);
@@ -322,28 +338,33 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.user_function_five:
+                isUserIn = true;
                 intent = new Intent(getActivity(), MyFollowNewsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.user_setting:
+                isUserIn = true;
                 //跳转到设置页面`
                 intent = new Intent(getActivity(), SettingActivity.class);
                 intent.putExtra("imgUrl", originalImageUrl);
                 startActivity(intent);
                 break;
             case R.id.inquiry_pay:
+                isUserIn = true;
                 intent = new Intent(getActivity(), DocPayActivity.class);
                 startActivity(intent);
                 break;
             case R.id.about_us:
                 break;
             case R.id.suggest_submit:
+                isUserIn = true;
                 //用户反馈
                 intent = new Intent(getActivity(), UserFadeActivity.class);
                 startActivity(intent);
                 break;
             case R.id.down_record:
                 if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
+                    isUserIn = true;
                     intent = new Intent(getActivity(), GlobeUnzipActivity.class);
                     startActivity(intent);
                 } else {
@@ -352,6 +373,7 @@ public class UserFragment extends BaseFragment {
                 break;
             case R.id.record_upload:
                 if (EmptyUtils.isNotEmpty(token)) {
+                    isUserIn = true;
                     //病历上传
                     intent = new Intent(getActivity(), RecordUploadActivity.class);
                     startActivity(intent);

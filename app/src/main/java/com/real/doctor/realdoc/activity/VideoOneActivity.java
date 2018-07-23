@@ -108,14 +108,6 @@ public class VideoOneActivity extends BaseActivity implements
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
-        PackageManager p = getPackageManager();
-        boolean permission = (PackageManager.PERMISSION_GRANTED ==
-                p.checkPermission("android.permission.RECORD_AUDIO", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.CAMERA", "com.real.doctor.realdoc"));
-        if (!permission) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(VideoOneActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0);
-            }
-        }
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
                 CLASS_LABEL);
