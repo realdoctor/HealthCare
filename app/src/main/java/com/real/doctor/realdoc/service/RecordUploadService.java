@@ -130,7 +130,7 @@ public class RecordUploadService extends JobService {
                 RequestBody requestBody = DocUtils.toRequestBodyOfImage(file);
                 maps.put("attach\"; filename=\"" + file.getName() + "", requestBody);//head_img图片key
             }
-            HttpRequestClient.getInstance(RecordUploadService.this).createBaseApi().uploads("upload/uploadFiles/", maps, new BaseObserver<ResponseBody>(RecordUploadService.this) {
+            HttpRequestClient.getInstance(RecordUploadService.this).createBaseApi().uploads("upload/uploadPatientRecord/", maps, new BaseObserver<ResponseBody>(RecordUploadService.this) {
                 protected Disposable disposable;
 
                 @Override

@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -109,17 +110,7 @@ public class CheckDetailActivity extends BaseActivity {
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                //跳转到在线复诊页面
-                Intent intent = null;
-                if (EmptyUtils.isEmpty(questionId)) {
-                    intent = new Intent(CheckDetailActivity.this, DoctorsListActivity.class);
-                } else {
-                    intent = new Intent(CheckDetailActivity.this, MyRevisitActivity.class);
-                }
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                finish();
+                goBackBtn();
                 break;
             case R.id.zip_img:
                 if (EmptyUtils.isNotEmpty(path)) {
@@ -134,4 +125,28 @@ public class CheckDetailActivity extends BaseActivity {
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            goBackBtn();
+            return false;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+
+    }
+
+    private void goBackBtn() {
+        //跳转到在线复诊页面
+        Intent intent = null;
+        if (EmptyUtils.isEmpty(questionId)) {
+            intent = new Intent(CheckDetailActivity.this, DoctorsListActivity.class);
+        } else {
+            intent = new Intent(CheckDetailActivity.this, MyRevisitActivity.class);
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
+    }
 }

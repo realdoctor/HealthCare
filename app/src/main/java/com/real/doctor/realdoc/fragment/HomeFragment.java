@@ -42,6 +42,7 @@ import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.Constants;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
@@ -52,6 +53,7 @@ import com.real.doctor.realdoc.view.floatmenu.FloatBallManager;
 import com.real.doctor.realdoc.view.floatmenu.floatball.FloatBallCfg;
 import com.real.doctor.realdoc.view.floatmenu.utils.DensityUtil;
 import com.real.doctor.realdoc.widget.permission.FloatPermissionManager;
+import com.superrtc.util.AppRTCUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +130,7 @@ public class HomeFragment extends BaseFragment {
     private String isRole;
     public static String SHOW_RED_ICON = "android.intent.action.show.red.icon";
     public static String SHOW_WINDOW_ICON = "android.intent.action.show.window.icon";
+    public static String CLOSE_WINDOW_MANAGER = "android.intent.action.close.window.manager";
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -151,9 +154,14 @@ public class HomeFragment extends BaseFragment {
         searchText.getBackground().setAlpha(180);
         isRole = (String) SPUtils.get(getActivity(), Constants.ROLE_ID, "");
         if (isRole.equals("1")) {
+            mainLayout.setVisibility(View.GONE);
+            docLayout.setVisibility(View.VISIBLE);
+            personFlag = false;
             initFloatMenu();
         } else if (isRole.equals("0")) {
-            //do nothing
+            mainLayout.setVisibility(View.VISIBLE);
+            docLayout.setVisibility(View.GONE);
+            personFlag = true;
         }
         initViewFlipper();
     }
@@ -165,6 +173,11 @@ public class HomeFragment extends BaseFragment {
         if (EmptyUtils.isNotEmpty(mFloatPermissionManager)) {
             mFloatPermissionManager.checkPermission(getActivity());
         }
+        //判断是app否运行在前台
+        boolean isForeBack = DocUtils.getLinuxCoreInfo(getActivity(), "com.real.doctor.realdoc");
+        if (isForeBack && EmptyUtils.isNotEmpty(mFloatballManager)) {
+            mFloatballManager.show();
+        }
         showBroadcast();
     }
 
@@ -173,6 +186,7 @@ public class HomeFragment extends BaseFragment {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SHOW_WINDOW_ICON);
         intentFilter.addAction(RECORD_LIST_TEXT);
+        intentFilter.addAction(CLOSE_WINDOW_MANAGER);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -181,11 +195,15 @@ public class HomeFragment extends BaseFragment {
                     onShowMenu();
                 } else if (action.equals(RECORD_LIST_TEXT)) {
                     if (EmptyUtils.isNotEmpty(instance)) {
-                        recordList = instance.querySaveDocList(getActivity());
-                        adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
-                        recycleView.setAdapter(adapter);
-                        initEvent();
+                        if (EmptyUtils.isNotEmpty(recycleView)) {
+                            recordList = instance.querySaveDocList(getActivity());
+                            adapter = new HomeRecordAdapter(R.layout.home_record_item, recordList);
+                            recycleView.setAdapter(adapter);
+                            initEvent();
+                        }
                     }
+                } else if (action.equals(CLOSE_WINDOW_MANAGER)) {
+                    mFloatballManager.hide();
                 }
             }
         };
@@ -235,7 +253,12 @@ public class HomeFragment extends BaseFragment {
         isFirst = (boolean) SPUtils.get(getActivity(), "first", true);
         //1 初始化悬浮球配置，定义好悬浮球大小和icon的drawable
         final int ballSize = DensityUtil.dip2px(getActivity(), 60);
-        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
+        Drawable ballIcon;
+        if (personFlag) {
+            ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
+        } else {
+            ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
+        }
         //可以尝试使用以下几种不同的config。
         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
         mFloatballManager = new FloatBallManager(RealDocApplication.getContext(), ballCfg);

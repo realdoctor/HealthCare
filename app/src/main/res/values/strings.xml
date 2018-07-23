@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">康链</string>
     <string name="name">康链(REAL_DOCTOR)</string>
+    <string name="accessbiliityNo">请为App打开辅助功能开关！！</string>
     <!--label-->
     <item name="tag_key_data" type="id" />
     <item name="tag_key_position" type="id" />

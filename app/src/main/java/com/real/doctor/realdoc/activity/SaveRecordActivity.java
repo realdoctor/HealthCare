@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +37,7 @@ import com.real.doctor.realdoc.adapter.ImageCardAdapter;
 import com.real.doctor.realdoc.adapter.VideoAdapter;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.fragment.PlayRecordFragment;
 import com.real.doctor.realdoc.greendao.table.ImageManager;
 import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
@@ -384,6 +388,27 @@ public class SaveRecordActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
+        audioAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //点击播放录音
+                PlayRecordFragment playRecordFragment =
+                        new PlayRecordFragment().newInstance((RecordBean) adapter.getItem(position));
+                FragmentTransaction transaction = SaveRecordActivity.this.getSupportFragmentManager()
+                        .beginTransaction();
+                playRecordFragment.show(transaction, "dialog_play_record");
+            }
+        });
+        videoAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                VideoBean videoBean = ((VideoBean) adapter.getItem(position));
+                Intent intent = new Intent(SaveRecordActivity.this, PlayLocalVideoActivity.class);
+                intent.putExtra("videoBean", videoBean);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
         hospitalLabels.setOnLabelClickListener(new LabelsView.OnLabelClickListener() {
             @Override
             public void onLabelClick(TextView label, Object data, int position) {
@@ -558,18 +583,21 @@ public class SaveRecordActivity extends BaseActivity {
                         bean.setId(mModifyId);
                         String illness = ill.getText().toString().trim();
                         if (EmptyUtils.isEmpty(illness)) {
+                            mProgressDialog.dismiss();
                             ToastUtil.showLong(this, "请填写疾病名称!");
                             return;
                         }
                         bean.setIll(illness);
                         String hospitaName = hospital.getText().toString().trim();
                         if (EmptyUtils.isEmpty(hospitaName)) {
+                            mProgressDialog.dismiss();
                             ToastUtil.showLong(this, "请填写就诊医院名称!");
                             return;
                         }
                         bean.setHospital(hospitaName);
                         String doctorName = doctor.getText().toString().trim();
                         if (EmptyUtils.isEmpty(doctorName)) {
+                            mProgressDialog.dismiss();
                             ToastUtil.showLong(this, "请填写就诊医生!");
                             return;
                         }
@@ -664,18 +692,21 @@ public class SaveRecordActivity extends BaseActivity {
                         String illness = ill.getText().toString().trim();
                         if (EmptyUtils.isEmpty(illness)) {
                             ToastUtil.showLong(this, "请填写疾病名称!");
+                            mProgressDialog.dismiss();
                             return;
                         }
                         bean.setIll(illness);
                         String hospitaName = hospital.getText().toString().trim();
                         if (EmptyUtils.isEmpty(hospitaName)) {
                             ToastUtil.showLong(this, "请填写就诊医院名称!");
+                            mProgressDialog.dismiss();
                             return;
                         }
                         bean.setHospital(hospitaName);
                         String doctorName = doctor.getText().toString().trim();
                         if (EmptyUtils.isEmpty(doctorName)) {
                             ToastUtil.showLong(this, "请填写就诊医生!");
+                            mProgressDialog.dismiss();
                             return;
                         }
                         bean.setDoctor(doctorName);
@@ -754,13 +785,22 @@ public class SaveRecordActivity extends BaseActivity {
                     startActivityForResult(intent, 111);
                 }
             } else if (i == R.id.add_video) {
-                if (DocUtils.isFastClick()) {
-                    Intent intent = new Intent(SaveRecordActivity.this, VideoOneActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("modifyId", mModifyId);
-                    bundle.putString("folder", folder);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, 112);
+                PackageManager p = getPackageManager();
+                boolean permission = (PackageManager.PERMISSION_GRANTED ==
+                        p.checkPermission("android.permission.RECORD_AUDIO", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.CAMERA", "com.real.doctor.realdoc"));
+                if (!permission) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0x0003);
+                    }
+                }else{
+                    if (DocUtils.isFastClick()) {
+                        Intent intent = new Intent(SaveRecordActivity.this, VideoOneActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("modifyId", mModifyId);
+                        bundle.putString("folder", folder);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, 112);
+                    }
                 }
             }
         }
@@ -792,6 +832,16 @@ public class SaveRecordActivity extends BaseActivity {
                 break;
             case 0x0002:
                 takePhotoCompress();
+                break;
+            case 0x003:
+                if (DocUtils.isFastClick()) {
+                    Intent intent = new Intent(SaveRecordActivity.this, VideoOneActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("modifyId", mModifyId);
+                    bundle.putString("folder", folder);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, 112);
+                }
                 break;
         }
     }
