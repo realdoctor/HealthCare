@@ -19,7 +19,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="20dp"
             android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ease_default_avatar" />
 
 
         <TextView

@@ -250,7 +250,7 @@ public class AccountActivity extends BaseActivity {
                 maps.put("attach\"; filename=\"" + file.getName() + "", requestBody);//head_img图片key
             }
 
-            HttpRequestClient.getInstance(AccountActivity.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(AccountActivity.this) {
+            HttpRequestClient.getInstance(AccountActivity.this).createBaseApi().uploads("upload/uploadImg/", maps, new BaseObserver<ResponseBody>(AccountActivity.this) {
                 protected Disposable disposable;
 
                 @Override
