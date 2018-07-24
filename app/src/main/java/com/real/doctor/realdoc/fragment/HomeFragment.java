@@ -203,7 +203,9 @@ public class HomeFragment extends BaseFragment {
                         }
                     }
                 } else if (action.equals(CLOSE_WINDOW_MANAGER)) {
-                    mFloatballManager.hide();
+                    if (EmptyUtils.isNotEmpty(mFloatballManager)) {
+                        mFloatballManager.hide();
+                    }
                 }
             }
         };
