@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
+//import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -25,8 +25,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.util.Hashtable;
 
 /**
- *
- *   生成条形码和二维码的工具
+ * 生成条形码和二维码的工具
  */
 public class ZXingUtils {
     /**
@@ -75,14 +74,10 @@ public class ZXingUtils {
      * 生成条形码
      *
      * @param context
-     * @param contents
-     *            需要生成的内容
-     * @param desiredWidth
-     *            生成条形码的宽带
-     * @param desiredHeight
-     *            生成条形码的高度
-     * @param displayCode
-     *            是否在条形码下方显示内容
+     * @param contents      需要生成的内容
+     * @param desiredWidth  生成条形码的宽带
+     * @param desiredHeight 生成条形码的高度
+     * @param displayCode   是否在条形码下方显示内容
      * @return
      */
     public static Bitmap creatBarcode(Context context, String contents,
@@ -115,10 +110,8 @@ public class ZXingUtils {
     /**
      * 生成条形码的Bitmap
      *
-     * @param contents
-     *            需要生成的内容
-     * @param format
-     *            编码格式
+     * @param contents      需要生成的内容
+     * @param format        编码格式
      * @param desiredWidth
      * @param desiredHeight
      * @return
@@ -129,31 +122,31 @@ public class ZXingUtils {
         final int WHITE = 0xFFFFFFFF;
         final int BLACK = 0xFF000000;
 
-        MultiFormatWriter writer = new MultiFormatWriter();
-        BitMatrix result = null;
-        try {
-            result = writer.encode(contents, format, desiredWidth,
-                    desiredHeight, null);
-        } catch (WriterException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        int width = result.getWidth();
-        int height = result.getHeight();
-        int[] pixels = new int[width * height];
-        // All are 0, or black, by default
-        for (int y = 0; y < height; y++) {
-            int offset = y * width;
-            for (int x = 0; x < width; x++) {
-                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
-            }
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(width, height,
-                Config.ARGB_8888);
-        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-        return bitmap;
+//        MultiFormatWriter writer = new MultiFormatWriter();
+//        BitMatrix result = null;
+//        try {
+//            result = writer.encode(contents, format, desiredWidth,
+//                    desiredHeight, null);
+//        } catch (WriterException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//
+//        int width = result.getWidth();
+//        int height = result.getHeight();
+//        int[] pixels = new int[width * height];
+//        // All are 0, or black, by default
+//        for (int y = 0; y < height; y++) {
+//            int offset = y * width;
+//            for (int x = 0; x < width; x++) {
+//                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+//            }
+//        }
+//
+//        Bitmap bitmap = Bitmap.createBitmap(width, height,
+//                Config.ARGB_8888);
+//        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        return null;
     }
 
     /**
@@ -191,8 +184,7 @@ public class ZXingUtils {
      *
      * @param first
      * @param second
-     * @param fromPoint
-     *            第二个Bitmap开始绘制的起始位置（相对于第一个Bitmap）
+     * @param fromPoint 第二个Bitmap开始绘制的起始位置（相对于第一个Bitmap）
      * @return
      */
     protected static Bitmap mixtureBitmap(Bitmap first, Bitmap second,

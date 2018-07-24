@@ -71,8 +71,8 @@ public class MyQrActivity extends BaseActivity {
     public void doBusiness(Context mContext) {
         String user_id= (String)SPUtils.get(MyQrActivity.this, Constants.USER_KEY,"");
         if(user_id.length()!=0) {
-            Bitmap bitmap = ZXingUtils.createQRImage(user_id, 800, 800);
-            iv_qr_code.setImageBitmap(bitmap);
+//            Bitmap bitmap = ZXingUtils.createQRImage(user_id, 800, 800);
+//            iv_qr_code.setImageBitmap(bitmap);
         }
     }
 }
