@@ -53,11 +53,11 @@
     <string name="hint_phone_register">请输入手机号</string>
     <string name="hint_verify_register">验证码</string>
     <string name="hint_password_register">设置密码</string>
-    <string name="save_doc_ill">疾病名称:</string>
-    <string name="save_doc_hospital">就诊医院:</string>
+    <string name="save_doc_ill">疾病名称</string>
+    <string name="save_doc_hospital">就诊医院</string>
     <string name="save_doc_hospital_edit">请输入您就诊的医院名称</string>
-    <string name="save_doc_doctor">就诊医生:</string>
-    <string name="save_doc_time">就诊时间:</string>
+    <string name="save_doc_doctor">就诊医生</string>
+    <string name="save_doc_time">就诊时间</string>
     <string name="save_doc_text">描  述</string>
     <string name="save_doc_ill_edit">请输入您的疾病</string>
     <string name="save_doc_advice">请输入您对该病历的描述</string>
@@ -140,7 +140,7 @@
     <string name="zi_fu_bao">支付宝支付</string>
     <string name="wei_xing">微信支付</string>
     <string name="social_security">社保支付</string>
-    <string name="advice_info">处方信息:</string>
+    <string name="advice_info">处方信息</string>
     <string name="record_one">第一份病历</string>
     <string name="record_two">第二份病历</string>
     <string name="history_record">历史就诊信息</string>
@@ -190,6 +190,8 @@
     <string name="revisit">咨询</string>
     <string name="confirm_charge">确认收费</string>
     <string name="whether_to_save">是否保存?</string>
+    <string name="whether_to_video_advice">是否为该视频添加描述内容?</string>
+    <string name="whether_to_audio_advice">是否为该音频添加描述内容?</string>
     <string name="other_record">其他病历</string>
     <!--二维码扫描-->
     <string name="title_activity_scan_qr_code">扫一扫</string>

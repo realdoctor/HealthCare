@@ -32,6 +32,7 @@ public class ImageBeanDao extends AbstractDao<ImageBean, String> {
         public final static Property SpareImage = new Property(2, int.class, "spareImage", false, "SPARE_IMAGE");
         public final static Property Advice = new Property(3, String.class, "advice", false, "ADVICE");
         public final static Property ImageId = new Property(4, String.class, "imageId", false, "IMAGE_ID");
+        public final static Property IsPatient = new Property(5, String.class, "isPatient", false, "IS_PATIENT");
     }
 
     private Query<ImageBean> imageListBean_MImgUrlListQuery;
@@ -52,7 +53,8 @@ public class ImageBeanDao extends AbstractDao<ImageBean, String> {
                 "\"IMG_URL\" TEXT," + // 1: imgUrl
                 "\"SPARE_IMAGE\" INTEGER NOT NULL ," + // 2: spareImage
                 "\"ADVICE\" TEXT," + // 3: advice
-                "\"IMAGE_ID\" TEXT);"); // 4: imageId
+                "\"IMAGE_ID\" TEXT," + // 4: imageId
+                "\"IS_PATIENT\" TEXT);"); // 5: isPatient
     }
 
     /** Drops the underlying database table. */
@@ -85,6 +87,11 @@ public class ImageBeanDao extends AbstractDao<ImageBean, String> {
         if (imageId != null) {
             stmt.bindString(5, imageId);
         }
+ 
+        String isPatient = entity.getIsPatient();
+        if (isPatient != null) {
+            stmt.bindString(6, isPatient);
+        }
     }
 
     @Override
@@ -111,6 +118,11 @@ public class ImageBeanDao extends AbstractDao<ImageBean, String> {
         if (imageId != null) {
             stmt.bindString(5, imageId);
         }
+ 
+        String isPatient = entity.getIsPatient();
+        if (isPatient != null) {
+            stmt.bindString(6, isPatient);
+        }
     }
 
     @Override
@@ -125,7 +137,8 @@ public class ImageBeanDao extends AbstractDao<ImageBean, String> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // imgUrl
             cursor.getInt(offset + 2), // spareImage
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // advice
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // imageId
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // imageId
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // isPatient
         );
         return entity;
     }
@@ -137,6 +150,7 @@ public class ImageBeanDao extends AbstractDao<ImageBean, String> {
         entity.setSpareImage(cursor.getInt(offset + 2));
         entity.setAdvice(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setImageId(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setIsPatient(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
     
     @Override

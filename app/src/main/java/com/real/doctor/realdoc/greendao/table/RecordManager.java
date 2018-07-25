@@ -8,15 +8,9 @@ import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.greendao.DaoMaster;
 import com.real.doctor.realdoc.greendao.DaoSession;
 import com.real.doctor.realdoc.greendao.RecordBeanDao;
-import com.real.doctor.realdoc.greendao.SaveDocBeanDao;
 import com.real.doctor.realdoc.model.RecordBean;
-import com.real.doctor.realdoc.model.SaveDocBean;
-import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.EmptyUtils;
-
 import org.greenrobot.greendao.query.QueryBuilder;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,7 +74,7 @@ public class RecordManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
         QueryBuilder<RecordBean> qb = recordBeanDao.queryBuilder();
-        List<RecordBean> list = qb.list();
+        List<RecordBean> list = qb.where(RecordBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
@@ -161,7 +155,7 @@ public class RecordManager {
         QueryBuilder<RecordBean> qb = recordBeanDao.queryBuilder();
         List<RecordBean> list = null;
         if (EmptyUtils.isNotEmpty(folder)) {
-            list = qb.where(RecordBeanDao.Properties.Folder.eq(folder)).orderDesc(RecordBeanDao.Properties.ElapsedMillis).list();
+            list = qb.where(RecordBeanDao.Properties.Folder.eq(folder),RecordBeanDao.Properties.IsPatient.isNull()).orderDesc(RecordBeanDao.Properties.ElapsedMillis).list();
         }
         return list;
     }
@@ -170,7 +164,7 @@ public class RecordManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
         QueryBuilder<RecordBean> qb = recordBeanDao.queryBuilder();
-        List<RecordBean> list = qb.where(RecordBeanDao.Properties.RecordId.eq(recordId)).orderDesc(RecordBeanDao.Properties.ElapsedMillis).list();
+        List<RecordBean> list = qb.where(RecordBeanDao.Properties.RecordId.eq(recordId),RecordBeanDao.Properties.IsPatient.isNull()).orderDesc(RecordBeanDao.Properties.ElapsedMillis).list();
         return list;
     }
 
@@ -182,7 +176,7 @@ public class RecordManager {
         DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
         RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
         QueryBuilder<RecordBean> qb = recordBeanDao.queryBuilder();
-        List<RecordBean> list = qb.where(RecordBeanDao.Properties.RecordId.eq(recordId)).orderDesc(RecordBeanDao.Properties.ElapsedMillis).list();
+        List<RecordBean> list = qb.where(RecordBeanDao.Properties.RecordId.eq(recordId), RecordBeanDao.Properties.IsPatient.isNull()).orderDesc(RecordBeanDao.Properties.ElapsedMillis).list();
         return list;
     }
 
@@ -194,7 +188,7 @@ public class RecordManager {
         DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         RecordBeanDao recordBeanDao = daoSession.getRecordBeanDao();
         QueryBuilder<RecordBean> qb = recordBeanDao.queryBuilder();
-        List<RecordBean> list = qb.list();
+        List<RecordBean> list = qb.where(RecordBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 

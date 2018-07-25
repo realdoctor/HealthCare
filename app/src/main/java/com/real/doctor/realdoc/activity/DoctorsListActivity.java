@@ -21,10 +21,15 @@ import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,8 +58,11 @@ public class DoctorsListActivity extends BaseActivity {
     RecyclerView doctorsRv;
     @BindView(R.id.right_icon)
     ImageView rightIcon;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     DoctorsAdapter doctorsAdapter;
     List<DoctorBean> doctors;
+    private int mPageNum = 1;
 
     @Override
     public int getLayoutId() {
@@ -84,10 +92,14 @@ public class DoctorsListActivity extends BaseActivity {
         divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.disease_divider));
         doctorsRv.addItemDecoration(divider);
         doctorsRv.setLayoutManager(new LinearLayoutManager(this));
-        doctorsAdapter = new DoctorsAdapter(DoctorsListActivity.this, R.layout.doctors_list_item_view, doctors);
-        doctorsRv.setAdapter(doctorsAdapter);
         //获得医生数据
         getDoctorsData("1");
+        swipeRefresh();
+    }
+
+    @Override
+    public void initEvent() {
+        //do nothing
     }
 
     private void getDoctorsData(String pageNum) {
@@ -95,6 +107,7 @@ public class DoctorsListActivity extends BaseActivity {
         String mobile = (String) SPUtils.get(this, "mobile", "");
         map.put("mobilePhone", mobile);
         map.put("pageNum", pageNum);
+        map.put("pageSize", "10");
         HttpRequestClient.getInstance(DoctorsListActivity.this).createBaseApi().get("patient/revisit"
                 , map, new BaseObserver<ResponseBody>(DoctorsListActivity.this) {
                     protected Disposable disposable;
@@ -106,6 +119,11 @@ public class DoctorsListActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        if (mPageNum == 1) {
+                            refreshLayout.finishRefresh();
+                        } else {
+                            refreshLayout.finishLoadmore();
+                        }
                         ToastUtil.showLong(DoctorsListActivity.this, "获取医生列表失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
@@ -139,13 +157,22 @@ public class DoctorsListActivity extends BaseActivity {
                                     if (DocUtils.hasValue(obj, "list")) {
                                         doctors = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), DoctorBean.class);
                                         if (doctors.size() > 0) {
+//                                            if (EmptyUtils.isEmpty(doctorsAdapter)) {
                                             doctorsAdapter = new DoctorsAdapter(DoctorsListActivity.this, R.layout.doctors_list_item_view, doctors);
                                             doctorsRv.setAdapter(doctorsAdapter);
-                                            initEvent();
-//                                            doctorsAdapter.notifyDataSetChanged();
+//                                            } else {
+//                                                doctorsAdapter.notifyDataSetChanged();
+//                                            }
+                                            initListEvent();
                                         } else {
                                             ToastUtil.showLong(DoctorsListActivity.this, "医生列表为空!");
                                         }
+                                    }
+                                    if (mPageNum == 1) {
+                                        refreshLayout.finishRefresh();
+                                    } else {
+                                        refreshLayout.finishRefresh();
+                                        refreshLayout.finishLoadmore();
                                     }
                                 } else {
                                     ToastUtil.showLong(DoctorsListActivity.this, msg);
@@ -160,12 +187,32 @@ public class DoctorsListActivity extends BaseActivity {
                 });
     }
 
-    @Override
-    public void initEvent() {
+    public void initListEvent() {
         doctorsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                DoctorBean bean = doctors.get(position);
                 //跳转进医生详情
+                Intent intent = new Intent(DoctorsListActivity.this, DoctorsDetailActivity.class);
+                intent.putExtra("doctorUserId", bean.getId());
+                intent.putExtra("desease", bean.getDiagName());
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void swipeRefresh() {
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                //处理刷新列表逻辑
+                getDoctorsData("1");
+            }
+        });
+        refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                getDoctorsData(String.valueOf(++mPageNum));
             }
         });
     }
@@ -184,6 +231,4 @@ public class DoctorsListActivity extends BaseActivity {
     public void doBusiness(Context mContext) {
 
     }
-
-
 }

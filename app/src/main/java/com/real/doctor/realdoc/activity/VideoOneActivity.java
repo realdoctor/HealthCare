@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
@@ -60,6 +61,7 @@ public class VideoOneActivity extends BaseActivity implements
         MediaRecorder.OnInfoListener {
 
     private static final String TAG = "VideoOneActivity";
+    private static final int REQUEST_ADD_ADVICE = 112;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.page_title)
@@ -92,6 +94,7 @@ public class VideoOneActivity extends BaseActivity implements
     private String fileName;
     private VideoManager instance = null;
     public int key;
+    private AlertDialog dialog;
 
     @Override
     public int getLayoutId() {
@@ -175,35 +178,42 @@ public class VideoOneActivity extends BaseActivity implements
                 chronometer.stop();
                 btnStart.setVisibility(View.VISIBLE);
                 btnStop.setVisibility(View.INVISIBLE);
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.whether_to_save)
+                String st3;
+                if (key == 0) {
+                    st3 = getResources().getString(R.string.whether_to_video_advice);
+                } else {
+                    st3 = getResources().getString(R.string.whether_to_save);
+                }
+                dialog = new AlertDialog.Builder(this)
+                        .setMessage(st3)
                         .setPositiveButton(R.string.ok,
                                 new DialogInterface.OnClickListener() {
 
                                     @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        dialog.dismiss();
-                                        saveVideo(null);
-                                    }
-                                })
-                        .setNegativeButton(R.string.cancel,
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        if (localPath != null) {
-                                            File file = new File(localPath);
-                                            if (file.exists())
-                                                file.delete();
+                                    public void onClick(DialogInterface arg0,
+                                                        int arg1) {
+                                        arg0.dismiss();
+                                        if (key == 0) {
+                                            saveYesVideo();
+                                        } else if (key == 1) {
+                                            saveVideo(null);
+                                            resultVideo();
                                         }
-                                        finish();
-
                                     }
-                                }).setCancelable(false).show();
+                                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0,
+                                                int arg1) {
+                                arg0.dismiss();
+                                saveVideo(null);
+                                resultVideo();
+                            }
+                        }).setCancelable(false).show();
+                setDialogStyle();
                 break;
-
+            case R.id.finish_back:
+                finish();
+                break;
             default:
                 break;
         }
@@ -238,8 +248,13 @@ public class VideoOneActivity extends BaseActivity implements
             if (localPath == null) {
                 return;
             }
-            String st3 = getResources().getString(R.string.whether_to_save);
-            new android.app.AlertDialog.Builder(this)
+            String st3;
+            if (key == 0) {
+                st3 = getResources().getString(R.string.whether_to_video_advice);
+            } else {
+                st3 = getResources().getString(R.string.whether_to_save);
+            }
+            dialog = new AlertDialog.Builder(this)
                     .setMessage(st3)
                     .setPositiveButton(R.string.ok,
                             new DialogInterface.OnClickListener() {
@@ -248,11 +263,35 @@ public class VideoOneActivity extends BaseActivity implements
                                 public void onClick(DialogInterface arg0,
                                                     int arg1) {
                                     arg0.dismiss();
-                                    saveVideo(null);
+                                    if (key == 0) {
+                                        saveYesVideo();
+                                    } else if (key == 1) {
+                                        saveVideo(null);
+                                        resultVideo();
+                                    }
                                 }
-                            }).setNegativeButton(R.string.cancel, null)
-                    .setCancelable(false).show();
+                            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0,
+                                            int arg1) {
+                            arg0.dismiss();
+                            saveVideo(null);
+                            resultVideo();
+                        }
+                    }).setCancelable(false).show();
+            setDialogStyle();
         }
+    }
+
+    private void setDialogStyle() {
+        // 在dialog执行show之后设置样式
+        TextView tvMsg = (TextView) dialog.findViewById(android.R.id.message);
+        tvMsg.setTextSize(16);
+        tvMsg.setTextColor(Color.parseColor("#4E4E4E"));
+        dialog.getButton(dialog.BUTTON_NEGATIVE).setTextSize(16);
+        dialog.getButton(dialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#8C8C8C"));
+        dialog.getButton(dialog.BUTTON_POSITIVE).setTextSize(16);
+        dialog.getButton(dialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#1DA6DD"));
     }
 
     private void saveVideo(Object o) {
@@ -266,6 +305,24 @@ public class VideoOneActivity extends BaseActivity implements
         bean.setElapsedMillis(chronometer.getFormat());
         bean.setFolder(mFolder);
         instance.insertVideo(VideoOneActivity.this, bean);
+    }
+
+    private void saveYesVideo() {
+        Intent intent = new Intent(VideoOneActivity.this, AddAdviceActivity.class);
+        //存储数据进数据库
+        VideoBean bean = new VideoBean();
+        if (EmptyUtils.isNotEmpty(mModifyId)) {
+            bean.setRecordId(mModifyId);
+        }
+        bean.setFileName(fileName);
+        bean.setFilePath(localPath);
+        bean.setElapsedMillis(chronometer.getFormat());
+        bean.setFolder(mFolder);
+        intent.putExtra("video", bean);
+        startActivityForResult(intent, REQUEST_ADD_ADVICE);
+    }
+
+    private void resultVideo() {
         if (key == 0) {
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
@@ -389,7 +446,6 @@ public class VideoOneActivity extends BaseActivity implements
 
     @SuppressLint("NewApi")
     public void switchCamera() {
-
         if (mCamera == null) {
             return;
         }
@@ -526,7 +582,6 @@ public class VideoOneActivity extends BaseActivity implements
                             public void onClick(DialogInterface dialog,
                                                 int which) {
                                 finish();
-
                             }
                         }).setCancelable(false).show();
     }
@@ -542,7 +597,6 @@ public class VideoOneActivity extends BaseActivity implements
                             public void onClick(DialogInterface dialog,
                                                 int which) {
                                 finish();
-
                             }
                         }).setCancelable(false).show();
 

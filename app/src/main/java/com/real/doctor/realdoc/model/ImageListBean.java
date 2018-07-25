@@ -30,19 +30,29 @@ public class ImageListBean implements Parcelable {
             @JoinProperty(name = "id", referencedName = "imageId")
     })
     private List<ImageBean> mImgUrlList;
-    /** Used to resolve relations */
+    //如果该字段是空,则该病历是本地的病历，否则如果是"1",就是患者传给医生的病历
+    private String isPatient;
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 873861295)
     private transient ImageListBeanDao myDao;
-    @Generated(hash = 1017987797)
-    public ImageListBean(String id, String date, String content, String recordId) {
+
+    @Generated(hash = 1030138088)
+    public ImageListBean(String id, String date, String content, String recordId,
+                         String isPatient) {
         this.id = id;
         this.date = date;
         this.content = content;
         this.recordId = recordId;
+        this.isPatient = isPatient;
     }
+
     @Generated(hash = 1158683224)
     public ImageListBean() {
     }
@@ -52,6 +62,8 @@ public class ImageListBean implements Parcelable {
         date = in.readString();
         content = in.readString();
         recordId = in.readString();
+        mImgUrlList = in.createTypedArrayList(ImageBean.CREATOR);
+        isPatient = in.readString();
     }
 
     public static final Creator<ImageListBean> CREATOR = new Creator<ImageListBean>() {
@@ -69,27 +81,51 @@ public class ImageListBean implements Parcelable {
     public String getId() {
         return this.id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
+
     public String getDate() {
         return this.date;
     }
+
     public void setDate(String date) {
         this.date = date;
     }
+
     public String getContent() {
         return this.content;
     }
+
     public void setContent(String content) {
         this.content = content;
     }
+
     public String getRecordId() {
         return this.recordId;
     }
+
     public void setRecordId(String recordId) {
         this.recordId = recordId;
     }
+
+    public String getIsPatient() {
+        return this.isPatient;
+    }
+
+    public void setIsPatient(String isPatient) {
+        this.isPatient = isPatient;
+    }
+
+    public List<ImageBean> getmImgUrlList() {
+        return mImgUrlList;
+    }
+
+    public void setmImgUrlList(List<ImageBean> mImgUrlList) {
+        this.mImgUrlList = mImgUrlList;
+    }
+
     /**
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
@@ -112,11 +148,15 @@ public class ImageListBean implements Parcelable {
         }
         return mImgUrlList;
     }
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 2083827047)
     public synchronized void resetMImgUrlList() {
         mImgUrlList = null;
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
@@ -128,6 +168,7 @@ public class ImageListBean implements Parcelable {
         }
         myDao.delete(this);
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
@@ -139,6 +180,7 @@ public class ImageListBean implements Parcelable {
         }
         myDao.refresh(this);
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
      * Entity must attached to an entity context.
@@ -150,35 +192,14 @@ public class ImageListBean implements Parcelable {
         }
         myDao.update(this);
     }
-    /** called by internal mechanisms, do not call yourself. */
+
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated(hash = 1250701509)
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getImageListBeanDao() : null;
-    }
-
-    public List<ImageBean> getmImgUrlList() {
-        return mImgUrlList;
-    }
-
-    public void setmImgUrlList(List<ImageBean> mImgUrlList) {
-        this.mImgUrlList = mImgUrlList;
-    }
-
-    public DaoSession getDaoSession() {
-        return daoSession;
-    }
-
-    public void setDaoSession(DaoSession daoSession) {
-        this.daoSession = daoSession;
-    }
-
-    public ImageListBeanDao getMyDao() {
-        return myDao;
-    }
-
-    public void setMyDao(ImageListBeanDao myDao) {
-        this.myDao = myDao;
     }
 
     @Override
@@ -192,5 +213,7 @@ public class ImageListBean implements Parcelable {
         dest.writeString(date);
         dest.writeString(content);
         dest.writeString(recordId);
+        dest.writeTypedList(mImgUrlList);
+        dest.writeString(isPatient);
     }
 }

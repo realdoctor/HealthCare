@@ -73,9 +73,10 @@ public class VideoManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
-        List<VideoBean> list = qb.list();
+        List<VideoBean> list = qb.where(VideoBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
+
     /**
      * 插入一条记录
      *
@@ -153,7 +154,7 @@ public class VideoManager {
         QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
         List<VideoBean> list = null;
         if (EmptyUtils.isNotEmpty(folder)) {
-            list = qb.where(VideoBeanDao.Properties.Folder.eq(folder)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
+            list = qb.where(VideoBeanDao.Properties.Folder.eq(folder), VideoBeanDao.Properties.IsPatient.isNull()).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
         }
         return list;
     }
@@ -176,7 +177,7 @@ public class VideoManager {
         DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
-        List<VideoBean> list = qb.where(VideoBeanDao.Properties.Folder.eq(folder)).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
+        List<VideoBean> list = qb.where(VideoBeanDao.Properties.Folder.eq(folder), VideoBeanDao.Properties.IsPatient.isNull()).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
         return list;
     }
 
@@ -199,7 +200,7 @@ public class VideoManager {
         DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         VideoBeanDao videoBeanDao = daoSession.getVideoBeanDao();
         QueryBuilder<VideoBean> qb = videoBeanDao.queryBuilder();
-        List<VideoBean> list = qb.orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
+        List<VideoBean> list = qb.where(VideoBeanDao.Properties.IsPatient.isNull()).orderDesc(VideoBeanDao.Properties.ElapsedMillis).list();
         return list;
     }
 

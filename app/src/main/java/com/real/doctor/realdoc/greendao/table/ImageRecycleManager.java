@@ -75,7 +75,7 @@ public class ImageRecycleManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         QueryBuilder<ImageListBean> qb = imageBeanListDao.queryBuilder();
-        List<ImageListBean> list = qb.list();
+        List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
@@ -118,6 +118,7 @@ public class ImageRecycleManager {
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         imageBeanListDao.insertOrReplaceInTx(beanList);
     }
+
     /**
      * 插入每一个病人上传病历时的图片item的list
      *
@@ -153,7 +154,7 @@ public class ImageRecycleManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         QueryBuilder<ImageListBean> qb = imageBeanListDao.queryBuilder();
-        List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.Id.eq(id)).list();
+        List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.Id.eq(id), ImageListBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
@@ -178,18 +179,19 @@ public class ImageRecycleManager {
         List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.RecordId.eq(recordId)).list();
         return list;
     }
+
     /**
      * 查询列表list
      */
     public List<ImageListBean> queryGlobeImageList(Context context, String mobile, String folderName) {
-        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context,mobile, folderName);
+        DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         ImageListBeanDao imageBeanListDao = daoSession.getImageListBeanDao();
         QueryBuilder<ImageListBean> qb = imageBeanListDao.queryBuilder();
-        List<ImageListBean> list = qb.list();
+        List<ImageListBean> list = qb.where(ImageListBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
-    private static final String SQL_ID_LIST = "SELECT DISTINCT " + ImageListBeanDao.Properties.Id.columnName + " FROM " + ImageListBeanDao.TABLENAME + " WHERE " + ImageListBeanDao.Properties.RecordId.columnName + "=?";
+    private static final String SQL_ID_LIST = "SELECT DISTINCT " + ImageListBeanDao.Properties.Id.columnName + " FROM " + ImageListBeanDao.TABLENAME + " WHERE " + ImageListBeanDao.Properties.IsPatient.columnName + " IS NULL " + " AND " + ImageListBeanDao.Properties.RecordId.columnName + "=?";
 
     /**
      * 查询该份病历中Id列表

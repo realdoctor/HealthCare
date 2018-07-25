@@ -26,6 +26,7 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.CaseControlActivity;
 import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.InfoActivity;
+import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyQrActivity;
 import com.real.doctor.realdoc.activity.PatientEduActivity;
 import com.real.doctor.realdoc.activity.PatientEduListActivity;
@@ -412,6 +413,7 @@ public class HomeFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), DocContentActivity.class);
                 Bundle mBundle = new Bundle();
                 mBundle.putParcelable("SaveDocBean", bean);
+                mBundle.putBoolean("key", true);
                 intent.putExtras(mBundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -453,8 +455,6 @@ public class HomeFragment extends BaseFragment {
                     break;
                 case R.id.base_cure:
                     isHomeIn = true;
-                    intent = new Intent(getActivity(), ProductShowByCategoryActivity.class);
-                    startActivity(intent);
                     break;
                 case R.id.doctor_online:
                     if (EmptyUtils.isNotEmpty(token)) {
@@ -469,6 +469,8 @@ public class HomeFragment extends BaseFragment {
                             startActivity(intent);
                         }
                     } else {
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
                         ToastUtil.showLong(getActivity(), "请登录您的账户!");
                     }
                     break;
@@ -488,6 +490,8 @@ public class HomeFragment extends BaseFragment {
                         intent = new Intent(getActivity(), CaseControlActivity.class);
                         startActivity(intent);
                     } else {
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
                         ToastUtil.showLong(getActivity(), "请登录您的账户!");
                     }
                     break;
@@ -505,6 +509,8 @@ public class HomeFragment extends BaseFragment {
                         intent = new Intent(getActivity(), MyQrActivity.class);
                         startActivity(intent);
                     } else {
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
                         ToastUtil.showLong(getActivity(), "请登录您的账户!");
                     }
                     break;
@@ -514,6 +520,8 @@ public class HomeFragment extends BaseFragment {
                         intent = new Intent(getActivity(), InfoActivity.class);
                         startActivity(intent);
                     } else {
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
                         ToastUtil.showLong(getActivity(), "请登录您的账户!");
                     }
                     break;

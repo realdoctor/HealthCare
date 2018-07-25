@@ -51,7 +51,7 @@ public class RevisitingFragment extends BaseFragment {
     private String mobile;
     private String userId;
     private String roleChangeId;
-    private static int mPageNum = 1;
+    private int mPageNum = 1;
     private List<DoctorBean> doctors;
     @BindView(R.id.revisiting_recycler)
     RecyclerView revisitingRv;
@@ -182,7 +182,7 @@ public class RevisitingFragment extends BaseFragment {
         refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                getRevisitingList(String.valueOf(mPageNum++));
+                getRevisitingList(String.valueOf(++mPageNum));
             }
         });
     }

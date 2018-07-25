@@ -4,8 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.IBinder;
+import android.os.Parcelable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.real.doctor.realdoc.activity.RecordActivity;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.util.DateUtil;
@@ -41,7 +44,6 @@ public class RecordingService extends Service {
 
     private Timer mTimer = null;
     private TimerTask mIncrementTimerTask = null;
-    private RecordManager instance = null;
     private String mFolder;
     private String mModifyId;
 
@@ -57,7 +59,7 @@ public class RecordingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = RecordManager.getInstance(RecordingService.this);
+
     }
 
     @Override
@@ -114,7 +116,7 @@ public class RecordingService extends Service {
     }
 
     public void setFileNameAndPath() {
-        mFileName = mStartingTimeMillis + ".mp4";
+        mFileName = mStartingTimeMillis + ".mp3";
         mFilePath = SDCardUtils.getSDCardPath() + "RealDoc" + File.separator + mFolder + File.separator + "music" + File.separator;
         //创建路径
         File folderFile = new File(mFilePath);
@@ -159,7 +161,11 @@ public class RecordingService extends Service {
             bean.setDate(String.valueOf(mStartingTimeMillis));
             bean.setElapsedMillis(String.valueOf(mElapsedMillis));
             bean.setFolder(mFolder);
-            instance.insertRecord(this, bean);
+            //广播给activity
+            //通知页面刷新数据
+            Intent intent = new Intent(RecordActivity.RECORD_SERVICE);
+            intent.putExtra("record", bean);
+            LocalBroadcastManager.getInstance(RecordingService.this).sendBroadcast(intent);
         } catch (Exception e) {
             Log.e(LOG_TAG, "exception", e);
         }

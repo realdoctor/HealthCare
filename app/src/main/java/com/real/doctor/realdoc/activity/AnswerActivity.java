@@ -171,7 +171,6 @@ public class AnswerActivity extends BaseActivity {
                                     //do nothing 通知后台开始计时成功
                                 } else {
                                     //do nothing 通知后台开始计时失败
-                                    ToastUtil.showLong(AnswerActivity.this, msg);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

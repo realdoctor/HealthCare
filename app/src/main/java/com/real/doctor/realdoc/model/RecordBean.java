@@ -15,8 +15,26 @@ public class RecordBean implements Parcelable {
     private String elapsedMillis;
     private String date;
     private String folder;
+    private String advice;
     private String recordId;
+    //如果该字段是空,则该病历是本地的病历，否则如果是"1",就是患者传给医生的病历
+    private String isPatient;
 
+    @Generated(hash = 686652382)
+    public RecordBean(String fileName, String filePath, String elapsedMillis,
+                      String date, String folder, String advice, String recordId,
+                      String isPatient) {
+        this.fileName = fileName;
+        this.filePath = filePath;
+        this.elapsedMillis = elapsedMillis;
+        this.date = date;
+        this.folder = folder;
+        this.advice = advice;
+        this.recordId = recordId;
+        this.isPatient = isPatient;
+    }
+
+    @Generated(hash = 96196931)
     public RecordBean() {
     }
 
@@ -25,17 +43,10 @@ public class RecordBean implements Parcelable {
         filePath = in.readString();
         elapsedMillis = in.readString();
         date = in.readString();
-    }
-
-    @Generated(hash = 2103673713)
-    public RecordBean(String fileName, String filePath, String elapsedMillis,
-            String date, String folder, String recordId) {
-        this.fileName = fileName;
-        this.filePath = filePath;
-        this.elapsedMillis = elapsedMillis;
-        this.date = date;
-        this.folder = folder;
-        this.recordId = recordId;
+        folder = in.readString();
+        advice = in.readString();
+        recordId = in.readString();
+        isPatient = in.readString();
     }
 
     @Override
@@ -44,12 +55,28 @@ public class RecordBean implements Parcelable {
         dest.writeString(filePath);
         dest.writeString(elapsedMillis);
         dest.writeString(date);
+        dest.writeString(folder);
+        dest.writeString(advice);
+        dest.writeString(recordId);
+        dest.writeString(isPatient);
     }
 
     @Override
     public int describeContents() {
         return 0;
     }
+
+    public static final Creator<RecordBean> CREATOR = new Creator<RecordBean>() {
+        @Override
+        public RecordBean createFromParcel(Parcel in) {
+            return new RecordBean(in);
+        }
+
+        @Override
+        public RecordBean[] newArray(int size) {
+            return new RecordBean[size];
+        }
+    };
 
     public String getFileName() {
         return this.fileName;
@@ -91,6 +118,14 @@ public class RecordBean implements Parcelable {
         this.folder = folder;
     }
 
+    public String getAdvice() {
+        return this.advice;
+    }
+
+    public void setAdvice(String advice) {
+        this.advice = advice;
+    }
+
     public String getRecordId() {
         return this.recordId;
     }
@@ -99,15 +134,11 @@ public class RecordBean implements Parcelable {
         this.recordId = recordId;
     }
 
-    public static final Creator<RecordBean> CREATOR = new Creator<RecordBean>() {
-        @Override
-        public RecordBean createFromParcel(Parcel in) {
-            return new RecordBean(in);
-        }
+    public String getIsPatient() {
+        return this.isPatient;
+    }
 
-        @Override
-        public RecordBean[] newArray(int size) {
-            return new RecordBean[size];
-        }
-    };
+    public void setIsPatient(String isPatient) {
+        this.isPatient = isPatient;
+    }
 }

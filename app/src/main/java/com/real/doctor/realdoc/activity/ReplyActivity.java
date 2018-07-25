@@ -153,6 +153,10 @@ public class ReplyActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     //跳转到病历打包页面
                                     ToastUtil.showLong(ReplyActivity.this, "咨询回复提交成功!");
+                                    Intent intent = new Intent(ReplyActivity.this, CaseControlActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();
                                 } else {
                                     ToastUtil.showLong(ReplyActivity.this, msg);

@@ -792,7 +792,7 @@ public class SaveRecordActivity extends BaseActivity {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         requestPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0x0003);
                     }
-                }else{
+                } else {
                     if (DocUtils.isFastClick()) {
                         Intent intent = new Intent(SaveRecordActivity.this, VideoOneActivity.class);
                         Bundle bundle = new Bundle();
@@ -886,7 +886,7 @@ public class SaveRecordActivity extends BaseActivity {
                 audioRecycleView.setAdapter(audioAdapter);
                 initEvent();
             }
-        } else if (resultCode == RESULT_OK && requestCode == 112) {
+        } else if ((resultCode == RESULT_OK || resultCode == RESULT_CANCELED) && requestCode == 112) {
             // 从数据库中取出视频列表,并展示
             if (isModify) {
                 videoList = videoInstance.queryVideoWithRecordId(SaveRecordActivity.this, mModifyId);

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.baidu.platform.comapi.map.E;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.real.doctor.realdoc.R;
@@ -55,7 +54,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -208,6 +208,7 @@ public class RecordListActivity extends BaseActivity {
                 Intent intent = new Intent(RecordListActivity.this, DocContentActivity.class);
                 Bundle mBundle = new Bundle();
                 mBundle.putParcelable("SaveDocBean", bean);
+                mBundle.putBoolean("key", true);
                 intent.putExtras(mBundle);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -450,6 +451,7 @@ public class RecordListActivity extends BaseActivity {
         HttpRequestClient.getInstance(RecordListActivity.this).createBaseApi().get("user/certification/check"
                 , param, new BaseObserver<ResponseBody>(RecordListActivity.this) {
                     protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
                         disposable = d;

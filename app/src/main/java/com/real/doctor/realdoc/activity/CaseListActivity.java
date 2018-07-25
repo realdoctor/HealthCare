@@ -191,6 +191,7 @@ public class CaseListActivity extends BaseActivity {
                 Bundle mBundle = new Bundle();
                 mBundle.putParcelable("SaveDocBean", bean);
                 mBundle.putBoolean("noModify", true);
+                mBundle.putBoolean("key", false);
                 intent.putExtras(mBundle);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

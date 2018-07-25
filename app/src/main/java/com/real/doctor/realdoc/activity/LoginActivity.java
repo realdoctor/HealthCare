@@ -929,11 +929,10 @@ public class LoginActivity extends BaseActivity {
                                                         String orgCode = jsonObj.getString("orgCode");
                                                         bean.setOrgCode(orgCode);
                                                     }
-                                                    if (DocUtils.hasValue(jsonObj, "diagCode")) {
-                                                        String diagCode = jsonObj.getString("diagCode");
-                                                        bean.setId(diagCode);
+                                                    if (DocUtils.hasValue(jsonObj, "doctorUserId")) {
+                                                        String doctorUserId = jsonObj.getString("doctorUserId");
+                                                        bean.setDoctorUserId(doctorUserId);
                                                     }
-
                                                     if (DocUtils.hasValue(jsonObj, "patientDiagId")) {
                                                         String patientDiagId = jsonObj.getString("patientDiagId");
                                                         bean.setPatientDiagId(patientDiagId);

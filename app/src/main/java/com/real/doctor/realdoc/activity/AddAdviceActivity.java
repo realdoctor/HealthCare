@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.greendao.table.VideoManager;
+import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.KeyBoardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
@@ -31,6 +33,8 @@ public class AddAdviceActivity extends BaseActivity {
     Button buttonConfirm;
     private String pos;
     private String changeAdvice;
+    private VideoBean bean;
+    private VideoManager instance;
 
     @Override
     public int getLayoutId() {
@@ -51,10 +55,12 @@ public class AddAdviceActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        instance = VideoManager.getInstance(this);
         Intent intent = getIntent();
         if (intent != null) {
             pos = intent.getStringExtra("pos");
             changeAdvice = intent.getStringExtra("change");
+            bean = intent.getParcelableExtra("video");
         }
         if (EmptyUtils.isNotEmpty(changeAdvice)) {
             advice.setText(changeAdvice);
@@ -77,11 +83,20 @@ public class AddAdviceActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.button_confirm:
                 String mAdvice = advice.getText().toString().trim();
-                Intent intent = new Intent();
-                intent.putExtra("pos", pos);
-                intent.putExtra("advice", mAdvice);
-                setResult(RESULT_OK, intent);;
-                finish();
+                if (EmptyUtils.isNotEmpty(bean)) {
+                    Intent intent = new Intent();
+                    bean.setAdvice(mAdvice);
+                    instance.insertVideo(AddAdviceActivity.this, bean);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    //音频添加描述也用同一段代码
+                    Intent intent = new Intent();
+                    intent.putExtra("pos", pos);
+                    intent.putExtra("advice", mAdvice);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
                 break;
             case R.id.finish_back:
                 finish();

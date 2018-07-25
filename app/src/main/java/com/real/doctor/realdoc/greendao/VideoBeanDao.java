@@ -32,7 +32,9 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
         public final static Property ElapsedMillis = new Property(2, String.class, "elapsedMillis", false, "ELAPSED_MILLIS");
         public final static Property Date = new Property(3, String.class, "date", false, "DATE");
         public final static Property Folder = new Property(4, String.class, "folder", false, "FOLDER");
-        public final static Property RecordId = new Property(5, String.class, "recordId", false, "RECORD_ID");
+        public final static Property Advice = new Property(5, String.class, "advice", false, "ADVICE");
+        public final static Property RecordId = new Property(6, String.class, "recordId", false, "RECORD_ID");
+        public final static Property IsPatient = new Property(7, String.class, "isPatient", false, "IS_PATIENT");
     }
 
     private Query<VideoBean> saveDocBean_VideoListQuery;
@@ -54,7 +56,9 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
                 "\"ELAPSED_MILLIS\" TEXT," + // 2: elapsedMillis
                 "\"DATE\" TEXT," + // 3: date
                 "\"FOLDER\" TEXT," + // 4: folder
-                "\"RECORD_ID\" TEXT);"); // 5: recordId
+                "\"ADVICE\" TEXT," + // 5: advice
+                "\"RECORD_ID\" TEXT," + // 6: recordId
+                "\"IS_PATIENT\" TEXT);"); // 7: isPatient
     }
 
     /** Drops the underlying database table. */
@@ -92,9 +96,19 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
             stmt.bindString(5, folder);
         }
  
+        String advice = entity.getAdvice();
+        if (advice != null) {
+            stmt.bindString(6, advice);
+        }
+ 
         String recordId = entity.getRecordId();
         if (recordId != null) {
-            stmt.bindString(6, recordId);
+            stmt.bindString(7, recordId);
+        }
+ 
+        String isPatient = entity.getIsPatient();
+        if (isPatient != null) {
+            stmt.bindString(8, isPatient);
         }
     }
 
@@ -127,9 +141,19 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
             stmt.bindString(5, folder);
         }
  
+        String advice = entity.getAdvice();
+        if (advice != null) {
+            stmt.bindString(6, advice);
+        }
+ 
         String recordId = entity.getRecordId();
         if (recordId != null) {
-            stmt.bindString(6, recordId);
+            stmt.bindString(7, recordId);
+        }
+ 
+        String isPatient = entity.getIsPatient();
+        if (isPatient != null) {
+            stmt.bindString(8, isPatient);
         }
     }
 
@@ -146,7 +170,9 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // elapsedMillis
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // date
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // folder
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // recordId
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // advice
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // recordId
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // isPatient
         );
         return entity;
     }
@@ -158,7 +184,9 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
         entity.setElapsedMillis(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setDate(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setFolder(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setRecordId(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setAdvice(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setRecordId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setIsPatient(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
      }
     
     @Override

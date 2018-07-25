@@ -196,14 +196,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:scrollbars="none"></android.support.v7.widget.RecyclerView>
-
-                    <ImageView
-                        android:id="@+id/add_icon"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10.0dip"
-                        android:src="@mipmap/add" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -218,6 +210,8 @@
                         android:id="@+id/audio_recycle_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:scrollbars="none"></android.support.v7.widget.RecyclerView>
                 </LinearLayout>
 
@@ -233,13 +227,24 @@
                         android:id="@+id/video_recycle_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:scrollbars="none"></android.support.v7.widget.RecyclerView>
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/add_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/video_recycle_view_linear"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10.0dip"
+                    android:src="@mipmap/add" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/video_recycle_view_linear"
+                    android:layout_below="@id/add_icon"
                     android:layout_marginBottom="80dp"
                     android:layout_marginTop="45.0dip">
 

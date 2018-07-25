@@ -21,6 +21,7 @@ public class DoctorBean extends UserBean implements Parcelable {
     private String answer;
     private String addTime;
     private String retryNum;
+    private String doctorRealName;
 
     public DoctorBean() {
         super();
@@ -37,6 +38,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         answer = in.readString();
         addTime = in.readString();
         retryNum = in.readString();
+        doctorRealName = in.readString();
     }
 
     @Override
@@ -51,6 +53,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         dest.writeString(answer);
         dest.writeString(addTime);
         dest.writeString(retryNum);
+        dest.writeString(doctorRealName);
     }
 
     @Override
@@ -140,5 +143,13 @@ public class DoctorBean extends UserBean implements Parcelable {
 
     public void setRetryNum(String retryNum) {
         this.retryNum = retryNum;
+    }
+
+    public String getDoctorRealName() {
+        return doctorRealName;
+    }
+
+    public void setDoctorRealName(String doctorRealName) {
+        this.doctorRealName = doctorRealName;
     }
 }

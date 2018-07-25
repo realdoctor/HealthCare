@@ -29,6 +29,7 @@ import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.greendao.table.VideoManager;
+import com.real.doctor.realdoc.model.DoctorBean;
 import com.real.doctor.realdoc.model.DrugBean;
 import com.real.doctor.realdoc.model.ImageBean;
 import com.real.doctor.realdoc.model.ImageListBean;
@@ -122,6 +123,8 @@ public class DocContentActivity extends BaseActivity {
     private EasyPopup mRightPop;
     private String mAdvice;
     private DrugManager drugInstance;
+    //是否是从病历列表中跳转进来的,如果是则为true,否则为false
+    private boolean key;
 
     @Override
     public int getLayoutId() {
@@ -157,6 +160,7 @@ public class DocContentActivity extends BaseActivity {
         imageInstance = ImageManager.getInstance(DocContentActivity.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(DocContentActivity.this);
         saveDocBean = (SaveDocBean) getIntent().getParcelableExtra("SaveDocBean");
+        key = getIntent().getBooleanExtra("key", false);
         boolean noModify = getIntent().getBooleanExtra("noModify", false);
         if (noModify) {
             rightIcon.setVisibility(View.GONE);
@@ -171,7 +175,11 @@ public class DocContentActivity extends BaseActivity {
             mId = saveDocBean.getId();
             if (EmptyUtils.isNotEmpty(mId)) {
                 String drug = getPatientDiag(mId);
-                advice.setText(drug);
+                if (EmptyUtils.isNotEmpty(drug)) {
+                    advice.setText(drug);
+                } else {
+                    advice.setText("无");
+                }
             }
             if (saveDocBean.getIll() != null) {
                 mIll = saveDocBean.getIll().toString().trim();
@@ -187,17 +195,24 @@ public class DocContentActivity extends BaseActivity {
             }
             if (EmptyUtils.isNotEmpty(mIll)) {
                 ill.setText(mIll);
+            } else {
+                ill.setText("无");
             }
             if (EmptyUtils.isNotEmpty(mHospital)) {
                 hospital.setText(mHospital);
+            } else {
+                hospital.setText("无");
             }
             if (EmptyUtils.isNotEmpty(mDoctor)) {
                 doctor.setText(mDoctor);
+            } else {
+                doctor.setText("无");
             }
             if (EmptyUtils.isNotEmpty(mTime)) {
                 time.setText(DateUtil.timeStamp2Date(mTime, "yyyy年MM月dd日"));
+            } else {
+                time.setText("无");
             }
-
             String recordId = saveDocBean.getId();
             //获取图片,文字item
             List<ImageListBean> imageList = imageRecycleInstance.queryImageListById(this, recordId);
@@ -353,7 +368,7 @@ public class DocContentActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back, R.id.right_icon})
+    @OnClick({R.id.finish_back, R.id.right_icon, R.id.doctor})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
@@ -363,7 +378,23 @@ public class DocContentActivity extends BaseActivity {
             case R.id.right_icon:
                 showRightPop(v);
                 break;
-
+            case R.id.doctor:
+                //跳转进医生详情
+                if (key) {
+                    String doctorUserId = saveDocBean.getDoctorUserId();
+                    String desease = saveDocBean.getIll();
+                    if (EmptyUtils.isNotEmpty(doctorUserId) && EmptyUtils.isNotEmpty(desease)) {
+                        Intent intent = new Intent(DocContentActivity.this, DoctorsDetailActivity.class);
+                        intent.putExtra("doctorUserId", doctorUserId);
+                        intent.putExtra("desease", desease);
+                        startActivity(intent);
+                    } else {
+                        ToastUtil.showLong(this, "您选择的医生不在复诊病历列表中,请确认后重试!");
+                    }
+                } else {
+                    //不是病历列表中跳转进入的,do nothing
+                }
+                break;
         }
     }
 

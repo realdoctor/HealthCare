@@ -24,137 +24,286 @@
                 android:id="@+id/save_doc_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingBottom="20dp">
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
-                <RelativeLayout
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/disease_divider" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white">
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/ill_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
+                        android:layout_height="match_parent"
+                        android:background="@color/appthemecolor"
                         android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/save_doc_ill"
-                        android:textColor="#ff333333"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/ill"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/ill_text"
-                        android:layout_marginBottom="10.0dip"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
-                        android:textColor="#ff333333"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/text_black_color"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/disease_divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/hospital_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/ill"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
+                        android:layout_height="match_parent"
+                        android:background="@color/appthemecolor"
+                        android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/save_doc_hospital"
-                        android:textColor="#ff333333"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/hospital"
-                        android:layout_width="fill_parent"
-                        android:layout_height="45.0dip"
-                        android:layout_below="@id/hospital_text"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
-                        android:background="@android:color/white"
-                        android:textColor="@color/text_special_color"
-                        android:textSize="14.0sp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:textColor="@color/text_black_color"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/disease_divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/doctor_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/hospital"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
+                        android:layout_height="match_parent"
+                        android:background="@color/appthemecolor"
+                        android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/save_doc_doctor"
-                        android:textColor="#ff333333"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/doctor"
-                        android:layout_width="fill_parent"
-                        android:layout_height="45.0dip"
-                        android:layout_below="@id/doctor_text"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
-                        android:background="@android:color/white"
-                        android:textColor="@color/text_special_color"
-                        android:textSize="14.0sp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:textColor="@color/text_black_color"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/disease_divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/time_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/doctor"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
+                        android:layout_height="match_parent"
+                        android:background="@color/appthemecolor"
+                        android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/save_doc_time"
-                        android:textColor="#ff333333"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/time"
-                        android:layout_width="fill_parent"
-                        android:layout_height="45.0dip"
-                        android:layout_below="@id/time_text"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
-                        android:background="@android:color/white"
-                        android:textColor="@color/text_special_color"
-                        android:textSize="14.0sp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:textColor="@color/text_black_color"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/disease_divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/advice_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/time"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
+                        android:layout_height="match_parent"
+                        android:background="@color/appthemecolor"
+                        android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/advice_info"
-                        android:textColor="@color/text_special_color"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
 
                     <TextView
                         android:id="@+id/advice"
-                        android:layout_width="fill_parent"
-                        android:layout_height="45.0dip"
-                        android:layout_below="@id/advice_text"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_marginTop="10.0dip"
-                        android:textColor="@color/text_special_color"
-                        android:textSize="14.0sp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:textColor="@color/text_black_color"
+                        android:textSize="16sp"
                         android:typeface="monospace" />
-                </RelativeLayout>
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/disease_divider" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/disease_divider" />
 
                 <LinearLayout
                     android:id="@+id/video_recycle_view_linear"
@@ -176,6 +325,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:scrollbars="none"></android.support.v7.widget.RecyclerView>
 
 
@@ -184,6 +335,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:paddingBottom="30dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:scrollbars="none"></android.support.v7.widget.RecyclerView>
                 </LinearLayout>
             </LinearLayout>

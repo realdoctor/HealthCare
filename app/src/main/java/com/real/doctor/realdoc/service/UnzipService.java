@@ -120,21 +120,34 @@ public class UnzipService extends JobService {
                                     String id = list.get(i).getId();
                                     //通过id查询item数据
                                     List<ImageListBean> imageListBeans = imageRecycleInstance.queryPatientImageListById(UnzipService.this, id, str, folderName);
+                                    for (ImageListBean bean : imageListBeans) {
+                                        bean.setIsPatient("1");
+                                    }
                                     imageRecycleInstance.insertImageListList(UnzipService.this, imageListBeans);
                                     int imageListBeanLength = imageListBeans.size();
                                     for (int j = 0; j < imageListBeanLength; j++) {
                                         String imageId = imageListBeans.get(j).getId();
                                         List<ImageBean> images = imageInstance.queryPatientImageByImageId(UnzipService.this, imageId, str, folderName);
+                                        for (ImageBean bean : images) {
+                                            bean.setIsPatient("1");
+                                        }
                                         imageInstance.insertImageList(UnzipService.this, images);
                                     }
                                     if (EmptyUtils.isNotEmpty(id)) {
                                         //通过folder查询视频数据
                                         List<VideoBean> videoList = videoInstance.queryPatientVideoWithRecordId(UnzipService.this, id, str, folderName);
+                                        for (VideoBean bean : videoList) {
+                                            bean.setIsPatient("1");
+                                        }
                                         videoInstance.insertVideoList(UnzipService.this, videoList);
                                         //通过folder查询音频频数据
                                         List<RecordBean> recordList = recordInstance.queryPatientRecordWithRecordId(UnzipService.this, id, str, folderName);
+                                        for (RecordBean bean : recordList) {
+                                            bean.setIsPatient("1");
+                                        }
                                         recordInstance.insertRecordList(UnzipService.this, recordList);
                                     }
+                                    list.get(i).setIsPatient("1");
                                 }
                                 instance.insertSaveDoc(UnzipService.this, list);
                                 //删除数据库

@@ -134,7 +134,7 @@ public class ImageManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         ImageBeanDao saveDocDao = daoSession.getImageBeanDao();
         QueryBuilder<ImageBean> qb = saveDocDao.queryBuilder();
-        List<ImageBean> list = qb.list();
+        List<ImageBean> list = qb.where(ImageBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
@@ -167,11 +167,11 @@ public class ImageManager {
         DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         ImageBeanDao imageBeanDao = daoSession.getImageBeanDao();
         QueryBuilder<ImageBean> qb = imageBeanDao.queryBuilder();
-        List<ImageBean> list = qb.list();
+        List<ImageBean> list = qb.where(ImageBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
-    private static final String SQL_IMAGE_URL_LIST = "SELECT DISTINCT " + ImageBeanDao.Properties.ImgUrl.columnName + " FROM " + ImageBeanDao.TABLENAME + " WHERE " + ImageBeanDao.Properties.ImageId.columnName + "=?";
+    private static final String SQL_IMAGE_URL_LIST = "SELECT DISTINCT " + ImageBeanDao.Properties.ImgUrl.columnName + " FROM " + ImageBeanDao.TABLENAME + " WHERE " + ImageBeanDao.Properties.IsPatient.columnName + " IS NULL " + " AND " + ImageBeanDao.Properties.ImageId.columnName + "=?";
 
     /**
      * 查询该份病历中Id列表

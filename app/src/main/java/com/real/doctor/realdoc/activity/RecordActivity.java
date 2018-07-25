@@ -1,14 +1,20 @@
 package com.real.doctor.realdoc.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -21,6 +27,8 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.greendao.table.RecordManager;
+import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.service.RecordingService;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
@@ -56,9 +64,13 @@ public class RecordActivity extends BaseActivity {
     private boolean pauseRecording = true;
     private String mFolder;
     private String mModifyId;
+    private String advice;
     private Intent intent = null;
+    private RecordManager instance = null;
+    public static String RECORD_SERVICE = "android.intent.action.record.service";
 
     long timeWhenPaused = 0; //stores time when user clicks pause button
+    private static final int REQUEST_ADD_ADVICE = 111;
 
     @Override
     public int getLayoutId() {
@@ -96,6 +108,27 @@ public class RecordActivity extends BaseActivity {
         recordButton.setColorNormal(getResources().getColor(R.color.appthemecolor));
         recordButton.setColorPressed(getResources().getColor(R.color.search_bgcolor));
         pauseButton.setVisibility(View.GONE);
+        instance = RecordManager.getInstance(RecordActivity.this);
+        localBroadcast();
+    }
+
+    private void localBroadcast() {
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(RecordActivity.this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(RECORD_SERVICE);
+        BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                RecordBean bean = intent.getExtras().getParcelable("record");
+                bean.setAdvice(advice);
+                instance.insertRecord(RecordActivity.this, bean);
+                Intent intentResult = new Intent();
+                intentResult.putExtra("advice", advice);
+                RecordActivity.this.setResult(RESULT_OK, intentResult);
+                finish();
+            }
+        };
+        broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 
     @Override
@@ -116,9 +149,6 @@ public class RecordActivity extends BaseActivity {
                 pauseRecording = !pauseRecording;
                 break;
             case R.id.finish_back:
-                Intent intent = new Intent();
-                stopRecording();
-                setResult(RESULT_OK, intent);
                 finish();
                 break;
         }
@@ -164,14 +194,50 @@ public class RecordActivity extends BaseActivity {
             recordPromptCount++;
 
         } else {
-            //stop recording
-            stopRecording();
-            intent = null;
+            stopChangeBtn();
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setMessage(R.string.whether_to_audio_advice)
+                    .setPositiveButton(R.string.ok,
+                            new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface arg0,
+                                                    int arg1) {
+                                    arg0.dismiss();
+                                    saveYesRecord();
+                                }
+                            }).
+
+                            setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0,
+                                                    int arg1) {
+                                    arg0.dismiss();
+                                    //stop recording
+                                    stopRecording();
+                                    Intent intentResult = new Intent();
+                                    setResult(RESULT_OK, intentResult);
+                                    finish();
+                                }
+                            }).setCancelable(false).show();
+            // 在dialog执行show之后设置样式
+            TextView tvMsg = (TextView) dialog.findViewById(android.R.id.message);
+            tvMsg.setTextSize(16);
+            tvMsg.setTextColor(Color.parseColor("#4E4E4E"));
+
+            dialog.getButton(dialog.BUTTON_NEGATIVE).setTextSize(16);
+            dialog.getButton(dialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#8C8C8C"));
+            dialog.getButton(dialog.BUTTON_POSITIVE).setTextSize(16);
+            dialog.getButton(dialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#1DA6DD"));
         }
     }
 
+    private void saveYesRecord() {
+        Intent startIntent = new Intent(RecordActivity.this, AddAdviceActivity.class);
+        startActivityForResult(startIntent, REQUEST_ADD_ADVICE);
+    }
 
-    private void stopRecording() {
+    private void stopChangeBtn() {
         if (EmptyUtils.isNotEmpty(intent)) {
             recordButton.setImageResource(R.drawable.ic_mic_white_36dp);
             //mPauseButton.setVisibility(View.GONE);
@@ -179,10 +245,15 @@ public class RecordActivity extends BaseActivity {
             chronometer.setBase(SystemClock.elapsedRealtime());
             timeWhenPaused = 0;
             recordingPrompt.setText(getString(R.string.record_prompt));
+        }
+    }
 
+    private void stopRecording() {
+        if (EmptyUtils.isNotEmpty(intent)) {
             stopService(intent);
             //allow the screen to turn off again once recording is finished
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            intent = null;
         }
     }
 
@@ -202,6 +273,16 @@ public class RecordActivity extends BaseActivity {
             recordingPrompt.setText((String) getString(R.string.pause_recording_button).toUpperCase());
             chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenPaused);
             chronometer.start();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_ADVICE) {
+            advice = data.getStringExtra("advice");
+            stopRecording();
+            intent = null;
         }
     }
 

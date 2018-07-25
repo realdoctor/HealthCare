@@ -103,6 +103,7 @@ public class DocDetailActivity extends BaseActivity {
                 Intent intent = new Intent(DocDetailActivity.this, DocContentActivity.class);
                 Bundle mBundle = new Bundle();
                 mBundle.putParcelable("SaveDocBean", bean);
+                mBundle.putBoolean("key", false);
                 intent.putExtras(mBundle);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

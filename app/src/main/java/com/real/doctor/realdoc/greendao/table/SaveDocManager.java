@@ -147,7 +147,7 @@ public class SaveDocManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        List<SaveDocBean> list = qb.orderDesc(SaveDocBeanDao.Properties.Time).list();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.IsPatient.isNull()).orderDesc(SaveDocBeanDao.Properties.Time).list();
         return list;
     }
 
@@ -158,7 +158,7 @@ public class SaveDocManager {
         DaoSession daoSession = RealDocApplication.getPatientDaoSession(context, time, folderName);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        List<SaveDocBean> list = qb.orderDesc(SaveDocBeanDao.Properties.Time).list();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.IsPatient.isNull()).orderDesc(SaveDocBeanDao.Properties.Time).list();
         return list;
     }
 
@@ -169,7 +169,7 @@ public class SaveDocManager {
         DaoSession daoSession = RealDocApplication.getGlobeDaoSession(context, mobile, folderName);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        List<SaveDocBean> list = qb.orderDesc(SaveDocBeanDao.Properties.Time).list();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.IsPatient.isNull()).orderDesc(SaveDocBeanDao.Properties.Time).list();
         return list;
     }
 
@@ -191,7 +191,7 @@ public class SaveDocManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Folder.isNotNull()).orderDesc(SaveDocBeanDao.Properties.Time).list();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.IsPatient.isNull(), SaveDocBeanDao.Properties.Folder.isNotNull()).orderDesc(SaveDocBeanDao.Properties.Time).list();
         return list;
     }
 
@@ -229,10 +229,14 @@ public class SaveDocManager {
         saveDocDao.delete(bean);
     }
 
+    public List<SaveDocBean> queryRecordByTimeList(Context context, String start, String end) {
+        return queryRecordByTimeList(context, start, end, true);
+    }
+
     /**
      * 查询规定时间内的病历list列表
      */
-    public List<SaveDocBean> queryRecordByTimeList(Context context, String start, String end) {
+    public List<SaveDocBean> queryRecordByTimeList(Context context, String start, String end, boolean isPatient) {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
@@ -240,17 +244,29 @@ public class SaveDocManager {
         List<SaveDocBean> list = null;
         if (end.equals(today)) {
             end = String.valueOf(Long.valueOf(end) + (long) 86400000);
-            list = qb.where(SaveDocBeanDao.Properties.Time.ge(Long.valueOf(start)), SaveDocBeanDao.Properties.Time.le(Long.valueOf(end))).orderDesc(SaveDocBeanDao.Properties.Time).list();
+            if (isPatient) {
+                list = qb.where(SaveDocBeanDao.Properties.Time.ge(Long.valueOf(start)), SaveDocBeanDao.Properties.IsPatient.isNull(), SaveDocBeanDao.Properties.Time.le(Long.valueOf(end))).orderDesc(SaveDocBeanDao.Properties.Time).list();
+            } else {
+                list = qb.where(SaveDocBeanDao.Properties.Time.ge(Long.valueOf(start)), SaveDocBeanDao.Properties.IsPatient.eq("1"), SaveDocBeanDao.Properties.Time.le(Long.valueOf(end))).orderDesc(SaveDocBeanDao.Properties.Time).list();
+            }
         } else if (start.equals(today) && end.equals(today) && start.equals(end)) {
-            list = qb.where(SaveDocBeanDao.Properties.Time.eq(Long.valueOf(today))).list();
+            if (isPatient) {
+                list = qb.where(SaveDocBeanDao.Properties.Time.eq(Long.valueOf(today)), SaveDocBeanDao.Properties.IsPatient.isNull()).list();
+            } else {
+                list = qb.where(SaveDocBeanDao.Properties.Time.eq(Long.valueOf(today)), SaveDocBeanDao.Properties.IsPatient.eq("1")).list();
+            }
         } else {
-            list = qb.where(SaveDocBeanDao.Properties.Time.ge(Long.valueOf(start)), SaveDocBeanDao.Properties.Time.le(Long.valueOf(end))).orderDesc(SaveDocBeanDao.Properties.Time).list();
+            if (isPatient) {
+                list = qb.where(SaveDocBeanDao.Properties.Time.ge(Long.valueOf(start)), SaveDocBeanDao.Properties.IsPatient.isNull(), SaveDocBeanDao.Properties.Time.le(Long.valueOf(end))).orderDesc(SaveDocBeanDao.Properties.Time).list();
+            } else {
+                list = qb.where(SaveDocBeanDao.Properties.Time.ge(Long.valueOf(start)), SaveDocBeanDao.Properties.IsPatient.eq("1"), SaveDocBeanDao.Properties.Time.le(Long.valueOf(end))).orderDesc(SaveDocBeanDao.Properties.Time).list();
+            }
         }
 
         return list;
     }
 
-    private static final String SQL_DISTINCT_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Ill.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
+    private static final String SQL_DISTINCT_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Ill.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " WHERE " + SaveDocBeanDao.Properties.IsPatient.columnName + " IS NULL " + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
 
     /**
      * 查询病历一列列表
@@ -270,7 +286,7 @@ public class SaveDocManager {
         return result;
     }
 
-    private static final String SQL_HOSPITAL_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Hospital.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
+    private static final String SQL_HOSPITAL_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Hospital.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " WHERE " + SaveDocBeanDao.Properties.IsPatient.columnName + " IS NULL " + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
 
     /**
      * 查询病历一列列表
@@ -297,7 +313,7 @@ public class SaveDocManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.like("%" + disease + "%")).list();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.like("%" + disease + "%"), SaveDocBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
@@ -309,7 +325,7 @@ public class SaveDocManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.eq(disease)).list();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.eq(disease), SaveDocBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
@@ -320,7 +336,7 @@ public class SaveDocManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.notEq(disease)).list();
+        List<SaveDocBean> list = qb.where(SaveDocBeanDao.Properties.Ill.notEq(disease), SaveDocBeanDao.Properties.IsPatient.isNull()).list();
         return list;
     }
 
@@ -331,10 +347,10 @@ public class SaveDocManager {
         DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         QueryBuilder<SaveDocBean> qb = saveDocDao.queryBuilder();
-        return qb.buildCount().count();
+        return qb.where(SaveDocBeanDao.Properties.IsPatient.isNull()).buildCount().count();
     }
 
-    private static final String SQL_TIME_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Time.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
+    private static final String SQL_TIME_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Time.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " WHERE " + SaveDocBeanDao.Properties.IsPatient.columnName + " IS NULL " + " ORDER BY " + SaveDocBeanDao.Properties.Time.columnName + " DESC";
 
     /**
      * 查询病历时间一列列表
@@ -354,7 +370,7 @@ public class SaveDocManager {
         return result;
     }
 
-    private static final String SQL_GLOBE_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Id.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " WHERE " + SaveDocBeanDao.Properties.Folder.columnName + " IS NOT NULL ";
+    private static final String SQL_GLOBE_ILL = "SELECT DISTINCT " + SaveDocBeanDao.Properties.Id.columnName + " FROM " + SaveDocBeanDao.TABLENAME + " WHERE " + SaveDocBeanDao.Properties.Folder.columnName + " IS NOT NULL " + " AND " + SaveDocBeanDao.Properties.IsPatient.columnName + " IS NULL ";
 
     /**
      * 查询病历时间一列列表

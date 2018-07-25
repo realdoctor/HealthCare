@@ -46,6 +46,8 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     //医生
     @SerializedName("respDoctorName")
     private String doctor;
+    //医生的userId
+    private String doctorUserId;
     //就诊时间
     @SerializedName("visitDtime")
     private String time;
@@ -79,6 +81,8 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     private String visitWay;
     //是否选中病历
     private boolean isSelect = false;
+    //如果该字段是空,则该病历是本地的病历，否则如果是"1",就是患者传给医生的病历
+    private String isPatient;
     @Transient
     private int type = 1;
     /**
@@ -92,20 +96,17 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     @Generated(hash = 225895165)
     private transient SaveDocBeanDao myDao;
 
-
-    public SaveDocBean() {
-    }
-
-
-    @Generated(hash = 434754401)
+    @Generated(hash = 1465066037)
     public SaveDocBean(String id, String ill, String hospital, String doctor,
-                       String time, String folder, String imgs, String advice, String orgCode,
-                       String patientDiagId, String patientId, String visitDeptName,
-                       String visitWay, boolean isSelect) {
+                       String doctorUserId, String time, String folder, String imgs,
+                       String advice, String orgCode, String patientDiagId, String patientId,
+                       String visitDeptName, String visitWay, boolean isSelect,
+                       String isPatient) {
         this.id = id;
         this.ill = ill;
         this.hospital = hospital;
         this.doctor = doctor;
+        this.doctorUserId = doctorUserId;
         this.time = time;
         this.folder = folder;
         this.imgs = imgs;
@@ -116,14 +117,19 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         this.visitDeptName = visitDeptName;
         this.visitWay = visitWay;
         this.isSelect = isSelect;
+        this.isPatient = isPatient;
     }
 
+    @Generated(hash = 592665827)
+    public SaveDocBean() {
+    }
 
     protected SaveDocBean(Parcel in) {
         id = in.readString();
         ill = in.readString();
         hospital = in.readString();
         doctor = in.readString();
+        doctorUserId = in.readString();
         time = in.readString();
         folder = in.readString();
         imgs = in.readString();
@@ -137,6 +143,8 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         visitDeptName = in.readString();
         visitWay = in.readString();
         isSelect = in.readByte() != 0;
+        isPatient = in.readString();
+        type = in.readInt();
     }
 
     public static final Creator<SaveDocBean> CREATOR = new Creator<SaveDocBean>() {
@@ -155,139 +163,128 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         return this.id;
     }
 
-
     public void setId(String id) {
         this.id = id;
     }
-
 
     public String getIll() {
         return this.ill;
     }
 
-
     public void setIll(String ill) {
         this.ill = ill;
     }
-
 
     public String getHospital() {
         return this.hospital;
     }
 
-
     public void setHospital(String hospital) {
         this.hospital = hospital;
     }
-
 
     public String getDoctor() {
         return this.doctor;
     }
 
-
     public void setDoctor(String doctor) {
         this.doctor = doctor;
     }
 
+    public String getDoctorUserId() {
+        return this.doctorUserId;
+    }
+
+    public void setDoctorUserId(String doctorUserId) {
+        this.doctorUserId = doctorUserId;
+    }
 
     public String getTime() {
         return this.time;
     }
 
-
     public void setTime(String time) {
         this.time = time;
     }
-
 
     public String getFolder() {
         return this.folder;
     }
 
-
     public void setFolder(String folder) {
         this.folder = folder;
     }
-
 
     public String getImgs() {
         return this.imgs;
     }
 
-
     public void setImgs(String imgs) {
         this.imgs = imgs;
     }
-
 
     public String getAdvice() {
         return this.advice;
     }
 
-
     public void setAdvice(String advice) {
         this.advice = advice;
     }
-
 
     public String getOrgCode() {
         return this.orgCode;
     }
 
-
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode;
     }
-
 
     public String getPatientDiagId() {
         return this.patientDiagId;
     }
 
-
     public void setPatientDiagId(String patientDiagId) {
         this.patientDiagId = patientDiagId;
     }
-
 
     public String getPatientId() {
         return this.patientId;
     }
 
-
     public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
-
 
     public String getVisitDeptName() {
         return this.visitDeptName;
     }
 
-
     public void setVisitDeptName(String visitDeptName) {
         this.visitDeptName = visitDeptName;
     }
-
 
     public String getVisitWay() {
         return this.visitWay;
     }
 
-
     public void setVisitWay(String visitWay) {
         this.visitWay = visitWay;
     }
-
 
     public boolean getIsSelect() {
         return this.isSelect;
     }
 
-
     public void setIsSelect(boolean isSelect) {
         this.isSelect = isSelect;
+    }
+
+    public String getIsPatient() {
+        return this.isPatient;
+    }
+
+    public void setIsPatient(String isPatient) {
+        this.isPatient = isPatient;
     }
 
     public int getType() {
@@ -296,14 +293,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public static int getTypeTwo() {
-        return TYPE_TWO;
-    }
-
-    public static int getTypeOne() {
-        return TYPE_ONE;
     }
 
     /**
@@ -329,7 +318,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         return imageListBeans;
     }
 
-
     /**
      * Resets a to-many relationship, making the next get call to query for a fresh result.
      */
@@ -337,7 +325,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     public synchronized void resetImageListBeans() {
         imageListBeans = null;
     }
-
 
     /**
      * To-many relationship, resolved on first access (and after reset).
@@ -362,7 +349,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         return audioList;
     }
 
-
     /**
      * Resets a to-many relationship, making the next get call to query for a fresh result.
      */
@@ -370,7 +356,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     public synchronized void resetAudioList() {
         audioList = null;
     }
-
 
     /**
      * To-many relationship, resolved on first access (and after reset).
@@ -395,7 +380,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         return videoList;
     }
 
-
     /**
      * Resets a to-many relationship, making the next get call to query for a fresh result.
      */
@@ -403,7 +387,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     public synchronized void resetVideoList() {
         videoList = null;
     }
-
 
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
@@ -417,7 +400,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         myDao.delete(this);
     }
 
-
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
@@ -429,7 +411,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         }
         myDao.refresh(this);
     }
-
 
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
@@ -443,7 +424,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         myDao.update(this);
     }
 
-
     /**
      * called by internal mechanisms, do not call yourself.
      */
@@ -452,7 +432,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getSaveDocBeanDao() : null;
     }
-
 
     @Override
     public int describeContents() {
@@ -465,6 +444,7 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         dest.writeString(ill);
         dest.writeString(hospital);
         dest.writeString(doctor);
+        dest.writeString(doctorUserId);
         dest.writeString(time);
         dest.writeString(folder);
         dest.writeString(imgs);
@@ -478,14 +458,12 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         dest.writeString(visitDeptName);
         dest.writeString(visitWay);
         dest.writeByte((byte) (isSelect ? 1 : 0));
+        dest.writeString(isPatient);
+        dest.writeInt(type);
     }
 
     @Override
     public int getItemType() {
         return type;
-    }
-
-    public void setItemType(int itemType) {
-        this.type = itemType;
     }
 }
