@@ -50,6 +50,7 @@ public class InqueryActivity extends BaseActivity {
     @BindView(R.id.finish_back)
     ImageView finishBack;
     private String doctorUserId;
+    private String patientRecordId;
     private String desease;
     private String questionId;
     private CommonDialog dialog;
@@ -78,6 +79,7 @@ public class InqueryActivity extends BaseActivity {
         doctorUserId = getIntent().getStringExtra("doctorUserId");
         desease = getIntent().getStringExtra("desease");
         questionId = getIntent().getStringExtra("questionId");
+        patientRecordId = getIntent().getStringExtra("patientRecordId");
     }
 
     @Override
@@ -119,6 +121,7 @@ public class InqueryActivity extends BaseActivity {
                                         intent.putExtra("doctorUserId", doctorUserId);
                                         intent.putExtra("desease", desease);
                                         intent.putExtra("questionId", questionId);
+                                        intent.putExtra("patientRecordId", patientRecordId);
                                         startActivity(intent);
                                     }
                                 }).show();
@@ -139,6 +142,7 @@ public class InqueryActivity extends BaseActivity {
             maps.put("content", DocUtils.toRequestBodyOfText(inqueryEditContent));
             maps.put("title", DocUtils.toRequestBodyOfText(desease));
             maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
+            maps.put("patientRecordId", DocUtils.toRequestBodyOfText(patientRecordId));
             if (EmptyUtils.isNotEmpty(questionId)) {
                 maps.put("questionId", DocUtils.toRequestBodyOfText(questionId));
             }

@@ -15,6 +15,7 @@ public class PatientBean implements Parcelable {
     private String title;
     private String question;
     private UserBean userInfo;
+    private String patientRecordId;
 
     public PatientBean() {
     }
@@ -29,6 +30,7 @@ public class PatientBean implements Parcelable {
         title = in.readString();
         question = in.readString();
         userInfo = in.readParcelable(UserBean.class.getClassLoader());
+        patientRecordId = in.readString();
     }
 
     public static final Creator<PatientBean> CREATOR = new Creator<PatientBean>() {
@@ -115,6 +117,14 @@ public class PatientBean implements Parcelable {
         this.userInfo = userInfo;
     }
 
+    public String getPatientRecordId() {
+        return patientRecordId;
+    }
+
+    public void setPatientRecordId(String patientRecordId) {
+        this.patientRecordId = patientRecordId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -131,5 +141,6 @@ public class PatientBean implements Parcelable {
         dest.writeString(title);
         dest.writeString(question);
         dest.writeParcelable(userInfo, flags);
+        dest.writeString(patientRecordId);
     }
 }

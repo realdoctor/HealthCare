@@ -16,6 +16,7 @@ public class DoctorBean extends UserBean implements Parcelable {
     private String diagName;
     private String visitDtime;
     private String questionId;
+    private String patientRecordId;
     @SerializedName("question")
     private String inquery;
     private String answer;
@@ -34,6 +35,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         diagName = in.readString();
         visitDtime = in.readString();
         questionId = in.readString();
+        patientRecordId = in.readString();
         inquery = in.readString();
         answer = in.readString();
         addTime = in.readString();
@@ -49,6 +51,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         dest.writeString(diagName);
         dest.writeString(visitDtime);
         dest.writeString(questionId);
+        dest.writeString(patientRecordId);
         dest.writeString(inquery);
         dest.writeString(answer);
         dest.writeString(addTime);
@@ -111,6 +114,14 @@ public class DoctorBean extends UserBean implements Parcelable {
 
     public void setQuestionId(String questionId) {
         this.questionId = questionId;
+    }
+
+    public String getPatientRecordId() {
+        return patientRecordId;
+    }
+
+    public void setPatientRecordId(String patientRecordId) {
+        this.patientRecordId = patientRecordId;
     }
 
     public String getInquery() {

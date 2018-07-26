@@ -423,7 +423,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
                     @Override
                     public void onError(Throwable e) {
                         mProgressDialog.dismiss();
-                        ToastUtil.showLong(RegistrationsActivity.this, e.getMessage());
+                        ToastUtil.showLong(RegistrationsActivity.this, "获取医院列表失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -468,6 +468,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
                                         Collections.sort(hospitalBeanArrayList, comparator);
                                     }
                                     hospitalAdapter.notifyDataSetChanged();
+                                    ToastUtil.showLong(RegistrationsActivity.this, "获取医院列表成功!");
                                 } else {
                                     ToastUtil.showLong(RegistrationsActivity.this, msg.toString().trim());
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

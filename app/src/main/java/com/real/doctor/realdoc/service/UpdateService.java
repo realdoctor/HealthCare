@@ -66,6 +66,7 @@ public class UpdateService extends JobService {
     private String doctorUserId;
     private String desease;
     private String questionId;
+    private String patientRecordId;
     private boolean zip = false;
     //从数据库中获取数据
     private ImageManager imageInstance;
@@ -240,6 +241,7 @@ public class UpdateService extends JobService {
                 maps.put("content", DocUtils.toRequestBodyOfText(inquery));
                 maps.put("title", DocUtils.toRequestBodyOfText(desease));
                 maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
+                maps.put("patientRecordId", DocUtils.toRequestBodyOfText(patientRecordId));
                 if (EmptyUtils.isNotEmpty(questionId)) {
                     maps.put("questionId", DocUtils.toRequestBodyOfText(questionId));
                 }
@@ -313,6 +315,7 @@ public class UpdateService extends JobService {
             desease = intent.getExtras().getString("desease");
             doctorUserId = intent.getExtras().getString("doctorUserId");
             questionId = intent.getExtras().getString("questionId");
+            patientRecordId = intent.getExtras().getString("patientRecordId");
         }
         Message m = Message.obtain();
         handler.sendMessage(m);

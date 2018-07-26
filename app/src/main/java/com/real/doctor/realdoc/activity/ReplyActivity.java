@@ -48,6 +48,7 @@ public class ReplyActivity extends BaseActivity {
     Button confirmCharge;
     private String userId;
     private String questionId;
+    private String patientRecordId;
 
     @Override
     public int getLayoutId() {
@@ -73,6 +74,7 @@ public class ReplyActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             questionId = intent.getExtras().getString("questionId");
+            patientRecordId = intent.getExtras().getString("patientRecordId");
         }
     }
 
@@ -106,6 +108,7 @@ public class ReplyActivity extends BaseActivity {
             json.put("content", reply);
             json.put("questionId", questionId);
             json.put("userId", userId);
+            json.put("patientRecordId", patientRecordId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

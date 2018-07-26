@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -62,7 +63,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class VideoFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener, VideoListAdapter.OnListListener,
+public class VideoFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener, VideoListAdapter.OnListListener,
         OnReceiverEventListener, OnPlayerEventListener {
 
     @BindView(R.id.play_recycler)
@@ -73,14 +74,14 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener,On
     FrameLayout container;
     public VideoListAdapter newsAdapter;
     private Unbinder unbinder;
-    public ArrayList<VideoListBean> newModels=new ArrayList<VideoListBean>();
+    public ArrayList<VideoListBean> newModels = new ArrayList<VideoListBean>();
     private PageModel<InfoModel> baseModel = new PageModel<InfoModel>();
-    public int pageNum=1;
-    public int pageSize=10;
+    public int pageNum = 1;
+    public int pageSize = 10;
     public String userId;
     private boolean toDetail;
     private boolean isLandScape;
-
+    private Dialog mProgressDialog;
     private ReceiverGroup receiverGroup;
 
     public static VideoFragment newInstance() {
@@ -99,7 +100,7 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener,On
 
     @Override
     public void doBusiness(Context mContext) {
-        userId= (String) SPUtils.get(getActivity(), Constants.USER_KEY,"");
+        userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
         playRecycler.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         AssistPlayer.get().addOnReceiverEventListener(this);
@@ -110,9 +111,10 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener,On
         newsAdapter.setOnListListener(this);
         playRecycler.setAdapter(newsAdapter);
         ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
+        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
+        mProgressDialog = DocUtils.getProgressDialog(getActivity(), "正在加载数据....");
         getData();
     }
 
@@ -120,31 +122,42 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener,On
     public void widgetClick(View v) {
 
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
+
     private void getData() {
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("pageNum",pageNum);
-        params.put("pageSize",pageSize);
-        params.put("type","1");
-        params.put("userId",userId);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageNum", pageNum);
+        params.put("pageSize", pageSize);
+        params.put("type", "1");
+        params.put("userId", userId);
         HttpRequestClient.getInstance(getActivity()).createBaseApi().get("news_pub/list"
                 , params, new BaseObserver<ResponseBody>(getActivity()) {
+                    protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        mProgressDialog.dismiss();
+                        ToastUtil.showLong(getActivity(), "获取视频列表失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
                     public void onComplete() {
-
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
                     }
 
                     @Override
@@ -163,20 +176,22 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener,On
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
                                     baseModel = localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<PageModel<InfoModel>>() {
                                             }.getType());
-                                    for(InfoModel model:baseModel.list){
-                                        VideoListBean bean=new VideoListBean(model.content,model.pic,model.src);
+                                    for (InfoModel model : baseModel.list) {
+                                        VideoListBean bean = new VideoListBean(model.content, model.pic, model.src);
                                         newModels.add(bean);
                                     }
                                     newsAdapter.notifyDataSetChanged();
+                                    ToastUtil.showLong(getActivity(), "获取视频列表成功!");
                                 } else {
-
+                                    ToastUtil.showLong(getActivity(), "获取视频列表失败!");
                                 }
+                                mProgressDialog.dismiss();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -190,8 +205,8 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener,On
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        if(pageSize*pageNum>newModels.size()){
-            ToastUtil.show(getActivity(),"已经是最后一页", Toast.LENGTH_SHORT);
+        if (pageSize * pageNum > newModels.size()) {
+            ToastUtil.show(getActivity(), "已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
             return;
         }
@@ -202,7 +217,7 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener,On
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        pageNum=1;
+        pageNum = 1;
         newModels.clear();
         getData();
         refreshLayout.finishRefresh();

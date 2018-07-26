@@ -74,6 +74,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     private IWXAPI api;
     private String payType;
     private String doctorUserId;
+    private String patientRecordId;
     private String desease;
     private String userId;
 
@@ -99,6 +100,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         payType = getIntent().getStringExtra("payType");
         doctorUserId = getIntent().getStringExtra("doctorUserId");
         desease = getIntent().getStringExtra("desease");
+        patientRecordId = getIntent().getStringExtra("patientRecordId");
         if (payType.equals("1")) {
             pageTitle.setText("聊天咨询支付");
             initGetPay();
@@ -114,6 +116,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     private void initGetPay() {
         Map<String, String> map = new HashMap<String, String>();
         map.put("userId", doctorUserId);
+        map.put("patientRecordId", patientRecordId);
         HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().get("askQuestion/getAskQuestionMoney"
                 , map, new BaseObserver<ResponseBody>(ChatPayActivity.this) {
                     protected Disposable disposable;
@@ -212,11 +215,13 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                         intent.putExtra("userId", "admin");
                         intent.putExtra("doctorUserId", doctorUserId);
                         intent.putExtra("desease", desease);
+                        intent.putExtra("patientRecordId", patientRecordId);
                         startActivity(intent);
                     } else if (payType.equals("2")) {
                         Intent intent = new Intent(ChatPayActivity.this, InqueryActivity.class);
                         intent.putExtra("doctorUserId", doctorUserId);
                         intent.putExtra("desease", desease);
+                        intent.putExtra("patientRecordId", patientRecordId);
                         startActivity(intent);
                     }
 //                    if (zhifu_type.equals("1")) {
@@ -256,6 +261,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         try {
             json.put("totalAmount", tvCountprice.getText().toString().trim());
             json.put("userId", userId);
+            json.put("patientRecordId", patientRecordId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

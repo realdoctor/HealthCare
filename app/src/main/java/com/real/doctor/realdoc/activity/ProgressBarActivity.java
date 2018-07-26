@@ -55,6 +55,7 @@ public class ProgressBarActivity extends BaseActivity {
     private String inquery;
     private String desease;
     private String questionId;
+    private String patientRecordId;
 
     @Override
     public int getLayoutId() {
@@ -90,6 +91,7 @@ public class ProgressBarActivity extends BaseActivity {
             mList = intent.getParcelableArrayListExtra("mList");
             doctorUserId = intent.getExtras().getString("doctorUserId");
             questionId = intent.getExtras().getString("questionId");
+            patientRecordId = intent.getExtras().getString("patientRecordId");
         }
         localBroadcast();
         startService();
@@ -131,6 +133,7 @@ public class ProgressBarActivity extends BaseActivity {
             startServiceIntent.putExtra("inquery", inquery);
             startServiceIntent.putExtra("doctorUserId", doctorUserId);
             startServiceIntent.putExtra("questionId", questionId);
+            startServiceIntent.putExtra("patientRecordId", patientRecordId);
             startService(startServiceIntent);
             JobInfo jobInfo = new JobInfo.Builder(1, new ComponentName(getPackageName(), UpdateService.class.getName()))
                     .setPeriodic(2000)

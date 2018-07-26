@@ -68,6 +68,7 @@ public class CaseListActivity extends BaseActivity {
     private List<SaveDocBean> recordList;
     private String disease;
     private String inqueryText;
+    private String patientRecordId;
     private Dialog mProgressDialog;
 
     @Override
@@ -94,6 +95,7 @@ public class CaseListActivity extends BaseActivity {
         realName = getIntent().getStringExtra("realName");
         disease = patientBean.getTitle();
         inqueryText = patientBean.getQuestion();
+        patientRecordId = patientBean.getPatientRecordId();
         pageTitle.setText(realName);
         //获取患者咨询
         if (EmptyUtils.isNotEmpty(inqueryText)) {
@@ -210,6 +212,7 @@ public class CaseListActivity extends BaseActivity {
                 //点击回复按钮
                 Intent intent = new Intent(CaseListActivity.this, ReplyActivity.class);
                 intent.putExtra("questionId", patientBean.getQuestionId());
+                intent.putExtra("patientRecordId", patientRecordId);
                 startActivity(intent);
                 break;
         }
