@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -58,6 +59,7 @@ public class RevisitingFragment extends BaseFragment {
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     private DividerItemDecoration divider;
+    private Dialog mProgressDialog;
     DocPayListAdapter docPayListAdapter;
 
     @Override
@@ -68,6 +70,7 @@ public class RevisitingFragment extends BaseFragment {
     @Override
     public void initView(View view) {
         unbinder = ButterKnife.bind(this, view);
+        mProgressDialog = DocUtils.getProgressDialog(getActivity(), "正在加载数据....");
     }
 
     @Override
@@ -87,6 +90,7 @@ public class RevisitingFragment extends BaseFragment {
     }
 
     private void getRevisitingList(final String pageNum) {
+        mProgressDialog.show();
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("pageNum", pageNum);
         param.put("pageSize", "10");
@@ -110,6 +114,7 @@ public class RevisitingFragment extends BaseFragment {
                             refreshLayout.finishLoadmore();
                         }
                         ToastUtil.showLong(getActivity(), "获取咨询列表失败!");
+                        mProgressDialog.dismiss();
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -160,6 +165,7 @@ public class RevisitingFragment extends BaseFragment {
                                     refreshLayout.finishRefresh();
                                     refreshLayout.finishLoadmore();
                                 }
+                                mProgressDialog.dismiss();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -517,6 +517,10 @@ public class HomeFragment extends BaseFragment {
                 case R.id.info_icon:
                     if (EmptyUtils.isNotEmpty(token)) {
                         isHomeIn = true;
+                        //红色标记消失
+                        if (EmptyUtils.isNotEmpty(infoRedInfo)) {
+                            infoRedInfo.setVisibility(View.GONE);
+                        }
                         intent = new Intent(getActivity(), InfoActivity.class);
                         startActivity(intent);
                     } else {

@@ -151,7 +151,7 @@ public class UserFragment extends BaseFragment {
             recordUpload.setVisibility(View.GONE);
             recordUploadLine.setVisibility(View.GONE);
         }
-        if (roleId.equals("0")) {
+        if (EmptyUtils.isNotEmpty(roleId) && roleId.equals("0")) {
             inquiryPay.setVisibility(View.GONE);
         } else {
             inquiryPay.setVisibility(View.VISIBLE);
@@ -296,52 +296,59 @@ public class UserFragment extends BaseFragment {
                 break;
             case R.id.user_function_one:
                 isUserIn = true;
-                if (verifyFlag.equals("1")) {
-                    intent = new Intent(getActivity(), MyRegistrationActivity.class);
+                if (EmptyUtils.isNotEmpty(token)) {
+                    //跳转到实名认证页面
+                    intent = new Intent(getActivity(), VerifyActivity.class);
                     startActivity(intent);
                 } else {
                     //跳转到实名认证页面
-                    intent = new Intent(getActivity(), VerifyActivity.class);
+                    intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
                 break;
             case R.id.user_function_two:
                 isUserIn = true;
-                if (verifyFlag.equals("1")) {
+                if (EmptyUtils.isNotEmpty(token)) {
                     intent = new Intent(getActivity(), RecordListActivity.class);
                     startActivity(intent);
                 } else {
                     //跳转到实名认证页面
-                    intent = new Intent(getActivity(), VerifyActivity.class);
+                    intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
                 break;
             case R.id.user_function_three:
                 isUserIn = true;
-                if (verifyFlag.equals("1")) {
+                if (EmptyUtils.isNotEmpty(token)) {
                     intent = new Intent(getActivity(), MyRevisitActivity.class);
                     startActivity(intent);
                 } else {
                     //跳转到实名认证页面
-                    intent = new Intent(getActivity(), VerifyActivity.class);
+                    intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
                 break;
             case R.id.user_function_four:
                 isUserIn = true;
-                if (verifyFlag.equals("1")) {
+                if (EmptyUtils.isNotEmpty(token)) {
                     intent = new Intent(getActivity(), OrderListActivity.class);
                     startActivity(intent);
                 } else {
                     //跳转到实名认证页面
-                    intent = new Intent(getActivity(), VerifyActivity.class);
+                    intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
                 break;
             case R.id.user_function_five:
                 isUserIn = true;
-                intent = new Intent(getActivity(), MyFollowDoctorsActivity.class);
-                startActivity(intent);
+                if (EmptyUtils.isNotEmpty(token)) {
+                    intent = new Intent(getActivity(), MyFollowDoctorsActivity.class);
+                    startActivity(intent);
+                } else {
+                    //跳转到实名认证页面
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.user_setting:
                 isUserIn = true;

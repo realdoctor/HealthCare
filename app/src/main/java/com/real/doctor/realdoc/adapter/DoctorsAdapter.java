@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ChatPayActivity;
+import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.model.DoctorBean;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
@@ -52,6 +53,15 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 intent.putExtra("payType", "2");
                 intent.putExtra("doctorUserId", item.getId());
                 intent.putExtra("desease", item.getDiagName());
+                context.startActivity(intent);
+            }
+        });
+        CircleImageView registrationsView = helper.getView(R.id.registrations);
+        registrationsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击进入挂号界面,这样做是错误的,应该为在该医生名下挂号
+                Intent intent = new Intent(context, RegistrationsActivity.class);
                 context.startActivity(intent);
             }
         });

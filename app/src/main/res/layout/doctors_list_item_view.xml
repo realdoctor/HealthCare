@@ -134,5 +134,15 @@
             android:src="@mipmap/ease_default_avatar"
             app:border_circle_color="@android:color/white"
             app:border_circle_width="1.0dip" />
+
+        <com.real.doctor.realdoc.view.CircleImageView
+            android:id="@+id/registrations"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/ease_default_avatar"
+            app:border_circle_color="@android:color/white"
+            app:border_circle_width="1.0dip" />
     </LinearLayout>
 </LinearLayout>

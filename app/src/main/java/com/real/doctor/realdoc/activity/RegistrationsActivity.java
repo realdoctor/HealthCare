@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -97,7 +98,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
     private AMapLocationClientOption locationOption = null;
     public final static int REGISTRATION_EVENT_REQUEST_CODE = 2;
     public final static int REGISTRATION_AREA_EVENT_REQUEST_CODE = 4;
-
+    private Dialog mProgressDialog;
 
     @Override
     public int getLayoutId() {
@@ -119,6 +120,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        mProgressDialog = DocUtils.getProgressDialog(RegistrationsActivity.this, "正在加载数据....");
         init();
         initLocation();
         startLocation();
@@ -208,7 +210,6 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
         @Override
         public void onLocationChanged(AMapLocation location) {
             if (null != location) {
-
                 StringBuffer sb = new StringBuffer();
                 //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
                 if (location.getErrorCode() == 0) {
@@ -217,7 +218,6 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
                     String city = location.getCity();
                     right_title.setText(city);
                     cityName = city;
-
                 } else {
 
                 }
@@ -233,6 +233,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
      * @since 2.8.0
      */
     private void startLocation() {
+        mProgressDialog.show();
         // 设置定位参数
         locationClient.setLocationOption(locationOption);
         // 启动定位
@@ -280,13 +281,11 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
             case R.id.home_search:
                 Intent intent = new Intent(RegistrationsActivity.this, SearchHistoryListActivity.class);
                 intent.putExtra("requestCode", REGISTRATION_EVENT_REQUEST_CODE);
-                ;
                 startActivity(intent);
                 break;
             case R.id.right_title:
                 Intent intentArea = new Intent(RegistrationsActivity.this, AppointmentAddressActivity.class);
                 intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);
-                ;
                 startActivityForResult(intentArea, REGISTRATION_AREA_EVENT_REQUEST_CODE);
                 break;
         }
@@ -306,6 +305,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
                 right_title.setText(cityName);
                 pageNum = 1;
                 hospitalBeanArrayList.clear();
+                mProgressDialog.show();
                 getData();
                 refreshLayout.finishRefresh();
             }
@@ -337,6 +337,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
                     sortstr = item.SortId;
                     hospitalBeanArrayList.clear();
                     pageNum = 1;
+                    mProgressDialog.show();
                     getData();
                     refreshLayout.finishRefresh();
                 }
@@ -353,6 +354,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
                     hospitalLevel = item.LevelName;
                     hospitalBeanArrayList.clear();
                     pageNum = 1;
+                    mProgressDialog.show();
                     getData();
                     refreshLayout.finishRefresh();
                 }
@@ -387,6 +389,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
             return;
         }
         pageNum++;
+        mProgressDialog.show();
         getData();
         refreshlayout.finishLoadmore();
     }
@@ -395,6 +398,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
     public void onRefresh(RefreshLayout refreshlayout) {
         pageNum = 1;
         hospitalBeanArrayList.clear();
+        mProgressDialog.show();
         getData();
         refreshLayout.finishRefresh();
     }
@@ -418,6 +422,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
 
                     @Override
                     public void onError(Throwable e) {
+                        mProgressDialog.dismiss();
                         ToastUtil.showLong(RegistrationsActivity.this, e.getMessage());
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
@@ -468,6 +473,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();
                                 }
+                                mProgressDialog.dismiss();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

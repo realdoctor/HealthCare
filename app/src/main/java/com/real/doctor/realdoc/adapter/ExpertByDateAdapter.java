@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.ExpertBean;
 import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.EmptyUtils;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ExpertByDateAdapter extends RdBaseAdapter<ExpertBean> implements Vi
         holder.expert_title.setText(bean.doctorName);
         holder.expert_postion.setText(bean.positional);
         holder.good_at.setText(bean.goodAt);
-        if(bean.orderFlag.equals("0")) {
+        if(EmptyUtils.isNotEmpty(bean.orderFlag)&&bean.orderFlag.equals("0")) {
             holder.expert_order.setText("预  约");
             holder.expert_order.setOnClickListener(this);
             holder.expert_order.setTag(bean);

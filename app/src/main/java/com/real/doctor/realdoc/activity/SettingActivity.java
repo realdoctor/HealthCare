@@ -35,6 +35,7 @@ import com.real.doctor.realdoc.model.ImageListBean;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.model.VideoBean;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
@@ -94,6 +95,7 @@ public class SettingActivity extends BaseActivity {
     private CommonDialog dialog;
     private String avator;
     private String mobile;
+    private String token;
     private String path;
     private SaveDocManager instance;
     //从数据库中获取数据
@@ -141,6 +143,12 @@ public class SettingActivity extends BaseActivity {
         recordInstance = RecordManager.getInstance(SettingActivity.this);
         videoInstance = VideoManager.getInstance(SettingActivity.this);
         mobile = (String) SPUtils.get(SettingActivity.this, "mobile", "");
+        token = (String) SPUtils.get(SettingActivity.this, "token", "");
+        if (EmptyUtils.isNotEmpty(token)) {
+            loginOut.setVisibility(View.VISIBLE);
+        } else {
+            loginOut.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -284,6 +292,8 @@ public class SettingActivity extends BaseActivity {
                                     deleteInsideData();
                                     //插入外面已经添加的
                                     getExternalData("external");
+                                    //隐藏退出登录按钮
+                                    loginOut.setVisibility(View.GONE);
                                     //跳转到首页
                                     Intent intent = new Intent(SettingActivity.this, RealDocActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
