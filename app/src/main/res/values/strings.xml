@@ -30,8 +30,8 @@
     <string name="home">首页</string>
     <string name="read">阅读</string>
     <string name="my">我的</string>
-    <string name="hint_username">请输入手机号</string>
-    <string name="hint_password">请输入登录密码</string>
+    <string name="hint_username">输入您的手机号</string>
+    <string name="hint_password">输入您的密码</string>
     <string name="search_hint">搜索疾病、医生、医院</string>
     <string name="search_patient_hint">按患者姓名搜索 </string>
     <string name="second_function_one_string">皮肤病</string>
@@ -50,9 +50,13 @@
     <string name="function_seven_string">远程医疗</string>
     <string name="function_eight_string">我的二维码</string>
     <string name="second_function_eight_string">更多疾病</string>
+    <string name="login">登 录</string>
+    <string name="register">注 册</string>
     <string name="hint_phone_register">请输入手机号</string>
-    <string name="hint_verify_register">验证码</string>
-    <string name="hint_password_register">设置密码</string>
+    <string name="hint_verify_register">输入您的验证码</string>
+    <string name="get_hint_verify_register">获取验证码</string>
+    <string name="hint_password_register">输入您的密码</string>
+    <string name="hint_confirm_password_register">确认您的密码</string>
     <string name="save_doc_ill">疾病名称</string>
     <string name="save_doc_hospital">就诊医院</string>
     <string name="save_doc_hospital_edit">请输入您就诊的医院名称</string>

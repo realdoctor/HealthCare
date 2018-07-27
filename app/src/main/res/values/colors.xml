@@ -67,6 +67,7 @@
     <color name="divider_color">#ffeeeeee</color>
     <color name="search_bgcolor">#ff029cc6</color>
     <color name="appthemecolor">#ff03b5e5</color>
+    <color name="app_globe_color">#488af1</color>
     <color name="appbgcolor">#f2f2f2</color>
     <color name="text_special_color">#ff333333</color>
     <color name="text_primary_color">#ff666666</color>
