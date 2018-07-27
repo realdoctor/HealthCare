@@ -32,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.QueryItemAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.fragment.ArticleShowFragment;
 import com.real.doctor.realdoc.fragment.ShoppintMallFragment;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
@@ -205,6 +206,11 @@ public class SearchHistoryListActivity extends BaseActivity {
             Intent resultIntent = new Intent(SearchHistoryListActivity.this, SearchProductResultActivity.class);
             resultIntent.putExtra("searchKey", value);
             resultIntent.putExtra("categoryId", categoryId);
+            startActivity(resultIntent);
+            finish();
+        }else if(requestCode== ArticleShowFragment.INFO_SEARCH){
+            Intent resultIntent = new Intent(SearchHistoryListActivity.this, SearchInfoResultActivity.class);
+            resultIntent.putExtra("searchKey", value);
             startActivity(resultIntent);
             finish();
         }

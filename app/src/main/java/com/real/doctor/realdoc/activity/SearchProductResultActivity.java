@@ -136,7 +136,8 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
         param.put("pageNum", pageNum);
         param.put("pageSize", pageSize);
         param.put("searchstr", searchKey);
-        HttpRequestClient.getInstance(SearchProductResultActivity.this).createBaseApi().get(" goods/"
+        param.put("onlyMatch","1");
+        HttpRequestClient.getInstance(SearchProductResultActivity.this).createBaseApi().get(" goods/search"
                 , param, new BaseObserver<ResponseBody>(SearchProductResultActivity.this) {
                     protected Disposable disposable;
 

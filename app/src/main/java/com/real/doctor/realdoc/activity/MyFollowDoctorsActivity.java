@@ -146,7 +146,9 @@ public class MyFollowDoctorsActivity extends BaseActivity implements OnLoadmoreL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ExpertBean bean=(ExpertBean) parent.getAdapter().getItem(position);
         Intent intent = new Intent(MyFollowDoctorsActivity.this, PatientEduListActivity.class);
+        intent.putExtra("id",bean.doctorCode);
         startActivity(intent);
     }
 

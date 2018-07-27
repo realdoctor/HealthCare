@@ -4,12 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:paddingLeft="@dimen/dp_72"
         android:background="@color/white"
-        android:paddingRight="@dimen/dp_72"
         android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/dp_72"
+            android:layout_marginRight="@dimen/dp_72"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content">
     <android.support.design.widget.TabLayout
         android:id="@+id/tb_category"
         android:background="@color/white"
@@ -20,7 +24,16 @@
         android:layout_width="match_parent"
         android:layout_height="50dp">
     </android.support.design.widget.TabLayout>
-    </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/img_search"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/search"
+            android:layout_marginRight="@dimen/sp_16"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_show"
         android:layout_width="match_parent"

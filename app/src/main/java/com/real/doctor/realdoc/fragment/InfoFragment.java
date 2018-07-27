@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.icu.text.IDNA;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -27,6 +28,7 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.widget.Constant;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
@@ -65,8 +67,12 @@ public class InfoFragment extends BaseFragment implements OnLoadmoreListener,OnR
     public int pageSize=10;
     public String userId;
 
-    public static InfoFragment newInstance() {
-        return new InfoFragment();
+    public static InfoFragment newInstance(String id) {
+        InfoFragment infoFragment=new InfoFragment();
+        Bundle bundel = new Bundle();
+        bundel.putSerializable("id", id);
+        infoFragment.setArguments(bundel);
+        return infoFragment;
     }
 
     @Override
@@ -81,15 +87,23 @@ public class InfoFragment extends BaseFragment implements OnLoadmoreListener,OnR
 
     @Override
     public void doBusiness(Context mContext) {
-        userId= (String) SPUtils.get(getContext(), Constants.USER_KEY,"");
-        newsAdapter= new InfoShowAdapter(getActivity(),newModels);
-        listView.setAdapter(newsAdapter);
-        listView.setOnItemClickListener(this);
-        ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer=(ClassicsFooter) refreshLayout.getRefreshFooter();
-        refreshLayout.setOnLoadmoreListener(this);
-        refreshLayout.setOnRefreshListener(this);
-        getData();
+        if (getArguments() != null) {
+            String id = (String) getArguments().get("id");
+            if(id.length()!=0){
+                userId = id;
+
+            }else{
+                userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
+            }
+            newsAdapter = new InfoShowAdapter(getActivity(), newModels);
+            listView.setAdapter(newsAdapter);
+            listView.setOnItemClickListener(this);
+            ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
+            ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
+            refreshLayout.setOnLoadmoreListener(this);
+            refreshLayout.setOnRefreshListener(this);
+            getData();
+        }
     }
 
     @Override
