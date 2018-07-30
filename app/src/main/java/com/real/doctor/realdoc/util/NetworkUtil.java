@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
@@ -14,9 +15,9 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- *     author: zhujiabin
- *     time  : 2018/1/3
- *     desc  : 网络连接工具类
+ * author: zhujiabin
+ * time  : 2018/1/3
+ * desc  : 网络连接工具类
  */
 
 public class NetworkUtil {
@@ -30,6 +31,7 @@ public class NetworkUtil {
 
     /**
      * check NetworkAvailable
+     *
      * @param context
      * @return
      */
@@ -46,14 +48,15 @@ public class NetworkUtil {
 
     /**
      * getLocalIpAddress
+     *
      * @return
      */
     public static String getLocalIpAddress() {
         String ret = "";
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
                         ret = inetAddress.getHostAddress().toString();
@@ -96,7 +99,8 @@ public class NetworkUtil {
     }
 
     /**
-     *ping "http://www.baidu.com"
+     * ping "http://www.baidu.com"
+     *
      * @return
      */
     static private boolean connectionNetwork() {
@@ -120,6 +124,7 @@ public class NetworkUtil {
 
     /**
      * check is3G
+     *
      * @param context
      * @return boolean
      */
@@ -136,6 +141,7 @@ public class NetworkUtil {
 
     /**
      * isWifi
+     *
      * @param context
      * @return boolean
      */
@@ -152,6 +158,7 @@ public class NetworkUtil {
 
     /**
      * is2G
+     *
      * @param context
      * @return boolean
      */
@@ -169,7 +176,7 @@ public class NetworkUtil {
     }
 
     /**
-     *  is wifi on
+     * is wifi on
      */
     public static boolean isWifiEnabled(Context context) {
         ConnectivityManager mgrConn = (ConnectivityManager) context
@@ -181,4 +188,16 @@ public class NetworkUtil {
                 .getNetworkType() == TelephonyManager.NETWORK_TYPE_UMTS);
     }
 
+    public static void goToWifiSetting(Context context) {
+        Intent i = new Intent();
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            //Honeycomb
+            i.setClassName("com.android.settings", "com.android.settings.Settings$WifiSettingsActivity");
+        } else {
+            //other versions
+            i.setClassName("com.android.settings"
+                    , "com.android.settings.wifi.WifiSettings");
+        }
+        context.startActivity(i);
+    }
 }

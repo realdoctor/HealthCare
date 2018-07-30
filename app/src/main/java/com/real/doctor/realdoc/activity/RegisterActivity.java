@@ -107,7 +107,7 @@ public class RegisterActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.login_btn:
-                    actionStart(this, LoginActivity.class);
+                    goBackBtn();
                     break;
             }
         }

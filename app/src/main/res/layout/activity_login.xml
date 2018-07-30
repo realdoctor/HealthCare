@@ -106,7 +106,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/login_btn_bg"
-            android:text="登 录"
+            android:text="@string/login"
             android:textColor="@android:color/white"
             android:textSize="16.0sp" />
     </RelativeLayout>
@@ -117,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:text="注 册"
+        android:text="@string/register"
         android:textColor="@color/app_globe_color"
         android:textSize="16.0sp" />
 

@@ -46,6 +46,7 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.StringUtils;
@@ -457,27 +458,49 @@ public class HomeFragment extends BaseFragment {
                     isHomeIn = true;
                     break;
                 case R.id.doctor_online:
-                    if (EmptyUtils.isNotEmpty(token)) {
-                        if (verifyFlag.equals("1")) {
-                            isHomeIn = true;
-                            //在线复诊
-                            intent = new Intent(getActivity(), DoctorsListActivity.class);
-                            startActivity(intent);
+                    if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                        if (EmptyUtils.isNotEmpty(token)) {
+                            if (verifyFlag.equals("1")) {
+                                isHomeIn = true;
+                                //在线复诊
+                                intent = new Intent(getActivity(), DoctorsListActivity.class);
+                                startActivity(intent);
+                            } else {
+                                //跳转到实名认证页面
+                                intent = new Intent(getActivity(), VerifyActivity.class);
+                                startActivity(intent);
+                            }
                         } else {
-                            //跳转到实名认证页面
-                            intent = new Intent(getActivity(), VerifyActivity.class);
+                            intent = new Intent(getActivity(), LoginActivity.class);
                             startActivity(intent);
+                            ToastUtil.showLong(getActivity(), "请登录您的账户!");
                         }
                     } else {
-                        intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
-                        ToastUtil.showLong(getActivity(), "请登录您的账户!");
+                        ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
+                        NetworkUtil.goToWifiSetting(getActivity());
                     }
                     break;
                 case R.id.appoint_icon:
                     isHomeIn = true;
-                    intent = new Intent(getActivity(), RegistrationsActivity.class);
-                    startActivity(intent);
+                    if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                        if (EmptyUtils.isNotEmpty(token)) {
+                            if (verifyFlag.equals("1")) {
+                                intent = new Intent(getActivity(), RegistrationsActivity.class);
+                                startActivity(intent);
+                            } else {
+                                //跳转到实名认证页面
+                                intent = new Intent(getActivity(), VerifyActivity.class);
+                                startActivity(intent);
+                            }
+                        } else {
+                            intent = new Intent(getActivity(), LoginActivity.class);
+                            startActivity(intent);
+                            ToastUtil.showLong(getActivity(), "请登录您的账户!");
+                        }
+                    } else {
+                        ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
+                        NetworkUtil.goToWifiSetting(getActivity());
+                    }
                     break;
                 case R.id.scan_icon:
                     isHomeIn = true;

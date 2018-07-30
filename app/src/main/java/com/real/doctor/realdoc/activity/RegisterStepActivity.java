@@ -70,9 +70,10 @@ public class RegisterStepActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.next_step_btn, R.id.finish_back, R.id.send_verify_code})
+    @OnClick({R.id.next_step_btn, R.id.finish_back, R.id.send_verify_code, R.id.login_btn})
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
+            Intent intent;
             switch (v.getId()) {
                 case R.id.next_step_btn:
                     mobilePhone = phoneNumber.getText().toString().trim();
@@ -89,7 +90,7 @@ public class RegisterStepActivity extends BaseActivity {
                         ToastUtil.showLong(RegisterStepActivity.this, "请输入正确的手机号!");
                         return;
                     }
-                    Intent intent = new Intent(this, RegisterActivity.class);
+                    intent = new Intent(this, RegisterActivity.class);
                     intent.putExtra("mobile", mobilePhone);
                     intent.putExtra("verify", verify);
                     startActivity(intent);
@@ -105,7 +106,11 @@ public class RegisterStepActivity extends BaseActivity {
                     }
                     break;
                 case R.id.login_btn:
-                    actionStart(this, LoginActivity.class);
+                    intent = new Intent(RegisterStepActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    finish();
                     break;
             }
         }

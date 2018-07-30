@@ -149,9 +149,11 @@
     <string name="record_two">第二份病历</string>
     <string name="history_record">历史就诊信息</string>
     <string name="my_point">我的预约</string>
+    <string name="packag_history">打包历史</string>
     <string name="my_record">我的病历</string>
     <string name="my_visit">我的复诊</string>
-    <string name="my_orders">我的订单</string>
+    <string name="my_orders">商品订单</string>
+    <string name="my_pay">支付订单</string>
     <string name="my_follow">我的关注</string>
     <string name="account_set">账号设置</string>
     <string name="record_upload">上传病历至服务器</string>
