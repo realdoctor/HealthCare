@@ -39,11 +39,8 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileProvider7;
 import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.InitCacheFileUtils;
-import com.real.doctor.realdoc.util.KeyBoardUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
-import com.real.doctor.realdoc.util.SizeUtils;
-import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.SelectPopupWindow;
 import com.real.doctor.realdoc.widget.OnRecyclerItemClickListener;
 import com.real.doctor.realdoc.widget.RecordCallBack;
@@ -137,7 +134,7 @@ public class RecordImagesActivity extends BaseActivity {
         dragImages.addAll(originImages);
         new Thread(new ImgRunnable(dragImages, originImages, dragImages, imgHandler, false)).start();//开启线程，在新线程中去压缩图片
         initRcv();
-        mPopup = new SelectPopupWindow(RecordImagesActivity.this, itemsOnClick);
+        mPopup = new SelectPopupWindow(RecordImagesActivity.this, true, itemsOnClick);
     }
 
     @Override
@@ -356,7 +353,7 @@ public class RecordImagesActivity extends BaseActivity {
                                     dragImages.add(addIndex, filePath);
                                     originImages.add(addIndex++, filePath);
                                 }
-                                if(finalI ==images.size()-1){
+                                if (finalI == images.size() - 1) {
                                     Message message = new Message();
                                     message.what = 1;
                                     handler.sendMessage(message);

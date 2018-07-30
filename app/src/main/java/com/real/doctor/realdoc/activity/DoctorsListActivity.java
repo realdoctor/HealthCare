@@ -191,7 +191,7 @@ public class DoctorsListActivity extends BaseActivity {
         doctorsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                DoctorBean bean = doctors.get(position);
+                DoctorBean bean = (DoctorBean) adapter.getItem(position);
                 //跳转进医生详情
                 Intent intent = new Intent(DoctorsListActivity.this, DoctorsDetailActivity.class);
                 intent.putExtra("doctorUserId", bean.getId());

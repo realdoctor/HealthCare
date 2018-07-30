@@ -25,7 +25,7 @@
                     android:background="@mipmap/user_bg">
 
                     <TextView
-                        android:id="@+id/page_title"
+                        android:id="@+id/user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"

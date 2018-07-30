@@ -320,7 +320,7 @@ public class UserFragment extends BaseFragment {
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
                         //跳转到我的预约界面
-                        intent = new Intent(getActivity(), MyRegistrationActivity.class);
+                        intent = new Intent(getActivity(), VerifyActivity.class);
                         startActivity(intent);
                     } else {
                         //跳转到登录页面
@@ -328,7 +328,6 @@ public class UserFragment extends BaseFragment {
                         startActivity(intent);
                     }
                 } else {
-                    ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
@@ -344,7 +343,6 @@ public class UserFragment extends BaseFragment {
                         startActivity(intent);
                     }
                 } else {
-                    ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
@@ -360,7 +358,6 @@ public class UserFragment extends BaseFragment {
                         startActivity(intent);
                     }
                 } else {
-                    ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
@@ -391,7 +388,6 @@ public class UserFragment extends BaseFragment {
                         startActivity(intent);
                     }
                 } else {
-                    ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
@@ -411,46 +407,31 @@ public class UserFragment extends BaseFragment {
                 break;
             case R.id.suggest_submit:
                 isUserIn = true;
-                if (NetworkUtil.isNetworkAvailable(getActivity())) {
-                    //用户反馈
-                    intent = new Intent(getActivity(), UserFadeActivity.class);
-                    startActivity(intent);
-                } else {
-                    ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
-                    NetworkUtil.goToWifiSetting(getActivity());
-                }
+                //用户反馈
+                intent = new Intent(getActivity(), UserFadeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.down_record:
-                if (NetworkUtil.isNetworkAvailable(getActivity())) {
-                    if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
-                        isUserIn = true;
-                        intent = new Intent(getActivity(), GlobeUnzipActivity.class);
-                        startActivity(intent);
-                    } else {
-                        //跳转到登录页面
-                        intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
-                    }
+                if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
+                    isUserIn = true;
+                    intent = new Intent(getActivity(), GlobeUnzipActivity.class);
+                    startActivity(intent);
                 } else {
-                    ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
-                    NetworkUtil.goToWifiSetting(getActivity());
+                    //跳转到登录页面
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.record_upload:
-                if (NetworkUtil.isNetworkAvailable(getActivity())) {
-                    if (EmptyUtils.isNotEmpty(token)) {
-                        isUserIn = true;
-                        //病历上传
-                        intent = new Intent(getActivity(), RecordUploadActivity.class);
-                        startActivity(intent);
-                    } else {
-                        //跳转到登录页面
-                        intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
-                    }
+                if (EmptyUtils.isNotEmpty(token)) {
+                    isUserIn = true;
+                    //病历上传
+                    intent = new Intent(getActivity(), RecordUploadActivity.class);
+                    startActivity(intent);
                 } else {
-                    ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
-                    NetworkUtil.goToWifiSetting(getActivity());
+                    //跳转到登录页面
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
                 }
                 break;
         }
