@@ -190,6 +190,16 @@
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.SearchProductResultActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchInfoResultActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
+
+
+        <activity
             android:name=".activity.MyFollowNewsActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />

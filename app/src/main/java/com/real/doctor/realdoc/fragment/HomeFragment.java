@@ -522,6 +522,7 @@ public class HomeFragment extends BaseFragment {
                     isHomeIn = true;
                     //intent = new Intent(getActivity(), PatientEduActivity.class);
                     intent = new Intent(getActivity(), PatientEduListActivity.class);
+                    intent.putExtra("id","");
                     startActivity(intent);
                     break;
                 case R.id.telemedicine:

@@ -63,7 +63,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class VideoFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener, VideoListAdapter.OnListListener,
+public class VideoFragment extends BaseFragment implements OnLoadmoreListener,OnRefreshListener, VideoListAdapter.OnListListener,
         OnReceiverEventListener, OnPlayerEventListener {
 
     @BindView(R.id.play_recycler)
@@ -74,18 +74,22 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener, O
     FrameLayout container;
     public VideoListAdapter newsAdapter;
     private Unbinder unbinder;
-    public ArrayList<VideoListBean> newModels = new ArrayList<VideoListBean>();
+    public ArrayList<VideoListBean> newModels=new ArrayList<VideoListBean>();
     private PageModel<InfoModel> baseModel = new PageModel<InfoModel>();
-    public int pageNum = 1;
-    public int pageSize = 10;
+    public int pageNum=1;
+    public int pageSize=10;
     public String userId;
     private boolean toDetail;
     private boolean isLandScape;
     private Dialog mProgressDialog;
     private ReceiverGroup receiverGroup;
 
-    public static VideoFragment newInstance() {
-        return new VideoFragment();
+    public static VideoFragment newInstance(String id) {
+        VideoFragment infoFragment=new VideoFragment();
+        Bundle bundel = new Bundle();
+        bundel.putSerializable("id", id);
+        infoFragment.setArguments(bundel);
+        return infoFragment;
     }
 
     @Override
@@ -100,29 +104,35 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener, O
 
     @Override
     public void doBusiness(Context mContext) {
-        userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
-        playRecycler.setLayoutManager(
-                new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        AssistPlayer.get().addOnReceiverEventListener(this);
-        AssistPlayer.get().addOnPlayerEventListener(this);
-        receiverGroup = ReceiverGroupManager.get().getLiteReceiverGroup(getActivity());
-        receiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_NETWORK_RESOURCE, true);
-        newsAdapter = new VideoListAdapter(getActivity(), playRecycler, newModels);
-        newsAdapter.setOnListListener(this);
-        playRecycler.setAdapter(newsAdapter);
-        ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
-        refreshLayout.setOnLoadmoreListener(this);
-        refreshLayout.setOnRefreshListener(this);
-        mProgressDialog = DocUtils.getProgressDialog(getActivity(), "正在加载数据....");
-        getData();
+        if (getArguments() != null) {
+            String id = (String) getArguments().get("id");
+            if (id.length() != 0) {
+                userId = id;
+            } else {
+                userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
+            }
+            playRecycler.setLayoutManager(
+                    new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            AssistPlayer.get().addOnReceiverEventListener(this);
+            AssistPlayer.get().addOnPlayerEventListener(this);
+            receiverGroup = ReceiverGroupManager.get().getLiteReceiverGroup(getActivity());
+            receiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_NETWORK_RESOURCE, true);
+            newsAdapter = new VideoListAdapter(getActivity(), playRecycler, newModels);
+            newsAdapter.setOnListListener(this);
+            playRecycler.setAdapter(newsAdapter);
+            ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
+            ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
+            refreshLayout.setOnLoadmoreListener(this);
+            refreshLayout.setOnRefreshListener(this);
+            mProgressDialog = DocUtils.getProgressDialog(getActivity(), "正在加载数据....");
+            getData();
+        }
     }
 
     @Override
     public void widgetClick(View v) {
 
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -205,8 +215,8 @@ public class VideoFragment extends BaseFragment implements OnLoadmoreListener, O
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        if (pageSize * pageNum > newModels.size()) {
-            ToastUtil.show(getActivity(), "已经是最后一页", Toast.LENGTH_SHORT);
+        if(pageSize*pageNum>newModels.size()){
+            ToastUtil.show(getActivity(),"已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
             return;
         }

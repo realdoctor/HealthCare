@@ -19,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.NewDetailActivity;
+import com.real.doctor.realdoc.activity.SearchHistoryListActivity;
 import com.real.doctor.realdoc.adapter.ArticleFragmentAdapter;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
@@ -46,6 +47,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
@@ -62,6 +64,9 @@ public class ArticleShowFragment extends BaseFragment  {
     @BindView(R.id.vp_show)
     ViewPager viewPager;
     private Unbinder unbinder;
+    @BindView(R.id.img_search)
+    ImageView img_search;
+    public static  final int INFO_SEARCH=2008;
 
     public static ArticleShowFragment newInstance() {
         return new ArticleShowFragment();
@@ -86,8 +91,15 @@ public class ArticleShowFragment extends BaseFragment  {
     }
 
     @Override
+    @OnClick(R.id.img_search)
     public void widgetClick(View v) {
-
+        switch (v.getId()){
+            case R.id.img_search:
+                Intent intent =new Intent(getActivity(), SearchHistoryListActivity.class);
+                intent.putExtra("requestCode",INFO_SEARCH);
+                startActivity(intent);
+                break;
+        }
     }
     @Override
     public void onDestroyView() {

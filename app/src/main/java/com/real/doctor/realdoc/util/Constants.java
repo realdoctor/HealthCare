@@ -22,6 +22,8 @@ public class Constants {
     //新浪登录
     public static final String XINLANG_APP_KEY = "";
     public static final String XINLANG_APP_SECRET = "";
+    public static final String Value = "com.real.doctor";
+
     /**
      * 当前 DEMO 应用的回调页，第三方应用可以使用自己的回调页。
      * <p>
