@@ -197,7 +197,7 @@ public class RevisitingFragment extends BaseFragment {
         docPayListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                String answer = doctors.get(position).getAnswer();
+                String answer = ((DoctorBean) adapter.getItem(position)).getAnswer();
                 if (EmptyUtils.isEmpty(answer)) {
                     ToastUtil.showLong(getActivity(), "医生还未回答您咨询的问题,请耐心等待!");
                     return;
