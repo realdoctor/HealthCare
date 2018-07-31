@@ -103,9 +103,9 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.phone_number)
     EditText phoneNumber;
     @BindView(R.id.userpassword)
-    EditTextPassword userpassword;
-    @BindView(R.id.login_dismiss)
-    ImageView loginDismiss;
+    EditText userpassword;
+//    @BindView(R.id.login_dismiss)
+//    ImageView loginDismiss;
     @BindView(R.id.login_weixin)
     ImageView loginWeixin;
     @BindView(R.id.login_weibo)
@@ -246,14 +246,13 @@ public class LoginActivity extends BaseActivity {
 //    }
 
     @Override
-    @OnClick({R.id.user_register, R.id.button_login, R.id.login_dismiss})
+    @OnClick({R.id.user_register, R.id.button_login})
     public void widgetClick(View v) {
         if (DocUtils.isFastClick()) {
             switch (v.getId()) {
                 case R.id.user_register:
-                    actionStart(LoginActivity.this, RegisterActivity.class);
+                    actionStart(LoginActivity.this, RegisterStepActivity.class);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
                     break;
                 case R.id.button_login:
                     //用户登录
@@ -265,10 +264,6 @@ public class LoginActivity extends BaseActivity {
                         ToastUtil.showLong(LoginActivity.this, "请链接互联网!");
                         return;
                     }
-                    break;
-                case R.id.login_dismiss:
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
                     break;
                 case R.id.login_weixin:
                     //点击微信登录按钮
@@ -569,12 +564,12 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onError(final int code, final String message) {
                 Log.d(TAG, "login: onError: " + code);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                });
             }
         });
     }

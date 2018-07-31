@@ -19,7 +19,7 @@ public class UserBean extends EMContact implements Parcelable {
     @SerializedName(value = "userId", alternate = {"doctorUserId"})
     private String id;
     private String roleId;
-    @SerializedName("originalImageUrl")
+    @SerializedName("imageUrl")
     private String avater;
     @SerializedName(value = "userName", alternate = {"patientRealName", "respDoctorName"})
     private String name;

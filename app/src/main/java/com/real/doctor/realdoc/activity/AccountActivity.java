@@ -108,7 +108,7 @@ public class AccountActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        mPopup = new SelectPopupWindow(AccountActivity.this, itemsOnClick);
+        mPopup = new SelectPopupWindow(AccountActivity.this, true, itemsOnClick);
         mMobile = (String) SPUtils.get(AccountActivity.this, "mobile", "");
         mobile.setText(mMobile);
         //实名认证

@@ -39,11 +39,8 @@ import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileProvider7;
 import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.InitCacheFileUtils;
-import com.real.doctor.realdoc.util.KeyBoardUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
-import com.real.doctor.realdoc.util.SizeUtils;
-import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.SelectPopupWindow;
 import com.real.doctor.realdoc.widget.OnRecyclerItemClickListener;
 import com.real.doctor.realdoc.widget.RecordCallBack;
@@ -137,7 +134,7 @@ public class RecordImagesActivity extends BaseActivity {
         dragImages.addAll(originImages);
         new Thread(new ImgRunnable(dragImages, originImages, dragImages, imgHandler, false)).start();//开启线程，在新线程中去压缩图片
         initRcv();
-        mPopup = new SelectPopupWindow(RecordImagesActivity.this, itemsOnClick);
+        mPopup = new SelectPopupWindow(RecordImagesActivity.this, true, itemsOnClick);
     }
 
     @Override
@@ -264,6 +261,7 @@ public class RecordImagesActivity extends BaseActivity {
             //压缩图片
             new Thread(new ImgRunnable((ArrayList<String>) photos,
                     originImages, dragImages, imgHandler, true)).start();
+
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_ADD_LABEL) {
             //添加标签
             labelTextRelative.setVisibility(View.VISIBLE);
@@ -296,16 +294,19 @@ public class RecordImagesActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+
     /**
      * 另起线程压缩图片
      */
     static class ImgRunnable implements Runnable {
-
         ArrayList<String> images;
         ArrayList<String> originImages;
         ArrayList<String> dragImages;
         Handler handler;
         boolean add;//是否为添加图片
+        String filePath;
+        int addIndex;
+        Bitmap newBitmap;
 
         public ImgRunnable(ArrayList<String> images, ArrayList<String> originImages, ArrayList<String> dragImages, Handler handler, boolean add) {
             this.images = images;
@@ -317,17 +318,11 @@ public class RecordImagesActivity extends BaseActivity {
 
         @Override
         public void run() {
-            final String[] filePath = new String[1];
-            final Bitmap[] newBitmap = new Bitmap[1];
-            final int[] addIndex = {originImages.size() - 1};
+            addIndex = originImages.size() - 1;
             for (int i = 0; i < images.size(); i++) {
                 if (images.get(i).contains(RealDocApplication.getContext().getString(R.string.glide_plus_icon_string))) {//说明是添加图片按钮
                     continue;
                 }
-                //压缩
-//                newBitmap = ImageUtils.getSmallBitmap(images.get(i),
-//                        SizeUtils.dp2px(RealDocApplication.getContext(), 100),
-//                        SizeUtils.dp2px(RealDocApplication.getContext(), 100));
                 final int finalI = i;
                 Luban.with(RealDocApplication.getContext())
                         .load(images.get(i))
@@ -346,19 +341,22 @@ public class RecordImagesActivity extends BaseActivity {
 
                             @Override
                             public void onSuccess(File file) {
-                                // TODO 压缩成功后调用，返回压缩后的图片文件
-                                newBitmap[0] = BitmapFactory.decodeFile(file.getAbsolutePath());//filePath
-                                //文件地址
-                                filePath[0] = SDCardUtils.getSDCardPath() + FILE_DIR_NAME + "/"
+                                newBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());//filePath
+                                filePath = SDCardUtils.getSDCardPath() + FILE_DIR_NAME + "/"
                                         + FILE_IMG_NAME + "/" + String.format("img_%d.jpg", System.currentTimeMillis());
                                 //保存图片
-                                ImageUtils.save(newBitmap[0], filePath[0], Bitmap.CompressFormat.JPEG, true);
+                                ImageUtils.save(newBitmap, filePath, Bitmap.CompressFormat.JPEG, true);
                                 //设置值
                                 if (!add) {
-                                    images.set(finalI, filePath[0]);
+                                    images.set(finalI, filePath);
                                 } else {//添加图片，要更新
-                                    dragImages.add(addIndex[0], filePath[0]);
-                                    originImages.add(addIndex[0]++, filePath[0]);
+                                    dragImages.add(addIndex, filePath);
+                                    originImages.add(addIndex++, filePath);
+                                }
+                                if (finalI == images.size() - 1) {
+                                    Message message = new Message();
+                                    message.what = 1;
+                                    handler.sendMessage(message);
                                 }
                             }
 
@@ -367,11 +365,8 @@ public class RecordImagesActivity extends BaseActivity {
                                 // TODO 当压缩过程出现问题时调用
                             }
                         }).launch();
-
             }
-            Message message = new Message();
-            message.what = 1;
-            handler.sendMessage(message);
+
         }
     }
 

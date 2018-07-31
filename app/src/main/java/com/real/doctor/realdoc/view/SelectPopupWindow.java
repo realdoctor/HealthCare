@@ -37,6 +37,22 @@ public class SelectPopupWindow extends PopupWindow {
     public SelectPopupWindow(Activity context, OnClickListener itemsOnClick) {
         super(context);
         mContext = context;
+        initView(context);
+        initEvent(itemsOnClick);
+    }
+
+    public SelectPopupWindow(Activity context, boolean isHideBtn, OnClickListener itemsOnClick) {
+        super(context);
+        mContext = context;
+        initView(context);
+        if (isHideBtn) {
+            mAddAudio.setVisibility(View.GONE);
+            mAddVideo.setVisibility(View.GONE);
+        }
+        initEvent(itemsOnClick);
+    }
+
+    public void initView(Activity context) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.select_popup_layout, null);
@@ -45,6 +61,9 @@ public class SelectPopupWindow extends PopupWindow {
         mPhotoUpload = mMenuView.findViewById(R.id.photo_upload);
         mSelectPhoto = mMenuView.findViewById(R.id.select_photo);
         mCancelText = mMenuView.findViewById(R.id.cancel_text);
+    }
+
+    public void initEvent(OnClickListener itemsOnClick) {
         //取消按钮
         mCancelText.setOnClickListener(new OnClickListener() {
 

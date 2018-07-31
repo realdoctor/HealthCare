@@ -5,6 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/RealDoc.iml" filepath="$PROJECT_DIR$/RealDoc.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/easeui/easeui.iml" filepath="$PROJECT_DIR$/easeui/easeui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hmspush/hmspush.iml" filepath="$PROJECT_DIR$/hmspush/hmspush.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ijkplayer/ijkplayer.iml" filepath="$PROJECT_DIR$/ijkplayer/ijkplayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/playerbase/playerbase.iml" filepath="$PROJECT_DIR$/playerbase/playerbase.iml" />
       <module fileurl="file://$PROJECT_DIR$/zxing/zxing.iml" filepath="$PROJECT_DIR$/zxing/zxing.iml" />
     </modules>
   </component>

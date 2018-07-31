@@ -31,11 +31,13 @@ import com.real.doctor.realdoc.activity.VerifyActivity;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -67,6 +69,7 @@ public class UserFragment extends BaseFragment {
     private String verifyFlag = "";
     private String roleId;
     private String url;
+    private String realName;
     @BindView(R.id.user_name)
     TextView userName;
     @BindView(R.id.title_bar)
@@ -137,6 +140,9 @@ public class UserFragment extends BaseFragment {
         verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
         roleId = (String) SPUtils.get(getActivity(), Constants.ROLE_ID, "");
         url = (String) SPUtils.get(getActivity(), "url", "");
+        realName = (String) SPUtils.get(getActivity(), "realName", "");
+        originalImageUrl = (String) SPUtils.get(getActivity(), "originalImageUrl", "");
+        verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
         if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
             downRecord.setVisibility(View.VISIBLE);
             downRecordLine.setVisibility(View.VISIBLE);
@@ -161,14 +167,22 @@ public class UserFragment extends BaseFragment {
             checkName(mobile);
         }
         //获得用户信息
-        getUserInfo();
+        if (NetworkUtil.isNetworkAvailable(getActivity())) {
+            getUserInfo();
+        } else {
+            if (verifyFlag.equals("1")) {
+                userName.setText(realName);
+            } else {
+                userName.setText("完善信息");
+            }
+            GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
+        }
         localBroadcast();
     }
 
     private void localBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
-
         intentFilter.addAction(AccountActivity.CHANGE_AVATOR);
         intentFilter.addAction(VERIFY_TEXT);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
@@ -179,6 +193,7 @@ public class UserFragment extends BaseFragment {
                     verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
                     getUserInfo();
                 } else if (action.equals(AccountActivity.CHANGE_AVATOR)) {
+                    userName.setText(realName);
                     originalImageUrl = (String) intent.getExtras().get("avator");
                     GlideUtils.loadImageViewLoding(getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
                 }
@@ -237,6 +252,7 @@ public class UserFragment extends BaseFragment {
                                     pageTitle.setVisibility(View.GONE);
                                     if (verifyFlag.equals("1")) {
                                         if (EmptyUtils.isNotEmpty(realName)) {
+                                            SPUtils.put(getActivity(), "realName", realName);
                                             userName.setText(realName);
                                         }
                                     } else {
@@ -244,7 +260,8 @@ public class UserFragment extends BaseFragment {
                                     }
                                     if (DocUtils.hasValue(obj, "originalImageUrl")) {
                                         originalImageUrl = obj.getString("originalImageUrl");
-                                        GlideUtils.loadImageView(RealDocApplication.getContext(), originalImageUrl, userAvator);
+                                        SPUtils.put(getActivity(), "originalImageUrl", originalImageUrl);
+                                        GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
                                     }
                                 } else {
                                     ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");
@@ -284,70 +301,94 @@ public class UserFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.user_name:
                 isUserIn = true;
-                if (verifyFlag.equals("0")) {
-                    //跳转到未实名认证界面
-                    intent = new Intent(getActivity(), VerifyActivity.class);
-                    startActivity(intent);
-                } else if (EmptyUtils.isEmpty(token)) {
-                    //跳转到登录界面
-                    intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
+                if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                    if (verifyFlag.equals("0")) {
+                        //跳转到未实名认证界面
+                        intent = new Intent(getActivity(), VerifyActivity.class);
+                        startActivity(intent);
+                    } else if (EmptyUtils.isEmpty(token)) {
+                        //跳转到登录界面
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
+                } else {
+                    NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
             case R.id.user_function_one:
                 isUserIn = true;
-                if (EmptyUtils.isNotEmpty(token)) {
-                    //跳转到实名认证页面
-                    intent = new Intent(getActivity(), VerifyActivity.class);
-                    startActivity(intent);
+                if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                    if (EmptyUtils.isNotEmpty(token)) {
+                        //跳转到我的预约界面
+                        intent = new Intent(getActivity(),MyRegistrationActivity.class);
+                        startActivity(intent);
+                    } else {
+                        //跳转到登录页面
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
-                    //跳转到实名认证页面
-                    intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
+                    NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
             case R.id.user_function_two:
                 isUserIn = true;
-                if (EmptyUtils.isNotEmpty(token)) {
-                    intent = new Intent(getActivity(), RecordListActivity.class);
-                    startActivity(intent);
+                if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                    if (EmptyUtils.isNotEmpty(token)) {
+                        intent = new Intent(getActivity(), RecordListActivity.class);
+                        startActivity(intent);
+                    } else {
+                        //跳转到登录页面
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
-                    //跳转到实名认证页面
-                    intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
+                    NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
             case R.id.user_function_three:
                 isUserIn = true;
-                if (EmptyUtils.isNotEmpty(token)) {
-                    intent = new Intent(getActivity(), MyRevisitActivity.class);
-                    startActivity(intent);
+                if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                    if (EmptyUtils.isNotEmpty(token)) {
+                        intent = new Intent(getActivity(), MyRevisitActivity.class);
+                        startActivity(intent);
+                    } else {
+                        //跳转到登录页面
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
-                    //跳转到实名认证页面
-                    intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
+                    NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
             case R.id.user_function_four:
                 isUserIn = true;
-                if (EmptyUtils.isNotEmpty(token)) {
-                    intent = new Intent(getActivity(), OrderListActivity.class);
-                    startActivity(intent);
+                if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                    if (EmptyUtils.isNotEmpty(token)) {
+                        intent = new Intent(getActivity(), OrderListActivity.class);
+                        startActivity(intent);
+                    } else {
+                        //跳转到登录页面
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
-                    //跳转到实名认证页面
-                    intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
+                    NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
             case R.id.user_function_five:
                 isUserIn = true;
-                if (EmptyUtils.isNotEmpty(token)) {
-                    intent = new Intent(getActivity(), MyFollowDoctorsActivity.class);
-                    startActivity(intent);
+                if (NetworkUtil.isNetworkAvailable(getActivity())) {
+                    if (EmptyUtils.isNotEmpty(token)) {
+                        intent = new Intent(getActivity(), MyFollowDoctorsActivity.class);
+                        startActivity(intent);
+                    } else {
+                        //跳转到登录页面
+                        intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
-                    //跳转到实名认证页面
-                    intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
+                    NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
             case R.id.user_setting:
@@ -376,7 +417,9 @@ public class UserFragment extends BaseFragment {
                     intent = new Intent(getActivity(), GlobeUnzipActivity.class);
                     startActivity(intent);
                 } else {
-                    ToastUtil.showLong(getActivity(), "请确定是否已登录!");
+                    //跳转到登录页面
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.record_upload:
@@ -386,7 +429,9 @@ public class UserFragment extends BaseFragment {
                     intent = new Intent(getActivity(), RecordUploadActivity.class);
                     startActivity(intent);
                 } else {
-                    ToastUtil.showLong(getActivity(), "请确定是否已登录!");
+                    //跳转到登录页面
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
                 }
                 break;
         }

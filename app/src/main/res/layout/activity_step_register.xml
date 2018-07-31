@@ -17,6 +17,7 @@
         android:layout_height="250dp"
         android:layout_marginTop="50dp">
 
+
         <LinearLayout
             android:id="@+id/login_frame"
             android:layout_width="275dp"
@@ -34,7 +35,7 @@
                 android:src="@mipmap/register_back_icon" />
 
             <EditText
-                android:id="@+id/pwd"
+                android:id="@+id/phone_number"
                 android:layout_width="fill_parent"
                 android:layout_height="45.0dip"
                 android:layout_marginLeft="30dp"
@@ -42,40 +43,58 @@
                 android:layout_marginTop="15.0dip"
                 android:background="@drawable/et_underline_selector"
                 android:gravity="center_horizontal|bottom"
-                android:hint="@string/hint_password_register"
-                android:inputType="textPassword"
+                android:hint="@string/hint_username"
+                android:inputType="phone"
                 android:paddingBottom="7dp"
                 android:textColorHint="@color/text2"
                 android:textCursorDrawable="@drawable/color_cursor_bg"
                 android:textSize="14.0sp"
                 android:typeface="monospace" />
 
-            <EditText
-                android:id="@+id/pwd_confirm"
-                android:layout_width="fill_parent"
-                android:layout_height="45.0dip"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/et_underline_selector"
-                android:gravity="center_horizontal|bottom"
-                android:hint="@string/hint_confirm_password_register"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:paddingBottom="7dp"
-                android:textColorHint="@color/text2"
-                android:textCursorDrawable="@drawable/color_cursor_bg"
-                android:textSize="14.0sp"
-                android:typeface="monospace" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="45.0dip">
+
+                <EditText
+                    android:id="@+id/verify_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/et_underline_selector"
+                    android:gravity="center_horizontal|bottom"
+                    android:hint="@string/hint_verify_register"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:paddingBottom="7dp"
+                    android:textColorHint="@color/text2"
+                    android:textCursorDrawable="@drawable/color_cursor_bg"
+                    android:textSize="14.0sp"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/send_verify_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/get_hint_verify_register"
+                    android:textColor="@color/app_globe_color"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+
         </LinearLayout>
 
         <Button
-            android:id="@+id/register_btn"
+            android:id="@+id/next_step_btn"
             android:layout_width="135dp"
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/login_btn_bg"
-            android:text="@string/register"
+            android:text="@string/next_step"
             android:textColor="@android:color/white"
             android:textSize="16.0sp" />
     </RelativeLayout>
@@ -89,4 +108,5 @@
         android:text="@string/login"
         android:textColor="@color/app_globe_color"
         android:textSize="16.0sp" />
+
 </LinearLayout>
