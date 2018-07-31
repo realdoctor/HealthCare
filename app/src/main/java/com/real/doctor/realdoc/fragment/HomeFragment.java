@@ -483,14 +483,8 @@ public class HomeFragment extends BaseFragment {
                 case R.id.appoint_icon:
                     isHomeIn = true;
                     if (NetworkUtil.isNetworkAvailable(getActivity())) {
-                        if (verifyFlag.equals("1")) {
-                            intent = new Intent(getActivity(), RegistrationsActivity.class);
-                            startActivity(intent);
-                        } else {
-                            //跳转到实名认证页面
-                            intent = new Intent(getActivity(), VerifyActivity.class);
-                            startActivity(intent);
-                        }
+                        intent = new Intent(getActivity(), RegistrationsActivity.class);
+                        startActivity(intent);
                     } else {
                         ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
                         NetworkUtil.goToWifiSetting(getActivity());
