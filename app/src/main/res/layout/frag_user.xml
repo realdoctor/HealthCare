@@ -86,6 +86,7 @@
                 android:layout_height="@dimen/linearLayout_height"
                 android:background="#ffffffff"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -98,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8.0dip"
-                    android:text="咨询定价"
+                    android:text="@string/inquiry_pay"
                     android:textColor="@color/text_primary_color"
                     android:textSize="@dimen/text_size_14sp" />
             </LinearLayout>
@@ -184,7 +185,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_8dp"
-                    android:text="关于我们"
+                    android:text="@string/about_us"
                     android:textColor="@color/text_primary_color"
                     android:textSize="@dimen/text_size_14sp" />
             </LinearLayout>
@@ -212,7 +213,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_8dp"
-                    android:text="意见反馈"
+                    android:text="@string/suggest_submit"
                     android:textColor="@color/text_primary_color"
                     android:textSize="@dimen/text_size_14sp" />
             </LinearLayout>

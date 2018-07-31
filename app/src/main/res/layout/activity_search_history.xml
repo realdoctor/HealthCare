@@ -3,54 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:background="@color/appthemecolor"
-        android:layout_alignParentTop="true"
         android:id="@+id/top_id"
-        android:layout_height="wrap_content">
-    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48.0dip"
-        android:id="@+id/search_top"
-        android:orientation="horizontal"
-        android:paddingRight="16dp">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/appthemecolor">
 
-        <ImageView
-            android:layout_width="55.0dip"
-            android:layout_height="20.0dip"
-            android:id="@+id/back"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10.0dip"
-            android:background="@drawable/finish_back_white_selector"
-            />
+        <LinearLayout
+            android:id="@+id/search_top"
+            android:layout_width="fill_parent"
+            android:layout_height="48.0dip"
+            android:orientation="horizontal"
+            android:paddingRight="16dp">
 
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="264"
-            android:background="@drawable/search_background"
-            android:drawableLeft="@mipmap/icon_search_gray"
-            android:drawablePadding="8dp"
-            android:padding="@dimen/dp_4"
-            android:layout_gravity="center_vertical"
-            android:gravity="start|center_vertical"
-            android:hint="输入查询的关键字"
-            android:imeOptions="actionSearch"
-            android:singleLine="true"
-            android:textColor="@color/gray"
-            android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="55.0dip"
+                android:layout_height="20.0dip"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10.0dip"
+                android:background="@drawable/finish_back_white_selector" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="264"
+                android:background="@drawable/search_background"
+                android:drawableLeft="@mipmap/icon_search_gray"
+                android:drawablePadding="8dp"
+                android:gravity="start|center_vertical"
+                android:hint="输入查询的关键字"
+                android:imeOptions="actionSearch"
+                android:padding="@dimen/dp_4"
+                android:singleLine="true"
+                android:textColor="@color/gray"
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="14sp" />
+
+        </LinearLayout>
     </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_below="@+id/top_id"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_id">
 
         <LinearLayout
             android:layout_width="match_parent"

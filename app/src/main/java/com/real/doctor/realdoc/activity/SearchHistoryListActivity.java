@@ -72,10 +72,8 @@ public class SearchHistoryListActivity extends BaseActivity {
     @BindView(R.id.search_top)
     LinearLayout search_top;
     private RecordSQLiteOpenHelper helper = new RecordSQLiteOpenHelper(this);
-    ;
     private SQLiteDatabase db;
     private QueryItemAdapter adapter;
-
     private int requestCode;
     public String categoryId;
     public ArrayList<String> list = new ArrayList<String>();

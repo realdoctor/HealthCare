@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -123,7 +124,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     ExpertAdapter expertAdapter;
     public static double latitude;
     public static double longitude;
-
+    private Dialog mProgressDialog;
 
     @Override
     public int getLayoutId() {
@@ -149,10 +150,10 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         searchstr = getIntent().getStringExtra("searchKey");
         right_title.setVisibility(View.VISIBLE);
         right_title.setText("定位中");
+        mProgressDialog = DocUtils.getProgressDialog(SearchResultListActivity.this, "正在加载数据....");
         init();
         initLocation();
         startLocation();
-
     }
 
     @Override
@@ -170,7 +171,6 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
             case R.id.right_title:
                 Intent intentArea = new Intent(SearchResultListActivity.this, AppointmentAddressActivity.class);
                 intentArea.putExtra("requestCode", REGISTRATION_AREA_EVENT_REQUEST_CODE);
-                ;
                 startActivityForResult(intentArea, REGISTRATION_AREA_EVENT_REQUEST_CODE);
                 break;
         }
@@ -421,6 +421,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     }
 
     private void searchHospital(int pageNum, int pageSize) {
+        mProgressDialog.show();
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
@@ -440,6 +441,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
                     @Override
                     public void onError(Throwable e) {
+                        mProgressDialog.dismiss();
                         ToastUtil.showLong(SearchResultListActivity.this, e.getMessage());
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
@@ -498,6 +500,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                 } else {
 //
                                 }
+                                mProgressDialog.dismiss();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -532,6 +535,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     }
 
     public void orderExpert(ExpertBean bean) {
+        mProgressDialog.show();
         JSONObject object = new JSONObject();
         try {
             object.put("deptId", bean.deptId);
@@ -556,6 +560,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
                     @Override
                     public void onError(Throwable e) {
+                        mProgressDialog.dismiss();
                         Log.d(TAG, e.getMessage());
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
@@ -589,6 +594,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                 } else {
                                     ToastUtil.showLong(SearchResultListActivity.this, "预约失败!");
                                 }
+                                mProgressDialog.dismiss();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

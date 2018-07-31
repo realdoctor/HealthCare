@@ -148,6 +148,7 @@
     <string name="record_one">第一份病历</string>
     <string name="record_two">第二份病历</string>
     <string name="history_record">历史就诊信息</string>
+    <string name="my_login">点击登录</string>
     <string name="my_point">我的预约</string>
     <string name="packag_history">打包历史</string>
     <string name="my_record">我的病历</string>
@@ -156,12 +157,14 @@
     <string name="my_pay">支付订单</string>
     <string name="my_follow">我的关注</string>
     <string name="account_set">账号设置</string>
+    <string name="inquiry_pay">咨询定价</string>
     <string name="record_upload">上传病历至服务器</string>
     <string name="down_record">从服务端病历下载</string>
     <string name="address_set">地址设置</string>
     <string name="clean_cache">清除缓存</string>
     <string name="user_fade">用户反馈</string>
     <string name="about_us">关于我们</string>
+    <string name="suggest_submit">意见反馈</string>
     <string name="current_version">当前版本</string>
     <string name="check_info">请务必填写真实信息,您的信息我们将严格保密</string>
     <string name="account">账号</string>

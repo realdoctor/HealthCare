@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.AccountActivity;
+import com.real.doctor.realdoc.activity.AlreadyVertifyActivity;
 import com.real.doctor.realdoc.activity.DocPayActivity;
 import com.real.doctor.realdoc.activity.GlobeUnzipActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
@@ -74,24 +75,22 @@ public class UserFragment extends BaseFragment {
     TextView userName;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
-    @BindView(R.id.finish_back)
-    ImageView finishBack;
-    @BindView(R.id.user_function_one)
-    LinearLayout userFunctionOne;
-    @BindView(R.id.user_function_two)
-    LinearLayout userFunctionTwo;
-    @BindView(R.id.user_function_three)
-    LinearLayout userFunctionThree;
-    @BindView(R.id.user_function_four)
-    LinearLayout userFunctionFour;
-    @BindView(R.id.user_function_five)
-    LinearLayout userFunctionFive;
+    @BindView(R.id.my_login)
+    LinearLayout myLogin;
+    @BindView(R.id.my_appointment)
+    LinearLayout myAppointment;
+    @BindView(R.id.packag_history)
+    LinearLayout packagHistory;
+    @BindView(R.id.my_visit)
+    LinearLayout myVisit;
+    @BindView(R.id.my_orders)
+    LinearLayout myOrders;
+    @BindView(R.id.my_follow)
+    LinearLayout myFollow;
+    @BindView(R.id.identify)
+    LinearLayout identify;
     @BindView(R.id.user_avator)
     CircleImageView userAvator;
-    @BindView(R.id.title)
-    RelativeLayout titleRelative;
-    @BindView(R.id.page_title)
-    TextView pageTitle;
     @BindView(R.id.inquiry_pay)
     LinearLayout inquiryPay;
     @BindView(R.id.about_us)
@@ -99,7 +98,7 @@ public class UserFragment extends BaseFragment {
     @BindView(R.id.suggest_submit)
     LinearLayout suggestSubmit;
     @BindView(R.id.user_setting)
-    LinearLayout userSetting;
+    ImageView userSetting;
     @BindView(R.id.down_record)
     LinearLayout downRecord;
     @BindView(R.id.down_record_line)
@@ -119,22 +118,13 @@ public class UserFragment extends BaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.frag_user;
+        return R.layout.frag_user_layout;
     }
 
     @Override
     public void initView(View view) {
         unbinder = ButterKnife.bind(this, view);
-        //加上沉浸式状态栏高度
-        int statusHeight = ScreenUtil.getStatusHeight(getActivity());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
-            lp.topMargin = statusHeight;
-            titleBar.setLayoutParams(lp);
-        }
-        finishBack.setVisibility(View.GONE);
-        titleRelative.setBackgroundColor(Color.TRANSPARENT);
-        pageTitle.setText("个人中心");
+        userName.setText("个人中心");
         token = (String) SPUtils.get(getActivity(), "token", "");
         mobile = (String) SPUtils.get(getActivity(), "mobile", "");
         verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
@@ -153,9 +143,11 @@ public class UserFragment extends BaseFragment {
         if (EmptyUtils.isNotEmpty(token)) {
             recordUpload.setVisibility(View.VISIBLE);
             recordUploadLine.setVisibility(View.VISIBLE);
+            myLogin.setVisibility(View.GONE);
         } else {
             recordUpload.setVisibility(View.GONE);
             recordUploadLine.setVisibility(View.GONE);
+            myLogin.setVisibility(View.VISIBLE);
         }
         if (EmptyUtils.isNotEmpty(roleId) && roleId.equals("0")) {
             inquiryPay.setVisibility(View.GONE);
@@ -173,7 +165,7 @@ public class UserFragment extends BaseFragment {
             if (verifyFlag.equals("1")) {
                 userName.setText(realName);
             } else {
-                userName.setText("完善信息");
+                userName.setText("个人中心");
             }
             GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
         }
@@ -249,14 +241,13 @@ public class UserFragment extends BaseFragment {
                                     if (DocUtils.hasValue(obj, "realName")) {
                                         realName = obj.getString("realName");
                                     }
-                                    pageTitle.setVisibility(View.GONE);
                                     if (verifyFlag.equals("1")) {
                                         if (EmptyUtils.isNotEmpty(realName)) {
                                             SPUtils.put(getActivity(), "realName", realName);
                                             userName.setText(realName);
                                         }
                                     } else {
-                                        userName.setText("完善信息");
+                                        userName.setText("个人中心");
                                     }
                                     if (DocUtils.hasValue(obj, "originalImageUrl")) {
                                         originalImageUrl = obj.getString("originalImageUrl");
@@ -295,11 +286,11 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.user_name, R.id.user_function_one, R.id.user_function_two, R.id.user_function_three, R.id.user_function_four, R.id.user_function_five, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit, R.id.down_record, R.id.record_upload})
+    @OnClick({R.id.identify, R.id.my_appointment, R.id.packag_history, R.id.my_visit, R.id.my_orders, R.id.my_follow, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit, R.id.down_record, R.id.record_upload, R.id.my_login})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
-            case R.id.user_name:
+            case R.id.identify:
                 isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (verifyFlag.equals("0")) {
@@ -310,17 +301,20 @@ public class UserFragment extends BaseFragment {
                         //跳转到登录界面
                         intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
+                    } else {
+                        intent = new Intent(getActivity(), AlreadyVertifyActivity.class);
+                        startActivity(intent);
                     }
                 } else {
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
-            case R.id.user_function_one:
+            case R.id.my_appointment:
                 isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
                         //跳转到我的预约界面
-                        intent = new Intent(getActivity(),MyRegistrationActivity.class);
+                        intent = new Intent(getActivity(), MyRegistrationActivity.class);
                         startActivity(intent);
                     } else {
                         //跳转到登录页面
@@ -331,7 +325,7 @@ public class UserFragment extends BaseFragment {
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
-            case R.id.user_function_two:
+            case R.id.packag_history:
                 isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
@@ -346,7 +340,7 @@ public class UserFragment extends BaseFragment {
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
-            case R.id.user_function_three:
+            case R.id.my_visit:
                 isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
@@ -361,7 +355,7 @@ public class UserFragment extends BaseFragment {
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
-            case R.id.user_function_four:
+            case R.id.my_orders:
                 isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
@@ -376,7 +370,7 @@ public class UserFragment extends BaseFragment {
                     NetworkUtil.goToWifiSetting(getActivity());
                 }
                 break;
-            case R.id.user_function_five:
+            case R.id.my_follow:
                 isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
@@ -433,6 +427,12 @@ public class UserFragment extends BaseFragment {
                     intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
+                break;
+            case R.id.my_login:
+                isUserIn = true;
+                //跳转到登录页面
+                intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
                 break;
         }
     }

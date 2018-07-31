@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -73,6 +74,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     public ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
     public String searchKey;
     public String categoryId;
+    private Dialog mProgressDialog;
 
     @Override
     public int getLayoutId() {
@@ -93,6 +95,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        mProgressDialog = DocUtils.getProgressDialog(SearchProductResultActivity.this, "正在加载数据....");
         userId = (String) SPUtils.get(SearchProductResultActivity.this, Constants.USER_KEY, "");
         searchKey = getIntent().getStringExtra("searchKey");
         categoryId = getIntent().getStringExtra("categoryId");
@@ -106,8 +109,6 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
         listView.setAdapter(productAdapter);
         listView.setOnItemClickListener(this);
         getRefreshProducts();
-
-
     }
 
     @Override
@@ -131,6 +132,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     }
 
     public void getRefreshProducts() {
+        mProgressDialog.show();
         HashMap<String, Object> param = new HashMap<>();
         param.put("categoryId", categoryId);
         param.put("pageNum", pageNum);
@@ -148,6 +150,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
 
                     @Override
                     public void onError(Throwable e) {
+                        mProgressDialog.dismiss();
                         Log.d(TAG, e.getMessage());
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
@@ -188,6 +191,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
                                     refreshLayout.finishRefresh();
                                 } else {
                                 }
+                                mProgressDialog.dismiss();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
