@@ -319,6 +319,7 @@ public class VideoOneActivity extends BaseActivity implements
         bean.setElapsedMillis(chronometer.getFormat());
         bean.setFolder(mFolder);
         intent.putExtra("video", bean);
+        intent.putExtra("label", true);
         startActivityForResult(intent, REQUEST_ADD_ADVICE);
     }
 

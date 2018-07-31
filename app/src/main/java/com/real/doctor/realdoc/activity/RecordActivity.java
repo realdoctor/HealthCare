@@ -22,20 +22,17 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
+import com.real.doctor.realdoc.model.AddLabelBean;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.service.RecordingService;
 import com.real.doctor.realdoc.util.EmptyUtils;
-import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
-import com.real.doctor.realdoc.util.ToastUtil;
-
-import java.io.File;
+import com.real.doctor.realdoc.util.StringUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,6 +62,7 @@ public class RecordActivity extends BaseActivity {
     private String mFolder;
     private String mModifyId;
     private String advice;
+    private AddLabelBean addLabelBean;
     private Intent intent = null;
     private RecordManager instance = null;
     public static String RECORD_SERVICE = "android.intent.action.record.service";
@@ -121,6 +119,23 @@ public class RecordActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
                 RecordBean bean = intent.getExtras().getParcelable("record");
                 bean.setAdvice(advice);
+                int spare;
+                String name = "";
+                if (EmptyUtils.isNotEmpty(addLabelBean)) {
+                    name = addLabelBean.getName();
+                }
+                if (StringUtils.equals(name, "处方")) {
+                    spare = 1;
+                } else if (StringUtils.equals(name, "医嘱")) {
+                    spare = 2;
+                } else if (StringUtils.equals(name, "体征")) {
+                    spare = 3;
+                } else if (StringUtils.equals(name, "报告检查")) {
+                    spare = 4;
+                } else {
+                    spare = 0;
+                }
+                bean.setSpareImage(spare);
                 instance.insertRecord(RecordActivity.this, bean);
                 Intent intentResult = new Intent();
                 intentResult.putExtra("advice", advice);
@@ -234,6 +249,7 @@ public class RecordActivity extends BaseActivity {
 
     private void saveYesRecord() {
         Intent startIntent = new Intent(RecordActivity.this, AddAdviceActivity.class);
+        startIntent.putExtra("label", true);
         startActivityForResult(startIntent, REQUEST_ADD_ADVICE);
     }
 
@@ -281,6 +297,7 @@ public class RecordActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_ADVICE) {
             advice = data.getStringExtra("advice");
+            addLabelBean = data.getParcelableExtra("addLabelBean");
             stopRecording();
             intent = null;
         }

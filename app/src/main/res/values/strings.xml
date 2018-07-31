@@ -124,7 +124,7 @@
     <string name="record_image_edit">请输入您所要表达的信息</string>
     <string name="image_card_replace_image">替换图片</string>
     <string name="image_card_delete_recipel">删除处方</string>
-    <string name="image_card_add_advice">添加/更改嘱咐</string>
+    <string name="image_card_add_advice">添加/更改备注</string>
     <string name="record_images_label">添加标签</string>
     <string name="location">定位中</string>
     <string name="notifyTitle">提示</string>

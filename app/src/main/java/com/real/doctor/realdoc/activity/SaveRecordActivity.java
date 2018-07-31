@@ -918,7 +918,7 @@ public class SaveRecordActivity extends BaseActivity {
             imageBeanList.get(Integer.valueOf(groupPos)).getmImgUrlList().get(Integer.valueOf(pos)).setImgUrl(photos.get(0));
             imageCardAdapter.notifyDataSetChanged();
         } else if (resultCode == RESULT_OK && requestCode == ImageCardAdapter.REQUEST_CODE_CHANGE_ADVICE) {
-            //更改嘱咐
+            //更改备注
             String groupPos = data.getStringExtra("pos");
             String advice = data.getStringExtra("advice");
             imageBeanList.get(Integer.valueOf(groupPos)).setContent(advice);

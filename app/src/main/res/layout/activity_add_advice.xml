@@ -19,9 +19,9 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/audio_item_bg"
+        android:gravity="left|top"
         android:hint="@string/image_card_add_advice"
         android:inputType="textMultiLine"
-        android:gravity="left|top"
         android:minLines="6"
         android:paddingLeft="10.0dip"
         android:textColorHint="#ff999999"
@@ -30,11 +30,56 @@
         android:typeface="monospace" />
 
     <RelativeLayout
+        android:id="@+id/add_label_relative"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/advice"
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/add_label_btn"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/button_selector"
+            android:text="@string/record_images_label"
+            android:textColor="@android:color/white"
+            android:textSize="15.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/label_text_relative"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_label_relative"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="15dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/label_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="处方标签"
+            android:textColor="@color/text_special_color" />
+
+        <ImageView
+            android:id="@+id/label_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/label_text"
+            android:src="@mipmap/add" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label_text_relative"
         android:layout_marginBottom="80dp"
-        android:layout_marginTop="45.0dip">
+        android:layout_marginTop="20.0dip">
 
         <Button
             android:id="@+id/button_confirm"

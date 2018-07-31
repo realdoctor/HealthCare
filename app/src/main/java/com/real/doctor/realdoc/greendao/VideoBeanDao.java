@@ -35,6 +35,7 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
         public final static Property Advice = new Property(5, String.class, "advice", false, "ADVICE");
         public final static Property RecordId = new Property(6, String.class, "recordId", false, "RECORD_ID");
         public final static Property IsPatient = new Property(7, String.class, "isPatient", false, "IS_PATIENT");
+        public final static Property SpareImage = new Property(8, int.class, "spareImage", false, "SPARE_IMAGE");
     }
 
     private Query<VideoBean> saveDocBean_VideoListQuery;
@@ -58,7 +59,8 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
                 "\"FOLDER\" TEXT," + // 4: folder
                 "\"ADVICE\" TEXT," + // 5: advice
                 "\"RECORD_ID\" TEXT," + // 6: recordId
-                "\"IS_PATIENT\" TEXT);"); // 7: isPatient
+                "\"IS_PATIENT\" TEXT," + // 7: isPatient
+                "\"SPARE_IMAGE\" INTEGER NOT NULL );"); // 8: spareImage
     }
 
     /** Drops the underlying database table. */
@@ -110,6 +112,7 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
         if (isPatient != null) {
             stmt.bindString(8, isPatient);
         }
+        stmt.bindLong(9, entity.getSpareImage());
     }
 
     @Override
@@ -155,6 +158,7 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
         if (isPatient != null) {
             stmt.bindString(8, isPatient);
         }
+        stmt.bindLong(9, entity.getSpareImage());
     }
 
     @Override
@@ -172,7 +176,8 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // folder
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // advice
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // recordId
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // isPatient
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // isPatient
+            cursor.getInt(offset + 8) // spareImage
         );
         return entity;
     }
@@ -187,6 +192,7 @@ public class VideoBeanDao extends AbstractDao<VideoBean, String> {
         entity.setAdvice(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setRecordId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setIsPatient(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setSpareImage(cursor.getInt(offset + 8));
      }
     
     @Override
