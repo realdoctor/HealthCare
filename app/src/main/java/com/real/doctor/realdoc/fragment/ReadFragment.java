@@ -284,7 +284,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
             }else
             {
                 Intent intent = new Intent(getContext(), ChatPayActivity.class);
-                intent.putExtra("type", "5");
+                intent.putExtra("payType", "5");
                 startActivity(intent);
             }
         }else{
