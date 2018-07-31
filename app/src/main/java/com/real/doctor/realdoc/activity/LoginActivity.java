@@ -564,12 +564,12 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onError(final int code, final String message) {
                 Log.d(TAG, "login: onError: " + code);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                });
             }
         });
     }
