@@ -112,7 +112,14 @@ public class MultiNewsAdapter extends BaseAdapter{
                     textView.setLayoutParams(layoutParams);
                     holder1.ll_content.addView(textView);
                 }
-                holder1.tv_price.setText("收费金额："+bean.price);
+                if(Double.parseDouble(bean.price)==0.00d){
+                    holder1.tv_price.setVisibility(View.INVISIBLE);
+                    holder1.tv_price.setText("收费金额："+bean.price);
+                }else{
+                    holder1.tv_price.setVisibility(View.VISIBLE);
+                    holder1.tv_price.setText("收费金额："+bean.price);
+                }
+
                 Glide.with(context).load(bean.photoAddress).crossFade().error(R.drawable.timg).into(holder1.new_detail_img);
                 break;
 

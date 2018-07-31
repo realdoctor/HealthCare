@@ -107,6 +107,8 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         } else if (payType.equals("2")) {
             pageTitle.setText("病历咨询支付");
             initGetPay();
+        } else if(payType.equals("5")){
+            pageTitle.setText("资讯支付");
         }
         userId = (String) SPUtils.get(ChatPayActivity.this, Constants.USER_KEY, "");
         api = WXAPIFactory.createWXAPI(this, Constants.WX_APP_ID);
