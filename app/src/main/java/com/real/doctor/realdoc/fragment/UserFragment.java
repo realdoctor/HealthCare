@@ -320,7 +320,7 @@ public class UserFragment extends BaseFragment {
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
                         //跳转到我的预约界面
-                        intent = new Intent(getActivity(), VerifyActivity.class);
+                        intent = new Intent(getActivity(),MyRegistrationActivity.class);
                         startActivity(intent);
                     } else {
                         //跳转到登录页面

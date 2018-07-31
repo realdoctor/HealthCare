@@ -483,19 +483,13 @@ public class HomeFragment extends BaseFragment {
                 case R.id.appoint_icon:
                     isHomeIn = true;
                     if (NetworkUtil.isNetworkAvailable(getActivity())) {
-                        if (EmptyUtils.isNotEmpty(token)) {
-                            if (verifyFlag.equals("1")) {
-                                intent = new Intent(getActivity(), RegistrationsActivity.class);
-                                startActivity(intent);
-                            } else {
-                                //跳转到实名认证页面
-                                intent = new Intent(getActivity(), VerifyActivity.class);
-                                startActivity(intent);
-                            }
-                        } else {
-                            intent = new Intent(getActivity(), LoginActivity.class);
+                        if (verifyFlag.equals("1")) {
+                            intent = new Intent(getActivity(), RegistrationsActivity.class);
                             startActivity(intent);
-                            ToastUtil.showLong(getActivity(), "请登录您的账户!");
+                        } else {
+                            //跳转到实名认证页面
+                            intent = new Intent(getActivity(), VerifyActivity.class);
+                            startActivity(intent);
                         }
                     } else {
                         ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
@@ -522,7 +516,7 @@ public class HomeFragment extends BaseFragment {
                     isHomeIn = true;
                     //intent = new Intent(getActivity(), PatientEduActivity.class);
                     intent = new Intent(getActivity(), PatientEduListActivity.class);
-                    intent.putExtra("id","");
+                    intent.putExtra("id", "");
                     startActivity(intent);
                     break;
                 case R.id.telemedicine:
