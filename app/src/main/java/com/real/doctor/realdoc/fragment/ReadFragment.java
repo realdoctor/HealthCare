@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.ChatPayActivity;
 import com.real.doctor.realdoc.activity.NewDetailActivity;
 import com.real.doctor.realdoc.adapter.MultiNewsAdapter;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
@@ -276,9 +277,16 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
         int Type=parent.getAdapter().getItemViewType(position);
         if(Type==MultiNewsAdapter.TYPE_A) {
             NewModel model = (NewModel) parent.getAdapter().getItem(position);
-            Intent intent = new Intent(getContext(), NewDetailActivity.class);
-            intent.putExtra("newsId", model.newsId);
-            startActivity(intent);
+            if(Double.parseDouble(model.price)==0.00d) {
+                Intent intent = new Intent(getContext(), NewDetailActivity.class);
+                intent.putExtra("newsId", model.newsId);
+                startActivity(intent);
+            }else
+            {
+                Intent intent = new Intent(getContext(), ChatPayActivity.class);
+                intent.putExtra("type", "5");
+                startActivity(intent);
+            }
         }else{
 
         }
