@@ -55,6 +55,7 @@ public class ProgressBarActivity extends BaseActivity {
     private String inquery;
     private String desease;
     private String questionId;
+    private boolean detail;
     private String patientRecordId;
 
     @Override
@@ -90,6 +91,7 @@ public class ProgressBarActivity extends BaseActivity {
             desease = intent.getExtras().getString("desease");
             mList = intent.getParcelableArrayListExtra("mList");
             doctorUserId = intent.getExtras().getString("doctorUserId");
+            detail = getIntent().getBooleanExtra("detail", false);
             questionId = intent.getExtras().getString("questionId");
             patientRecordId = intent.getExtras().getString("patientRecordId");
         }
@@ -115,6 +117,8 @@ public class ProgressBarActivity extends BaseActivity {
                 Intent extras = new Intent(ProgressBarActivity.this, CheckDetailActivity.class);
                 extras.putExtra("path", path);
                 extras.putExtra("questionId", questionId);
+                extras.putExtra("doctorUserId", doctorUserId);
+                extras.putExtra("detail", detail);
                 extras.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
                 extras.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(extras);

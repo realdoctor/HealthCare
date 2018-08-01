@@ -46,6 +46,8 @@ public class CheckDetailActivity extends BaseActivity {
     List<SaveDocBean> mList;
     DocDetailAdapter checkDetailAdapter;
     private String path;
+    private boolean detail;
+    private String doctorUserId;
     private String questionId;
 
     @Override
@@ -74,6 +76,8 @@ public class CheckDetailActivity extends BaseActivity {
         if (intent != null) {
             path = intent.getStringExtra("path");
             questionId = intent.getStringExtra("questionId");
+            doctorUserId = intent.getStringExtra("doctorUserId");
+            detail = getIntent().getBooleanExtra("detail", false);
             mList = intent.getParcelableArrayListExtra("mList");
         }
         //倒序排列
@@ -139,7 +143,10 @@ public class CheckDetailActivity extends BaseActivity {
     private void goBackBtn() {
         //跳转到在线复诊页面
         Intent intent = null;
-        if (EmptyUtils.isEmpty(questionId)) {
+        if (detail) {
+            intent = new Intent(CheckDetailActivity.this, DoctorsDetailActivity.class);
+            intent.putExtra("doctorUserId", doctorUserId);
+        } else if (EmptyUtils.isEmpty(questionId)) {
             intent = new Intent(CheckDetailActivity.this, DoctorsListActivity.class);
         } else {
             intent = new Intent(CheckDetailActivity.this, MyRevisitActivity.class);

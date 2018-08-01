@@ -199,6 +199,7 @@ public class DoctorsDetailActivity extends BaseActivity {
                     intent.putExtra("payType", "2");
                     intent.putExtra("doctorUserId", doctorUserId);
                     intent.putExtra("desease", desease);
+                    intent.putExtra("detail", true);
                     intent.putExtra("patientRecordId", patientRecordId);
                     DoctorsDetailActivity.this.startActivity(intent);
                 } else {

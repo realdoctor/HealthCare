@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -152,8 +153,6 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         right_title.setText("定位中");
         mProgressDialog = DocUtils.getProgressDialog(SearchResultListActivity.this, "正在加载数据....");
         init();
-        initLocation();
-        startLocation();
     }
 
     @Override
@@ -330,6 +329,13 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         });
         expertAdapter = new ExpertAdapter(SearchResultListActivity.this, expertBeans, this);
         expert_list.setAdapter(expertAdapter);
+        ////判断当前是否是6.0版本
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0001);
+        } else {
+            initLocation();
+            startLocation();
+        }
     }
 /**
  * 显示
@@ -508,7 +514,6 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                             e.printStackTrace();
                         }
                     }
-
                 });
     }
 
@@ -606,6 +611,22 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 });
 
 
+    }
+
+    /**
+     * 权限成功回调函数
+     *
+     * @param requestCode
+     */
+    @Override
+    public void permissionSuccess(int requestCode) {
+        super.permissionSuccess(requestCode);
+        switch (requestCode) {
+            case 0x0001:
+                initLocation();
+                startLocation();
+                break;
+        }
     }
 
     @Override

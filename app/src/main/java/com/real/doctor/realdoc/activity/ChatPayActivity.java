@@ -76,6 +76,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     private String doctorUserId;
     private String patientRecordId;
     private String desease;
+    private boolean detail;
     private String userId;
 
     @Override
@@ -101,13 +102,14 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         doctorUserId = getIntent().getStringExtra("doctorUserId");
         desease = getIntent().getStringExtra("desease");
         patientRecordId = getIntent().getStringExtra("patientRecordId");
+        detail = getIntent().getBooleanExtra("detail", false);
         if (payType.equals("1")) {
             pageTitle.setText("聊天咨询支付");
             initGetPay();
         } else if (payType.equals("2")) {
             pageTitle.setText("病历咨询支付");
             initGetPay();
-        } else if(payType.equals("5")){
+        } else if (payType.equals("5")) {
             pageTitle.setText("资讯支付");
         }
         userId = (String) SPUtils.get(ChatPayActivity.this, Constants.USER_KEY, "");
@@ -223,6 +225,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                         Intent intent = new Intent(ChatPayActivity.this, InqueryActivity.class);
                         intent.putExtra("doctorUserId", doctorUserId);
                         intent.putExtra("desease", desease);
+                        intent.putExtra("detail", detail);
                         intent.putExtra("patientRecordId", patientRecordId);
                         startActivity(intent);
                     }

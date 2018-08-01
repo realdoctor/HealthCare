@@ -51,6 +51,7 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     private String inquery;
     private String doctorUserId;
     private String desease;
+    private boolean detail;
     private String questionId;
     private String patientRecordId;
 
@@ -89,6 +90,7 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
         intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
         intent.putExtra("doctorUserId", doctorUserId);
         intent.putExtra("questionId", questionId);
+        intent.putExtra("detail", detail);
         intent.putExtra("patientRecordId", patientRecordId);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -127,6 +129,7 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
             doctorUserId = intent.getExtras().getString("doctorUserId");
             desease = intent.getExtras().getString("desease");
             questionId = intent.getExtras().getString("questionId");
+            detail = getIntent().getBooleanExtra("detail", false);
             patientRecordId = intent.getExtras().getString("patientRecordId");
         }
         mCheckDocAdapter = new CheckDocAdapter(this);

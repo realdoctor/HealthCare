@@ -53,6 +53,7 @@ public class InqueryActivity extends BaseActivity {
     private String patientRecordId;
     private String desease;
     private String questionId;
+    private boolean detail;
     private CommonDialog dialog;
     private String inqueryEditContent;
 
@@ -79,6 +80,7 @@ public class InqueryActivity extends BaseActivity {
         doctorUserId = getIntent().getStringExtra("doctorUserId");
         desease = getIntent().getStringExtra("desease");
         questionId = getIntent().getStringExtra("questionId");
+        detail = getIntent().getBooleanExtra("detail", false);
         patientRecordId = getIntent().getStringExtra("patientRecordId");
     }
 
@@ -121,6 +123,7 @@ public class InqueryActivity extends BaseActivity {
                                         intent.putExtra("doctorUserId", doctorUserId);
                                         intent.putExtra("desease", desease);
                                         intent.putExtra("questionId", questionId);
+                                        intent.putExtra("detail", detail);
                                         intent.putExtra("patientRecordId", patientRecordId);
                                         startActivity(intent);
                                     }
@@ -176,7 +179,13 @@ public class InqueryActivity extends BaseActivity {
                                 ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
                             }
                             dialog.dismiss();
-                            Intent intent = new Intent(InqueryActivity.this, DoctorsListActivity.class);
+                            Intent intent;
+                            if (detail) {
+                                intent = new Intent(InqueryActivity.this, DoctorsDetailActivity.class);
+                                intent.putExtra("doctorUserId", doctorUserId);
+                            } else {
+                                intent = new Intent(InqueryActivity.this, DoctorsListActivity.class);
+                            }
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
