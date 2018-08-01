@@ -7,11 +7,66 @@
 
     <include layout="@layout/title_bar" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="朱家斌,上海市中医文献馆中医门诊部副主任医师，副教授，1999年毕业于上海中医药大学，获医学博士学位，从事中医、中西医结合产临床、教学与科研工作十余年，现任上海中医药大学临床基础学科副教授。学术上师承上海市名中医严世芸教授、郑平东教授。主持多项局级课题，从事上海市科委课题“肾衰91冲剂治疗慢性肾衰的临床与实验研究”，获1996年度上海市科技进步二等奖，撰写论文获上海市首届中医、中西医结合青年学术会议二等奖。编写《朱家斌谈心脏病》等专著6部，发表学术论文10余篇。"
-        android:textColor="@color/text_black_color"
-        android:textSize="16sp" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/doc_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:textColor="@color/text_black_color"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/chat_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="43.0dip"
+                    android:layout_marginLeft="18.0dip"
+                    android:layout_marginRight="18.0dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:text="通讯复诊"
+                    android:textColor="@android:color/white"
+                    android:textSize="15.0sp" />
+
+                <Button
+                    android:id="@+id/record_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="43.0dip"
+                    android:layout_marginLeft="18.0dip"
+                    android:layout_marginRight="18.0dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:text="图文复诊"
+                    android:textColor="@android:color/white"
+                    android:textSize="15.0sp" />
+
+                <Button
+                    android:id="@+id/registrations_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="43.0dip"
+                    android:layout_marginLeft="18.0dip"
+                    android:layout_marginRight="18.0dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:text="@string/function_two_string"
+                    android:textColor="@android:color/white"
+                    android:textSize="15.0sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

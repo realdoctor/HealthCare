@@ -38,8 +38,9 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         public final static Property PatientId = new Property(11, String.class, "patientId", false, "PATIENT_ID");
         public final static Property VisitDeptName = new Property(12, String.class, "visitDeptName", false, "VISIT_DEPT_NAME");
         public final static Property VisitWay = new Property(13, String.class, "visitWay", false, "VISIT_WAY");
-        public final static Property IsSelect = new Property(14, boolean.class, "isSelect", false, "IS_SELECT");
-        public final static Property IsPatient = new Property(15, String.class, "isPatient", false, "IS_PATIENT");
+        public final static Property PatientRecordId = new Property(14, String.class, "patientRecordId", false, "PATIENT_RECORD_ID");
+        public final static Property IsSelect = new Property(15, boolean.class, "isSelect", false, "IS_SELECT");
+        public final static Property IsPatient = new Property(16, String.class, "isPatient", false, "IS_PATIENT");
     }
 
     private DaoSession daoSession;
@@ -72,8 +73,9 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
                 "\"PATIENT_ID\" TEXT," + // 11: patientId
                 "\"VISIT_DEPT_NAME\" TEXT," + // 12: visitDeptName
                 "\"VISIT_WAY\" TEXT," + // 13: visitWay
-                "\"IS_SELECT\" INTEGER NOT NULL ," + // 14: isSelect
-                "\"IS_PATIENT\" TEXT);"); // 15: isPatient
+                "\"PATIENT_RECORD_ID\" TEXT," + // 14: patientRecordId
+                "\"IS_SELECT\" INTEGER NOT NULL ," + // 15: isSelect
+                "\"IS_PATIENT\" TEXT);"); // 16: isPatient
     }
 
     /** Drops the underlying database table. */
@@ -155,11 +157,16 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         if (visitWay != null) {
             stmt.bindString(14, visitWay);
         }
-        stmt.bindLong(15, entity.getIsSelect() ? 1L: 0L);
+ 
+        String patientRecordId = entity.getPatientRecordId();
+        if (patientRecordId != null) {
+            stmt.bindString(15, patientRecordId);
+        }
+        stmt.bindLong(16, entity.getIsSelect() ? 1L: 0L);
  
         String isPatient = entity.getIsPatient();
         if (isPatient != null) {
-            stmt.bindString(16, isPatient);
+            stmt.bindString(17, isPatient);
         }
     }
 
@@ -236,11 +243,16 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         if (visitWay != null) {
             stmt.bindString(14, visitWay);
         }
-        stmt.bindLong(15, entity.getIsSelect() ? 1L: 0L);
+ 
+        String patientRecordId = entity.getPatientRecordId();
+        if (patientRecordId != null) {
+            stmt.bindString(15, patientRecordId);
+        }
+        stmt.bindLong(16, entity.getIsSelect() ? 1L: 0L);
  
         String isPatient = entity.getIsPatient();
         if (isPatient != null) {
-            stmt.bindString(16, isPatient);
+            stmt.bindString(17, isPatient);
         }
     }
 
@@ -272,8 +284,9 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // patientId
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // visitDeptName
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // visitWay
-            cursor.getShort(offset + 14) != 0, // isSelect
-            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15) // isPatient
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // patientRecordId
+            cursor.getShort(offset + 15) != 0, // isSelect
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // isPatient
         );
         return entity;
     }
@@ -294,8 +307,9 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         entity.setPatientId(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setVisitDeptName(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
         entity.setVisitWay(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setIsSelect(cursor.getShort(offset + 14) != 0);
-        entity.setIsPatient(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setPatientRecordId(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setIsSelect(cursor.getShort(offset + 15) != 0);
+        entity.setIsPatient(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
      }
     
     @Override

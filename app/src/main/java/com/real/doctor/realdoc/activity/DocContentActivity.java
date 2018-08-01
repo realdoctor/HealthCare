@@ -383,9 +383,11 @@ public class DocContentActivity extends BaseActivity {
                 if (key) {
                     String doctorUserId = saveDocBean.getDoctorUserId();
                     String desease = saveDocBean.getIll();
+                    String patientRecordId = saveDocBean.getPatientRecordId();
                     if (EmptyUtils.isNotEmpty(doctorUserId) && EmptyUtils.isNotEmpty(desease)) {
                         Intent intent = new Intent(DocContentActivity.this, DoctorsDetailActivity.class);
                         intent.putExtra("doctorUserId", doctorUserId);
+                        intent.putExtra("patientRecordId", patientRecordId);
                         intent.putExtra("desease", desease);
                         startActivity(intent);
                     } else {

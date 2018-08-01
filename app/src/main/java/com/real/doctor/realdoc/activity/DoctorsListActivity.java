@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -63,6 +64,7 @@ public class DoctorsListActivity extends BaseActivity {
     DoctorsAdapter doctorsAdapter;
     List<DoctorBean> doctors;
     private int mPageNum = 1;
+    private Dialog mProgressDialog;
 
     @Override
     public int getLayoutId() {
@@ -81,6 +83,7 @@ public class DoctorsListActivity extends BaseActivity {
         }
         pageTitle.setText("在线复诊");
         rightIcon.setVisibility(View.GONE);
+        mProgressDialog = DocUtils.getProgressDialog(DoctorsListActivity.this, "正在加载数据....");
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            rightIcon.setBackground(getResources().getDrawable(R.mipmap.map_icon, null));
 //        }
@@ -103,6 +106,7 @@ public class DoctorsListActivity extends BaseActivity {
     }
 
     private void getDoctorsData(String pageNum) {
+        mProgressDialog.show();
         Map<String, String> map = new HashMap<String, String>();
         String mobile = (String) SPUtils.get(this, "mobile", "");
         map.put("mobilePhone", mobile);
@@ -125,6 +129,7 @@ public class DoctorsListActivity extends BaseActivity {
                             refreshLayout.finishLoadmore();
                         }
                         ToastUtil.showLong(DoctorsListActivity.this, "获取医生列表失败!");
+                        mProgressDialog.dismiss();
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -177,6 +182,7 @@ public class DoctorsListActivity extends BaseActivity {
                                 } else {
                                     ToastUtil.showLong(DoctorsListActivity.this, msg);
                                 }
+                                mProgressDialog.dismiss();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -196,6 +202,7 @@ public class DoctorsListActivity extends BaseActivity {
                 Intent intent = new Intent(DoctorsListActivity.this, DoctorsDetailActivity.class);
                 intent.putExtra("doctorUserId", bean.getId());
                 intent.putExtra("desease", bean.getDiagName());
+                intent.putExtra("patientRecordId", bean.getPatientRecordId());
                 startActivity(intent);
             }
         });

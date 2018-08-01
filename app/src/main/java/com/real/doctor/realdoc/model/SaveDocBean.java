@@ -79,6 +79,8 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     private String visitDeptName;
     //就诊通道(1、门诊，2、住院)
     private String visitWay;
+    //记录上传的是那份病历(后台记录用的)
+    private String patientRecordId;
     //是否选中病历
     private boolean isSelect = false;
     //如果该字段是空,则该病历是本地的病历，否则如果是"1",就是患者传给医生的病历
@@ -96,12 +98,12 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     @Generated(hash = 225895165)
     private transient SaveDocBeanDao myDao;
 
-    @Generated(hash = 1465066037)
+    @Generated(hash = 1379033457)
     public SaveDocBean(String id, String ill, String hospital, String doctor,
                        String doctorUserId, String time, String folder, String imgs,
                        String advice, String orgCode, String patientDiagId, String patientId,
-                       String visitDeptName, String visitWay, boolean isSelect,
-                       String isPatient) {
+                       String visitDeptName, String visitWay, String patientRecordId,
+                       boolean isSelect, String isPatient) {
         this.id = id;
         this.ill = ill;
         this.hospital = hospital;
@@ -116,6 +118,7 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         this.patientId = patientId;
         this.visitDeptName = visitDeptName;
         this.visitWay = visitWay;
+        this.patientRecordId = patientRecordId;
         this.isSelect = isSelect;
         this.isPatient = isPatient;
     }
@@ -142,6 +145,7 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         patientId = in.readString();
         visitDeptName = in.readString();
         visitWay = in.readString();
+        patientRecordId = in.readString();
         isSelect = in.readByte() != 0;
         isPatient = in.readString();
         type = in.readInt();
@@ -271,6 +275,14 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         this.visitWay = visitWay;
     }
 
+    public String getPatientRecordId() {
+        return this.patientRecordId;
+    }
+
+    public void setPatientRecordId(String patientRecordId) {
+        this.patientRecordId = patientRecordId;
+    }
+
     public boolean getIsSelect() {
         return this.isSelect;
     }
@@ -285,14 +297,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
 
     public void setIsPatient(String isPatient) {
         this.isPatient = isPatient;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     /**
@@ -434,6 +438,19 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     }
 
     @Override
+    public int getItemType() {
+        return type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -457,13 +474,9 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         dest.writeString(patientId);
         dest.writeString(visitDeptName);
         dest.writeString(visitWay);
+        dest.writeString(patientRecordId);
         dest.writeByte((byte) (isSelect ? 1 : 0));
         dest.writeString(isPatient);
         dest.writeInt(type);
-    }
-
-    @Override
-    public int getItemType() {
-        return type;
     }
 }

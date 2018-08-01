@@ -274,6 +274,10 @@ public class RealDocApplication extends MultiDexApplication {
                                                         String visitWay = jsonObj.getString("visitWay");
                                                         bean.setVisitWay(visitWay);
                                                     }
+                                                    if (DocUtils.hasValue(jsonObj, "patientRecordId")) {
+                                                        String patientRecordId = jsonObj.getString("patientRecordId");
+                                                        bean.setPatientRecordId(patientRecordId);
+                                                    }
                                                     //插入到数据库中
                                                     if (!time.contains(bean.getTime())) {
                                                         bean.setId(String.valueOf(Math.random()));

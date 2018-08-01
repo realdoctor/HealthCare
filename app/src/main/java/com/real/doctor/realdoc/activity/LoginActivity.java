@@ -104,7 +104,7 @@ public class LoginActivity extends BaseActivity {
     EditText phoneNumber;
     @BindView(R.id.userpassword)
     EditText userpassword;
-//    @BindView(R.id.login_dismiss)
+    //    @BindView(R.id.login_dismiss)
 //    ImageView loginDismiss;
     @BindView(R.id.login_weixin)
     ImageView loginWeixin;
@@ -955,6 +955,10 @@ public class LoginActivity extends BaseActivity {
                                                     if (DocUtils.hasValue(jsonObj, "visitWay")) {
                                                         String visitWay = jsonObj.getString("visitWay");
                                                         bean.setVisitWay(visitWay);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "patientRecordId")) {
+                                                        String patientRecordId = jsonObj.getString("patientRecordId");
+                                                        bean.setPatientRecordId(patientRecordId);
                                                     }
                                                     //插入到数据库中
                                                     if (!time.contains(bean.getTime())) {

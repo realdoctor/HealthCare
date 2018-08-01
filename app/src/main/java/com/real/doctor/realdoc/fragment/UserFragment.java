@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,6 +44,7 @@ import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
 
@@ -77,6 +81,8 @@ public class UserFragment extends BaseFragment {
     RelativeLayout titleBar;
     @BindView(R.id.my_login)
     LinearLayout myLogin;
+    @BindView(R.id.my_login_line)
+    View myLoginLine;
     @BindView(R.id.my_appointment)
     LinearLayout myAppointment;
     @BindView(R.id.packag_history)
@@ -107,7 +113,6 @@ public class UserFragment extends BaseFragment {
     LinearLayout recordUpload;
     @BindView(R.id.record_upload_line)
     View recordUploadLine;
-
     public static String VERIFY_TEXT = "android.intent.action.record.verify.text";
     private String originalImageUrl = "";
     private boolean isUserIn = false;
@@ -121,6 +126,7 @@ public class UserFragment extends BaseFragment {
         return R.layout.frag_user_layout;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void initView(View view) {
         unbinder = ButterKnife.bind(this, view);
@@ -141,13 +147,18 @@ public class UserFragment extends BaseFragment {
             downRecordLine.setVisibility(View.GONE);
         }
         if (EmptyUtils.isNotEmpty(token)) {
+//            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)   myLoginLine.getLayoutParams();
+//            lp.topMargin = SizeUtils.px2dp(getActivity(), 20);
+//            myLoginLine.setLayoutParams(lp);
             recordUpload.setVisibility(View.VISIBLE);
             recordUploadLine.setVisibility(View.VISIBLE);
             myLogin.setVisibility(View.GONE);
+            myLoginLine.setVisibility(View.GONE);
         } else {
             recordUpload.setVisibility(View.GONE);
             recordUploadLine.setVisibility(View.GONE);
             myLogin.setVisibility(View.VISIBLE);
+            myLoginLine.setVisibility(View.VISIBLE);
         }
         if (EmptyUtils.isNotEmpty(roleId) && roleId.equals("0")) {
             inquiryPay.setVisibility(View.GONE);

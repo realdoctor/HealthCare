@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <com.real.doctor.realdoc.view.HorizontalListView
+        android:id="@+id/hlv_date"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="10dp" />
+
+    <ListView
+        android:id="@+id/lv_expert"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
