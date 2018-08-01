@@ -491,6 +491,9 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                     baseModel = localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<PageModel<HospitalBean>>() {
                                             }.getType());
+                                    if (baseModel.list.size() == 0) {
+                                        ToastUtil.showLong(SearchResultListActivity.this, "查询结果为空!");
+                                    }
                                     for (HospitalBean bean : baseModel.list) {
                                         bean.distance = DistanceUtil.getDistance(SearchResultListActivity.latitude, SearchResultListActivity.longitude, Double.parseDouble(bean.lat), Double.parseDouble(bean.lng));
                                         hospitalBeans.add(bean);

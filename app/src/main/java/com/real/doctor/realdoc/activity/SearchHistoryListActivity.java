@@ -197,6 +197,10 @@ public class SearchHistoryListActivity extends BaseActivity {
     }
 
     public void setBackValue(String value) {
+        if (EmptyUtils.isEmpty(value)) {
+            ToastUtil.showLong(SearchHistoryListActivity.this, "搜索关键字不能为空!");
+            return;
+        }
         if (requestCode == RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE) {
             Intent intent = new Intent(SearchHistoryListActivity.this, SearchResultListActivity.class);
             intent.putExtra("searchKey", value);
@@ -220,6 +224,10 @@ public class SearchHistoryListActivity extends BaseActivity {
      * 插入数据
      */
     private void insertData(String tempName) {
+        if (EmptyUtils.isEmpty(tempName)) {
+            ToastUtil.showLong(SearchHistoryListActivity.this, "搜索关键字不能为空!");
+            return;
+        }
         db = helper.getWritableDatabase();
         db.execSQL("insert into records(name) values('" + tempName + "')");
         db.close();
@@ -264,10 +272,6 @@ public class SearchHistoryListActivity extends BaseActivity {
 
     public void getQuery(final String queryStr) {
         HashMap<String, String> param = new HashMap<String, String>();
-        if (EmptyUtils.isEmpty(queryStr)) {
-            ToastUtil.showLong(this, "搜索关键字不能为空!");
-            return;
-        }
         param.put("query", queryStr);
         HttpRequestClient client = HttpRequestClient.getInstance(SearchHistoryListActivity.this, HttpNetUtil.SEARCH_URL);
         client.createBaseApi().get("goods/autoComplete/"
