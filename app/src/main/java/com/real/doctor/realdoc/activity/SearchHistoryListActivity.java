@@ -38,8 +38,10 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.RecordSQLiteOpenHelper;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.MyListView;
 
 import org.json.JSONArray;
@@ -206,7 +208,7 @@ public class SearchHistoryListActivity extends BaseActivity {
             resultIntent.putExtra("categoryId", categoryId);
             startActivity(resultIntent);
             finish();
-        }else if(requestCode== ArticleShowFragment.INFO_SEARCH){
+        } else if (requestCode == ArticleShowFragment.INFO_SEARCH) {
             Intent resultIntent = new Intent(SearchHistoryListActivity.this, SearchInfoResultActivity.class);
             resultIntent.putExtra("searchKey", value);
             startActivity(resultIntent);
@@ -262,6 +264,10 @@ public class SearchHistoryListActivity extends BaseActivity {
 
     public void getQuery(final String queryStr) {
         HashMap<String, String> param = new HashMap<String, String>();
+        if (EmptyUtils.isEmpty(queryStr)) {
+            ToastUtil.showLong(this, "搜索关键字不能为空!");
+            return;
+        }
         param.put("query", queryStr);
         HttpRequestClient client = HttpRequestClient.getInstance(SearchHistoryListActivity.this, HttpNetUtil.SEARCH_URL);
         client.createBaseApi().get("goods/autoComplete/"
