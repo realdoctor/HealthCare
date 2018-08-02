@@ -24,6 +24,7 @@ import com.real.doctor.realdoc.greendao.table.DrugManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.DrugBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.receiver.RegisterReceiver;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.service.PatientListService;
@@ -181,7 +182,7 @@ public class RealDocApplication extends MultiDexApplication {
 //        map.put("mobilePhone", "13777850036");
         map.put("mobilePhone", mobile);
         map.put("clientNum", String.valueOf(count));
-        HttpRequestClient.getInstance(getContext()).createBaseApi().get("patient"
+        HttpRequestClient.getInstance(getContext()).createBaseApi().get("patient/list"
                 , map, new BaseObserver<ResponseBody>(getContext()) {
                     protected Disposable disposable;
 

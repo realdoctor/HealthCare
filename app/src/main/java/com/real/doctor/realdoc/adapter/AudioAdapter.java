@@ -30,6 +30,7 @@ public class AudioAdapter extends BaseQuickAdapter<RecordBean, BaseViewHolder> {
         String time = str.substring(0, str.indexOf("."));
         String advice = item.getAdvice();
         TextView textView = viewHolder.getView(R.id.audio_advice);
+        TextView recipel = viewHolder.getView(R.id.recipel);
         ImageView imageView = viewHolder.getView(R.id.recipel_icon);
         if (EmptyUtils.isNotEmpty(advice)) {
             viewHolder.setText(R.id.audio_advice, item.getAdvice());
@@ -49,15 +50,19 @@ public class AudioAdapter extends BaseQuickAdapter<RecordBean, BaseViewHolder> {
             String labelPath = "android.resource://" + mContext.getApplicationContext().getPackageName() + "/";
             if (spare == 1) {
                 //处方标签
+                recipel.setText("处方标签");
                 Glide.with(mContext).load(labelPath + R.mipmap.add).crossFade().into(imageView);
             } else if (spare == 2) {
                 //医嘱标签
+                recipel.setText("医嘱标签");
                 Glide.with(mContext).load(labelPath + R.mipmap.bg_healthy).crossFade().into(imageView);
             } else if (spare == 3) {
                 //体征标签
+                recipel.setText("体征标签");
                 Glide.with(mContext).load(labelPath + R.mipmap.avatar_bg).crossFade().into(imageView);
             } else if (spare == 4) {
                 //报告检查标签
+                recipel.setText("报告检查标签");
                 Glide.with(mContext).load(labelPath + R.mipmap.arrow_white).crossFade().into(imageView);
             }
         }

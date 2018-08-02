@@ -197,20 +197,14 @@ public class RevisitingFragment extends BaseFragment {
         docPayListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                String answer = ((DoctorBean) adapter.getItem(position)).getAnswer();
-                if (EmptyUtils.isEmpty(answer)) {
-                    ToastUtil.showLong(getActivity(), "医生还未回答您咨询的问题,请耐心等待!");
-                    return;
-                } else {
-                    //点击item
-                    Intent intent = new Intent(getActivity(), AnswerActivity.class);
-                    intent.putExtra("inquery", doctors.get(position).getInquery());
-                    intent.putExtra("answer", doctors.get(position).getAnswer());
-                    intent.putExtra("doctor", doctors.get(position).getName());
-                    intent.putExtra("questionId", doctors.get(position).getQuestionId());
-                    intent.putExtra("retryNum", doctors.get(position).getRetryNum());
-                    startActivity(intent);
-                }
+                //点击item
+                Intent intent = new Intent(getActivity(), AnswerActivity.class);
+                intent.putExtra("inquery", doctors.get(position).getInquery());
+                intent.putExtra("answer", doctors.get(position).getAnswer());
+                intent.putExtra("doctor", doctors.get(position).getName());
+                intent.putExtra("questionId", doctors.get(position).getQuestionId());
+                intent.putExtra("retryNum", doctors.get(position).getRetryNum());
+                startActivity(intent);
             }
         });
     }

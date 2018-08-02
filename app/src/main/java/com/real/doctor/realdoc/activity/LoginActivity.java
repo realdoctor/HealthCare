@@ -863,7 +863,7 @@ public class LoginActivity extends BaseActivity {
 //        map.put("mobilePhone", "13777850036");
         map.put("mobilePhone", mobile);
         map.put("clientNum", String.valueOf(count));
-        HttpRequestClient.getInstance(LoginActivity.this).createBaseApi().get("patient"
+        HttpRequestClient.getInstance(LoginActivity.this).createBaseApi().get("patient/list"
                 , map, new BaseObserver<ResponseBody>(LoginActivity.this) {
                     protected Disposable disposable;
 

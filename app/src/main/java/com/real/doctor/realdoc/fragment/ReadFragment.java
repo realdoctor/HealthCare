@@ -189,7 +189,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
         params.put("userId", userId);
-        HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews"
+        HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews/list"
                 , params, new BaseObserver<ResponseBody>(getContext()) {
                     protected Disposable disposable;
 

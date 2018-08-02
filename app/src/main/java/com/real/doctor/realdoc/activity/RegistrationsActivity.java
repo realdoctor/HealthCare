@@ -411,7 +411,7 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
         params.put("sortstr", sortstr);
         params.put("cityName", cityName);
         params.put("searchstr", searchstr);
-        HttpRequestClient.getInstance(RegistrationsActivity.this).createBaseApi().get("guahao/hospital"
+        HttpRequestClient.getInstance(RegistrationsActivity.this).createBaseApi().get("guahao/hospital/list"
                 , params, new BaseObserver<ResponseBody>(RegistrationsActivity.this) {
                     protected Disposable disposable;
 

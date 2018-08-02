@@ -53,6 +53,7 @@ import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.video.Utils;
 
 import java.io.BufferedOutputStream;
@@ -94,7 +95,7 @@ public class RecorderVideoActivity extends Activity implements
         setContentView(R.layout.em_recorder_activity);
         PackageManager p = getPackageManager();
         boolean permission = (PackageManager.PERMISSION_GRANTED ==
-                p.checkPermission("android.permission.RECORD_AUDIO", "com.real.doctor.realdoc") && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.CAMERA", "com.real.doctor.realdoc"));
+                p.checkPermission("android.permission.RECORD_AUDIO", DocUtils.getPackageName(RecorderVideoActivity.this)) && PackageManager.PERMISSION_GRANTED == p.checkPermission("android.permission.CAMERA", "com.real.doctor.realdoc"));
         if (!permission) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(RecorderVideoActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0);

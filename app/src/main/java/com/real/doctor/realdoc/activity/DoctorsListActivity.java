@@ -112,7 +112,7 @@ public class DoctorsListActivity extends BaseActivity {
         map.put("mobilePhone", mobile);
         map.put("pageNum", pageNum);
         map.put("pageSize", "10");
-        HttpRequestClient.getInstance(DoctorsListActivity.this).createBaseApi().get("patient/revisit"
+        HttpRequestClient.getInstance(DoctorsListActivity.this).createBaseApi().get("patient/revisit/list"
                 , map, new BaseObserver<ResponseBody>(DoctorsListActivity.this) {
                     protected Disposable disposable;
 

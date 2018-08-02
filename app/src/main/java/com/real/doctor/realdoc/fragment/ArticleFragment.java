@@ -93,7 +93,7 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
-        HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews"
+        HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews/list"
                 , params, new BaseObserver<ResponseBody>(getContext()) {
                     protected Disposable disposable;
 

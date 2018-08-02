@@ -3,6 +3,8 @@ apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
     compileSdkVersion 26
+    buildToolsVersion '27.0.3'
+
     defaultConfig {
         applicationId "com.real.doctor.realdoc"
         minSdkVersion 15
@@ -40,7 +42,6 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    buildToolsVersion '27.0.3'
 }
 
 dependencies {

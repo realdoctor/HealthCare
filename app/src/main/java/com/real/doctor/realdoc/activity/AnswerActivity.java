@@ -90,7 +90,7 @@ public class AnswerActivity extends BaseActivity {
         inquery.setText(inqueryText);
         answerInfo.setText("医生" + doctorText + "的解答:");
         if (answerText.equals("")) {
-            answer.setText("该问题医生还未解答!");
+            answer.setText("医生还未回答您咨询的问题,请耐心等待!");
         } else {
             answer.setText(answerText);
         }

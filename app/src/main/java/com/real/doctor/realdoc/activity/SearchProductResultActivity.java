@@ -255,7 +255,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
         }
         HttpRequestClient client = HttpRequestClient.getInstance(SearchProductResultActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
-        client.createBaseApi().json("cart/addCartItem/"
+        client.createBaseApi().json("goods/cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(SearchProductResultActivity.this) {
                     protected Disposable disposable;
 

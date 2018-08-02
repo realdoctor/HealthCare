@@ -18,14 +18,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/recipel_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:clickable="false"
-                android:scaleType="fitXY"
-                android:src="@mipmap/delete_icon" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:id="@+id/recipel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    tools:text="体征标签" />
+
+                <ImageView
+                    android:id="@+id/recipel_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_toRightOf="@id/recipel"
+                    android:clickable="false"
+                    android:scaleType="fitXY" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/name"

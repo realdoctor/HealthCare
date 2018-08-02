@@ -176,7 +176,7 @@ public class ProductShowActivity extends BaseActivity {
         }
         HttpRequestClient client = HttpRequestClient.getInstance(ProductShowActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
-        client.createBaseApi().json("cart/addCartItem/"
+        client.createBaseApi().json("goods/cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ProductShowActivity.this) {
                     protected Disposable disposable;
 
@@ -245,7 +245,7 @@ public class ProductShowActivity extends BaseActivity {
         }
         HttpRequestClient client = HttpRequestClient.getInstance(ProductShowActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
-        client.createBaseApi().json("cart/addCartItem/"
+        client.createBaseApi().json("goods/cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ProductShowActivity.this) {
                     protected Disposable disposable;
 

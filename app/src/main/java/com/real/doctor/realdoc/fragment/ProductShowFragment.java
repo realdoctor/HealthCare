@@ -151,7 +151,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
         param.put("pageNum", pageNum);
         param.put("pageSize", pageSize);
         param.put("searchstr", searchKey);
-        HttpRequestClient.getInstance(getContext()).createBaseApi().get(" goods/"
+        HttpRequestClient.getInstance(getContext()).createBaseApi().get(" goods/list/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
                     protected Disposable disposable;
 
@@ -220,7 +220,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
         param.put("pageNum", pageNum);
         param.put("pageSize", pageSize);
         param.put("searchstr", searchKey);
-        HttpRequestClient.getInstance(getContext()).createBaseApi().get("goods/"
+        HttpRequestClient.getInstance(getContext()).createBaseApi().get("goods/list/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
                     protected Disposable disposable;
 
@@ -374,7 +374,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
         }
         HttpRequestClient client = HttpRequestClient.getInstance(getContext(), HttpNetUtil.BASE_URL, header);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
-        client.createBaseApi().json("cart/addCartItem/"
+        client.createBaseApi().json("goods/cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(getContext()) {
                     protected Disposable disposable;
 

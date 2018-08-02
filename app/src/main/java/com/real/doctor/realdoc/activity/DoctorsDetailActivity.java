@@ -92,7 +92,7 @@ public class DoctorsDetailActivity extends BaseActivity {
         mProgressDialog.show();
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("userId", doctorUserId);
-        HttpRequestClient.getInstance(DoctorsDetailActivity.this).createBaseApi().get("user/doctor/getDoctorInfo"
+        HttpRequestClient.getInstance(DoctorsDetailActivity.this).createBaseApi().get("doctor/getDoctorInfo"
                 , param, new BaseObserver<ResponseBody>(DoctorsDetailActivity.this) {
                     protected Disposable disposable;
 

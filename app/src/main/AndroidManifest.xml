@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <!--视频播放-->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -197,13 +196,10 @@
             android:name=".activity.SearchInfoResultActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".activity.MyFollowNewsActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ProgressBarActivity"
             android:hardwareAccelerated="false"
@@ -233,7 +229,6 @@
             android:name=".activity.InfoDetailActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ShopCartActivity"
             android:hardwareAccelerated="false"
@@ -242,7 +237,6 @@
             android:name=".activity.MyFollowDoctorsActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ProductShowActivity"
             android:hardwareAccelerated="false"

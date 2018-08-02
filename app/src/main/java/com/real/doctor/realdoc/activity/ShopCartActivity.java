@@ -279,7 +279,7 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-        HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().json("cart/deleteCartItem/"
+        HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().json("goods/cart/deleteCartItem/"
                 , body, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
                     protected Disposable disposable;
 
@@ -461,7 +461,7 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
         }
         HttpRequestClient client = HttpRequestClient.getInstance(ShopCartActivity.this, HttpNetUtil.BASE_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
-        client.createBaseApi().json("cart/addCartItem/"
+        client.createBaseApi().json("goods/cart/addCartItem/"
                 , body, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
                     protected Disposable disposable;
 
