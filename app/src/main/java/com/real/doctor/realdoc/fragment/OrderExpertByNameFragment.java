@@ -12,7 +12,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.DoctorsListActivity;
+import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.ProductShowActivity;
+import com.real.doctor.realdoc.activity.VerifyActivity;
 import com.real.doctor.realdoc.adapter.ExpertAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.model.ExpertBean;
@@ -23,6 +26,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 
@@ -52,7 +56,7 @@ public class OrderExpertByNameFragment extends BaseFragment implements AdapterVi
     private Unbinder unbinder;
     ArrayList<ExpertBean> arrayList = new ArrayList<ExpertBean>();
     ExpertAdapter expertAdapter;
-    public String userId;
+    public String userId,token;
 
     public static OrderExpertByNameFragment newInstance(String hospitalId, String deptName) {
         OrderExpertByNameFragment fragment = new OrderExpertByNameFragment();
@@ -76,6 +80,7 @@ public class OrderExpertByNameFragment extends BaseFragment implements AdapterVi
     @Override
     public void doBusiness(final Context mContext) {
         if (getArguments() != null) {
+            token = (String) SPUtils.get(getActivity(), "token", "");
             userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
             String hospitalId = (String) getArguments().get("hospitalId");
             String deptName = (String) getArguments().get("deptName");
@@ -172,7 +177,18 @@ public class OrderExpertByNameFragment extends BaseFragment implements AdapterVi
     @Override
     public void clickListener(View v) {
         ExpertBean bean = (ExpertBean) v.getTag();
-        orderExpert(bean);
+        if (NetworkUtil.isNetworkAvailable(getActivity())) {
+            if (EmptyUtils.isNotEmpty(token)) {
+                orderExpert(bean);
+            } else {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                ToastUtil.showLong(getActivity(), "请登录您的账户!");
+            }
+        } else {
+            ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
+            NetworkUtil.goToWifiSetting(getActivity());
+        }
     }
 
     public void orderExpert(ExpertBean bean) {

@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.ProductShowActivity;
 import com.real.doctor.realdoc.adapter.ExpertAdapter;
 import com.real.doctor.realdoc.adapter.ExpertByDateAdapter;
@@ -29,6 +30,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.HorizontalListView;
@@ -66,7 +68,7 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
     OrderDateAdapter orderDateAdapter;
     String hospitalId;
     String deptName;
-    String userId;
+    String userId,token;
     private Unbinder unbinder;
 
     public static OrderExpertByDateFragment newInstance(String hospitalId, String deptName) {
@@ -91,6 +93,7 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
     @Override
     public void doBusiness(Context mContext) {
         if (getArguments() != null) {
+            token = (String) SPUtils.get(getActivity(), "token", "");
             userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
             hospitalId = (String) getArguments().get("hospitalId");
             deptName = (String) getArguments().get("deptName");
@@ -268,7 +271,18 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
     @Override
     public void clickListener(View v) {
         ExpertBean bean = (ExpertBean) v.getTag();
-        orderExpert(bean);
+        if (NetworkUtil.isNetworkAvailable(getActivity())) {
+            if (EmptyUtils.isNotEmpty(token)) {
+                orderExpert(bean);
+            } else {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                ToastUtil.showLong(getActivity(), "请登录您的账户!");
+            }
+        } else {
+            ToastUtil.showLong(getActivity(), "您还未连接网络,请连接互联网!");
+            NetworkUtil.goToWifiSetting(getActivity());
+        }
     }
 
     public void orderExpert(ExpertBean bean) {
