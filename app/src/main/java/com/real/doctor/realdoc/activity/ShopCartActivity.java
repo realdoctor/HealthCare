@@ -519,7 +519,7 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
     private void getCartData() {
         HashMap<String, String> param = new HashMap<>();
         param.put("userId", userId);
-        HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().get("cart/"
+        HttpRequestClient.getInstance(ShopCartActivity.this).createBaseApi().get("goods/cart/list/"
                 , param, new BaseObserver<ResponseBody>(ShopCartActivity.this) {
                     protected Disposable disposable;
 
