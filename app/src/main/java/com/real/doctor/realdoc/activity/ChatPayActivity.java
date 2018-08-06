@@ -69,6 +69,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     TextView pageTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
+    //zhifu_type=0支付宝支付,zhifu_type=1微信支付
     private String zhifu_type = "0";
     private static final int SDK_PAY_FLAG = 0;
     private IWXAPI api;
@@ -165,12 +166,12 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                                     if (payType.equals("1")) {
                                         if (DocUtils.hasValue(obj, "chatMoney")) {
                                             String chatMoney = obj.getString("chatMoney");
-                                            tvCountprice.setText(chatMoney + "元");
+                                            tvCountprice.setText(chatMoney);
                                         }
                                     } else if (payType.equals("2")) {
                                         if (DocUtils.hasValue(obj, "questionMoney")) {
                                             String questionMoney = obj.getString("questionMoney");
-                                            tvCountprice.setText(questionMoney + "元");
+                                            tvCountprice.setText(questionMoney);
                                         }
                                     }
                                 } else {
@@ -213,42 +214,26 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                     ToastUtil.showLong(this, "请选择支付方式");
                     return;
                 } else {
-                    if (payType.equals("1")) {
-                        //点击进入聊天页
-                        Intent intent = new Intent(ChatPayActivity.this, ChatActivity.class);
-                        intent.putExtra("userId", "admin");
-                        intent.putExtra("doctorUserId", doctorUserId);
-                        intent.putExtra("desease", desease);
-                        intent.putExtra("patientRecordId", patientRecordId);
-                        startActivity(intent);
-                    } else if (payType.equals("2")) {
-                        Intent intent = new Intent(ChatPayActivity.this, InqueryActivity.class);
-                        intent.putExtra("doctorUserId", doctorUserId);
-                        intent.putExtra("desease", desease);
-                        intent.putExtra("detail", detail);
-                        intent.putExtra("patientRecordId", patientRecordId);
-                        startActivity(intent);
+                    if (zhifu_type.equals("0")) {
+                        payOrderByAlipay();
+                    } else if (zhifu_type.equals("1")) {
+                        if (isWXAppInstalledAndSupported(ChatPayActivity.this, api)) {
+                            payOrderByWechat();
+                        }
                     }
-//                    if (zhifu_type.equals("1")) {
-//                        payOrderByAlipay();
-//                    } else if (zhifu_type.equals("0")) {
-//                        if (isWXAppInstalledAndSupported(ChatPayActivity.this, api)) {
-//                            payOrderByWechat();
-//                        }
-//                    }
                 }
                 break;
             case R.id.finish_back:
                 ChatPayActivity.this.finish();
                 break;
             case R.id.zhi_fu_bao_linear:
-                zhifu_type = "1";
+                zhifu_type = "0";
                 rbWechat.setChecked(false);
                 rbAlipay.setChecked(true);
                 socialSecurity.setChecked(false);
                 break;
             case R.id.weixin_linear:
-                zhifu_type = "0";
+                zhifu_type = "1";
                 rbAlipay.setChecked(false);
                 rbWechat.setChecked(true);
                 socialSecurity.setChecked(false);
@@ -264,14 +249,21 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     public void payOrderByAlipay() {
         JSONObject json = new JSONObject();
         try {
-            json.put("totalAmount", tvCountprice.getText().toString().trim());
+            if (payType.equals("1")) {
+                json.put("from", "1");
+            } else if (payType.equals("2")) {
+                json.put("from", "2");
+            }
             json.put("userId", userId);
-            json.put("patientRecordId", patientRecordId);
+            json.put("goodsId", patientRecordId);
+            json.put("toUserId", doctorUserId);
+            json.put("type", "alipay");
+            json.put("payAmount", tvCountprice.getText().toString().trim());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().json("pay/alipay/orderPay/"
+        HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().json("pay/orderPayT/"
                 , body, new BaseObserver<ResponseBody>(ChatPayActivity.this) {
                     protected Disposable disposable;
 
@@ -312,9 +304,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                                 if (msg.equals("ok") && code.equals("0")) {
                                     JSONObject orderObject = object.getJSONObject("data");
                                     final String orderInfo = orderObject.getString("orderString");
-
                                     Runnable payRunnable = new Runnable() {
-
                                         @Override
                                         public void run() {
                                             // 构造PayTask 对象
@@ -390,7 +380,11 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     public void payOrderByWechat() {
         JSONObject json = new JSONObject();
         try {
-            json.put("name", "ddd");
+            json.put("userId", userId);
+            json.put("patientRecordId", patientRecordId);
+            json.put("toUserId", doctorUserId);
+            json.put("type", "wxpay");
+            json.put("payAmount", tvCountprice.getText().toString().trim());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -479,12 +473,12 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
             if (buttonView == rbAlipay) {
-                zhifu_type = "1";
+                zhifu_type = "0";
                 rbWechat.setChecked(false);
                 rbAlipay.setChecked(true);
                 socialSecurity.setChecked(false);
             } else if (buttonView == rbWechat) {
-                zhifu_type = "0";
+                zhifu_type = "1";
                 rbAlipay.setChecked(false);
                 rbWechat.setChecked(true);
                 socialSecurity.setChecked(false);

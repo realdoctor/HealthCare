@@ -89,7 +89,7 @@ public class AnswerActivity extends BaseActivity {
         inqueryInfo.setText("您咨询的问题:");
         inquery.setText(inqueryText);
         answerInfo.setText("医生" + doctorText + "的解答:");
-        if (answerText.equals("")) {
+        if (EmptyUtils.isEmpty(answerText)) {
             answer.setText("医生还未回答您咨询的问题,请耐心等待!");
         } else {
             answer.setText(answerText);

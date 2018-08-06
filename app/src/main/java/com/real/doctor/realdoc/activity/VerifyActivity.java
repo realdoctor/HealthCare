@@ -22,6 +22,7 @@ import com.real.doctor.realdoc.fragment.UserFragment;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.CheckPhoneUtils;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
@@ -219,7 +220,7 @@ public class VerifyActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    SPUtils.put(VerifyActivity.this, "verifyFlag", "1");
+                                    SPUtils.put(VerifyActivity.this, Constants.VERIFYFLAG, "1");
                                     ToastUtil.showLong(RealDocApplication.getContext(), "实名认证成功!");
                                     //广播通知我的页面刷新
                                     Intent intent = new Intent(UserFragment.VERIFY_TEXT);

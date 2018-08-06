@@ -21,6 +21,7 @@ import com.real.doctor.realdoc.model.DoctorBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
@@ -108,7 +109,7 @@ public class DoctorsListActivity extends BaseActivity {
     private void getDoctorsData(String pageNum) {
         mProgressDialog.show();
         Map<String, String> map = new HashMap<String, String>();
-        String mobile = (String) SPUtils.get(this, "mobile", "");
+        String mobile = (String) SPUtils.get(this, Constants.MOBILE, "");
         map.put("mobilePhone", mobile);
         map.put("pageNum", pageNum);
         map.put("pageSize", "10");

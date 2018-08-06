@@ -329,7 +329,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         });
         expertAdapter = new ExpertAdapter(SearchResultListActivity.this, expertBeans, this);
         expert_list.setAdapter(expertAdapter);
-        ////判断当前是否是6.0版本
+        //判断当前是否是6.0版本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0001);
         } else {

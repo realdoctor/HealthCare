@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.DropMenuAdapter;
 import com.real.doctor.realdoc.adapter.HospitalAdapter;
+import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.FilterBean;
 import com.real.doctor.realdoc.model.HospitalBean;
 import com.real.doctor.realdoc.model.HospitalLevelBean;
@@ -64,7 +66,7 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/20.
  */
 
-public class RegistrationsActivity extends CheckPermissionsActivity implements OnFilterDoneListener, OnLoadmoreListener, OnRefreshListener {
+public class RegistrationsActivity extends BaseActivity implements OnFilterDoneListener, OnLoadmoreListener, OnRefreshListener {
 
     @BindView(R.id.right_title)
     TextView right_title;
@@ -122,8 +124,13 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
         }
         mProgressDialog = DocUtils.getProgressDialog(RegistrationsActivity.this, "正在加载数据....");
         init();
-        initLocation();
-        startLocation();
+        //判断当前是否是6.0版本
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0001);
+        } else {
+            initLocation();
+            startLocation();
+        }
     }
 
     @Override
@@ -493,4 +500,21 @@ public class RegistrationsActivity extends CheckPermissionsActivity implements O
             return (int) i;
         }
     };
+
+    /**
+     * 权限成功回调函数
+     *
+     * @param requestCode
+     */
+    @Override
+    public void permissionSuccess(int requestCode) {
+        super.permissionSuccess(requestCode);
+        switch (requestCode) {
+            case 0x0001:
+                initLocation();
+                startLocation();
+                break;
+        }
+    }
+
 }

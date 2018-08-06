@@ -220,7 +220,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void doBusiness(Context mContext) {
-        verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+        verifyFlag = (String) SPUtils.get(getActivity(), Constants.VERIFYFLAG, "");
         //滚轮
         List<View> views = new ArrayList<>();
         views.add(BGABannerUtil.getItemImageView(getActivity(), R.mipmap.useravator_bg));
@@ -233,7 +233,7 @@ public class HomeFragment extends BaseFragment {
                 ToastUtil.showLong(banner.getContext(), "点击了" + position);
             }
         });
-        token = (String) SPUtils.get(getActivity(), "token", "");
+        token = (String) SPUtils.get(getActivity(), Constants.TOKEN, "");
         if (EmptyUtils.isNotEmpty(token)) {
             if (verifyFlag.equals("1")) {
                 instance = SaveDocManager.getInstance(getActivity());
@@ -389,7 +389,7 @@ public class HomeFragment extends BaseFragment {
                 String action = intent.getAction();
                 if (action.equals(VERIFY_TEXT)) {
                     instance = SaveDocManager.getInstance(getActivity());
-                    verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+                    verifyFlag = (String) SPUtils.get(getActivity(), Constants.VERIFYFLAG , "");
                     if (StringUtils.equals(verifyFlag, "1")) {
                         recordList();
                     }

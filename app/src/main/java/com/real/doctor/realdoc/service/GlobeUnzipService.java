@@ -22,6 +22,7 @@ import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.rxjavaretrofit.down.DownCallBack;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.NetworkUtil;
@@ -115,7 +116,7 @@ public class GlobeUnzipService extends JobService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mobile = (String) SPUtils.get(GlobeUnzipService.this, "mobile", "");
+        mobile = (String) SPUtils.get(GlobeUnzipService.this, Constants.MOBILE, "");
         instance = SaveDocManager.getInstance(GlobeUnzipService.this);
         imageInstance = ImageManager.getInstance(GlobeUnzipService.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(GlobeUnzipService.this);

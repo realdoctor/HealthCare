@@ -73,7 +73,7 @@ public class AlreadyRevisitFragment extends BaseFragment {
     @Override
     public void doBusiness(Context mContext) {
         //获得后台正在进行咨询的数据
-        mobile = (String) SPUtils.get(getActivity(), "mobile", "");
+        mobile = (String) SPUtils.get(getActivity(), Constants.MOBILE, "");
         userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "0");
         roleChangeId = (String) SPUtils.get(getActivity(), Constants.ROLE_CHANGE_ID, "");
         doctors = new ArrayList<>();

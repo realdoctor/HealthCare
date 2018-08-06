@@ -131,14 +131,13 @@ public class UserFragment extends BaseFragment {
     public void initView(View view) {
         unbinder = ButterKnife.bind(this, view);
         userName.setText("个人中心");
-        token = (String) SPUtils.get(getActivity(), "token", "");
-        mobile = (String) SPUtils.get(getActivity(), "mobile", "");
-        verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+        token = (String) SPUtils.get(getActivity(), Constants.TOKEN, "");
+        mobile = (String) SPUtils.get(getActivity(), Constants.MOBILE, "");
+        verifyFlag = (String) SPUtils.get(getActivity(), Constants.VERIFYFLAG, "");
         roleId = (String) SPUtils.get(getActivity(), Constants.ROLE_ID, "");
-        url = (String) SPUtils.get(getActivity(), "url", "");
-        realName = (String) SPUtils.get(getActivity(), "realName", "");
-        originalImageUrl = (String) SPUtils.get(getActivity(), "originalImageUrl", "");
-        verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+        url = (String) SPUtils.get(getActivity(), Constants.URL, "");
+        realName = (String) SPUtils.get(getActivity(), Constants.REALNAME, "");
+        originalImageUrl = (String) SPUtils.get(getActivity(), Constants.ORIGINALIMAGEURL, "");
         if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
             downRecord.setVisibility(View.VISIBLE);
             downRecordLine.setVisibility(View.VISIBLE);
@@ -162,8 +161,10 @@ public class UserFragment extends BaseFragment {
         }
         if (EmptyUtils.isNotEmpty(roleId) && roleId.equals("0")) {
             inquiryPay.setVisibility(View.GONE);
-        } else {
+        } else if(EmptyUtils.isNotEmpty(token)){
             inquiryPay.setVisibility(View.VISIBLE);
+        }else{
+            inquiryPay.setVisibility(View.GONE);
         }
         if (EmptyUtils.isNotEmpty(mobile)) {
             //实名认证
@@ -193,7 +194,7 @@ public class UserFragment extends BaseFragment {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(VERIFY_TEXT)) {
-                    verifyFlag = (String) SPUtils.get(getActivity(), "verifyFlag", "");
+                    verifyFlag = (String) SPUtils.get(getActivity(), Constants.VERIFYFLAG, "");
                     getUserInfo();
                 } else if (action.equals(AccountActivity.CHANGE_AVATOR)) {
                     userName.setText(realName);
@@ -254,7 +255,7 @@ public class UserFragment extends BaseFragment {
                                     }
                                     if (verifyFlag.equals("1")) {
                                         if (EmptyUtils.isNotEmpty(realName)) {
-                                            SPUtils.put(getActivity(), "realName", realName);
+                                            SPUtils.put(getActivity(), Constants.REALNAME, realName);
                                             userName.setText(realName);
                                         }
                                     } else {
@@ -262,7 +263,7 @@ public class UserFragment extends BaseFragment {
                                     }
                                     if (DocUtils.hasValue(obj, "originalImageUrl")) {
                                         originalImageUrl = obj.getString("originalImageUrl");
-                                        SPUtils.put(getActivity(), "originalImageUrl", originalImageUrl);
+                                        SPUtils.put(getActivity(), Constants.ORIGINALIMAGEURL, originalImageUrl);
                                         GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
                                     }
                                 } else {
@@ -494,7 +495,7 @@ public class UserFragment extends BaseFragment {
                                     JSONObject obj = object.getJSONObject("data");
                                     if (DocUtils.hasValue(obj, "verifyFlag")) {
                                         verifyFlag = obj.getString("verifyFlag");
-                                        SPUtils.put(getActivity(), "verifyFlag", verifyFlag);
+                                        SPUtils.put(getActivity(), Constants.VERIFYFLAG, verifyFlag);
                                     }
                                 } else {
                                     ToastUtil.showLong(getActivity(), "获取用户信息失败,请确定是否已登录!");

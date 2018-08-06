@@ -363,7 +363,7 @@ public class ProductShowFragment extends BaseFragment implements OnLoadmoreListe
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String token = (String) SPUtils.get(getContext(), "token", "");
+        String token = (String) SPUtils.get(getContext(), Constants.TOKEN, "");
         Map<String, String> header = null;
         if (EmptyUtils.isNotEmpty(token)) {
             header = new HashMap<String, String>();

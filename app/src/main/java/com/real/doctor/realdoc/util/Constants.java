@@ -11,6 +11,13 @@ public class Constants {
     public static final String USER_KEY = "user_id";
     public static final String ROLE_ID = "role_id";
     public static final String ROLE_CHANGE_ID = "role_change_id";
+    public static final String VERIFYFLAG = "verifyFlag";
+    public static final String TOKEN = "token";
+    public static final String MOBILE = "mobile";
+    public static final String REALNAME = "realName";
+    public static final String URL = "url";
+    public static final String ORIGINALIMAGEURL = "originalImageUrl";
+
     //微信登录
     public static final String WX_APP_ID = "wxdcd80da641faa3ae";
     public static final String GetCodeRequest = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";

@@ -235,7 +235,7 @@ public class MyFollowDoctorsActivity extends BaseActivity implements OnLoadmoreL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String token = (String) SPUtils.get(MyFollowDoctorsActivity.this, "token", "");
+        String token = (String) SPUtils.get(MyFollowDoctorsActivity.this, Constants.TOKEN, "");
         Map<String, String> header = null;
         if (EmptyUtils.isNotEmpty(token)) {
             header = new HashMap<String, String>();

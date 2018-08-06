@@ -26,6 +26,7 @@ import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.photopicker.PhotoPreview;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileProvider7;
@@ -109,7 +110,7 @@ public class AccountActivity extends BaseActivity {
     @Override
     public void initData() {
         mPopup = new SelectPopupWindow(AccountActivity.this, true, itemsOnClick);
-        mMobile = (String) SPUtils.get(AccountActivity.this, "mobile", "");
+        mMobile = (String) SPUtils.get(AccountActivity.this, Constants.MOBILE, "");
         mobile.setText(mMobile);
         //实名认证
         checkName();

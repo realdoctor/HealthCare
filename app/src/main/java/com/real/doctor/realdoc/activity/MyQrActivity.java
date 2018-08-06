@@ -71,7 +71,7 @@ public class MyQrActivity extends BaseActivity {
     public void initData() {
         pageTitle.setText("我的二维码");
         userId = (String) SPUtils.get(MyQrActivity.this, Constants.USER_KEY, "");
-        realName = (String) SPUtils.get(MyQrActivity.this, "realName", "");
+        realName = (String) SPUtils.get(MyQrActivity.this, Constants.REALNAME, "");
     }
 
     @Override

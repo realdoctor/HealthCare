@@ -20,6 +20,7 @@ import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.CheckPhoneUtils;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
@@ -76,7 +77,7 @@ public class ChangePwdActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        mobile = (String) SPUtils.get(ChangePwdActivity.this, "mobile", "");
+        mobile = (String) SPUtils.get(ChangePwdActivity.this, Constants.MOBILE, "");
     }
 
     @Override
@@ -162,7 +163,7 @@ public class ChangePwdActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    SPUtils.remove(ChangePwdActivity.this, "token");
+                                    SPUtils.remove(ChangePwdActivity.this, Constants.TOKEN);
                                     ToastUtil.showLong(RealDocApplication.getContext(), "密码修改成功!");
                                     finish();
                                 } else {

@@ -109,6 +109,7 @@ public class CaseControlActivity extends BaseActivity {
         param.put("pageNum", String.valueOf(pageNum));
         param.put("roleId", "1");
         param.put("pageSize", "10");
+        param.put("type", "1");
         param.put("userId", mUserId);
         HttpRequestClient.getInstance(CaseControlActivity.this).createBaseApi().get("askQuestion/reply/list"
                 , param, new BaseObserver<ResponseBody>(CaseControlActivity.this) {

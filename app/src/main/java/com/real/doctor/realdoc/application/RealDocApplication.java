@@ -24,12 +24,13 @@ import com.real.doctor.realdoc.greendao.table.DrugManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.DrugBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
-import com.real.doctor.realdoc.receiver.RegisterReceiver;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.service.PatientListService;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.StringUtils;
@@ -90,7 +91,6 @@ public class RealDocApplication extends MultiDexApplication {
     public static final int PLAN_ID_IJK = 1;
     public static final int PLAN_ID_EXO = 2;
 
-
     public RealDocApplication getInstance() {
         if (instance == null) {
             instance = this;
@@ -107,14 +107,12 @@ public class RealDocApplication extends MultiDexApplication {
                 StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
         StrictMode.setVmPolicy(new
                 StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
-        verifyFlag = (String) SPUtils.get(mContext, "verifyFlag", "");
+        verifyFlag = (String) SPUtils.get(mContext, Constants.VERIFYFLAG, "");
         if (StringUtils.equals(verifyFlag, "1")) {
             getRecordListData();
         } else {
             //do nothing
         }
-        //建立全局文件夹
-        SDCardUtils.creatSDDir("RealDoc");
         //init demo helper
         HuanXinHelper.getInstance().init(getContext());
         PlayerConfig.addDecoderPlan(new DecoderPlan(PLAN_ID_IJK, IjkPlayer.class.getName(), "IjkPlayer"));
@@ -168,8 +166,8 @@ public class RealDocApplication extends MultiDexApplication {
         mInstance = SaveDocManager.getInstance(getContext());
         mDrugInstance = DrugManager.getInstance(getContext());
         count = (int) mInstance.getTotalCount();
-        String token = (String) SPUtils.get(getContext(), "token", "");
-        String mobile = (String) SPUtils.get(getContext(), "mobile", "");
+        String token = (String) SPUtils.get(getContext(), Constants.TOKEN, "");
+        String mobile = (String) SPUtils.get(getContext(), Constants.MOBILE, "");
         Map<String, String> header = null;
         if (EmptyUtils.isNotEmpty(token)) {
             header = new HashMap<String, String>();

@@ -1,7 +1,10 @@
 package com.real.doctor.realdoc.activity;
 
+import android.Manifest;
 import android.app.Notification;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -18,6 +21,9 @@ import com.real.doctor.realdoc.fragment.MessageFragment;
 import com.real.doctor.realdoc.fragment.ReadFragment;
 import com.real.doctor.realdoc.fragment.ShoppintMallFragment;
 import com.real.doctor.realdoc.fragment.UserFragment;
+import com.real.doctor.realdoc.util.FileUtils;
+import com.real.doctor.realdoc.util.SDCardUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -51,6 +57,9 @@ public class RealDocActivity extends BaseActivity {
     private Fragment tempFragment;
     private int position = 0;
     private long exitTime = 0;
+    private boolean isDeleteFolder = false;
+    private PackageManager p;
+    private boolean permission;
 
     @Override
     public int getLayoutId() {
@@ -73,6 +82,17 @@ public class RealDocActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        //删除从前文件夹,并重新创建新的文件夹
+        p = getPackageManager();
+        permission = (PackageManager.PERMISSION_GRANTED ==
+                p.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.real.doctor.realdoc"));
+        if (!permission) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0001);
+            }
+        } else {
+            init();
+        }
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
         readFragment = ArticleShowFragment.newInstance();
@@ -199,6 +219,48 @@ public class RealDocActivity extends BaseActivity {
             exitTime = System.currentTimeMillis();
         } else {
             this.finish();
+        }
+    }
+
+    /**
+     * 权限成功回调函数
+     *
+     * @param requestCode
+     */
+    @Override
+    public void permissionSuccess(int requestCode) {
+        super.permissionSuccess(requestCode);
+        switch (requestCode) {
+            case 0x0001:
+                init();
+                permission = (PackageManager.PERMISSION_GRANTED ==
+                        p.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.real.doctor.realdoc"));
+                if (!permission) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0001);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void init() {
+        //存放一个变量,这个变量永远为true
+        isDeleteFolder = (boolean) SPUtils.get(RealDocActivity.this, "isDeleteFolder", false);
+        if (!isDeleteFolder) {
+            SPUtils.put(RealDocActivity.this, "isDeleteFolder", true);
+            if (FileUtils.isFileExists(SDCardUtils.getGlobalDir())) {
+                //删除文件夹
+                StringBuffer sb = new StringBuffer();
+                sb.append(SDCardUtils.getGlobalDir());
+                FileUtils.deleteDir(sb.toString());
+            }
+            //建立全局文件夹
+            SDCardUtils.creatSDDir("RealDoc");
+        } else {
+            if (!FileUtils.isFileExists(SDCardUtils.getGlobalDir())) {
+                SDCardUtils.creatSDDir("RealDoc");
+            }
         }
     }
 }

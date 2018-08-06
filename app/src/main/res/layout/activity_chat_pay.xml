@@ -190,8 +190,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/pay_unit"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/pay_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_10"
                 android:layout_toLeftOf="@id/bt_pay"
+                android:text="@string/pay_unit"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
 

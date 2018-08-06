@@ -9,7 +9,7 @@ import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 
-public class RegisterReceiver extends BroadcastReceiver {
+public class AppInstallReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

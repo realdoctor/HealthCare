@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.rxjavaretrofit.cache;
 import android.util.Log;
 import android.content.Context;
 
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 
@@ -42,7 +43,7 @@ public class BaseInterceptor implements Interceptor {
         }
         if (EmptyUtils.isEmpty(headers)) {
             //如果header没有token(相当于没有hearder),则添加token
-            String token = (String) SPUtils.get(context, "token", "");
+            String token = (String) SPUtils.get(context, Constants.TOKEN, "");
             if (EmptyUtils.isNotEmpty(token)) {
                 builder.addHeader("Authorization", token);
             }

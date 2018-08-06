@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.service.GlobeUnzipService;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
@@ -71,7 +72,7 @@ public class GlobeUnzipActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        url = (String) SPUtils.get(GlobeUnzipActivity.this, "url", "");
+        url = (String) SPUtils.get(GlobeUnzipActivity.this, Constants.URL, "");
         localBroadcast();
         startService();
     }

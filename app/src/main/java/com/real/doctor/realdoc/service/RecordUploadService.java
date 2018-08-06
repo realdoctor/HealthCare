@@ -25,6 +25,7 @@ import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
@@ -204,7 +205,7 @@ public class RecordUploadService extends JobService {
         imageRecycleInstance = ImageRecycleManager.getInstance(RecordUploadService.this);
         recordInstance = RecordManager.getInstance(RecordUploadService.this);
         videoInstance = VideoManager.getInstance(RecordUploadService.this);
-        mobile = (String) SPUtils.get(RecordUploadService.this, "mobile", "");
+        mobile = (String) SPUtils.get(RecordUploadService.this, Constants.MOBILE, "");
         Message m = Message.obtain();
         handler.sendMessage(m);
         return START_STICKY;

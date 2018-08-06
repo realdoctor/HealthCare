@@ -19,6 +19,7 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.service.RecordUploadService;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
@@ -70,7 +71,7 @@ public class RecordUploadActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        mobile = (String) SPUtils.get(RecordUploadActivity.this, "mobile", "");
+        mobile = (String) SPUtils.get(RecordUploadActivity.this, Constants.MOBILE, "");
         localBroadcast();
         startService();
     }

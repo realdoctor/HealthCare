@@ -142,8 +142,8 @@ public class SettingActivity extends BaseActivity {
         imageRecycleInstance = ImageRecycleManager.getInstance(SettingActivity.this);
         recordInstance = RecordManager.getInstance(SettingActivity.this);
         videoInstance = VideoManager.getInstance(SettingActivity.this);
-        mobile = (String) SPUtils.get(SettingActivity.this, "mobile", "");
-        token = (String) SPUtils.get(SettingActivity.this, "token", "");
+        mobile = (String) SPUtils.get(SettingActivity.this, Constants.MOBILE, "");
+        token = (String) SPUtils.get(SettingActivity.this, Constants.TOKEN, "");
         if (EmptyUtils.isNotEmpty(token)) {
             loginOut.setVisibility(View.VISIBLE);
         } else {

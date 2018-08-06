@@ -33,6 +33,7 @@ import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
@@ -46,6 +47,7 @@ import com.real.doctor.realdoc.view.TriangleDrawable;
 import com.real.doctor.realdoc.view.popup.EasyPopup;
 import com.real.doctor.realdoc.view.popup.XGravity;
 import com.real.doctor.realdoc.view.popup.YGravity;
+import com.real.doctor.realdoc.widget.Constant;
 import com.real.doctor.realdoc.widget.timepicker.CustomDatePicker;
 
 import org.json.JSONException;
@@ -135,8 +137,8 @@ public class RecordListActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        token = (String) SPUtils.get(RecordListActivity.this, "token", "");
-        String mobile = (String) SPUtils.get(RecordListActivity.this, "mobile", "");
+        token = (String) SPUtils.get(RecordListActivity.this, Constants.TOKEN, "");
+        String mobile = (String) SPUtils.get(RecordListActivity.this, Constants.MOBILE, "");
         pageTitle.setText("病历列表");
         rightTitle.setVisibility(View.GONE);
         rightTitle.setText("新增");
@@ -491,7 +493,7 @@ public class RecordListActivity extends BaseActivity {
                                     JSONObject obj = object.getJSONObject("data");
                                     if (DocUtils.hasValue(obj, "verifyFlag")) {
                                         verifyFlag = obj.getString("verifyFlag");
-                                        SPUtils.put(RecordListActivity.this, "verifyFlag", verifyFlag);
+                                        SPUtils.put(RecordListActivity.this, Constants.VERIFYFLAG, verifyFlag);
                                         if (StringUtils.equals(verifyFlag, "1")) {
                                             rightTitle.setVisibility(View.VISIBLE);
                                             rightIcon.setVisibility(View.GONE);

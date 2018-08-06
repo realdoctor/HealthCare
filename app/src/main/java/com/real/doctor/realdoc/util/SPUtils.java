@@ -123,6 +123,8 @@ public class SPUtils
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         SharedPreferencesCompat.apply(editor);
+        //为了永远保存这个值,除非卸载
+        SPUtils.put(context, "isDeleteFolder", true);
     }
 
     /**

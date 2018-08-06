@@ -501,6 +501,16 @@
                          <category android:name="android.intent.category.LAUNCHER" />
                      </intent-filter>-->
         <!-- 声明sdk所需的service -->
+        <receiver android:name=".receiver.AppInstallReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"

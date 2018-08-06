@@ -359,17 +359,17 @@ public class LoginActivity extends BaseActivity {
                                         final JSONObject jsonObject = object.getJSONObject("data");
                                         if (DocUtils.hasValue(jsonObject, "url")) {
                                             String url = jsonObject.getString("url");
-                                            SPUtils.put(LoginActivity.this, "url", url);
+                                            SPUtils.put(LoginActivity.this, Constants.URL, url);
                                         }
                                         if (DocUtils.hasValue(jsonObject, "token")) {
                                             token = jsonObject.getString("token");
                                             if (EmptyUtils.isNotEmpty(token)) {
-                                                SPUtils.put(LoginActivity.this, "token", token);
+                                                SPUtils.put(LoginActivity.this, Constants.TOKEN, token);
                                             }
                                             //获取用户信息
                                             final UserBean user = GsonUtil.GsonToBean(jsonObject.getJSONObject("user").toString(), UserBean.class);
                                             if (EmptyUtils.isNotEmpty(user)) {
-                                                SPUtils.put(LoginActivity.this, "mobile", user.getMobile());
+                                                SPUtils.put(LoginActivity.this, Constants.MOBILE, user.getMobile());
                                                 SPUtils.put(LoginActivity.this, Constants.USER_KEY, user.getId());
                                                 SPUtils.put(LoginActivity.this, Constants.ROLE_ID, user.getRoleId());
                                                 //设置极光推送别名
@@ -802,7 +802,7 @@ public class LoginActivity extends BaseActivity {
                                     JSONObject obj = object.getJSONObject("data");
                                     if (DocUtils.hasValue(obj, "verifyFlag")) {
                                         verifyFlag = obj.getString("verifyFlag");
-                                        SPUtils.put(LoginActivity.this, "verifyFlag", verifyFlag);
+                                        SPUtils.put(LoginActivity.this, Constants.VERIFYFLAG, verifyFlag);
                                         if (!getList && StringUtils.equals(verifyFlag, "1")) {
                                             loginHuanXin(mobilePhone, pwd);
                                             //登录成功,获得列表数据
@@ -849,8 +849,8 @@ public class LoginActivity extends BaseActivity {
         mInstance = SaveDocManager.getInstance(LoginActivity.this);
         mDrugInstance = DrugManager.getInstance(LoginActivity.this);
         count = (int) mInstance.getTotalCount();
-        String token = (String) SPUtils.get(LoginActivity.this, "token", "");
-        String mobile = (String) SPUtils.get(LoginActivity.this, "mobile", "");
+        String token = (String) SPUtils.get(LoginActivity.this, Constants.TOKEN, "");
+        String mobile = (String) SPUtils.get(LoginActivity.this, Constants.MOBILE, "");
         Map<String, String> header = null;
         if (EmptyUtils.isNotEmpty(token)) {
             header = new HashMap<String, String>();
