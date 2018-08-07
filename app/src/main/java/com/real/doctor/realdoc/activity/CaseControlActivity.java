@@ -13,7 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,6 +30,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
@@ -101,15 +104,18 @@ public class CaseControlActivity extends BaseActivity {
         myPatientRv.addItemDecoration(divider);
         caseControlAdapter = new CaseControlAdapter(R.layout.case_control_item, patientList);
         mUserId = (String) SPUtils.get(CaseControlActivity.this, Constants.USER_KEY, "");
-        init();
+        initCaseControl("");
     }
 
-    private void init() {
+    private void initCaseControl(String searchStr) {
         HashMap<String, String> param = new HashMap<>();
         param.put("pageNum", String.valueOf(pageNum));
         param.put("roleId", "1");
+        if (EmptyUtils.isNotEmpty(searchStr)) {
+            param.put("searchStr", searchStr);
+        }
         param.put("pageSize", "10");
-        param.put("type", "1");
+        param.put("status", "1");
         param.put("userId", mUserId);
         HttpRequestClient.getInstance(CaseControlActivity.this).createBaseApi().get("askQuestion/reply/list"
                 , param, new BaseObserver<ResponseBody>(CaseControlActivity.this) {
@@ -187,6 +193,20 @@ public class CaseControlActivity extends BaseActivity {
                 intent.putExtras(mBundle);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
+
+        searchPatient.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String search = searchPatient.getText().toString().trim();
+                    if (EmptyUtils.isNotEmpty(search)) {
+                        initCaseControl(search);
+                    }
+                    return true;
+                }
+                return false;
             }
         });
     }

@@ -21,6 +21,8 @@ import com.real.doctor.realdoc.fragment.MessageFragment;
 import com.real.doctor.realdoc.fragment.ReadFragment;
 import com.real.doctor.realdoc.fragment.ShoppintMallFragment;
 import com.real.doctor.realdoc.fragment.UserFragment;
+import com.real.doctor.realdoc.util.Constants;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
@@ -60,6 +62,7 @@ public class RealDocActivity extends BaseActivity {
     private boolean isDeleteFolder = false;
     private PackageManager p;
     private boolean permission;
+    private String token;
 
     @Override
     public int getLayoutId() {
@@ -93,6 +96,7 @@ public class RealDocActivity extends BaseActivity {
         } else {
             init();
         }
+        token = (String) SPUtils.get(RealDocActivity.this, Constants.TOKEN, "");
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
         readFragment = ArticleShowFragment.newInstance();
@@ -135,9 +139,13 @@ public class RealDocActivity extends BaseActivity {
                         position = 0;
                         break;
                 }
-                //根据位置得到相应的Fragment
-                Fragment fragment = getFragment(position);
-                switchFragment(tempFragment, fragment);
+                if (EmptyUtils.isEmpty(token) && position == 3) {
+                    actionStart(RealDocActivity.this, LoginActivity.class);
+                } else {
+                    //根据位置得到相应的Fragment
+                    Fragment fragment = getFragment(position);
+                    switchFragment(tempFragment, fragment);
+                }
             }
         });
     }

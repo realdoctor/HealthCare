@@ -83,10 +83,6 @@ public class UserFragment extends BaseFragment {
     TextView userName;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
-    @BindView(R.id.my_login)
-    LinearLayout myLogin;
-    @BindView(R.id.my_login_line)
-    View myLoginLine;
     @BindView(R.id.my_appointment)
     LinearLayout myAppointment;
     @BindView(R.id.packag_history)
@@ -155,13 +151,9 @@ public class UserFragment extends BaseFragment {
 //            myLoginLine.setLayoutParams(lp);
             recordUpload.setVisibility(View.VISIBLE);
             recordUploadLine.setVisibility(View.VISIBLE);
-            myLogin.setVisibility(View.GONE);
-            myLoginLine.setVisibility(View.GONE);
         } else {
             recordUpload.setVisibility(View.GONE);
             recordUploadLine.setVisibility(View.GONE);
-            myLogin.setVisibility(View.VISIBLE);
-            myLoginLine.setVisibility(View.VISIBLE);
         }
         if (EmptyUtils.isNotEmpty(roleId) && roleId.equals("0")) {
             inquiryPay.setVisibility(View.GONE);
@@ -316,7 +308,7 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.identify, R.id.my_appointment, R.id.packag_history, R.id.my_visit, R.id.my_orders, R.id.my_follow, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit, R.id.down_record, R.id.record_upload, R.id.my_login})
+    @OnClick({R.id.identify, R.id.my_appointment, R.id.packag_history, R.id.my_visit, R.id.my_orders, R.id.my_follow, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit, R.id.down_record, R.id.record_upload})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
@@ -457,12 +449,6 @@ public class UserFragment extends BaseFragment {
                     intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
-                break;
-            case R.id.my_login:
-                isUserIn = true;
-                //跳转到登录页面
-                intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
                 break;
         }
     }
