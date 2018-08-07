@@ -10,7 +10,8 @@
         android:layout_width="75dp"
         android:layout_height="68dp"
         android:layout_marginRight="15dp"
-        android:background="#ccc" />
+        android:background="@mipmap/default_avatar"
+        android:scaleType="fitXY" />
 
     <RelativeLayout
         android:layout_width="match_parent"
