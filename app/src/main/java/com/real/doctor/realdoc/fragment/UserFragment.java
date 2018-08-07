@@ -184,8 +184,7 @@ public class UserFragment extends BaseFragment {
                 } else if (action.equals(AccountActivity.CHANGE_AVATOR)) {
                     userName.setText(realName);
                     String imageUrl = (String) intent.getExtras().get("avator");
-                    Bitmap bitmap = ImageUtils.getSmallBitmap(imageUrl, SizeUtils.dp2px(getActivity(),
-                            80), SizeUtils.dp2px(getActivity(), 80));
+                    Bitmap bitmap = ImageUtils.getSmallBitmap(imageUrl, SizeUtils.dp2px(getActivity(), 80), SizeUtils.dp2px(getActivity(), 80));
                     userAvator.setImageBitmap(bitmap);
 //                    GlideUtils.loadImageViewLoding(getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
                 }

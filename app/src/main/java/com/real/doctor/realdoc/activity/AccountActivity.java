@@ -18,9 +18,11 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.fragment.UserFragment;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.photopicker.PhotoPreview;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
@@ -127,12 +129,10 @@ public class AccountActivity extends BaseActivity {
         sb.append(mMobile);
         sb.append(".png");
         String avaterPath = sb.toString();
-        if (FileUtils.isFileExists(avaterPath)) {
-            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath,
-                    SizeUtils.dp2px(AccountActivity.this, 60),
-                    SizeUtils.dp2px(AccountActivity.this, 60));
-            userAvator.setImageBitmap(bitmap);
-        }
+        Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath,
+                SizeUtils.dp2px(AccountActivity.this, 60),
+                SizeUtils.dp2px(AccountActivity.this, 60));
+        userAvator.setImageBitmap(bitmap);
         //获取头像
         Intent intent = getIntent();
         avator = intent.getExtras().getString("avator");
@@ -290,6 +290,12 @@ public class AccountActivity extends BaseActivity {
                                 ToastUtil.showLong(RealDocApplication.getContext(), "图片上传成功!");
                                 Bitmap bitmap = ImageUtils.getSmallBitmap(mCurrentPhotoPath, SizeUtils.dp2px(AccountActivity.this, 60), SizeUtils.dp2px(AccountActivity.this, 60));
                                 userAvator.setImageBitmap(bitmap);
+                                JSONObject obj = object.getJSONObject("data");
+                                if (DocUtils.hasValue(obj, "imageUrl")) {
+                                    String imageUrl = obj.getString("imageUrl");
+                                    SPUtils.put(AccountActivity.this, Constants.ORIGINALIMAGEURL, imageUrl);
+                                    GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), imageUrl, userAvator);
+                                }
                                 //刷新需要刷新头像的界面
                                 Intent intent = new Intent(CHANGE_AVATOR);
                                 intent.putExtra("avator", mCurrentPhotoPath);
@@ -391,11 +397,9 @@ public class AccountActivity extends BaseActivity {
                                     if (DocUtils.hasValue(obj, "verifyFlag")) {
                                         verifyFlag = obj.getString("verifyFlag");
                                     }
-
                                 } else {
                                     ToastUtil.showLong(AccountActivity.this, "获取用户信息失败.请确定是否已登录!");
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
