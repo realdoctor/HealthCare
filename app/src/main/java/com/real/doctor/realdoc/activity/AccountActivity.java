@@ -18,11 +18,9 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
-import com.real.doctor.realdoc.fragment.UserFragment;
 import com.real.doctor.realdoc.photopicker.PhotoPicker;
 import com.real.doctor.realdoc.photopicker.PhotoPreview;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
@@ -134,13 +132,12 @@ public class AccountActivity extends BaseActivity {
                     SizeUtils.dp2px(AccountActivity.this, 60),
                     SizeUtils.dp2px(AccountActivity.this, 60));
             userAvator.setImageBitmap(bitmap);
-        }else{
-            //获取头像
-            Intent intent = getIntent();
-            avator = intent.getExtras().getString("avator");
-            if (EmptyUtils.isNotEmpty(avator)) {
-                GlideUtils.loadImageViewLoding(AccountActivity.this, avator, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
-            }
+        }
+        //获取头像
+        Intent intent = getIntent();
+        avator = intent.getExtras().getString("avator");
+        if (EmptyUtils.isNotEmpty(avator)) {
+            GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), avator, userAvator);
         }
     }
 

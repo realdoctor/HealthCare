@@ -134,12 +134,6 @@ public class SettingActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //获取头像
-        Intent intent = getIntent();
-        avator = intent.getExtras().getString("imgUrl");
-        if (EmptyUtils.isNotEmpty(avator)) {
-            GlideUtils.loadImageViewLoding(RealDocApplication.getContext(), avator, icon, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
-        }
         instance = SaveDocManager.getInstance(SettingActivity.this);
         imageInstance = ImageManager.getInstance(SettingActivity.this);
         imageRecycleInstance = ImageRecycleManager.getInstance(SettingActivity.this);
@@ -164,6 +158,12 @@ public class SettingActivity extends BaseActivity {
                     SizeUtils.dp2px(SettingActivity.this, 50),
                     SizeUtils.dp2px(SettingActivity.this, 50));
             icon.setImageBitmap(bitmap);
+        }
+        //获取头像
+        Intent intent = getIntent();
+        avator = intent.getExtras().getString("imgUrl");
+        if (EmptyUtils.isNotEmpty(avator)) {
+            GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), avator, icon);
         }
     }
 
