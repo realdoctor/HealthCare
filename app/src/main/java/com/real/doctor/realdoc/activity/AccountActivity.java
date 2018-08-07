@@ -129,10 +129,12 @@ public class AccountActivity extends BaseActivity {
         sb.append(mMobile);
         sb.append(".png");
         String avaterPath = sb.toString();
-        Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath,
-                SizeUtils.dp2px(AccountActivity.this, 60),
-                SizeUtils.dp2px(AccountActivity.this, 60));
-        userAvator.setImageBitmap(bitmap);
+        if (FileUtils.isFileExists(avaterPath)) {
+            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath,
+                    SizeUtils.dp2px(AccountActivity.this, 60),
+                    SizeUtils.dp2px(AccountActivity.this, 60));
+            userAvator.setImageBitmap(bitmap);
+        }
         //获取头像
         Intent intent = getIntent();
         avator = intent.getExtras().getString("avator");
