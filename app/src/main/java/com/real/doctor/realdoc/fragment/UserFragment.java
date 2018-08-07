@@ -166,29 +166,6 @@ public class UserFragment extends BaseFragment {
             //实名认证
             checkName(mobile);
         }
-        //获得用户信息
-        if (NetworkUtil.isNetworkAvailable(getActivity())) {
-            getUserInfo();
-        } else {
-            if (verifyFlag.equals("1")) {
-                userName.setText(realName);
-            } else {
-                userName.setText("个人中心");
-            }
-            GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
-        }
-        //获得头像
-        StringBuffer sb = new StringBuffer();
-        sb.append(SDCardUtils.getGlobalDir());
-        sb.append("avater");
-        sb.append(mobile);
-        sb.append(".png");
-        String avaterPath = sb.toString();
-        if (FileUtils.isFileExists(avaterPath)) {
-            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath, SizeUtils.dp2px(getActivity(),
-                    80), SizeUtils.dp2px(getActivity(), 80));
-            userAvator.setImageBitmap(bitmap);
-        }
         localBroadcast();
     }
 
@@ -294,6 +271,29 @@ public class UserFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        //获得头像
+        StringBuffer sb = new StringBuffer();
+        sb.append(SDCardUtils.getGlobalDir());
+        sb.append("avater");
+        sb.append(mobile);
+        sb.append(".png");
+        String avaterPath = sb.toString();
+        if (FileUtils.isFileExists(avaterPath)) {
+            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath, SizeUtils.dp2px(getActivity(),
+                    80), SizeUtils.dp2px(getActivity(), 80));
+            userAvator.setImageBitmap(bitmap);
+        }
+        //获得用户信息
+        if (NetworkUtil.isNetworkAvailable(getActivity())) {
+            getUserInfo();
+        } else {
+            if (verifyFlag.equals("1")) {
+                userName.setText(realName);
+            } else {
+                userName.setText("个人中心");
+            }
+            GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
+        }
         //发送广播，关闭悬浮窗
         if (isUserIn) {
             Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
