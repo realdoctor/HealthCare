@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Environment;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +47,7 @@ public class ClipImageActivity extends BaseActivity {
     public static final String RESULT_PATH = "crop_image";
     private static final String KEY = "path";
     private String mMobile;
+    private String originalImageUrl;
 
     public static void startActivity(Activity activity, String path, int code) {
         Intent intent = new Intent(activity, ClipImageActivity.class);
@@ -73,6 +75,7 @@ public class ClipImageActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        originalImageUrl = (String) SPUtils.get(ClipImageActivity.this, Constants.ORIGINALIMAGEURL, "");
         mMobile = (String) SPUtils.get(ClipImageActivity.this, Constants.MOBILE, "");
         String path = getIntent().getStringExtra(KEY);
         // 有的系统返回的图片是旋转了，有的没有旋转，所以处理
@@ -99,7 +102,7 @@ public class ClipImageActivity extends BaseActivity {
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                finish();
+                finishBack();
                 break;
             case R.id.right_btn:
                 Bitmap bitmap = clipImageLayout.clip();
@@ -198,5 +201,23 @@ public class ClipImageActivity extends BaseActivity {
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
                 bitmap.getWidth(), bitmap.getHeight(), matrix, false);
         return resizedBitmap;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finishBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void finishBack() {
+        //账号设置
+        Intent intent = new Intent(ClipImageActivity.this, AccountActivity.class);
+        intent.putExtra("avator", originalImageUrl);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 }
