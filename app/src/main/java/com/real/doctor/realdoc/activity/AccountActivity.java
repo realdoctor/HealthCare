@@ -132,7 +132,7 @@ public class AccountActivity extends BaseActivity {
         StringBuffer sb = new StringBuffer();
         sb.append(SDCardUtils.getGlobalDir());
         sb.append("avater");
-        sb.append(mobile);
+        sb.append(mMobile);
         sb.append(".png");
         String avaterPath = sb.toString();
         if (FileUtils.isFileExists(avaterPath)) {

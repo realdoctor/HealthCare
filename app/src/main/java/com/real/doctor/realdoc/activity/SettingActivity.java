@@ -180,8 +180,10 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String imageUrl = (String) intent.getExtras().get("avator");
-                Bitmap bitmap = ImageUtils.getSmallBitmap(imageUrl, SizeUtils.dp2px(SettingActivity.this, 50), SizeUtils.dp2px(SettingActivity.this, 50));
-                icon.setImageBitmap(bitmap);
+                if (EmptyUtils.isNotEmpty(imageUrl)) {
+                    Bitmap bitmap = ImageUtils.getSmallBitmap(imageUrl, SizeUtils.dp2px(SettingActivity.this, 50), SizeUtils.dp2px(SettingActivity.this, 50));
+                    icon.setImageBitmap(bitmap);
+                }
 //                GlideUtils.loadImageViewLoding(RealDocApplication.getContext(), avator, icon, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
             }
         };
