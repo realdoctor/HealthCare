@@ -313,6 +313,10 @@
             android:name=".activity.AddressListActivity"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ClipImageActivity"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name=".service.UpdateService"

@@ -150,8 +150,8 @@ public class UnzipService extends JobService {
                                     list.get(i).setIsPatient("1");
                                 }
                                 instance.insertSaveDoc(UnzipService.this, list);
-                                //删除数据库
-                                FileUtils.deleteDir(path);
+                                //不删除数据库(没必要删除)
+//                                FileUtils.deleteDir(path);
                             } else {
                                 ToastUtil.showLong(UnzipService.this, "解压文件失败,请返回列表重新进入病历列表!");
                             }

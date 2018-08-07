@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_linear"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/appbgcolor"
-    android:id="@+id/account_linear"
     android:orientation="vertical">
 
     <include layout="@layout/title_bar" />
@@ -15,9 +15,11 @@
         android:layout_width="@dimen/user_avatar_height"
         android:layout_height="@dimen/user_avatar_height"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/appbgcolor"
         android:src="@mipmap/ease_default_avatar"
-        app:border_circle_color="#ffffffff"
+        app:border_circle_color="@android:color/white"
         app:border_circle_width="2.0dip" />
 
     <TextView

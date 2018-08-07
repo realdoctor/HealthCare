@@ -274,6 +274,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(ChatPayActivity.this, "支付宝支付失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -302,28 +303,29 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONObject orderObject = object.getJSONObject("data");
-                                    final String orderInfo = orderObject.getString("orderString");
-                                    Runnable payRunnable = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            // 构造PayTask 对象
-                                            PayTask alipay = new PayTask(ChatPayActivity.this);
-                                            // 调用支付接口，获取支付结果
-                                            String result = alipay.pay(orderInfo, true);
-
-                                            Message msg = new Message();
-                                            msg.what = SDK_PAY_FLAG;
-                                            msg.obj = result;
-                                            mHandler.sendMessage(msg);
-                                        }
-                                    };
-
-                                    // 必须异步调用
-                                    Thread payThread = new Thread(payRunnable);
-                                    payThread.start();
+                                    ToastUtil.showLong(ChatPayActivity.this, "支付宝支付成功!");
+//                                    JSONObject orderObject = object.getJSONObject("data");
+//                                    final String orderInfo = orderObject.getString("orderString");
+//                                    Runnable payRunnable = new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            // 构造PayTask 对象
+//                                            PayTask alipay = new PayTask(ChatPayActivity.this);
+//                                            // 调用支付接口，获取支付结果
+//                                            String result = alipay.pay(orderInfo, true);
+//
+//                                            Message msg = new Message();
+//                                            msg.what = SDK_PAY_FLAG;
+//                                            msg.obj = result;
+//                                            mHandler.sendMessage(msg);
+//                                        }
+//                                    };
+//                                    // 必须异步调用
+//                                    Thread payThread = new Thread(payRunnable);
+//                                    payThread.start();
+                                    goToNextStep();
                                 } else {
-
+                                    ToastUtil.showLong(ChatPayActivity.this, "支付宝支付失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -380,8 +382,13 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     public void payOrderByWechat() {
         JSONObject json = new JSONObject();
         try {
+            if (payType.equals("1")) {
+                json.put("from", "1");
+            } else if (payType.equals("2")) {
+                json.put("from", "2");
+            }
             json.put("userId", userId);
-            json.put("patientRecordId", patientRecordId);
+            json.put("goodsId", patientRecordId);
             json.put("toUserId", doctorUserId);
             json.put("type", "wxpay");
             json.put("payAmount", tvCountprice.getText().toString().trim());
@@ -389,7 +396,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().json("user/regist/"
+        HttpRequestClient.getInstance(ChatPayActivity.this).createBaseApi().json("pay/orderPayT/"
                 , body, new BaseObserver<ResponseBody>(ChatPayActivity.this) {
                     protected Disposable disposable;
 
@@ -400,6 +407,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(ChatPayActivity.this, "微信支付失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -428,34 +436,31 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    String pay_str = object.getString("rs");
-
-                                    JSONObject ob = new JSONObject(pay_str);
-
-                                    String prepayId = ob.getString("prepayid");
-                                    String nonceStr = ob.getString("noncestr");
-                                    String timeStamp = ob.getString("timestamp");
-                                    String packageValue = ob.getString("package");
-                                    String sign = ob.getString("sign");
-                                    String partnerId = ob.getString("partnerid");
-
-
-                                    PayReq req = new PayReq();
-                                    req.appId = Constants.WX_APP_ID;
-                                    req.partnerId = partnerId;
-                                    req.prepayId = prepayId;
-                                    req.nonceStr = nonceStr;
-                                    req.timeStamp = String.valueOf(timeStamp);
-                                    req.packageValue = packageValue;
-                                    req.sign = sign;
-
-                                    // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-                                    boolean flag = api.sendReq(req);
-                                    if (flag) {
-                                        ChatPayActivity.this.finish();
-                                    }
+                                    ToastUtil.showLong(ChatPayActivity.this, "微信支付成功!");
+//                                    String pay_str = object.getString("rs");
+//                                    JSONObject ob = new JSONObject(pay_str);
+//                                    String prepayId = ob.getString("prepayid");
+//                                    String nonceStr = ob.getString("noncestr");
+//                                    String timeStamp = ob.getString("timestamp");
+//                                    String packageValue = ob.getString("package");
+//                                    String sign = ob.getString("sign");
+//                                    String partnerId = ob.getString("partnerid");
+//                                    PayReq req = new PayReq();
+//                                    req.appId = Constants.WX_APP_ID;
+//                                    req.partnerId = partnerId;
+//                                    req.prepayId = prepayId;
+//                                    req.nonceStr = nonceStr;
+//                                    req.timeStamp = String.valueOf(timeStamp);
+//                                    req.packageValue = packageValue;
+//                                    req.sign = sign;
+//                                    // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+//                                    boolean flag = api.sendReq(req);
+//                                    if (flag) {
+//                                        ChatPayActivity.this.finish();
+//                                    }
+                                    goToNextStep();
                                 } else {
-
+                                    ToastUtil.showLong(ChatPayActivity.this, "微信支付失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -487,6 +492,25 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                 rbWechat.setChecked(false);
                 socialSecurity.setChecked(true);
             }
+        }
+    }
+
+    private void goToNextStep() {
+        if (payType.equals("1")) {
+            //点击进入聊天页
+            Intent intent = new Intent(ChatPayActivity.this, ChatActivity.class);
+            intent.putExtra("userId", "admin");
+            intent.putExtra("doctorUserId", doctorUserId);
+            intent.putExtra("desease", desease);
+            intent.putExtra("patientRecordId", patientRecordId);
+            startActivity(intent);
+        } else if (payType.equals("2")) {
+            Intent intent = new Intent(ChatPayActivity.this, InqueryActivity.class);
+            intent.putExtra("doctorUserId", doctorUserId);
+            intent.putExtra("desease", desease);
+            intent.putExtra("detail", detail);
+            intent.putExtra("patientRecordId", patientRecordId);
+            startActivity(intent);
         }
     }
 }

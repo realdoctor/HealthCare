@@ -2,6 +2,7 @@ package com.real.doctor.realdoc.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -38,6 +39,7 @@ import com.real.doctor.realdoc.model.VideoBean;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
+import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
@@ -46,6 +48,7 @@ import com.real.doctor.realdoc.util.CleanMessageUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CommonDialog;
 
@@ -149,6 +152,19 @@ public class SettingActivity extends BaseActivity {
         } else {
             loginOut.setVisibility(View.GONE);
         }
+        //获得头像
+        StringBuffer sb = new StringBuffer();
+        sb.append(SDCardUtils.getGlobalDir());
+        sb.append("avater");
+        sb.append(mobile);
+        sb.append(".png");
+        String avaterPath = sb.toString();
+        if (FileUtils.isFileExists(avaterPath)) {
+            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath,
+                    SizeUtils.dp2px(SettingActivity.this, 50),
+                    SizeUtils.dp2px(SettingActivity.this, 50));
+            icon.setImageBitmap(bitmap);
+        }
     }
 
     @Override
@@ -163,8 +179,10 @@ public class SettingActivity extends BaseActivity {
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                avator = (String) intent.getExtras().get("avator");
-                GlideUtils.loadImageViewLoding(RealDocApplication.getContext(), avator, icon, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
+                String imageUrl = (String) intent.getExtras().get("avator");
+                Bitmap bitmap = ImageUtils.getSmallBitmap(imageUrl, SizeUtils.dp2px(SettingActivity.this, 50), SizeUtils.dp2px(SettingActivity.this, 50));
+                icon.setImageBitmap(bitmap);
+//                GlideUtils.loadImageViewLoding(RealDocApplication.getContext(), avator, icon, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
             }
         };
         broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);

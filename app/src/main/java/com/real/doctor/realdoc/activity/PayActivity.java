@@ -9,7 +9,10 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -55,16 +58,22 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/20.
  */
 
-public class PayActivity extends BaseActivity {
+public class PayActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
-    @BindView(R.id.pay_type)
-    RadioGroup rgPayType;
-    @BindView(R.id.zhifubao)
-    RadioButton rbAlipay;
-    @BindView(R.id.weixin)
-    RadioButton rbWechat;
+    @BindView(R.id.zhi_fu_bao_linear)
+    LinearLayout zhiFuBaoLinear;
+    @BindView(R.id.weixin_linear)
+    LinearLayout weixinLinear;
+    @BindView(R.id.social_security_linear)
+    LinearLayout socialSecurityLinear;
+    @BindView(R.id.zhi_fu_bao)
+    CheckBox rbAlipay;
+    @BindView(R.id.wei_xin)
+    CheckBox rbWechat;
+    @BindView(R.id.social_security)
+    CheckBox socialSecurity;
     @BindView(R.id.tv_count_price)
     TextView tvCountprice;
     @BindView(R.id.bt_pay)
@@ -77,6 +86,7 @@ public class PayActivity extends BaseActivity {
     PayShowListView lv_products;
     @BindView(R.id.select_address)
     TextView select_address;
+    //zhifu_type=0支付宝支付,zhifu_type=1微信支付
     private String zhifu_type = "0";
     private static final int SDK_PAY_FLAG = 0;
     private IWXAPI api;
@@ -119,18 +129,9 @@ public class PayActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-        rgPayType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // TODO Auto-generated method stub
-                if (checkedId == rbAlipay.getId()) {
-                    zhifu_type = "1";
-                } else if (checkedId == rbWechat.getId()) {
-                    zhifu_type = "0";
-                }
-            }
-        });
+        rbAlipay.setOnCheckedChangeListener(this);
+        rbWechat.setOnCheckedChangeListener(this);
+        socialSecurity.setOnCheckedChangeListener(this);
     }
 
     private boolean isWXAppInstalledAndSupported(Context context,
@@ -145,7 +146,7 @@ public class PayActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.bt_pay, R.id.finish_back, R.id.select_address})
+    @OnClick({R.id.bt_pay, R.id.finish_back, R.id.zhi_fu_bao_linear, R.id.weixin_linear, R.id.social_security_linear, R.id.select_address})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.bt_pay:
@@ -153,9 +154,9 @@ public class PayActivity extends BaseActivity {
                     ToastUtil.show(PayActivity.this, "请选择支付方式", Toast.LENGTH_SHORT);
                     return;
                 } else {
-                    if (zhifu_type.equals("1")) {
+                    if (zhifu_type.equals("0")) {
                         payOrderByAlipay();
-                    } else if (zhifu_type.equals("0")) {
+                    } else if (zhifu_type.equals("1")) {
                         if (isWXAppInstalledAndSupported(PayActivity.this, api)) {
                             payOrderByWechat();
                         }
@@ -168,6 +169,23 @@ public class PayActivity extends BaseActivity {
             case R.id.select_address:
                 Intent intent = new Intent(PayActivity.this, AddressListActivity.class);
                 startActivityForResult(intent, ADDRESS_EVENT_REQUEST_CODE);
+                break;
+            case R.id.zhi_fu_bao_linear:
+                zhifu_type = "0";
+                rbWechat.setChecked(false);
+                rbAlipay.setChecked(true);
+                socialSecurity.setChecked(false);
+                break;
+            case R.id.weixin_linear:
+                zhifu_type = "1";
+                rbAlipay.setChecked(false);
+                rbWechat.setChecked(true);
+                socialSecurity.setChecked(false);
+                break;
+            case R.id.social_security_linear:
+                rbAlipay.setChecked(false);
+                rbWechat.setChecked(false);
+                socialSecurity.setChecked(true);
                 break;
         }
     }
@@ -204,12 +222,13 @@ public class PayActivity extends BaseActivity {
         try {
             json.put("totalAmount", totalPrice);
             json.put("userId", userId);
+            json.put("type", "alipay");
             json.put("goodsList", array);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        HttpRequestClient.getInstance(PayActivity.this).createBaseApi().json("pay/alipay/orderPay/"
+        HttpRequestClient.getInstance(PayActivity.this).createBaseApi().json("pay/orderPay/"
                 , body, new BaseObserver<ResponseBody>(PayActivity.this) {
                     protected Disposable disposable;
 
@@ -220,6 +239,7 @@ public class PayActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(PayActivity.this, "支付宝支付失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -248,6 +268,7 @@ public class PayActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
+                                    ToastUtil.showLong(PayActivity.this, "支付宝支付成功!");
                                     JSONObject orderObject = object.getJSONObject("data");
                                     final String orderInfo = orderObject.getString("orderString");
 
@@ -266,12 +287,11 @@ public class PayActivity extends BaseActivity {
                                             mHandler.sendMessage(msg);
                                         }
                                     };
-
                                     // 必须异步调用
                                     Thread payThread = new Thread(payRunnable);
                                     payThread.start();
                                 } else {
-
+                                    ToastUtil.showLong(PayActivity.this, "支付宝支付失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -285,15 +305,29 @@ public class PayActivity extends BaseActivity {
     }
 
     public void payOrderByWechat() {
-
+        JSONArray array = new JSONArray();
+        try {
+            for (ProductBean bean : productBeanArrayList) {
+                JSONObject item = new JSONObject();
+                item.put("goodsId", bean.getGoodsId());
+                item.put("goodsNum", bean.getNum());
+                item.put("goodsPrice", bean.getCost());
+                array.put(item);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         JSONObject json = new JSONObject();
         try {
-            json.put("name", "ddd");
+            json.put("totalAmount", totalPrice);
+            json.put("userId", userId);
+            json.put("type", "alipay");
+            json.put("goodsList", array);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        HttpRequestClient.getInstance(PayActivity.this).createBaseApi().json("user/regist/"
+        HttpRequestClient.getInstance(PayActivity.this).createBaseApi().json("pay/orderPay/"
                 , body, new BaseObserver<ResponseBody>(PayActivity.this) {
                     protected Disposable disposable;
 
@@ -304,6 +338,7 @@ public class PayActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(PayActivity.this, "微信支付失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -332,18 +367,15 @@ public class PayActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
+                                    ToastUtil.showLong(PayActivity.this, "微信支付成功!");
                                     String pay_str = object.getString("rs");
-
                                     JSONObject ob = new JSONObject(pay_str);
-
                                     String prepayId = ob.getString("prepayid");
                                     String nonceStr = ob.getString("noncestr");
                                     String timeStamp = ob.getString("timestamp");
                                     String packageValue = ob.getString("package");
                                     String sign = ob.getString("sign");
                                     String partnerId = ob.getString("partnerid");
-
-
                                     PayReq req = new PayReq();
                                     req.appId = Constants.WX_APP_ID;
                                     req.partnerId = partnerId;
@@ -352,14 +384,13 @@ public class PayActivity extends BaseActivity {
                                     req.timeStamp = String.valueOf(timeStamp);
                                     req.packageValue = packageValue;
                                     req.sign = sign;
-
                                     // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
                                     boolean flag = api.sendReq(req);
                                     if (flag) {
                                         PayActivity.this.finish();
                                     }
                                 } else {
-
+                                    ToastUtil.showLong(PayActivity.this, "微信支付失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -412,4 +443,24 @@ public class PayActivity extends BaseActivity {
         ;
     };
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            if (buttonView == rbAlipay) {
+                zhifu_type = "0";
+                rbWechat.setChecked(false);
+                rbAlipay.setChecked(true);
+                socialSecurity.setChecked(false);
+            } else if (buttonView == rbWechat) {
+                zhifu_type = "1";
+                rbAlipay.setChecked(false);
+                rbWechat.setChecked(true);
+                socialSecurity.setChecked(false);
+            } else if (buttonView == socialSecurity) {
+                rbAlipay.setChecked(false);
+                rbWechat.setChecked(false);
+                socialSecurity.setChecked(true);
+            }
+        }
+    }
 }

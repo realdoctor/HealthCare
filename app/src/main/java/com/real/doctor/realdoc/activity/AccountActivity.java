@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -30,11 +31,14 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileProvider7;
+import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
+import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.util.StringUtils;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
@@ -59,6 +63,8 @@ import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+
+import static com.real.doctor.realdoc.activity.ClipImageActivity.RESULT_PATH;
 
 public class AccountActivity extends BaseActivity {
 
@@ -86,6 +92,8 @@ public class AccountActivity extends BaseActivity {
     private String avator;
     //拍照
     private static final int REQUEST_CODE_TAKE_PHOTO = 0x110;
+    //裁剪
+    private static final int CROP_RESULT_CODE = 0x100;
     //更新头像广播
     public static final String CHANGE_AVATOR = "android.intent.action.record.change.avator";
 
@@ -119,6 +127,18 @@ public class AccountActivity extends BaseActivity {
         avator = intent.getExtras().getString("avator");
         if (EmptyUtils.isNotEmpty(avator)) {
             GlideUtils.loadImageViewLoding(AccountActivity.this, avator, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
+        }
+        //获得头像
+        StringBuffer sb = new StringBuffer();
+        sb.append(SDCardUtils.getGlobalDir());
+        sb.append("avater");
+        sb.append(mobile);
+        sb.append(".png");
+        String avaterPath = sb.toString();
+        if (FileUtils.isFileExists(avaterPath)) {
+            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath, SizeUtils.dp2px(AccountActivity.this,
+                    60), SizeUtils.dp2px(AccountActivity.this, 60));
+            userAvator.setImageBitmap(bitmap);
         }
     }
 
@@ -205,7 +225,7 @@ public class AccountActivity extends BaseActivity {
                         .setShowCamera(false)
                         .setShowGif(false)
                         .setPreviewEnabled(true)//是否可以预览
-                        .start(AccountActivity.this, PhotoPicker.REQUEST_CODE);
+                        .start(AccountActivity.this, PhotoPicker.REQUEST_ACCOUNT_CODE);
                 break;
             case 0x0002:
                 takePhotoCompress();
@@ -218,24 +238,16 @@ public class AccountActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         List<String> photos = new ArrayList<>();
-        if (resultCode == RESULT_OK && (requestCode == PhotoPicker.REQUEST_CODE || requestCode == PhotoPreview.REQUEST_CODE)) {
+        if (resultCode == RESULT_OK && (requestCode == PhotoPicker.REQUEST_ACCOUNT_CODE || requestCode == PhotoPreview.REQUEST_CODE)) {
             photos = null;
             if (data != null) {
                 photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
             }
-            GlideUtils.loadImageViewLoding(this, photos.get(0), userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
-            //刷新需要刷新头像的界面
-            Intent intent = new Intent(CHANGE_AVATOR);
-            intent.putExtra("avator", photos.get(0));
-            LocalBroadcastManager.getInstance(AccountActivity.this).sendBroadcast(intent);
-            //通知后台头像已改
-            uploadIcon(photos.get(0));
+            startCropImageActivity(photos.get(0));
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_TAKE_PHOTO) {
-            GlideUtils.loadImageViewLoding(this, mCurrentPhotoPath, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
-            //刷新需要刷新头像的界面
-            Intent intent = new Intent(CHANGE_AVATOR);
-            intent.putExtra("avator", mCurrentPhotoPath);
-            LocalBroadcastManager.getInstance(AccountActivity.this).sendBroadcast(intent);
+            startCropImageActivity(mCurrentPhotoPath);
+        } else if (requestCode == CROP_RESULT_CODE) {
+            mCurrentPhotoPath = data.getStringExtra(RESULT_PATH);
             //通知后台头像已改
             uploadIcon(mCurrentPhotoPath);
         }
@@ -277,7 +289,16 @@ public class AccountActivity extends BaseActivity {
                             }
                             if (msg.equals("ok") && code.equals("0")) {
                                 ToastUtil.showLong(RealDocApplication.getContext(), "图片上传成功!");
+                                Bitmap bitmap = ImageUtils.getSmallBitmap(mCurrentPhotoPath, SizeUtils.dp2px(AccountActivity.this, 60), SizeUtils.dp2px(AccountActivity.this, 60));
+                                userAvator.setImageBitmap(bitmap);
+                                //刷新需要刷新头像的界面
+                                Intent intent = new Intent(CHANGE_AVATOR);
+                                intent.putExtra("avator", mCurrentPhotoPath);
+                                LocalBroadcastManager.getInstance(AccountActivity.this).sendBroadcast(intent);
                             } else {
+                                if (FileUtils.isFileExists(mCurrentPhotoPath)) {
+                                    FileUtils.deleteDir(mCurrentPhotoPath);
+                                }
                                 ToastUtil.showLong(RealDocApplication.getContext(), "图片上传失败!");
                             }
                         } catch (JSONException e) {
@@ -290,6 +311,9 @@ public class AccountActivity extends BaseActivity {
 
                 @Override
                 public void onError(Throwable e) {
+                    if (FileUtils.isFileExists(mCurrentPhotoPath)) {
+                        FileUtils.deleteDir(mCurrentPhotoPath);
+                    }
                     ToastUtil.showLong(RealDocApplication.getContext(), "图片上传失败!");
                     Log.d(TAG, e.getMessage());
                     if (disposable != null && !disposable.isDisposed()) {
@@ -387,5 +411,10 @@ public class AccountActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+
+    // 裁剪图片的Activity
+    private void startCropImageActivity(String path) {
+        ClipImageActivity.startActivity(this, path, CROP_RESULT_CODE);
     }
 }

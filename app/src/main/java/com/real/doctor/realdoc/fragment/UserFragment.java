@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.os.Build;
@@ -40,8 +41,11 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.FileUtils;
 import com.real.doctor.realdoc.util.GlideUtils;
+import com.real.doctor.realdoc.util.ImageUtils;
 import com.real.doctor.realdoc.util.NetworkUtil;
+import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
@@ -161,9 +165,9 @@ public class UserFragment extends BaseFragment {
         }
         if (EmptyUtils.isNotEmpty(roleId) && roleId.equals("0")) {
             inquiryPay.setVisibility(View.GONE);
-        } else if(EmptyUtils.isNotEmpty(token)){
+        } else if (EmptyUtils.isNotEmpty(token)) {
             inquiryPay.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             inquiryPay.setVisibility(View.GONE);
         }
         if (EmptyUtils.isNotEmpty(mobile)) {
@@ -180,6 +184,18 @@ public class UserFragment extends BaseFragment {
                 userName.setText("个人中心");
             }
             GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
+        }
+        //获得头像
+        StringBuffer sb = new StringBuffer();
+        sb.append(SDCardUtils.getGlobalDir());
+        sb.append("avater");
+        sb.append(mobile);
+        sb.append(".png");
+        String avaterPath = sb.toString();
+        if (FileUtils.isFileExists(avaterPath)) {
+            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath, SizeUtils.dp2px(getActivity(),
+                    80), SizeUtils.dp2px(getActivity(), 80));
+            userAvator.setImageBitmap(bitmap);
         }
         localBroadcast();
     }
@@ -198,8 +214,10 @@ public class UserFragment extends BaseFragment {
                     getUserInfo();
                 } else if (action.equals(AccountActivity.CHANGE_AVATOR)) {
                     userName.setText(realName);
-                    originalImageUrl = (String) intent.getExtras().get("avator");
-                    GlideUtils.loadImageViewLoding(getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
+                    String imageUrl = (String) intent.getExtras().get("avator");
+                    Bitmap bitmap = ImageUtils.getSmallBitmap(imageUrl, SizeUtils.dp2px(getActivity(), 80), SizeUtils.dp2px(getActivity(), 80));
+                    userAvator.setImageBitmap(bitmap);
+//                    GlideUtils.loadImageViewLoding(getContext(), originalImageUrl, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
                 }
             }
         };
