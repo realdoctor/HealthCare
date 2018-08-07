@@ -122,12 +122,6 @@ public class AccountActivity extends BaseActivity {
         mobile.setText(mMobile);
         //实名认证
         checkName();
-        //获取头像
-        Intent intent = getIntent();
-        avator = intent.getExtras().getString("avator");
-        if (EmptyUtils.isNotEmpty(avator)) {
-            GlideUtils.loadImageViewLoding(AccountActivity.this, avator, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
-        }
         //获得头像
         StringBuffer sb = new StringBuffer();
         sb.append(SDCardUtils.getGlobalDir());
@@ -136,9 +130,17 @@ public class AccountActivity extends BaseActivity {
         sb.append(".png");
         String avaterPath = sb.toString();
         if (FileUtils.isFileExists(avaterPath)) {
-            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath, SizeUtils.dp2px(AccountActivity.this,
-                    60), SizeUtils.dp2px(AccountActivity.this, 60));
+            Bitmap bitmap = ImageUtils.getSmallBitmap(avaterPath,
+                    SizeUtils.dp2px(AccountActivity.this, 60),
+                    SizeUtils.dp2px(AccountActivity.this, 60));
             userAvator.setImageBitmap(bitmap);
+        }else{
+            //获取头像
+            Intent intent = getIntent();
+            avator = intent.getExtras().getString("avator");
+            if (EmptyUtils.isNotEmpty(avator)) {
+                GlideUtils.loadImageViewLoding(AccountActivity.this, avator, userAvator, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
+            }
         }
     }
 
