@@ -94,7 +94,7 @@ public class RevisitingFragment extends BaseFragment {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("pageNum", pageNum);
         param.put("pageSize", "10");
-        param.put("type", "1");
+        param.put("status", "1");
         param.put("roleId", roleChangeId);
         param.put("userId", userId);
         HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/list"

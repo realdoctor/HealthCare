@@ -107,7 +107,7 @@ public class AlreadyRevisitFragment extends BaseFragment {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("pageNum", pageNum);
         param.put("pageSize", "10");
-        param.put("type", "2");
+        param.put("status", "2");
         param.put("roleId", roleChangeId);
         param.put("userId", userId);
         HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/list"
