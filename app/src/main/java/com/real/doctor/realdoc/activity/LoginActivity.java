@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.real.doctor.realdoc.R;
@@ -372,6 +373,7 @@ public class LoginActivity extends BaseActivity {
                                                 SPUtils.put(LoginActivity.this, Constants.MOBILE, user.getMobile());
                                                 SPUtils.put(LoginActivity.this, Constants.USER_KEY, user.getId());
                                                 SPUtils.put(LoginActivity.this, Constants.ROLE_ID, user.getRoleId());
+                                                SPUtils.put(LoginActivity.this, Constants.ROLE_CHANGE_ID, user.getRoleId());
                                                 //设置极光推送别名
                                                 // 调用 Handler 来异步设置别名
                                                 mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, user.getId()));
@@ -397,7 +399,6 @@ public class LoginActivity extends BaseActivity {
                                                     }
                                                     if (lastList.size() > 0 && isNotContains) {
                                                         isShowDialog(token, mobilePhone, pwd);
-                                                    } else {
                                                         getExternalData(user.getMobile());
                                                         //融合下载下来的病历
 //                                                    getDownData(jsonObject);
@@ -564,12 +565,57 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onError(final int code, final String message) {
                 Log.d(TAG, "login: onError: " + code);
-//                runOnUiThread(new Runnable() {
-//                    public void run() {
-//                        Toast.makeText(getApplicationContext(), getString(R.string.Login_failed) + message,
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("lzan13", "登录失败 Error code:" + code + ", message:" + message);
+                        /**
+                         * 关于错误码可以参考官方api详细说明
+                         * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
+                         */
+                        switch (code) {
+                            // 网络异常 2
+                            case EMError.NETWORK_ERROR:
+                                ToastUtil.showLong(LoginActivity.this, "网络错误 code: " + code + ", message:" + message);
+                                break;
+                            // 无效的用户名 101
+                            case EMError.INVALID_USER_NAME:
+                                ToastUtil.showLong(LoginActivity.this, "无效的用户名 code: " + code + ", message:" + message);
+                                break;
+                            // 无效的密码 102
+                            case EMError.INVALID_PASSWORD:
+                                ToastUtil.showLong(LoginActivity.this, "无效的密码 code: " + code + ", message:" + message);
+                                break;
+                            // 用户认证失败，用户名或密码错误 202
+                            case EMError.USER_AUTHENTICATION_FAILED:
+                                ToastUtil.showLong(LoginActivity.this, "用户认证失败，用户名或密码错误 code: " + code + ", message:" + message);
+                                break;
+                            // 用户不存在 204
+                            case EMError.USER_NOT_FOUND:
+                                ToastUtil.showLong(LoginActivity.this, "用户不存在 code: " + code + ", message:" + message);
+                                break;
+                            // 无法访问到服务器 300
+                            case EMError.SERVER_NOT_REACHABLE:
+                                ToastUtil.showLong(LoginActivity.this, "无法访问到服务器 code: " + code + ", message:" + message);
+                                break;
+                            // 等待服务器响应超时 301
+                            case EMError.SERVER_TIMEOUT:
+                                ToastUtil.showLong(LoginActivity.this, "等待服务器响应超时 code: " + code + ", message:" + message);
+                                break;
+                            // 服务器繁忙 302
+                            case EMError.SERVER_BUSY:
+                                ToastUtil.showLong(LoginActivity.this, "服务器繁忙 code: " + code + ", message:" + message);
+                                break;
+                            // 未知 Server 异常 303 一般断网会出现这个错误
+                            case EMError.SERVER_UNKNOWN_ERROR:
+                                ToastUtil.showLong(LoginActivity.this, "未知的服务器异常 code: " + code + ", message:" + message);
+                                break;
+                            default:
+                                ToastUtil.showLong(LoginActivity.this, "ml_sign_in_failed code: " + code + ", message:" + message);
+                                break;
+                        }
+                    }
+                });
             }
         });
     }

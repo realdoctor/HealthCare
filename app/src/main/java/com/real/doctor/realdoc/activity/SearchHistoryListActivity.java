@@ -103,12 +103,12 @@ public class SearchHistoryListActivity extends BaseActivity {
         Intent intent = getIntent();
         requestCode = intent.getIntExtra("requestCode", 0);
         categoryId = intent.getStringExtra("categoryId");
-        if(requestCode==ArticleShowFragment.INFO_SEARCH){
-            type="zx";
-        }else if(requestCode==ShoppintMallFragment.SHOPPING_EVENT_REQUEST_CODE){
-            type="sp";
-        }else if(requestCode==RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE){
-            type="gh";
+        if (requestCode == ArticleShowFragment.INFO_SEARCH) {
+            type = "zx";
+        } else if (requestCode == ShoppintMallFragment.SHOPPING_EVENT_REQUEST_CODE) {
+            type = "sp";
+        } else if (requestCode == RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE) {
+            type = "gh";
         }
         // 初始化控件
         initView();
@@ -280,7 +280,7 @@ public class SearchHistoryListActivity extends BaseActivity {
     public void getQuery(final String queryStr) {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("query", queryStr);
-        param.put("type",type);
+        param.put("type", type);
         HttpRequestClient client = HttpRequestClient.getInstance(SearchHistoryListActivity.this, HttpNetUtil.SEARCH_URL);
         client.createBaseApi().get("goods/autoComplete/"
                 , param, new BaseObserver<ResponseBody>(SearchHistoryListActivity.this) {

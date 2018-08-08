@@ -293,8 +293,6 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         filterBean.setHospitalLevelBeans(DataUtil.hospitalLevelBeans);
         filterBean.setExpertPostionalBeans(DataUtil.expertPostionalBeans);
         initFilterDropDownView();
-        ClassicsHeader mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -337,9 +335,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
             startLocation();
         }
     }
-/**
- * 显示
- */
+
     /**
      * 筛选框 初始化+获取列表数据+筛选条件监听
      */
@@ -436,7 +432,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         params.put("cityName", cityName);
         params.put("positional", positional);
         params.put("searchstr", searchstr);
-        HttpRequestClient.getInstance(SearchResultListActivity.this).createBaseApi().get("guahao/search"
+        HttpRequestClient.getNotInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL, null).createBaseApi().get("guahao/search"
                 , params, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {
                     protected Disposable disposable;
 
@@ -448,7 +444,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                     @Override
                     public void onError(Throwable e) {
                         mProgressDialog.dismiss();
-                        ToastUtil.showLong(SearchResultListActivity.this, e.getMessage());
+                        ToastUtil.showLong(SearchResultListActivity.this, "查询失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -507,7 +503,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                         expert_list.setVisibility(View.VISIBLE);
                                     }
                                 } else {
-//
+                                    ToastUtil.showLong(SearchResultListActivity.this, "查询失败!");
                                 }
                                 mProgressDialog.dismiss();
                             } catch (JSONException e) {
