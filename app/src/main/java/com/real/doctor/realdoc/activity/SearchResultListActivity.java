@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -165,7 +166,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                SearchResultListActivity.this.finish();
+                goBackBtn();
                 break;
             case R.id.right_title:
                 Intent intentArea = new Intent(SearchResultListActivity.this, AppointmentAddressActivity.class);
@@ -432,7 +433,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         params.put("cityName", cityName);
         params.put("positional", positional);
         params.put("searchstr", searchstr);
-        HttpRequestClient.getNotInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL, null).createBaseApi().get("guahao/search"
+        HttpRequestClient.getNotInstance(SearchResultListActivity.this, HttpNetUtil.SEARCH_URL, null).createBaseApi().get("guahao/search"
                 , params, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {
                     protected Disposable disposable;
 
@@ -551,7 +552,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpRequestClient client = HttpRequestClient.getInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL);
+        HttpRequestClient client = HttpRequestClient.getInstance(SearchResultListActivity.this, HttpNetUtil.SEARCH_URL);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), object.toString());
         client.createBaseApi().json("guahao/fastorder/"
                 , body, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {
@@ -652,6 +653,23 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                     refreshLayout.finishRefresh();
                 }
             }
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBackBtn();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goBackBtn() {
+        //将地址还给baseUrl
+        HttpRequestClient client = HttpRequestClient.getNotInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL, null);
+        if (EmptyUtils.isNotEmpty(client)) {
+            SearchResultListActivity.this.finish();
         }
     }
 }
