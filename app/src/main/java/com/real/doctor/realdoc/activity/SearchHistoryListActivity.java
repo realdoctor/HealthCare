@@ -282,7 +282,7 @@ public class SearchHistoryListActivity extends BaseActivity {
         param.put("query", queryStr);
         param.put("type", type);
         HttpRequestClient client = HttpRequestClient.getInstance(SearchHistoryListActivity.this, HttpNetUtil.SEARCH_URL);
-        client.createBaseApi().get("goods/autoComplete/"
+        client.createBaseApi().get("autoComplete"
                 , param, new BaseObserver<ResponseBody>(SearchHistoryListActivity.this) {
                     protected Disposable disposable;
 

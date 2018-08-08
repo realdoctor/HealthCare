@@ -404,6 +404,10 @@ public class LoginActivity extends BaseActivity {
 //                                                    getDownData(jsonObject);
                                                         //实名认证
                                                         checkName(mobilePhone, pwd, token);
+                                                    } else {
+                                                        //外面数据库和里面的数据已经一样
+                                                        //实名认证
+                                                        checkName(mobilePhone, pwd, token);
                                                     }
                                                 } else {
                                                     if (lastList.size() > 0) {
