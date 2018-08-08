@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -100,8 +101,6 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
         searchKey = getIntent().getStringExtra("searchKey");
         categoryId = getIntent().getStringExtra("categoryId");
         page_title.setText("搜索结果");
-        ClassicsHeader mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         productAdapter = new ProductAdapter(SearchProductResultActivity.this, productList);
@@ -121,7 +120,7 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                SearchProductResultActivity.this.finish();
+                goBackBtn();
                 break;
         }
     }
@@ -138,8 +137,8 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
         param.put("pageNum", pageNum);
         param.put("pageSize", pageSize);
         param.put("searchstr", searchKey);
-        param.put("onlyMatch","1");
-        HttpRequestClient.getInstance(SearchProductResultActivity.this).createBaseApi().get(" goods/search"
+        param.put("onlyMatch", "1");
+        HttpRequestClient.getNotInstance(SearchProductResultActivity.this, HttpNetUtil.BASE_URL, null).createBaseApi().get(" goods/search"
                 , param, new BaseObserver<ResponseBody>(SearchProductResultActivity.this) {
                     protected Disposable disposable;
 
@@ -316,5 +315,22 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     protected void onResume() {
         super.onResume();
         userId = (String) SPUtils.get(SearchProductResultActivity.this, Constants.USER_KEY, "");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBackBtn();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goBackBtn() {
+        //将地址还给baseUrl
+        HttpRequestClient client = HttpRequestClient.getNotInstance(SearchProductResultActivity.this, HttpNetUtil.BASE_URL, null);
+        if (EmptyUtils.isNotEmpty(client)) {
+            SearchProductResultActivity.this.finish();
+        }
     }
 }
