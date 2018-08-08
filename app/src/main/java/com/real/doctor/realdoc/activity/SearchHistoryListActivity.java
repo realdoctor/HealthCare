@@ -188,7 +188,7 @@ public class SearchHistoryListActivity extends BaseActivity {
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                SearchHistoryListActivity.this.finish();
+                goBackBtn();
                 break;
             case R.id.tv_clear:
                 list.clear();
@@ -345,7 +345,22 @@ public class SearchHistoryListActivity extends BaseActivity {
                     }
 
                 });
+    }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBackBtn();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    private void goBackBtn() {
+        //将地址还给baseUrl
+        HttpRequestClient client = HttpRequestClient.getNotInstance(SearchHistoryListActivity.this, HttpNetUtil.BASE_URL, null);
+        if (EmptyUtils.isNotEmpty(client)) {
+            SearchHistoryListActivity.this.finish();
+        }
     }
 }
