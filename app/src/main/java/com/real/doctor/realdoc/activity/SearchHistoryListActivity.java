@@ -293,7 +293,7 @@ public class SearchHistoryListActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, e.getMessage());
+                        ToastUtil.showLong(SearchHistoryListActivity.this, "查询失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -325,13 +325,16 @@ public class SearchHistoryListActivity extends BaseActivity {
                                     JSONArray array = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
+                                    if (array.length() == 0) {
+                                        ToastUtil.showLong(SearchHistoryListActivity.this, "查询结果为空!");
+                                    }
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject oo = (JSONObject) array.get(i);
                                         list.add(oo.getString("value"));
                                     }
                                     queryData(queryStr);
                                 } else {
-
+                                    ToastUtil.showLong(SearchHistoryListActivity.this, "查询失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
