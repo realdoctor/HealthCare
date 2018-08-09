@@ -202,18 +202,12 @@ public class DropDownMenuForResult extends RelativeLayout implements View.OnClic
         if (open) {
             close();
         } else {
-
-
             currentView = frameLayoutContainer.getChildAt(position);
-
             if (currentView == null) {
                 return;
             }
-
             frameLayoutContainer.getChildAt(filterTabsIndicator.getLastIndicatorPosition()).setVisibility(View.GONE);
             frameLayoutContainer.getChildAt(position).setVisibility(View.VISIBLE);
-
-
             if (isClosed()) {
                 frameLayoutContainer.setVisibility(VISIBLE);
                 frameLayoutContainer.startAnimation(alphaOccurAnimation);
@@ -225,7 +219,6 @@ public class DropDownMenuForResult extends RelativeLayout implements View.OnClic
 
         }
     }
-
 
     private void initAnimation() {
         occurAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.top_in);

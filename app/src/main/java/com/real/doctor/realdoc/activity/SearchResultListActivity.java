@@ -78,6 +78,7 @@ import okhttp3.ResponseBody;
  */
 
 public class SearchResultListActivity extends BaseActivity implements OnFilterDoneListener, ExpertAdapter.MyClickListener, OnLoadmoreListener, OnRefreshListener {
+
     @BindView(R.id.right_title)
     TextView right_title;
     @BindView(R.id.rg)
@@ -97,7 +98,6 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.refreshLayout)
-
     SmartRefreshLayout refreshLayout;
     //@BindView(R.id.dropMenu)
     DropDownMenuForResult dropDownMenu;
@@ -106,11 +106,12 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     public String cityName = "";
     public String positional = "";
     public String searchstr = "";
+    public String cate = "";
     public FilterBean filterBean;
     public int pageNum = 1;
     public int pageSize = 10;
     public int pageNum2 = 1;
-    public String tag = "1";
+    public String tag;
     public String userId;
     private String[] titleList;//标题
     private DropMenuAdapterForResult dropMenuAdapter;
@@ -150,6 +151,14 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         }
         dropDownMenu = findViewById(R.id.dropMenu);
         searchstr = getIntent().getStringExtra("searchKey");
+        cate = getIntent().getStringExtra("cate");
+        if (cate.equals("hospital")) {
+            tag = "1";
+        } else if (cate.equals("doctor")) {
+            tag = "2";
+        } else {
+            tag = "1";
+        }
         right_title.setVisibility(View.VISIBLE);
         right_title.setText("定位中");
         mProgressDialog = DocUtils.getProgressDialog(SearchResultListActivity.this, "正在加载数据....");
@@ -239,7 +248,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 } else {
 
                 }
-                searchHospital(pageNum, pageSize);
+                searchHospitalOrDoctor(pageNum, pageSize);
             }
         }
     };
@@ -300,12 +309,12 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-                    case R.id.rb_hospital:// first
+                    case R.id.rb_hospital:// 医院
                         hosptial_list.setVisibility(View.VISIBLE);
                         expert_list.setVisibility(View.GONE);
                         tag = "1";
                         break;
-                    case R.id.rb_expert:// 第二个
+                    case R.id.rb_expert:// 医生
                         hosptial_list.setVisibility(View.GONE);
                         expert_list.setVisibility(View.VISIBLE);
                         tag = "2";
@@ -374,9 +383,9 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                     positional = bean3.postional;
                 }
                 if (tag.equals("1")) {
-                    searchHospital(pageNum, pageSize);
+                    searchHospitalOrDoctor(pageNum, pageSize);
                 } else {
-                    searchHospital(pageNum2, pageSize);
+                    searchHospitalOrDoctor(pageNum2, pageSize);
                 }
             }
         });
@@ -393,7 +402,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 return;
             }
             pageNum++;
-            searchHospital(pageNum, pageSize);
+            searchHospitalOrDoctor(pageNum, pageSize);
             refreshlayout.finishLoadmore();
         } else {
             if (pageSize * pageNum2 > expertBeans.size()) {
@@ -402,7 +411,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 return;
             }
             pageNum2++;
-            searchHospital(pageNum2, pageSize);
+            searchHospitalOrDoctor(pageNum2, pageSize);
             refreshlayout.finishLoadmore();
         }
     }
@@ -412,27 +421,26 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         if (tag.equals("1")) {
             pageNum = 1;
             hospitalBeans.clear();
-            searchHospital(pageNum, pageSize);
+            searchHospitalOrDoctor(pageNum, pageSize);
             refreshLayout.finishRefresh();
         } else {
             pageNum2 = 1;
             expertBeans.clear();
-            searchHospital(pageNum2, pageSize);
+            searchHospitalOrDoctor(pageNum2, pageSize);
             refreshLayout.finishRefresh();
         }
 
     }
 
-    private void searchHospital(int pageNum, int pageSize) {
+    private void searchHospitalOrDoctor(int pageNum, int pageSize) {
         mProgressDialog.show();
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
-        params.put("tag", tag);
         params.put("sortstr", sortstr);
-        params.put("cityName", cityName);
         params.put("positional", positional);
         params.put("searchstr", searchstr);
+        params.put("tag", tag);
         HttpRequestClient.getNotInstance(SearchResultListActivity.this, HttpNetUtil.SEARCH_URL, null).createBaseApi().get("guahao/search"
                 , params, new BaseObserver<ResponseBody>(SearchResultListActivity.this) {
                     protected Disposable disposable;
@@ -644,12 +652,12 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                 if (tag.equals("1")) {
                     pageNum = 1;
                     hospitalBeans.clear();
-                    searchHospital(pageNum, pageSize);
+                    searchHospitalOrDoctor(pageNum, pageSize);
                     refreshLayout.finishRefresh();
                 } else {
                     pageNum2 = 1;
                     expertBeans.clear();
-                    searchHospital(pageNum2, pageSize);
+                    searchHospitalOrDoctor(pageNum2, pageSize);
                     refreshLayout.finishRefresh();
                 }
             }

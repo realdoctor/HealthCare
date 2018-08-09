@@ -41,7 +41,7 @@
                 android:imeOptions="actionSearch"
                 android:padding="@dimen/dp_4"
                 android:singleLine="true"
-                android:textColor="@color/gray"
+                android:textColor="@color/text_black_color"
                 android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="14sp" />
 
@@ -61,29 +61,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="20dp"
-
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_tip"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="left|center_vertical"
+                    android:paddingLeft="15dp"
                     android:text="搜索历史" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#EEEEEE"></View>
+                    android:layout_height="1px"
+                    android:background="@drawable/disease_divider" />
 
-                <com.real.doctor.realdoc.view.MyListView
+                <com.real.doctor.realdoc.view.CustomListView
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></com.real.doctor.realdoc.view.MyListView>
-
-
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/disease_divider" />
             </LinearLayout>
 
             <View

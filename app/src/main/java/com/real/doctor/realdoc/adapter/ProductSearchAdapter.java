@@ -6,19 +6,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.model.SearchBean;
+import com.real.doctor.realdoc.model.SearchProductBean;
 
 import java.util.List;
 
+public class ProductSearchAdapter extends RdBaseAdapter<SearchProductBean> {
 
-public class QueryItemAdapter extends RdBaseAdapter<SearchBean> {
-    public QueryItemAdapter(Context context, List list) {
+    public ProductSearchAdapter(Context context, List list) {
         super(context, list);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SearchBean bean = getItem(position);
+        SearchProductBean bean = getItem(position);
         final Holder holder;
         if (convertView == null) {
             holder = new Holder();

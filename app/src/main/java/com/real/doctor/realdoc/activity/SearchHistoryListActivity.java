@@ -1,48 +1,41 @@
 package com.real.doctor.realdoc.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.adapter.InfoSearchAdapter;
+import com.real.doctor.realdoc.adapter.ProductSearchAdapter;
 import com.real.doctor.realdoc.adapter.QueryItemAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.ArticleShowFragment;
 import com.real.doctor.realdoc.fragment.ShoppintMallFragment;
+import com.real.doctor.realdoc.greendao.table.SearchInfoManager;
+import com.real.doctor.realdoc.greendao.table.SearchManager;
+import com.real.doctor.realdoc.greendao.table.SearchProductManager;
+import com.real.doctor.realdoc.model.SearchBean;
+import com.real.doctor.realdoc.model.SearchInfoBean;
+import com.real.doctor.realdoc.model.SearchProductBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
-import com.real.doctor.realdoc.util.RecordSQLiteOpenHelper;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
-import com.real.doctor.realdoc.view.MyListView;
+import com.real.doctor.realdoc.view.CustomListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,35 +44,42 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 public class SearchHistoryListActivity extends BaseActivity {
 
     @BindView(R.id.et_search)
-    EditText et_search;
+    EditText searchEt;
     @BindView(R.id.tv_tip)
-    TextView tv_tip;
+    TextView tipTv;
     @BindView(R.id.listView)
-    MyListView listView;
+    CustomListView listView;
     @BindView(R.id.tv_clear)
-    TextView tv_clear;
+    TextView clearTv;
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.search_top)
     LinearLayout search_top;
-    private RecordSQLiteOpenHelper helper = new RecordSQLiteOpenHelper(this);
-    private SQLiteDatabase db;
     private QueryItemAdapter adapter;
+    private ProductSearchAdapter productAdapter;
+    private InfoSearchAdapter infoAdapter;
     private int requestCode;
     public String categoryId;
-    public ArrayList<String> list = new ArrayList<String>();
+    public ArrayList<SearchBean> list = new ArrayList<SearchBean>();
+    public ArrayList<SearchProductBean> productList = new ArrayList<SearchProductBean>();
+    public ArrayList<SearchInfoBean> infoList = new ArrayList<SearchInfoBean>();
+    public Map<String, Object> map = new HashMap<String, Object>();
     public String type;
+    private SearchManager searchInstance;
+    private SearchInfoManager searchInfoInstance;
+    private SearchProductManager searchProductInstance;
 
     @Override
     public int getLayoutId() {
@@ -105,40 +105,49 @@ public class SearchHistoryListActivity extends BaseActivity {
         categoryId = intent.getStringExtra("categoryId");
         if (requestCode == ArticleShowFragment.INFO_SEARCH) {
             type = "zx";
+            searchInfoInstance = SearchInfoManager.getInstance(SearchHistoryListActivity.this);
         } else if (requestCode == ShoppintMallFragment.SHOPPING_EVENT_REQUEST_CODE) {
             type = "sp";
+            searchProductInstance = SearchProductManager.getInstance(SearchHistoryListActivity.this);
         } else if (requestCode == RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE) {
             type = "gh";
+            searchInstance = SearchManager.getInstance(SearchHistoryListActivity.this);
         }
-        // 初始化控件
-        initView();
-        // 设置适配器
-        adapter = new QueryItemAdapter(SearchHistoryListActivity.this, list);
-        listView.setAdapter(adapter);
         // 搜索框的键盘搜索键点击回调
-        et_search.setOnKeyListener(new View.OnKeyListener() {// 输入完后按键盘上的搜索键
-
+        searchEt.setOnKeyListener(new View.OnKeyListener() {// 输入完后按键盘上的搜索键
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {// 修改回车键功能
                     // 先隐藏键盘
                     ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
                             getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     // 按完搜索键后将当前查询的关键字保存起来,如果该关键字已经存在就不执行保存
-                    boolean hasData = hasData(et_search.getText().toString().trim());
-                    if (!hasData) {
-                        insertData(et_search.getText().toString().trim());
-                        queryData("");
+                    String search = searchEt.getText().toString().trim();
+                    if (EmptyUtils.isNotEmpty(search)) {
+                        //从map中得到相同value的数据
+                        String cate = (String) map.get(search);
+                        if (EmptyUtils.isNotEmpty(cate)) {
+                            SearchBean bean = new SearchBean();
+                            bean.setCate(cate);
+                            bean.setValue(search);
+                            insertData(bean);
+                            setBackValue(search, cate);
+                        } else {
+                            SearchBean bean = new SearchBean();
+                            bean.setCate("");
+                            bean.setValue(search);
+                            insertData(bean);
+                            setBackValue(search, "");
+                        }
+                    } else {
+                        ToastUtil.showLong(SearchHistoryListActivity.this, "搜索框为空,请输入您要搜索的信息!");
                     }
-                    // TODO 根据输入的内容模糊查询商品，并跳转到另一个界面，由你自己去实现
-                    String value = et_search.getText().toString();
-                    setBackValue(value);
                 }
                 return false;
             }
         });
 
         // 搜索框的文本变化实时监听
-        et_search.addTextChangedListener(new TextWatcher() {
+        searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -152,35 +161,90 @@ public class SearchHistoryListActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().trim().length() == 0) {
-                    tv_tip.setText("搜索历史");
+                    tipTv.setText("搜索历史");
                 } else {
-                    tv_tip.setText("搜索结果");
+                    tipTv.setText("搜索结果");
                 }
-                String tempName = et_search.getText().toString();
-                // 根据tempName去模糊查询数据库中有没有数据
-                //queryData(tempName);
+                String value = searchEt.getText().toString();
+                // 根据value去模糊查询数据库中有没有数据
+                queryData(value);
                 list.clear();
-                getQuery(tempName);
+                getQuery(value);
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView textView = (TextView) view.findViewById(android.R.id.text1);
-                String name = textView.getText().toString();
-                et_search.setText(name);
-                setBackValue(name);
-                // TODO 获取到item上面的文字，根据该关键字跳转到另一个页面查询，由你自己去实现
-            }
-        });
-        // 第一次进入查询所有的历史记录
-        queryData("");
+        // 设置适配器
+        if (type.equals("sp")) {
+            // 第一次进入查询所有的历史记录
+            List<SearchProductBean> searchBeanList = queryProductAllData();
+            productAdapter = new ProductSearchAdapter(SearchHistoryListActivity.this, searchBeanList);
+            listView.setAdapter(productAdapter);
+        } else if (type.equals("zx")) {
+            // 第一次进入查询所有的历史记录
+            List<SearchInfoBean> searchBeanList = queryInfoAllData();
+            infoAdapter = new InfoSearchAdapter(SearchHistoryListActivity.this, searchBeanList);
+            listView.setAdapter(infoAdapter);
+        } else if (type.equals("gh")) {
+            // 第一次进入查询所有的历史记录
+            List<SearchBean> searchBeanList = queryAllData();
+            adapter = new QueryItemAdapter(SearchHistoryListActivity.this, searchBeanList);
+            listView.setAdapter(adapter);
+        }
+    }
+
+    private List<SearchBean> queryAllData() {
+        if (type.equals("gh")) {
+            return searchInstance.querySearchList(SearchHistoryListActivity.this);
+        }
+        return null;
+    }
+
+    private List<SearchInfoBean> queryInfoAllData() {
+        if (type.equals("zx")) {
+            return searchInfoInstance.querySearchList(SearchHistoryListActivity.this);
+        }
+        return null;
+    }
+
+    private List<SearchProductBean> queryProductAllData() {
+        if (type.equals("sp")) {
+            return searchProductInstance.querySearchList(SearchHistoryListActivity.this);
+        }
+        return null;
     }
 
     @Override
     public void initEvent() {
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SearchBean bean = null;
+                SearchInfoBean infoBean = null;
+                SearchProductBean productBean = null;
+                if (type.equals("sp")) {
+                    productBean = (SearchProductBean) parent.getAdapter().getItem(position);
+                    //插入数据库
+                    insertProductData(productBean);
+                    searchEt.setText(productBean.getValue());
+                    searchEt.setSelection(productBean.getValue().length());
+                    setBackValue(productBean.getValue(), productBean.getCate());
+                } else if (type.equals("zx")) {
+                    infoBean = (SearchInfoBean) parent.getAdapter().getItem(position);
+                    //插入数据库
+                    insertInfoData(infoBean);
+                    searchEt.setText(infoBean.getValue());
+                    searchEt.setSelection(infoBean.getValue().length());
+                    setBackValue(infoBean.getValue(), infoBean.getCate());
+                } else if (type.equals("gh")) {
+                    bean = (SearchBean) parent.getAdapter().getItem(position);
+                    //插入数据库
+                    insertData(bean);
+                    searchEt.setText(bean.getValue());
+                    searchEt.setSelection(bean.getValue().length());
+                    setBackValue(bean.getValue(), bean.getCate());
+                }
+            }
+        });
     }
 
     @Override
@@ -193,7 +257,17 @@ public class SearchHistoryListActivity extends BaseActivity {
             case R.id.tv_clear:
                 list.clear();
                 deleteData();
-                queryData("");
+                // 设置适配器
+                if (type.equals("sp")) {
+                    productAdapter = new ProductSearchAdapter(SearchHistoryListActivity.this, productList);
+                    listView.setAdapter(productAdapter);
+                } else if (type.equals("zx")) {
+                    infoAdapter = new InfoSearchAdapter(SearchHistoryListActivity.this, infoList);
+                    listView.setAdapter(infoAdapter);
+                } else if (type.equals("gh")) {
+                    adapter = new QueryItemAdapter(SearchHistoryListActivity.this, list);
+                    listView.setAdapter(adapter);
+                }
                 break;
         }
     }
@@ -203,7 +277,7 @@ public class SearchHistoryListActivity extends BaseActivity {
 
     }
 
-    public void setBackValue(String value) {
+    public void setBackValue(String value, String cate) {
         if (EmptyUtils.isEmpty(value)) {
             ToastUtil.showLong(SearchHistoryListActivity.this, "搜索关键字不能为空!");
             return;
@@ -211,6 +285,7 @@ public class SearchHistoryListActivity extends BaseActivity {
         if (requestCode == RegistrationsActivity.REGISTRATION_EVENT_REQUEST_CODE) {
             Intent intent = new Intent(SearchHistoryListActivity.this, SearchResultListActivity.class);
             intent.putExtra("searchKey", value);
+            intent.putExtra("cate", cate);
             startActivity(intent);
             SearchHistoryListActivity.this.finish();
         } else if (requestCode == ShoppintMallFragment.SHOPPING_EVENT_REQUEST_CODE) {
@@ -230,51 +305,54 @@ public class SearchHistoryListActivity extends BaseActivity {
     /**
      * 插入数据
      */
-    private void insertData(String tempName) {
-        if (EmptyUtils.isEmpty(tempName)) {
-            ToastUtil.showLong(SearchHistoryListActivity.this, "搜索关键字不能为空!");
-            return;
+    private void insertData(SearchBean bean) {
+        if (type.equals("gh")) {
+            searchInstance.insertSearch(this, bean);
         }
-        db = helper.getWritableDatabase();
-        db.execSQL("insert into records(name) values('" + tempName + "')");
-        db.close();
+    }
+
+    /**
+     * 插入数据
+     */
+    private void insertProductData(SearchProductBean bean) {
+        if (type.equals("sp")) {
+            searchProductInstance.insertSearch(this, bean);
+        }
+    }
+
+    /**
+     * 插入数据
+     */
+    private void insertInfoData(SearchInfoBean bean) {
+        if (type.equals("zx")) {
+            searchInfoInstance.insertSearch(this, bean);
+        }
     }
 
     /**
      * 模糊查询数据
      */
-    private void queryData(String tempName) {
-        Cursor cursor = helper.getReadableDatabase().rawQuery(
-                "select id as _id,name from records where name like '%" + tempName + "%' order by id desc ", null);
-        // 创建adapter适配器对象
-
-        if (cursor != null && cursor.moveToFirst()) {
-
-            do {
-                list.add(cursor.getString(1));
-            } while (cursor.moveToNext());
-
+    private void queryData(String value) {
+        if (type.equals("sp")) {
+            searchProductInstance.querySearchWithValue(this, value);
+        } else if (type.equals("zx")) {
+            searchInfoInstance.querySearchWithValue(this, value);
+        } else if (type.equals("gh")) {
+            searchInstance.querySearchWithValue(this, value);
         }
-        adapter.notifyDataSetChanged();
-    }
-
-    /**
-     * 检查数据库中是否已经有该条记录
-     */
-    private boolean hasData(String tempName) {
-        Cursor cursor = helper.getReadableDatabase().rawQuery(
-                "select id as _id,name from records where name =?", new String[]{tempName});
-        //判断是否有下一个
-        return cursor.moveToNext();
     }
 
     /**
      * 清空数据
      */
     private void deleteData() {
-        db = helper.getWritableDatabase();
-        db.execSQL("delete from records");
-        db.close();
+        if (type.equals("sp")) {
+            searchProductInstance.deleteAllSearch(this);
+        } else if (type.equals("zx")) {
+            searchInfoInstance.deleteAllSearch(this);
+        } else if (type.equals("gh")) {
+            searchInstance.deleteAllSearch(this);
+        }
     }
 
     public void getQuery(final String queryStr) {
@@ -323,11 +401,59 @@ public class SearchHistoryListActivity extends BaseActivity {
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     JSONArray array = object.getJSONArray("data");
-                                    Gson localGson = new GsonBuilder()
-                                            .create();
                                     for (int i = 0; i < array.length(); i++) {
-                                        JSONObject oo = (JSONObject) array.get(i);
-                                        list.add(oo.getString("value"));
+                                        SearchBean bean = null;
+                                        SearchInfoBean infoBean = null;
+                                        SearchProductBean productBean = null;
+                                        if (type.equals("sp")) {
+                                            productBean = new SearchProductBean();
+                                        } else if (type.equals("zx")) {
+                                            infoBean = new SearchInfoBean();
+                                        } else if (type.equals("gh")) {
+                                            bean = new SearchBean();
+                                        }
+                                        JSONObject jsonObj = (JSONObject) array.get(i);
+                                        String value = "";
+                                        String cate = "";
+                                        if (DocUtils.hasValue(jsonObj, "value")) {
+                                            value = jsonObj.getString("value");
+                                            if (type.equals("sp")) {
+                                                productBean.setValue(value);
+                                            } else if (type.equals("zx")) {
+                                                infoBean.setValue(value);
+                                            } else if (type.equals("gh")) {
+                                                bean.setValue(value);
+                                            }
+                                        }
+                                        if (DocUtils.hasValue(jsonObj, "cate")) {
+                                            cate = jsonObj.getString("cate");
+                                            if (type.equals("sp")) {
+                                                productBean.setCate(cate);
+                                            } else if (type.equals("zx")) {
+                                                infoBean.setCate(cate);
+                                            } else if (type.equals("gh")) {
+                                                bean.setCate(cate);
+                                            }
+                                        }
+                                        map.put(value, cate);
+                                        if (type.equals("sp")) {
+                                            productList.add(productBean);
+                                        } else if (type.equals("zx")) {
+                                            infoList.add(infoBean);
+                                        } else if (type.equals("gh")) {
+                                            list.add(bean);
+                                        }
+                                    }
+                                    // 设置适配器
+                                    if (type.equals("sp")) {
+                                        productAdapter = new ProductSearchAdapter(SearchHistoryListActivity.this, productList);
+                                        listView.setAdapter(productAdapter);
+                                    } else if (type.equals("zx")) {
+                                        infoAdapter = new InfoSearchAdapter(SearchHistoryListActivity.this, infoList);
+                                        listView.setAdapter(infoAdapter);
+                                    } else if (type.equals("gh")) {
+                                        adapter = new QueryItemAdapter(SearchHistoryListActivity.this, list);
+                                        listView.setAdapter(adapter);
                                     }
                                     queryData(queryStr);
                                 } else {

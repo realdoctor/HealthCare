@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <include layout="@layout/title_bar"></include>
 
     <LinearLayout
@@ -12,41 +13,42 @@
         android:orientation="vertical">
 
         <RadioGroup
+            android:id="@+id/rg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:id="@+id/rg"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <RadioButton
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:button="@null"
                 android:id="@+id/rb_hospital"
-                android:checked="true"
-                android:text="@string/hospital"
-                android:background="@drawable/radio_bg"
-                android:textSize="@dimen/sp_16"
-                android:gravity="center" />
-
-            <RadioButton
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:id="@+id/rb_expert"
-                android:button="@null"
-                android:text="@string/expert"
-                android:textSize="@dimen/sp_16"
                 android:background="@drawable/radio_bg"
-                android:gravity="center" />
-        </RadioGroup>
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/hospital"
+                android:textSize="@dimen/sp_16" />
 
+            <RadioButton
+                android:id="@+id/rb_expert"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/radio_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/expert"
+                android:textSize="@dimen/sp_16" />
+        </RadioGroup>
     </LinearLayout>
+
     <com.real.doctor.realdoc.view.DropDownMenuForResult
         android:id="@+id/dropMenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
@@ -56,26 +58,29 @@
             app:srlEnableLoadmore="true"
             app:srlEnablePreviewInEditMode="true"
             app:srlPrimaryColor="@android:color/white">
-        <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
-        <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
-        <com.scwang.smartrefresh.layout.header.ClassicsHeader
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/ll_contain"
-            android:layout_height="match_parent">
-            <ListView
-                android:id="@+id/hosptial_list"
+            <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
+            <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></ListView>
-            <ListView
-                android:id="@+id/expert_list"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/ll_contain"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></ListView>
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/hosptial_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ListView
+                    android:id="@+id/expert_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
             <com.scwang.smartrefresh.layout.footer.ClassicsFooter
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

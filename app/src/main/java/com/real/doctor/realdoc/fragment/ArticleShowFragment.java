@@ -58,7 +58,7 @@ import static com.real.doctor.realdoc.util.DpUtils.dip2px;
  * Created by Administrator on 2018/4/18.
  */
 
-public class ArticleShowFragment extends BaseFragment  {
+public class ArticleShowFragment extends BaseFragment {
     @BindView(R.id.tb_category)
     TabLayout tabLayout;
     @BindView(R.id.vp_show)
@@ -66,7 +66,7 @@ public class ArticleShowFragment extends BaseFragment  {
     private Unbinder unbinder;
     @BindView(R.id.img_search)
     ImageView img_search;
-    public static  final int INFO_SEARCH=2008;
+    public static final int INFO_SEARCH = 1;
 
     public static ArticleShowFragment newInstance() {
         return new ArticleShowFragment();
@@ -84,7 +84,7 @@ public class ArticleShowFragment extends BaseFragment  {
 
     @Override
     public void doBusiness(Context mContext) {
-        ArticleFragmentAdapter articleFragmentAdapter=new ArticleFragmentAdapter(getChildFragmentManager());
+        ArticleFragmentAdapter articleFragmentAdapter = new ArticleFragmentAdapter(getChildFragmentManager());
         viewPager.setAdapter(articleFragmentAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -93,14 +93,15 @@ public class ArticleShowFragment extends BaseFragment  {
     @Override
     @OnClick(R.id.img_search)
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.img_search:
-                Intent intent =new Intent(getActivity(), SearchHistoryListActivity.class);
-                intent.putExtra("requestCode",INFO_SEARCH);
+                Intent intent = new Intent(getActivity(), SearchHistoryListActivity.class);
+                intent.putExtra("requestCode", INFO_SEARCH);
                 startActivity(intent);
                 break;
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

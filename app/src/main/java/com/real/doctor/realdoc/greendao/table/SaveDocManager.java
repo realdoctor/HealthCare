@@ -399,7 +399,8 @@ public class SaveDocManager {
         boolean flag = false;
         try {
             DaoSession daoSession = RealDocApplication.getDaoSession(context);
-            daoSession.deleteAll(Context.class);
+            SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+            saveDocDao.deleteAll();
             flag = true;
         } catch (Exception e) {
             e.printStackTrace();
