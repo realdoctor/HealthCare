@@ -16,6 +16,8 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.AlreadyRevisitFragment;
 import com.real.doctor.realdoc.fragment.RevisitingFragment;
+import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.widget.TabViewPagerAdapter;
@@ -78,6 +80,7 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
         viewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager(), titles, fragments);
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        DocUtils.setIndicator(this, tabLayout, 20, 20);
         LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
         linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.layout_divider_vertical));
@@ -88,6 +91,7 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
     public void initEvent() {
 
     }
+
 
     @Override
     @OnClick({R.id.finish_back})
