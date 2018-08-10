@@ -59,7 +59,6 @@ public class RecordUploadService extends JobService {
     private RecordManager recordInstance;
     private VideoManager videoInstance;
     private String mobile;
-    private File file;
     private boolean zip = false;
 
     private Handler handler = new Handler(new Handler.Callback() {
@@ -76,28 +75,6 @@ public class RecordUploadService extends JobService {
             List<SaveDocBean> list = instance.querySaveDocList(RecordUploadService.this);
             instance.insertGlobeSaveDoc(RecordUploadService.this, list, mobile, folderName);
             List<ImageBean> beanList = imageInstance.queryImageList(RecordUploadService.this);
-            imageInstance.insertGlobeImageList(RecordUploadService.this, beanList, mobile, folderName);
-            List<ImageListBean> imageList = imageRecycleInstance.queryImageListList(RecordUploadService.this);
-            imageRecycleInstance.insertGlobelImageListList(RecordUploadService.this, imageList, mobile, folderName);
-            List<RecordBean> recordList = recordInstance.queryRecordList(RecordUploadService.this);
-            recordInstance.insertGlobeRecordList(RecordUploadService.this, recordList, mobile, folderName);
-            List<VideoBean> videoList = videoInstance.queryVideoList(RecordUploadService.this);
-            videoInstance.insertGlobeVideoList(RecordUploadService.this, videoList, mobile, folderName);
-            //复制文件夹中文件到指定文件夹中
-            //音频数据
-            boolean isMusic = FileUtils.createOrExistsDir(folderName + "music");
-            if (isMusic) {
-                for (int i = 0; i < recordList.size(); i++) {
-                    FileUtils.copyFile(recordList.get(i).getFilePath(), folderName + "music" + File.separator + recordList.get(i).getFileName());
-                }
-            }
-            //视频数据
-            boolean isVideo = FileUtils.createOrExistsDir(folderName + "movie");
-            if (isVideo) {
-                for (int i = 0; i < videoList.size(); i++) {
-                    FileUtils.copyFile(videoList.get(i).getFilePath(), folderName + "movie" + File.separator + videoList.get(i).getFileName());
-                }
-            }
             //图片数据
             boolean isImg = FileUtils.createOrExistsDir(folderName + "img");
             if (isImg) {
@@ -107,6 +84,46 @@ public class RecordUploadService extends JobService {
                     FileUtils.copyFile(beanList.get(i).getImgUrl(), folderName + "img" + File.separator + str);
                 }
             }
+            //修改图片所在的地址
+            for (int j = 0; j < beanList.size(); j++) {
+                String imgUrl = beanList.get(j).getImgUrl();
+                String fileName = imgUrl.substring(imgUrl.lastIndexOf("/") + 1, imgUrl.length());
+                //替换文件路径
+                beanList.get(j).setImgUrl(folderName + File.separator + "img" + File.separator + fileName);
+            }
+            imageInstance.insertGlobeImageList(RecordUploadService.this, beanList, mobile, folderName);
+            List<ImageListBean> imageList = imageRecycleInstance.queryImageListList(RecordUploadService.this);
+            imageRecycleInstance.insertGlobelImageListList(RecordUploadService.this, imageList, mobile, folderName);
+            List<RecordBean> recordList = recordInstance.queryRecordList(RecordUploadService.this);
+            //音频数据
+            boolean isMusic = FileUtils.createOrExistsDir(folderName + "music");
+            if (isMusic) {
+                for (int i = 0; i < recordList.size(); i++) {
+                    FileUtils.copyFile(recordList.get(i).getFilePath(), folderName + "music" + File.separator + recordList.get(i).getFileName());
+                }
+            }
+            //将该音频数据插入到patient数据库中
+            int audioLength = recordList.size();
+            for (int i = 0; i < audioLength; i++) {
+                //更换文件路径
+                recordList.get(i).setFilePath(folderName + File.separator + "music" + File.separator + recordList.get(i).getFileName());
+            }
+            recordInstance.insertGlobeRecordList(RecordUploadService.this, recordList, mobile, folderName);
+            List<VideoBean> videoList = videoInstance.queryVideoList(RecordUploadService.this);
+            //视频数据
+            boolean isVideo = FileUtils.createOrExistsDir(folderName + "movie");
+            if (isVideo) {
+                for (int i = 0; i < videoList.size(); i++) {
+                    FileUtils.copyFile(videoList.get(i).getFilePath(), folderName + "movie" + File.separator + videoList.get(i).getFileName());
+                }
+            }
+            //将该视频数据插入到patient数据库中
+            int videoLength = videoList.size();
+            for (int i = 0; i < videoLength; i++) {
+                //更换文件路径
+                videoList.get(i).setFilePath(folderName + File.separator + "movie" + File.separator + videoList.get(i).getFileName());
+            }
+            videoInstance.insertGlobeVideoList(RecordUploadService.this, videoList, mobile, folderName);
             //打包文件
             zip = false;
             //多条病历打成包

@@ -463,7 +463,8 @@
         <activity
             android:name=".activity.InqueryActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity
             android:name=".activity.AlreadyVertifyActivity"
             android:hardwareAccelerated="false"

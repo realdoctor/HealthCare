@@ -114,13 +114,8 @@ public class ProgressBarActivity extends BaseActivity {
                 } else if (StringUtils.equals(action, HAVE_NOTHING)) {
                     ToastUtil.showLong(ProgressBarActivity.this, "没有病历图片,音频,视频资源可打包,但病历信息已经上传完成!");
                 }
-                Intent extras = new Intent(ProgressBarActivity.this, CheckDetailActivity.class);
-                extras.putExtra("path", path);
-                extras.putExtra("questionId", questionId);
+                Intent extras = new Intent(ProgressBarActivity.this, MyRevisitActivity.class);
                 extras.putExtra("doctorUserId", doctorUserId);
-                extras.putExtra("detail", detail);
-                extras.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
-                extras.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(extras);
                 finish();
             }

@@ -212,10 +212,18 @@ public class SaveDocManager {
      * @param
      */
     public void updateRecord(SaveDocBean bean) {
-        DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
-        DaoSession daoSession = daoMaster.newSession();
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
         SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
         saveDocDao.update(bean);
+    }
+    /**
+     * 更新list数据
+     * @param
+     */
+    public void updateRecordList(List<SaveDocBean> list) {
+        DaoSession daoSession = RealDocApplication.getDaoSession(context);
+        SaveDocBeanDao saveDocDao = daoSession.getSaveDocBeanDao();
+        saveDocDao.updateInTx(list);
     }
 
     /**

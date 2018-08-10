@@ -40,12 +40,6 @@ public class CheckDocAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else {
             this.mSaveDocBean.addAll(saveDocBeanList);
         }
-        //将所有已选中去除
-        for (int i = 0; i < mSaveDocBean.size(); i++) {
-            if (mSaveDocBean.get(i).getIsSelect()) {
-                mSaveDocBean.get(i).setIsSelect(false);
-            }
-        }
         notifyDataSetChanged();
     }
 
@@ -78,7 +72,7 @@ public class CheckDocAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final SaveDocBean saveDocBean = mSaveDocBean.get(holder.getAdapterPosition());
         if (holder instanceof ViewHolder) {
-            ((ViewHolder) holder).bindHolder(saveDocBean, mSaveDocBean);
+            ((ViewHolder) holder).bindHolder(saveDocBean);
             ((ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -122,9 +116,8 @@ public class CheckDocAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ButterKnife.bind(this, itemView);
         }
 
-
         //为viewHolder绑定数据
-        public void bindHolder(final SaveDocBean saveDocBean, final List<SaveDocBean> mSaveDocBean) {
+        public void bindHolder(final SaveDocBean saveDocBean) {
             mTvTitle.setText(saveDocBean.getIll());
             mTvContent.setText(saveDocBean.getHospital());
             mTvTime.setText(DateUtil.timeStamp2Date(saveDocBean.getTime(), "yyyy年MM月dd日"));

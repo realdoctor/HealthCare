@@ -78,6 +78,7 @@ public class UserFragment extends BaseFragment {
     private String verifyFlag = "";
     private String roleId;
     private String url;
+    private String userId;
     private String realName;
     @BindView(R.id.user_name)
     TextView userName;
@@ -134,17 +135,10 @@ public class UserFragment extends BaseFragment {
         token = (String) SPUtils.get(getActivity(), Constants.TOKEN, "");
         mobile = (String) SPUtils.get(getActivity(), Constants.MOBILE, "");
         verifyFlag = (String) SPUtils.get(getActivity(), Constants.VERIFYFLAG, "");
+        userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
         roleId = (String) SPUtils.get(getActivity(), Constants.ROLE_ID, "");
-        url = (String) SPUtils.get(getActivity(), Constants.URL, "");
         realName = (String) SPUtils.get(getActivity(), Constants.REALNAME, "");
         originalImageUrl = (String) SPUtils.get(getActivity(), Constants.ORIGINALIMAGEURL, "");
-        if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
-            downRecord.setVisibility(View.VISIBLE);
-            downRecordLine.setVisibility(View.VISIBLE);
-        } else {
-            downRecord.setVisibility(View.GONE);
-            downRecordLine.setVisibility(View.GONE);
-        }
         if (EmptyUtils.isNotEmpty(token)) {
 //            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)   myLoginLine.getLayoutParams();
 //            lp.topMargin = SizeUtils.px2dp(getActivity(), 20);
@@ -166,6 +160,7 @@ public class UserFragment extends BaseFragment {
             //实名认证
             checkName(mobile);
         }
+        getUploadPatientUrl();
         localBroadcast();
     }
 
@@ -500,6 +495,76 @@ public class UserFragment extends BaseFragment {
                                     if (DocUtils.hasValue(obj, "verifyFlag")) {
                                         verifyFlag = obj.getString("verifyFlag");
                                         SPUtils.put(getActivity(), Constants.VERIFYFLAG, verifyFlag);
+                                    }
+                                } else {
+                                    ToastUtil.showLong(getActivity(), "获取用户信息失败,请确定是否已登录!");
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
+
+    private void getUploadPatientUrl() {
+        HashMap<String, String> param = new HashMap<String, String>();
+        param.put("userId", userId);
+        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("user/getUploadPatientUrl"
+                , param, new BaseObserver<ResponseBody>(getActivity()) {
+                    protected Disposable disposable;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(getActivity(), "获取用户信息失败,请确定是否已登录!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONObject obj = object.getJSONObject("data");
+                                    if (DocUtils.hasValue(obj, "url")) {
+                                        url = obj.getString("url");
+                                        SPUtils.put(getActivity(), Constants.URL, url);
+                                        if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
+                                            downRecord.setVisibility(View.VISIBLE);
+                                            downRecordLine.setVisibility(View.VISIBLE);
+                                        } else {
+                                            downRecord.setVisibility(View.GONE);
+                                            downRecordLine.setVisibility(View.GONE);
+                                        }
                                     }
                                 } else {
                                     ToastUtil.showLong(getActivity(), "获取用户信息失败,请确定是否已登录!");

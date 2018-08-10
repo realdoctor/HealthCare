@@ -1,11 +1,13 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +20,7 @@ import com.real.doctor.realdoc.fragment.AlreadyRevisitFragment;
 import com.real.doctor.realdoc.fragment.RevisitingFragment;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.SizeUtils;
 import com.real.doctor.realdoc.widget.TabViewPagerAdapter;
@@ -42,6 +45,7 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
     TabLayout tabLayout;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
+    private String doctorUserId;
     private TabViewPagerAdapter viewPagerAdapter;
     //TabLayout标签
     private String[] titles = new String[]{"正在复诊中", "复诊已完毕"};
@@ -85,6 +89,10 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
         linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.layout_divider_vertical));
         linearLayout.setDividerPadding(SizeUtils.dp2px(this, 15));
+        Intent intent = getIntent();
+        if (intent != null && intent.getExtras() != null) {
+            doctorUserId = intent.getExtras().getString("doctorUserId");
+        }
     }
 
     @Override
@@ -98,7 +106,7 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                finish();
+                goBackBtn();
                 break;
         }
     }
@@ -121,5 +129,26 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBackBtn();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goBackBtn() {
+        if (EmptyUtils.isNotEmpty(doctorUserId)) {
+            Intent intent = new Intent(MyRevisitActivity.this, DoctorsListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
+        } else {
+            finish();
+        }
     }
 }

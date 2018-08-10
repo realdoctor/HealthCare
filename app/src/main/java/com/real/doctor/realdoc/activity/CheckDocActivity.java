@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,6 +21,8 @@ import com.real.doctor.realdoc.adapter.CheckDocAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 
 import java.util.ArrayList;
@@ -38,8 +41,8 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     RelativeLayout titleBar;
     @BindView(R.id.page_title)
     TextView pageTitle;
-    @BindView(R.id.upload_btn)
-    TextView uploadBtn;
+    @BindView(R.id.confirm_btn)
+    TextView confirmBtn;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
     @BindView(R.id.select_all)
@@ -48,12 +51,9 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     private LinearLayoutManager mLinearLayoutManager;
     private boolean isSelectAll = false;
     private int index = 0;
-    private String inquery;
-    private String doctorUserId;
     private String desease;
-    private boolean detail;
-    private String questionId;
-    private String patientRecordId;
+    private SaveDocManager instance;
+    private Dialog mProgressDialog;
 
     @Override
     public void initEvent() {
@@ -62,39 +62,38 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
     }
 
     @Override
-    @OnClick({R.id.select_all, R.id.upload_btn})
+    @OnClick({R.id.select_all, R.id.confirm_btn})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.select_all:
                 selectAllMain();
                 break;
-            case R.id.upload_btn:
-                //跳转到进度条页面，并开启Service，上传成功，进度条页面消失
-                updateService();
+            case R.id.confirm_btn:
+                mProgressDialog.show();
+                Intent intent = new Intent();
+                List<SaveDocBean> mList = new ArrayList<>();
+                List<SaveDocBean> list = new ArrayList<>();
+                for (int i = mCheckDocAdapter.getSaveDocBeanList().size(), j = 0; i > j; i--) {
+                    SaveDocBean mSaveDocBean = mCheckDocAdapter.getSaveDocBeanList().get(i - 1);
+                    if (EmptyUtils.isEmpty(mSaveDocBean.getId())) {
+                        continue;
+                    } else {
+                        if (mSaveDocBean.getIsSelect()) {
+                            mList.add(mSaveDocBean);
+                        }
+                        list.add(mSaveDocBean);
+                    }
+                }
+                instance.updateRecordList(list);
+                intent.putParcelableArrayListExtra("records", (ArrayList<? extends Parcelable>) mList);
+                setResult(RESULT_OK, intent);
+                mProgressDialog.dismiss();
+                finish();
             default:
                 break;
         }
     }
 
-    private void updateService() {
-        Intent intent = new Intent(CheckDocActivity.this, ProgressBarActivity.class);
-        List<SaveDocBean> mList = new ArrayList<>();
-        for (int i = mCheckDocAdapter.getSaveDocBeanList().size(), j = 0; i > j; i--) {
-            SaveDocBean mSaveDocBean = mCheckDocAdapter.getSaveDocBeanList().get(i - 1);
-            if (mSaveDocBean.getIsSelect()) {
-                mList.add(mSaveDocBean);
-            }
-        }
-        intent.putExtra("inquery", inquery);
-        intent.putExtra("desease", desease);
-        intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) mList);
-        intent.putExtra("doctorUserId", doctorUserId);
-        intent.putExtra("questionId", questionId);
-        intent.putExtra("detail", detail);
-        intent.putExtra("patientRecordId", patientRecordId);
-        startActivity(intent);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-    }
 
     @Override
     public void doBusiness(Context mContext) {
@@ -117,7 +116,8 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
             titleBar.setLayoutParams(lp);
         }
         pageTitle.setText("相关病历资料");
-        uploadBtn.setText("发送");
+        confirmBtn.setText("确定");
+        mProgressDialog = DocUtils.getProgressDialog(CheckDocActivity.this, "正在添加病历数,请稍后....");
     }
 
     @Override
@@ -125,33 +125,20 @@ public class CheckDocActivity extends BaseActivity implements CheckDocAdapter.On
         //获取咨询内容
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
-            inquery = intent.getExtras().getString("inquery");
-            doctorUserId = intent.getExtras().getString("doctorUserId");
             desease = intent.getExtras().getString("desease");
-            questionId = intent.getExtras().getString("questionId");
-            detail = getIntent().getBooleanExtra("detail", false);
-            patientRecordId = intent.getExtras().getString("patientRecordId");
         }
         mCheckDocAdapter = new CheckDocAdapter(this);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(mLinearLayoutManager);
         mRecyclerview.setAdapter(mCheckDocAdapter);
-        SaveDocManager instance = SaveDocManager.getInstance(CheckDocActivity.this);
+        instance = SaveDocManager.getInstance(CheckDocActivity.this);
         List<SaveDocBean> mList = new ArrayList<>();
         List<SaveDocBean> mListOne = instance.queryRecordByEqDiseaseList(CheckDocActivity.this, desease);
-        //在SaveDocBean类中设置默认值为1
-//        for (int i = 0; i < mListOne.size(); i++) {
-//            mListOne.get(i).setType(1);
-//        }
         mList.addAll(mListOne);
         SaveDocBean bean = new SaveDocBean();
         bean.setType(2);
         mList.add(bean);
         List<SaveDocBean> mListThree = instance.queryRecordByNotDiseaseList(CheckDocActivity.this, desease);
-        //在SaveDocBean类中设置默认值为1
-//        for (int i = 0; i < mListThree.size(); i++) {
-//            mListThree.get(i).setType(1);
-//        }
         mList.addAll(mListThree);
         mCheckDocAdapter.notifyAdapter(mList, false);
     }

@@ -33,10 +33,10 @@ public class DaoMaster extends AbstractDaoMaster {
         RobotBeanDao.createTable(db, ifNotExists);
         SaveDocBeanDao.createTable(db, ifNotExists);
         SearchBeanDao.createTable(db, ifNotExists);
+        SearchInfoBeanDao.createTable(db, ifNotExists);
+        SearchProductBeanDao.createTable(db, ifNotExists);
         UserBeanDao.createTable(db, ifNotExists);
         VideoBeanDao.createTable(db, ifNotExists);
-        SearchProductBeanDao.createTable(db, ifNotExists);
-        SearchInfoBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -53,10 +53,10 @@ public class DaoMaster extends AbstractDaoMaster {
         RobotBeanDao.dropTable(db, ifExists);
         SaveDocBeanDao.dropTable(db, ifExists);
         SearchBeanDao.dropTable(db, ifExists);
+        SearchInfoBeanDao.dropTable(db, ifExists);
+        SearchProductBeanDao.dropTable(db, ifExists);
         UserBeanDao.dropTable(db, ifExists);
         VideoBeanDao.dropTable(db, ifExists);
-        SearchProductBeanDao.dropTable(db, ifExists);
-        SearchInfoBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -87,10 +87,10 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(RobotBeanDao.class);
         registerDaoClass(SaveDocBeanDao.class);
         registerDaoClass(SearchBeanDao.class);
+        registerDaoClass(SearchInfoBeanDao.class);
+        registerDaoClass(SearchProductBeanDao.class);
         registerDaoClass(UserBeanDao.class);
         registerDaoClass(VideoBeanDao.class);
-        registerDaoClass(SearchProductBeanDao.class);
-        registerDaoClass(SearchInfoBeanDao.class);
     }
 
     public DaoSession newSession() {

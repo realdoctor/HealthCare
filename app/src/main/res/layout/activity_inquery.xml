@@ -7,51 +7,90 @@
 
     <include layout="@layout/title_bar" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/inquery_text"
-        android:textColor="@color/text_black_color" />
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-    <EditText
-        android:id="@+id/inquery_edit"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10.0dip"
-        android:layout_marginRight="10.0dip"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/audio_item_bg"
-        android:gravity="top|left"
-        android:hint="@string/question_hint"
-        android:inputType="textMultiLine"
-        android:minLines="8"
-        android:padding="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:textColorHint="#ff999999"
-        android:textCursorDrawable="@drawable/color_cursor"
-        android:textSize="14.0sp"
-        android:typeface="monospace"
-        android:visibility="visible" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30.0dip"
-        android:gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/inquery_text"
+                android:textColor="@color/text_black_color" />
 
-        <Button
-            android:id="@+id/next_step"
-            android:layout_width="fill_parent"
-            android:layout_height="43.0dip"
-            android:layout_marginLeft="18.0dip"
-            android:layout_marginRight="18.0dip"
-            android:background="@drawable/button_selector"
-            android:text="@string/next_step"
-            android:textColor="#ffffffff"
-            android:textSize="15.0sp" />
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/inquery_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/audio_item_bg"
+                android:gravity="top|left"
+                android:hint="@string/question_hint"
+                android:inputType="textMultiLine"
+                android:minLines="8"
+                android:padding="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColorHint="#ff999999"
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="14.0sp"
+                android:typeface="monospace"
+                android:visibility="visible" />
+
+            <RelativeLayout
+                android:id="@+id/add_record_relative"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:visibility="visible">
+
+                <Button
+                    android:id="@+id/add_record_btn"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/button_selector"
+                    android:text="@string/add_record"
+                    android:textColor="@android:color/white"
+                    android:textSize="15.0sp" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/check_detail_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@null"
+                android:scrollbars="none" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30.0dip"
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:id="@+id/send"
+                    android:layout_width="fill_parent"
+                    android:layout_height="43.0dip"
+                    android:layout_marginLeft="18.0dip"
+                    android:layout_marginRight="18.0dip"
+                    android:background="@drawable/button_selector"
+                    android:text="@string/send"
+                    android:textColor="@android:color/white"
+                    android:textSize="15.0sp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>
