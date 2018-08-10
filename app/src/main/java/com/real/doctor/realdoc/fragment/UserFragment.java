@@ -234,10 +234,10 @@ public class UserFragment extends BaseFragment {
                                     String realName = "";
                                     if (DocUtils.hasValue(obj, "realName")) {
                                         realName = obj.getString("realName");
+                                        SPUtils.put(getActivity(), Constants.REALNAME, realName);
                                     }
                                     if (verifyFlag.equals("1")) {
                                         if (EmptyUtils.isNotEmpty(realName)) {
-                                            SPUtils.put(getActivity(), Constants.REALNAME, realName);
                                             userName.setText(realName);
                                         }
                                     } else {

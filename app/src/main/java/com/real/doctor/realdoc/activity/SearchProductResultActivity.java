@@ -74,7 +74,6 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     private PageModel<ProductBean> baseModel = new PageModel<ProductBean>();
     public ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
     public String searchKey;
-    public String categoryId;
     private Dialog mProgressDialog;
 
     @Override
@@ -99,7 +98,6 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
         mProgressDialog = DocUtils.getProgressDialog(SearchProductResultActivity.this, "正在加载数据....");
         userId = (String) SPUtils.get(SearchProductResultActivity.this, Constants.USER_KEY, "");
         searchKey = getIntent().getStringExtra("searchKey");
-        categoryId = getIntent().getStringExtra("categoryId");
         page_title.setText("搜索结果");
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
@@ -133,7 +131,6 @@ public class SearchProductResultActivity extends BaseActivity implements OnLoadm
     public void getRefreshProducts() {
         mProgressDialog.show();
         HashMap<String, Object> param = new HashMap<>();
-        param.put("categoryId", categoryId);
         param.put("pageNum", pageNum);
         param.put("pageSize", pageSize);
         param.put("searchstr", searchKey);

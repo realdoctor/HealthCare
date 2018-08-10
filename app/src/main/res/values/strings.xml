@@ -188,7 +188,7 @@
     <string name="confirm_dialog_btn">确定</string>
     <string name="cancel_dialog_btn">取消</string>
     <string name="my_qr">我是"朱家斌"医生,这是我的二维码</string>
-    <string name="my_qr_txt">请对准扫描枪</string>
+    <string name="my_qr_txt">请对准扫描</string>
     <string name="go_zip_path">点击图片进入压缩包所在文件夹 </string>
     <string name="chat_pay">聊天咨询收费</string>
     <string name="record_pay">病历咨询收费</string>

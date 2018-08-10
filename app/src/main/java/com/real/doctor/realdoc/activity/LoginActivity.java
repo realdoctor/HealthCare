@@ -370,6 +370,7 @@ public class LoginActivity extends BaseActivity {
                                                 SPUtils.put(LoginActivity.this, Constants.USER_KEY, user.getId());
                                                 SPUtils.put(LoginActivity.this, Constants.ROLE_ID, user.getRoleId());
                                                 SPUtils.put(LoginActivity.this, Constants.ROLE_CHANGE_ID, user.getRoleId());
+                                                SPUtils.put(LoginActivity.this, Constants.REALNAME, user.getRealname());
                                                 //设置极光推送别名
                                                 // 调用 Handler 来异步设置别名
                                                 mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, user.getId()));
