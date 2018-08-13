@@ -46,6 +46,7 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     private String doctorUserId;
+    private String questionId;
     private TabViewPagerAdapter viewPagerAdapter;
     //TabLayout标签
     private String[] titles = new String[]{"正在复诊中", "复诊已完毕"};
@@ -92,6 +93,7 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
             doctorUserId = intent.getExtras().getString("doctorUserId");
+            questionId = intent.getExtras().getString("questionId");
         }
     }
 
@@ -142,11 +144,16 @@ public class MyRevisitActivity extends BaseActivity implements TabLayout.OnTabSe
 
     private void goBackBtn() {
         if (EmptyUtils.isNotEmpty(doctorUserId)) {
-            Intent intent = new Intent(MyRevisitActivity.this, DoctorsListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            finish();
+            if (EmptyUtils.isEmpty(questionId)) {
+                Intent intent = new Intent(MyRevisitActivity.this, DoctorsListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                finish();
+            } else {
+                //跳转到我的fragment
+                finish();
+            }
         } else {
             finish();
         }

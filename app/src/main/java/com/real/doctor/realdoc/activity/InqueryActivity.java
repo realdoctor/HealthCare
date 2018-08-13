@@ -19,20 +19,35 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.DocDetailAdapter;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
+import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.view.SwipeItemLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 public class InqueryActivity extends BaseActivity {
 
@@ -124,16 +139,20 @@ public class InqueryActivity extends BaseActivity {
                 inqueryEditContent = inqueryEdit.getText().toString().trim();
                 if (EmptyUtils.isNotEmpty(inqueryEditContent)) {
                     if (inqueryEditContent.length() > 10) {
-                        intent = new Intent(InqueryActivity.this, ProgressBarActivity.class);
-                        intent.putExtra("inquery", inqueryEditContent);
-                        intent.putExtra("desease", desease);
-                        intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) list);
-                        intent.putExtra("doctorUserId", doctorUserId);
-                        intent.putExtra("questionId", questionId);
-                        intent.putExtra("detail", detail);
-                        intent.putExtra("patientRecordId", patientRecordId);
-                        startActivity(intent);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        if (EmptyUtils.isNotEmpty(list) && list.size() > 0) {
+                            intent = new Intent(InqueryActivity.this, ProgressBarActivity.class);
+                            intent.putExtra("inquery", inqueryEditContent);
+                            intent.putExtra("desease", desease);
+                            intent.putParcelableArrayListExtra("mList", (ArrayList<? extends Parcelable>) list);
+                            intent.putExtra("doctorUserId", doctorUserId);
+                            intent.putExtra("questionId", questionId);
+                            intent.putExtra("detail", detail);
+                            intent.putExtra("patientRecordId", patientRecordId);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        } else {
+                            postInquery();
+                        }
                     } else {
                         ToastUtil.showLong(InqueryActivity.this, "咨询内容不能小于10个字符!");
                     }
@@ -162,6 +181,7 @@ public class InqueryActivity extends BaseActivity {
     }
 
     public void initCheckedEvent() {
+        checkDetailRv.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(this));
         checkDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -174,6 +194,82 @@ public class InqueryActivity extends BaseActivity {
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
+    }
+
+    private void postInquery() {
+        if (NetworkUtil.isNetworkAvailable(InqueryActivity.this)) {
+            Map<String, RequestBody> maps = new HashMap<>();
+            maps.put("content", DocUtils.toRequestBodyOfText(inqueryEditContent));
+            maps.put("title", DocUtils.toRequestBodyOfText(desease));
+            maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
+            maps.put("patientRecordId", DocUtils.toRequestBodyOfText(patientRecordId));
+            if (EmptyUtils.isNotEmpty(questionId)) {
+                maps.put("questionId", DocUtils.toRequestBodyOfText(questionId));
+            }
+            HttpRequestClient.getInstance(InqueryActivity.this).createBaseApi().uploads("upload/uploadPatient/", maps, new BaseObserver<ResponseBody>(InqueryActivity.this) {
+                protected Disposable disposable;
+
+                @Override
+                public void onSubscribe(Disposable d) {
+                    disposable = d;
+                }
+
+                @Override
+                protected void onHandleSuccess(ResponseBody responseBody) {
+                    //上传文件成功
+                    String data = null;
+                    String msg = null;
+                    String code = null;
+                    try {
+                        data = responseBody.string().toString();
+                        try {
+                            JSONObject object = new JSONObject(data);
+                            if (DocUtils.hasValue(object, "msg")) {
+                                msg = object.getString("msg");
+                            }
+                            if (DocUtils.hasValue(object, "code")) {
+                                code = object.getString("code");
+                            }
+                            if (msg.equals("ok") && code.equals("0")) {
+                                ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传成功!");
+                            } else {
+                                ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
+                            }
+                            Intent intent;
+                            if (detail) {
+                                intent = new Intent(InqueryActivity.this, DoctorsDetailActivity.class);
+                                intent.putExtra("doctorUserId", doctorUserId);
+                            } else {
+                                intent = new Intent(InqueryActivity.this, DoctorsListActivity.class);
+                            }
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            finish();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
+                    if (disposable != null && !disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
+                }
+
+                @Override
+                public void onComplete() {
+                    if (disposable != null && !disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
+                }
+            });
+        }
     }
 
     @Override

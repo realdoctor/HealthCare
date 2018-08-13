@@ -165,11 +165,11 @@ public class DocPayActivity extends BaseActivity {
         JSONObject json = null;
         String chatPayEdit = chatPay.getText().toString().trim();
         String recordPayEdit = recordPay.getText().toString().trim();
-        if (Integer.valueOf(chatPayEdit) > 1000) {
+        if (Double.valueOf(chatPayEdit) > 1000) {
             ToastUtil.showLong(DocPayActivity.this, "您定的价格大于1000，请重新输入!");
             return;
         }
-        if (Integer.valueOf(recordPayEdit) > 1000) {
+        if (Double.valueOf(recordPayEdit) > 1000) {
             ToastUtil.showLong(DocPayActivity.this, "您定的价格大于1000，请重新输入!");
             return;
         }

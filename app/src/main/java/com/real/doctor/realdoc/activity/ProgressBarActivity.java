@@ -112,7 +112,9 @@ public class ProgressBarActivity extends BaseActivity {
                     ToastUtil.showLong(ProgressBarActivity.this, "没有病历图片,音频,视频资源可打包,但病历信息已经上传完成!");
                 }
                 Intent extras = new Intent(ProgressBarActivity.this, MyRevisitActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 extras.putExtra("doctorUserId", doctorUserId);
+                extras.putExtra("questionId", questionId);
                 startActivity(extras);
                 finish();
             }

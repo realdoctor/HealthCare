@@ -63,6 +63,7 @@ public class DocPayListAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHold
                 //点击进入病历列表页面
                 Intent intent = new Intent(context, InqueryActivity.class);
                 intent.putExtra("doctorUserId", item.getId());
+                intent.putExtra("patientRecordId", item.getPatientRecordId());
                 intent.putExtra("questionId", item.getQuestionId());
                 intent.putExtra("desease", item.getDiagName());
                 context.startActivity(intent);
