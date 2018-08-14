@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.ListView;
@@ -52,6 +53,7 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
     private PageModel<NewModel> baseModel = new PageModel<NewModel>();
     public int pageNum = 1;
     public int pageSize = 10;
+    private Dialog mProgressDialog;
 
     public static ArticleFragment newInstance() {
         return new ArticleFragment();
@@ -65,6 +67,7 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
     @Override
     public void initView(View view) {
         unbinder = ButterKnife.bind(this, view);
+        mProgressDialog = DocUtils.getProgressDialog(getActivity(), "正在加载数据....");
     }
 
     @Override
@@ -104,6 +107,7 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
 
                     @Override
                     public void onError(Throwable e) {
+                        mProgressDialog.show();
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -118,6 +122,7 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
 
                     @Override
                     protected void onHandleSuccess(ResponseBody responseBody) {
+                        mProgressDialog.show();
                         String data = null;
                         String msg = null;
                         String code = null;

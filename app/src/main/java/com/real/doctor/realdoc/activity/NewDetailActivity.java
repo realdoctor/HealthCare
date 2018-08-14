@@ -14,12 +14,14 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpNetUtil;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.ToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +42,7 @@ import okhttp3.ResponseBody;
  */
 
 public class NewDetailActivity extends BaseActivity {
+
     @BindView(R.id.finish_back)
     ImageView finish_back;
     @BindView(R.id.page_title)
@@ -118,7 +121,7 @@ public class NewDetailActivity extends BaseActivity {
     private void getData() {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("newsId", newsId);
-        HttpRequestClient.getInstance(NewDetailActivity.this).createBaseApi().get("healthnews/info"
+        HttpRequestClient.getNotInstance(NewDetailActivity.this, HttpNetUtil.BASE_URL, null).createBaseApi().get("healthnews/info"
                 , params, new BaseObserver<ResponseBody>(NewDetailActivity.this) {
                     protected Disposable disposable;
 
@@ -129,6 +132,7 @@ public class NewDetailActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(NewDetailActivity.this, "获取咨询详情失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -167,9 +171,8 @@ public class NewDetailActivity extends BaseActivity {
                                     tv_profer.setText(model.authorProfer);
                                     tv_time.setText(DateUtil.timeStamp2Date(model.createDate, null));
                                     tv_type.setText(model.newsType);
-
                                 } else {
-
+                                    ToastUtil.showLong(NewDetailActivity.this, "获取咨询详情失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

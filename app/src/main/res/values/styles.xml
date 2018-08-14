@@ -119,4 +119,11 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@android:color/white</item>
     </style>
+    <!--标签外部的linearlayout-->
+    <style name="WarpLinearLayoutDefault">
+        <item name="grivate">left</item>
+        <item name="horizontal_Space">20dp</item>
+        <item name="vertical_Space">20dp</item>
+        <item name="isFull">false</item>
+    </style>
 </resources>

@@ -1,8 +1,10 @@
 package com.real.doctor.realdoc.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -17,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ChatPayActivity;
 import com.real.doctor.realdoc.activity.NewDetailActivity;
+import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.adapter.MultiNewsAdapter;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
 import com.real.doctor.realdoc.base.BaseFragment;
@@ -61,12 +64,6 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
     ListView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    //    @BindView(R.id.page_title)
-//    TextView page_title;
-//    @BindView(R.id.title_bar)
-//    RelativeLayout titleBar;
-//    @BindView(R.id.finish_back)
-//    ImageView finish_back;
     public MultiNewsAdapter newsAdapter;
     private Unbinder unbinder;
     public ArrayList<Object> newModels = new ArrayList<>();
@@ -75,6 +72,8 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
     public int pageNum = 1;
     public int pageSize = 10;
     public String userId;
+    private Dialog mProgressDialog;
+    private boolean isUserIn = false;
 
     public static ReadFragment newInstance() {
         return new ReadFragment();
@@ -88,25 +87,15 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
     @Override
     public void initView(View view) {
         unbinder = ButterKnife.bind(this, view);
+        mProgressDialog = DocUtils.getProgressDialog(getActivity(), "正在加载数据....");
     }
 
     @Override
     public void doBusiness(Context mContext) {
-        //加上沉浸式状态栏高度
-//        int statusHeight = ScreenUtil.getStatusHeight(getActivity());
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
-//            lp.topMargin = statusHeight;
-//            titleBar.setLayoutParams(lp);
-//        }
-//        page_title.setText("资讯");
-//        finish_back.setVisibility(View.GONE);
         userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
-        newsAdapter = new MultiNewsAdapter(getActivity(), newModels,ads);
+        newsAdapter = new MultiNewsAdapter(getActivity(), newModels, ads);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);
-        ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         getAdData();
@@ -123,7 +112,9 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
         super.onDestroyView();
         unbinder.unbind();
     }
+
     private void getAdData() {
+        mProgressDialog.show();
         HashMap<String, Object> params = new HashMap<String, Object>();
         HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews/ad/list"
                 , params, new BaseObserver<ResponseBody>(getContext()) {
@@ -136,6 +127,8 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(getActivity(), "获取资讯数据失败!");
+                        mProgressDialog.dismiss();
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -150,6 +143,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
 
                     @Override
                     protected void onHandleSuccess(ResponseBody responseBody) {
+                        mProgressDialog.dismiss();
                         String data = null;
                         String msg = null;
                         String code = null;
@@ -167,11 +161,11 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
                                     JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    ads.addAll((ArrayList<Object>)localGson.fromJson(jsonObject.toString(),
+                                    ads.addAll((ArrayList<Object>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<AdBean>>() {
                                             }.getType()));
                                 } else {
-
+                                    ToastUtil.showLong(getActivity(), "获取资讯数据失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -180,7 +174,6 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
                             e.printStackTrace();
                         }
                     }
-
                 });
     }
 
@@ -235,7 +228,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
                                             new TypeToken<PageModel<NewModel>>() {
                                             }.getType());
                                     newModels.addAll(baseModel.list);
-                                    newsAdapter = new MultiNewsAdapter(getActivity(), newModels,ads);
+                                    newsAdapter = new MultiNewsAdapter(getActivity(), newModels, ads);
                                     listView.setAdapter(newsAdapter);
                                     newsAdapter.notifyDataSetChanged();
                                 } else {
@@ -274,21 +267,34 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        int Type=parent.getAdapter().getItemViewType(position);
-        if(Type==MultiNewsAdapter.TYPE_A) {
+        int Type = parent.getAdapter().getItemViewType(position);
+        if (Type == MultiNewsAdapter.TYPE_A) {
+            isUserIn = true;
             NewModel model = (NewModel) parent.getAdapter().getItem(position);
-            if(Double.parseDouble(model.price)==0.00d) {
+            if (Double.parseDouble(model.price) == 0.00d) {
                 Intent intent = new Intent(getContext(), NewDetailActivity.class);
                 intent.putExtra("newsId", model.newsId);
                 startActivity(intent);
-            }else
-            {
+            } else {
                 Intent intent = new Intent(getContext(), ChatPayActivity.class);
                 intent.putExtra("payType", "5");
+                intent.putExtra("price", model.price);
+                intent.putExtra("newsId", model.newsId);
                 startActivity(intent);
             }
-        }else{
+        } else if (Type == MultiNewsAdapter.TYPE_B) {
 
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //发送广播，关闭悬浮窗
+        if (isUserIn) {
+            Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(msgIntent);
+            isUserIn = false;
         }
     }
 }

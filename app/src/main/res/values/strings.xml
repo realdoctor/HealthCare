@@ -28,7 +28,7 @@
 
     <string name="home_titile">睿医软件</string>
     <string name="home">首页</string>
-    <string name="read">阅读</string>
+    <string name="read">资讯</string>
     <string name="my">我的</string>
     <string name="hint_username">输入您的手机号</string>
     <string name="hint_password">输入您的密码</string>

@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:paddingLeft="@dimen/dp_10"
-    android:paddingRight="@dimen/dp_10"
-    android:layout_height="wrap_content">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:id="@+id/tv_name"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:text="@string/ad"
-        android:background="@drawable/order_bg"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
-    <ImageView
+    android:paddingBottom="10dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="10dp">
+
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/order_bg"
+            android:text="@string/ad" />
+    </RelativeLayout>
+
+    <ImageView
         android:id="@+id/img_show"
-        android:scaleType="centerInside"
-        android:layout_height="150dp" />
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="5dp"
+        android:background="@mipmap/login_bg"
+        android:scaleType="centerInside" />
 </LinearLayout>

@@ -6,7 +6,7 @@
         <attr name="border_circle_color" format="color" />
     </declare-styleable>
     <declare-styleable name="Search_View">
-        <attr name="textSizeSearch" format="dimension"  />
+        <attr name="textSizeSearch" format="dimension" />
         <attr name="textColorSearch" format="color" />
         <attr name="textHintSearch" format="string" />
         <attr name="searchBlockHeight" format="integer" />
@@ -118,4 +118,16 @@
         <attr name="top_cell_height" format="dimension" />
         <attr name="normal_cell_width" format="dimension" />
     </declare-styleable>
+    <!--标签外部的linearlayout-->
+    <declare-styleable name="WarpLinearLayout">
+        <attr name="grivate" format="enum"><!--对齐方式 !-->
+            <enum name="right" value="0"></enum>
+            <enum name="left" value="1"></enum>
+            <enum name="center" value="2"></enum>
+        </attr>
+        <attr name="horizontal_Space" format="dimension"></attr>
+        <attr name="vertical_Space" format="dimension"></attr>
+        <attr name="isFull" format="boolean"></attr>
+    </declare-styleable>
+
 </resources>

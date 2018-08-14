@@ -1,124 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:padding="5dp">
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
     <ImageView
         android:id="@+id/new_detail_img"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:src="@drawable/timg"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        />
+        android:layout_marginTop="10dp"
+        android:background="@mipmap/zhifubao_select"
+        android:scaleType="fitXY" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginLeft="@dimen/dp_4"
-        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
         android:layout_toRightOf="@+id/new_detail_img"
-        >
-            <TextView
-                android:id="@+id/new_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/txt_14" />
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/new_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/txt_14"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/new_hospital"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
             android:textColor="@color/text3"
-            android:textSize="@dimen/txt_10" />
-        <LinearLayout
+            android:textSize="@dimen/txt_12" />
+
+        <com.real.doctor.realdoc.view.WarpLinearLayout
             android:id="@+id/ll_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tv_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text2"
-                android:textSize="@dimen/txt_12" />
-        </LinearLayout>
+            app:grivate="left"
+            app:horizontal_Space="3dp"
+            app:isFull="false"
+            app:vertical_Space="2dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tv_hospital"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/text3"
-                android:textSize="@dimen/txt_10" />
-            <TextView
-                android:id="@+id/tv_authorDept"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_4"
-                android:textColor="@color/text3"
-                android:textSize="@dimen/txt_10" />
-            <TextView
-                android:id="@+id/tv_newsAuthor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_4"
-                android:textColor="@color/text3"
-                android:textSize="@dimen/txt_10" />
+        <TextView
+            android:id="@+id/hospital_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:textColor="@color/text3"
+            android:textSize="@dimen/txt_12" />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/new_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text3"
+            android:textSize="@dimen/txt_12" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dp"
+            android:textColor="@color/red_light"
+            android:textSize="@dimen/sp_12" />
+
         <RelativeLayout
             android:id="@+id/centre_rl"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            >
+            android:layout_gravity="right"
+            android:layout_marginBottom="10dp">
+
             <TextView
-                android:id="@+id/new_time"
+                android:id="@+id/comment_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:textColor="@color/text3"
-                android:textSize="@dimen/txt_10" />
-            <TextView
-                android:id="@+id/tv_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/comment_color"
-                android:layout_alignParentRight="true"
                 android:drawableLeft="@mipmap/comment_bg"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/txt_10" />
+                android:paddingRight="15dp"
+                android:textColor="@color/comment_color"
+                android:textSize="@dimen/txt_12" />
         </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:id="@+id/tv_price"
-                android:textSize="@dimen/sp_12"
-                android:textColor="@color/red_light"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
-
-
     </LinearLayout>
 </RelativeLayout>

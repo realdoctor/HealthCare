@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.activity.AccountActivity;
 import com.real.doctor.realdoc.activity.NewDetailActivity;
 import com.real.doctor.realdoc.activity.SearchHistoryListActivity;
 import com.real.doctor.realdoc.adapter.ArticleFragmentAdapter;
@@ -66,6 +67,8 @@ public class ArticleShowFragment extends BaseFragment {
     private Unbinder unbinder;
     @BindView(R.id.img_search)
     ImageView img_search;
+    @BindView(R.id.tab_bar)
+    RelativeLayout tabBar;
     public static final int INFO_SEARCH = 1;
 
     public static ArticleShowFragment newInstance() {
@@ -80,6 +83,13 @@ public class ArticleShowFragment extends BaseFragment {
     @Override
     public void initView(View view) {
         unbinder = ButterKnife.bind(this, view);
+        //加上沉浸式状态栏高度
+        int statusHeight = ScreenUtil.getStatusHeight(getActivity());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tabBar.getLayoutParams();
+            lp.topMargin = statusHeight;
+            tabBar.setLayoutParams(lp);
+        }
     }
 
     @Override
@@ -87,7 +97,6 @@ public class ArticleShowFragment extends BaseFragment {
         ArticleFragmentAdapter articleFragmentAdapter = new ArticleFragmentAdapter(getChildFragmentManager());
         viewPager.setAdapter(articleFragmentAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 
     @Override

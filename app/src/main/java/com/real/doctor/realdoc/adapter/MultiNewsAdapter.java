@@ -1,6 +1,7 @@
 package com.real.doctor.realdoc.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,33 +14,31 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.model.AdBean;
 import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.view.WarpLinearLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
-public class MultiNewsAdapter extends BaseAdapter{
+public class MultiNewsAdapter extends BaseAdapter {
     //itemA类的type标志
     public static final int TYPE_A = 0;
     //itemB类的type标志
-    private static final int TYPE_B = 1;
-
+    public static final int TYPE_B = 1;
     private Context context;
     //整合数据
     private List<Object> data = new ArrayList<>();
 
-
-    public MultiNewsAdapter(Context context, ArrayList<Object> as ,ArrayList<Object> bs) {
+    public MultiNewsAdapter(Context context, ArrayList<Object> as, ArrayList<Object> bs) {
         this.context = context;
-
         //把数据装载同一个list里面
         data.addAll(as);
         data.addAll(bs);
-
         Collections.shuffle(data); // 混乱的意思
-
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //创建两种不同种类的viewHolder变量
@@ -57,21 +56,19 @@ public class MultiNewsAdapter extends BaseAdapter{
             switch (type) {
                 case TYPE_A:
                     convertView = View.inflate(context, R.layout.news_item, null);
-                    holder1.new_detail_img = (ImageView) convertView.findViewById(R.id.new_detail_img);
-                    holder1.new_title=(TextView) convertView.findViewById(R.id.new_title);
-                    holder1.new_time=(TextView) convertView.findViewById(R.id.new_time);
-                    holder1.ll_content=(LinearLayout) convertView.findViewById(R.id.ll_content);
-                    holder1.tv_comment=(TextView) convertView.findViewById(R.id.tv_comment);
-                    holder1.new_hospital=convertView.findViewById(R.id.new_hospital);
-                    holder1.tv_newsAuthor=convertView.findViewById(R.id.tv_newsAuthor);
-                    holder1.tv_authorDept=convertView.findViewById(R.id.tv_authorDept);
-                    holder1.tv_hospital=convertView.findViewById(R.id.tv_hospital);
-                    holder1.tv_price=convertView.findViewById(R.id.tv_price);
+                    holder1.newDetailImg = (ImageView) convertView.findViewById(R.id.new_detail_img);
+                    holder1.newTitle = (TextView) convertView.findViewById(R.id.new_title);
+                    holder1.newTime = (TextView) convertView.findViewById(R.id.new_time);
+                    holder1.llContent = convertView.findViewById(R.id.ll_content);
+                    holder1.commentTv = (TextView) convertView.findViewById(R.id.comment_tv);
+                    holder1.newHospital = convertView.findViewById(R.id.new_hospital);
+                    holder1.hospitalTv = convertView.findViewById(R.id.hospital_tv);
+                    holder1.priceTv = convertView.findViewById(R.id.tv_price);
                     convertView.setTag(R.id.tag_first, holder1);
                     break;
                 case TYPE_B:
                     convertView = View.inflate(context, R.layout.activity_ad_list_item, null);
-                    holder2.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+                    holder2.nameTv = (TextView) convertView.findViewById(R.id.tv_name);
                     holder2.img = (ImageView) convertView.findViewById(R.id.img_show);
                     convertView.setTag(R.id.tag_second, holder2);
                     break;
@@ -94,15 +91,24 @@ public class MultiNewsAdapter extends BaseAdapter{
         switch (type) {
             case TYPE_A:
                 NewModel bean = (NewModel) o;
-                holder1.new_title.setText(bean.newsName);
-                holder1.new_time.setText(DateUtil.timeStamp2Date(bean.createDate,null));
-                holder1.tv_comment.setText(bean.viewedTime);
-                holder1.new_hospital.setText(bean.authorHos);
-                holder1.tv_newsAuthor.setText(bean.newsAuthor);
-                holder1.tv_authorDept.setText(bean.authorDept);
-                holder1.tv_hospital.setText(bean.authorHos);
+                holder1.newTitle.setText(bean.newsName);
+                if (EmptyUtils.isEmpty(bean.createDate)) {
+                    holder1.newTime.setVisibility(View.GONE);
+                } else {
+                    holder1.newTime.setText(DateUtil.timeStamp2Date(bean.createDate, null));
+                }
+                holder1.commentTv.setText(bean.viewedTime);
+                holder1.newHospital.setText(bean.authorHos);
+                StringBuffer sb = new StringBuffer();
+                sb.append(bean.authorHos);
+                sb.append(" ");
+                sb.append(bean.newsAuthor);
+                sb.append(" ");
+                sb.append(bean.authorDept);
+                holder1.hospitalTv.setText(sb.toString());
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
+                holder1.llContent.removeAllViews();
                 for (int i = 0; i < bean.tagsList.size(); i++) {
                     TextView textView = new TextView(context);
                     layoutParams.setMargins(0, 5, 10, 5);
@@ -110,33 +116,30 @@ public class MultiNewsAdapter extends BaseAdapter{
                     textView.setBackgroundResource(R.drawable.order_bg); //设置背景
                     textView.setText(bean.tagsList.get(i).newsTag);
                     textView.setLayoutParams(layoutParams);
-                    holder1.ll_content.addView(textView);
+                    holder1.llContent.addView(textView);
                 }
-                if(Double.parseDouble(bean.price)==0.00d){
-                    holder1.tv_price.setVisibility(View.INVISIBLE);
-                    holder1.tv_price.setText("收费金额："+bean.price);
-                }else{
-                    holder1.tv_price.setVisibility(View.VISIBLE);
-                    holder1.tv_price.setText("收费金额："+bean.price);
+                if (Double.parseDouble(bean.price) == 0.00) {
+                    holder1.priceTv.setVisibility(View.GONE);
+                } else {
+                    holder1.priceTv.setVisibility(View.VISIBLE);
+                    holder1.priceTv.setText("收费金额：" + bean.price);
                 }
-
-                Glide.with(context).load(bean.photoAddress).crossFade().error(R.drawable.timg).into(holder1.new_detail_img);
+//                Glide.with(context).load(bean.photoAddress).crossFade().error(R.mipmap.zhifubao_select).into(holder1.new_detail_img);
                 break;
 
             case TYPE_B:
                 AdBean b = (AdBean) o;
-                holder2.tv_name.setText(b.content);
-                Glide.with(context).load(b.pic).crossFade().error(R.drawable.timg).into(holder2.img);
+                holder2.nameTv.setText(b.content);
+//                Glide.with(context).load(b.pic).crossFade().error(R.mipmap.zhifubao_select).into(holder2.img);
                 break;
         }
         return convertView;
     }
 
 
-
-
     /**
      * 获得itemView的type
+     *
      * @param position
      * @return
      */
@@ -153,6 +156,7 @@ public class MultiNewsAdapter extends BaseAdapter{
 
     /**
      * 获得有多少中view type
+     *
      * @return
      */
     @Override
@@ -176,23 +180,21 @@ public class MultiNewsAdapter extends BaseAdapter{
     }
 
     public class ViewHolder1 {
-        public ImageView new_detail_img;
-        public TextView new_title;
-        public TextView new_time;
-        public LinearLayout ll_content;
-        public TextView tv_comment;
-        public TextView new_hospital;
-        public TextView tv_newsAuthor;
-        public TextView tv_authorDept;
-        public TextView tv_hospital;
-        public TextView tv_price;
-
+        public ImageView newDetailImg;
+        public TextView newTitle;
+        public TextView newTime;
+        public WarpLinearLayout llContent;
+        public TextView commentTv;
+        public TextView newHospital;
+        public TextView hospitalTv;
+        public TextView priceTv;
     }
+
     /**
      * item B 的Viewholder
      */
     private static class ViewHolder2 {
-        TextView tv_name;
+        TextView nameTv;
         ImageView img;
     }
 }

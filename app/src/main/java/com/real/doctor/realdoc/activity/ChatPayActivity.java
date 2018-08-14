@@ -79,6 +79,8 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     private String desease;
     private boolean detail;
     private String userId;
+    private String price;
+    private String newsId;
 
     @Override
     public int getLayoutId() {
@@ -112,6 +114,9 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
             initGetPay();
         } else if (payType.equals("5")) {
             pageTitle.setText("资讯支付");
+            price = getIntent().getStringExtra("price");
+            newsId = getIntent().getStringExtra("newsId");
+            tvCountprice.setText(price);
         }
         userId = (String) SPUtils.get(ChatPayActivity.this, Constants.USER_KEY, "");
         api = WXAPIFactory.createWXAPI(this, Constants.WX_APP_ID);
@@ -253,9 +258,15 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                 json.put("from", "1");
             } else if (payType.equals("2")) {
                 json.put("from", "2");
+            } else if (payType.equals("5")) {
+                json.put("from", "5");
             }
             json.put("userId", userId);
-            json.put("goodsId", patientRecordId);
+            if (payType.equals("1") || payType.equals("2")) {
+                json.put("goodsId", patientRecordId);
+            } else if (payType.equals("5")) {
+                json.put("goodsId", newsId);
+            }
             json.put("toUserId", doctorUserId);
             json.put("type", "alipay");
             json.put("payAmount", tvCountprice.getText().toString().trim());
@@ -386,9 +397,15 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                 json.put("from", "1");
             } else if (payType.equals("2")) {
                 json.put("from", "2");
+            } else if (payType.equals("5")) {
+                json.put("from", "5");
             }
             json.put("userId", userId);
-            json.put("goodsId", patientRecordId);
+            if (payType.equals("1") || payType.equals("2")) {
+                json.put("goodsId", patientRecordId);
+            } else if (payType.equals("5")) {
+                json.put("goodsId", newsId);
+            }
             json.put("toUserId", doctorUserId);
             json.put("type", "wxpay");
             json.put("payAmount", tvCountprice.getText().toString().trim());
@@ -510,6 +527,10 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
             intent.putExtra("desease", desease);
             intent.putExtra("detail", detail);
             intent.putExtra("patientRecordId", patientRecordId);
+            startActivity(intent);
+        } else if (payType.equals("5")) {
+            Intent intent = new Intent(ChatPayActivity.this, NewDetailActivity.class);
+            intent.putExtra("newsId", newsId);
             startActivity(intent);
         }
     }
