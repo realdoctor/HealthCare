@@ -195,7 +195,7 @@ public class NewDetailActivity extends BaseActivity {
         }
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        HttpRequestClient.getInstance(NewDetailActivity.this).createBaseApi().json("healthnews/focus/"
+        HttpRequestClient.getNotInstance(NewDetailActivity.this, HttpNetUtil.BASE_URL, null).createBaseApi().json("healthnews/focus/"
                 , body, new BaseObserver<ResponseBody>(NewDetailActivity.this) {
                     protected Disposable disposable;
 
@@ -261,7 +261,7 @@ public class NewDetailActivity extends BaseActivity {
         }
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        HttpRequestClient.getInstance(NewDetailActivity.this).createBaseApi().json("healthnews/focus/off/"
+        HttpRequestClient.getNotInstance(NewDetailActivity.this, HttpNetUtil.BASE_URL, null).createBaseApi().json("healthnews/focus/off/"
                 , body, new BaseObserver<ResponseBody>(NewDetailActivity.this) {
                     protected Disposable disposable;
 

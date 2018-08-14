@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -66,6 +67,7 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
     public int pageSize = 10;
     public String userId;
     private Unbinder unbinder;
+    private boolean isUserIn = false;
 
     public static MyFollowNewsFragment newInstance() {
         return new MyFollowNewsFragment();
@@ -104,6 +106,17 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        //发送广播，关闭悬浮窗
+        if (isUserIn) {
+            Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(msgIntent);
+            isUserIn = false;
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -131,6 +144,7 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        isUserIn = true;
         NewModel model = (NewModel) parent.getAdapter().getItem(position);
         Intent intent = new Intent(getContext(), NewDetailActivity.class);
         intent.putExtra("newsId", model.newsId);
