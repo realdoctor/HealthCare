@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.ProductBean;
@@ -32,12 +33,16 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bingoogolapple.bgabanner.BGABanner;
+import cn.bingoogolapple.bgabanner.BGABannerUtil;
 import io.reactivex.disposables.Disposable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -48,7 +53,7 @@ import okhttp3.ResponseBody;
 
 public class ProductShowActivity extends BaseActivity {
     @BindView(R.id.banner_id_show)
-    com.youth.banner.Banner banner;
+    BGABanner banner;
     @BindView(R.id.tv_pName)
     TextView tv_pName;
     @BindView(R.id.tv_price_show)
@@ -101,10 +106,20 @@ public class ProductShowActivity extends BaseActivity {
         userId = (String) SPUtils.get(ProductShowActivity.this, Constants.USER_KEY, "");
         bean = (ProductBean) getIntent().getSerializableExtra("model");
         bean.setNum(1);
-        banner.setBannerStyle(Banner.CIRCLE_INDICATOR_TITLE);
-        banner.setIndicatorGravity(Banner.CENTER);
-        banner.isAutoPlay(false);
-        banner.setImages(new String[]{bean.getBigPic()});
+        //滚轮
+        banner.setAdapter(new BGABanner.Adapter<ImageView, String>() {
+            @Override
+            public void fillBannerItem(BGABanner banner, ImageView itemView, String model, int position) {
+                Glide.with(ProductShowActivity.this)
+                        .load(model)
+                        .placeholder(R.mipmap.login_bg)
+                        .error(R.mipmap.login_bg)
+                        .centerCrop()
+                        .dontAnimate()
+                        .into(itemView);
+            }
+        });
+        banner.setData(Arrays.asList(bean.getBigPic(), bean.getBigPic(), bean.getBigPic()), Arrays.asList("商品图一", "商品图二", "商品图三"));
         goodId = bean.getGoodsId();
         tv_pName.setText(bean.getName());
         tv_price.setText("￥" + bean.getCost());

@@ -1,117 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-<include layout="@layout/shop_detail_title_bar"></include>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ScrollView
-        android:id="@+id/sc_id"
-        android:layout_above="@+id/rl_bottom"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/shop_detail_title_bar" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
+
+        <ScrollView
+            android:id="@+id/sc_id"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <com.youth.banner.Banner
-            android:id="@+id/banner_id_show"
-            android:layout_height="200dp"
-            android:layout_width="match_parent">
-        </com.youth.banner.Banner>
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:orientation="vertical"
-             android:padding="10dp"
-             android:background="@color/white"
-             android:layout_height="wrap_content">
-             <TextView
-                 android:id="@+id/tv_pName"
-                 android:layout_width="match_parent"
-                 android:layout_alignParentLeft="true"
-                 android:textColor="@color/black"
-                 android:maxLines="2"
-                 android:textSize="@dimen/sp_16"
-                 android:textStyle="bold"
-                 android:layout_height="wrap_content" />
-             <TextView
-                 android:id="@+id/tv_description"
-                 android:layout_width="match_parent"
-                 android:textColor="@color/gray"
-                 android:textSize="@dimen/sp_12"
-                 android:layout_marginTop="2dp"
-                 android:layout_alignParentRight="true"
-                 android:layout_height="wrap_content" />
-             <RelativeLayout
-                 android:layout_width="match_parent"
-                 android:layout_marginTop="2dp"
-                 android:layout_height="wrap_content">
-                 <TextView
-                     android:id="@+id/tv_price_show"
-                     android:layout_width="wrap_content"
-                     android:layout_alignParentLeft="true"
-                     android:layout_centerVertical="true"
-                     android:textColor="@color/red_light"
-                     android:textSize="@dimen/sp_16"
-                     android:layout_alignParentRight="true"
-                     android:layout_height="wrap_content" />
-                 <TextView
-                     android:id="@+id/tv_num"
-                     android:layout_width="wrap_content"
-                     android:textColor="@color/gray"
-                     android:layout_alignParentRight="true"
-                     android:layout_centerVertical="true"
-                     android:textSize="@dimen/sp_12"
-                     android:layout_height="wrap_content" />
-             </RelativeLayout>
-                 <TextView
-                     android:id="@+id/tv_proproty"
-                     android:layout_width="wrap_content"
-                     android:layout_alignParentRight="true"
-                     android:layout_height="wrap_content" />
-
-         </LinearLayout>
-        </LinearLayout>
-
-    </ScrollView>
-    <RelativeLayout
-        android:id="@+id/rl_bottom"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        android:layout_height="50dp">
-        <View
-            android:layout_width="1dp"
-            android:background="@color/gray"
-            android:layout_toLeftOf="@+id/tv_incart"
-            android:layout_height="match_parent"></View>
-        <TextView
-            android:id="@+id/tv_incart"
-            android:layout_width="130dp"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center"
-            android:layout_toLeftOf="@+id/tv_buy"
-            android:layout_weight="1"
-            android:text="@string/inshopcart"
-            android:textColor="@color/orange"
-            android:textSize="@dimen/sp_16"
-            />
-        <TextView
-            android:layout_width="130dp"
-            android:id="@+id/tv_buy"
-            android:text="@string/buy"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_16"
-            android:gravity="center"
-            android:layout_alignParentRight="true"
-            android:background="@color/orange"
-            android:layout_centerVertical="true"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
+            android:layout_above="@+id/rl_bottom">
 
-</RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <cn.bingoogolapple.bgabanner.BGABanner
+                    android:id="@+id/banner_id_show"
+                    android:layout_width="match_parent"
+                    android:layout_height="380dp"
+                    app:banner_pageChangeDuration="1000"
+                    app:banner_pointAutoPlayAble="true"
+                    app:banner_pointContainerBackground="@android:color/transparent"
+                    app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
+                    app:banner_pointTopBottomMargin="15dp"
+                    app:banner_transitionEffect="alpha" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_pName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:maxLines="2"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/sp_12" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp">
+
+                        <TextView
+                            android:id="@+id/tv_price_show"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/red_light"
+                            android:textSize="@dimen/sp_16" />
+
+                        <TextView
+                            android:id="@+id/tv_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/gray"
+                            android:textSize="@dimen/sp_12" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tv_proproty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/rl_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/tv_incart"
+                android:background="@color/gray"/>
+
+            <TextView
+                android:id="@+id/tv_incart"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/tv_buy"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="@string/inshopcart"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/tv_buy"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@color/orange"
+                android:gravity="center"
+                android:text="@string/buy"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+    </RelativeLayout>
 </LinearLayout>

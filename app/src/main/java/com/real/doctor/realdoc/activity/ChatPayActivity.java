@@ -23,6 +23,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.PayResult;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
@@ -183,6 +184,10 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                                     ToastUtil.showLong(ChatPayActivity.this, msg);
                                 }
                             } catch (JSONException e) {
+                                if (e.getMessage().equals("Value null at data of type org.json.JSONObject$1 cannot be converted to JSONObject")) {
+                                    ToastUtil.showLong(ChatPayActivity.this, "该医生还未填写复诊咨询报价!");
+                                    ChatPayActivity.this.finish();
+                                }
                                 e.printStackTrace();
                             }
                         } catch (IOException e) {

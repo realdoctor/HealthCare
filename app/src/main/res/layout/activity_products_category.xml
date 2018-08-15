@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-   <include layout="@layout/product_list_top"></include>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/product_list_top" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/tb_category"
-        app:tabMode="scrollable"
-        android:background="@color/white"
-        app:tabSelectedTextColor="@color/main"
-        app:tabTextColor="@color/gray"
-        app:tabIndicatorColor="@color/transparent"
-        app:tabIndicatorHeight="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.design.widget.TabLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:tabIndicatorColor="@color/tab_sel_color"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/tab_sel_color"
+        app:tabTextColor="@color/gray" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_show"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+        android:layout_height="match_parent" />
 </LinearLayout>

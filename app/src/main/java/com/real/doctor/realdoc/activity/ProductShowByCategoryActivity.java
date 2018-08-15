@@ -52,7 +52,8 @@ public class ProductShowByCategoryActivity extends BaseActivity {
     @BindView(R.id.top_title)
     RelativeLayout topTitle;
     public ProductPagerAdapter productPagerAdapter;
-    public ArrayList<CategoryBean> categoryBeanArrayList=new ArrayList<CategoryBean>();
+    public ArrayList<CategoryBean> categoryBeanArrayList = new ArrayList<CategoryBean>();
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_products_category;
@@ -73,41 +74,42 @@ public class ProductShowByCategoryActivity extends BaseActivity {
             topTitle.setLayoutParams(lp);
         }
         virtulData();
-        for(CategoryBean bean:categoryBeanArrayList){
+        for (CategoryBean bean : categoryBeanArrayList) {
             tb_category.addTab(tb_category.newTab().setText(bean.categoryName).setText(bean.categoryId));
         }
-        productPagerAdapter=new ProductPagerAdapter(getSupportFragmentManager(),categoryBeanArrayList);
+        productPagerAdapter = new ProductPagerAdapter(getSupportFragmentManager(), categoryBeanArrayList);
         viewPager.setAdapter(productPagerAdapter);
         tb_category.setupWithViewPager(viewPager);
+//        DocUtils.setIndicator(this, tb_category, 20, 20);
     }
-    public void virtulData(){
-        CategoryBean bean=new CategoryBean();
-        bean.categoryId="1";
-        bean.categoryName="医疗器械";
-        CategoryBean bean2=new CategoryBean();
-        bean2.categoryId="2";
-        bean2.categoryName="药品";
+
+    public void virtulData() {
+        CategoryBean bean = new CategoryBean();
+        bean.categoryId = "1";
+        bean.categoryName = "医疗器械";
+        CategoryBean bean2 = new CategoryBean();
+        bean2.categoryId = "2";
+        bean2.categoryName = "药品";
         categoryBeanArrayList.add(bean);
         categoryBeanArrayList.add(bean2);
     }
+
     @Override
     public void initEvent() {
 
     }
 
     @Override
-    @OnClick({R.id.finish_back,R.id.home_search})
+    @OnClick({R.id.finish_back, R.id.home_search})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.finish_back:
                 ProductShowByCategoryActivity.this.finish();
                 break;
             case R.id.home_search:
-                Intent intent =new Intent(ProductShowByCategoryActivity.this,SearchActivity.class);
+                Intent intent = new Intent(ProductShowByCategoryActivity.this, SearchActivity.class);
                 startActivity(intent);
                 break;
-
-
         }
     }
 
