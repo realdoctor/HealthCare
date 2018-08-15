@@ -43,6 +43,7 @@ public class BrandAdapter extends RdBaseAdapter<BrandBean> {
             holder.brandText.setTextColor(mContext.getResources().getColor(R.color.tab_sel_color));
         } else {
             holder.v_line.setVisibility(View.INVISIBLE);
+            holder.ll.setBackgroundColor(Color.parseColor("#f2f2f2"));
             holder.brandText.setTextColor(mContext.getResources().getColor(R.color.gray));
         }
         holder.brandText.setText(bean.breadName);
