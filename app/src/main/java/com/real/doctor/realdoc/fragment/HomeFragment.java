@@ -171,16 +171,16 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //从新监听下是否有悬浮窗权限
-        if (EmptyUtils.isNotEmpty(mFloatPermissionManager)) {
-            mFloatPermissionManager.checkPermission(getActivity());
-        }
-        //判断是app否运行在前台
-        boolean isForeBack = DocUtils.getLinuxCoreInfo(getActivity(), "com.real.doctor.realdoc");
-        if (isForeBack && EmptyUtils.isNotEmpty(mFloatballManager)) {
-            mFloatballManager.show();
-        }
-        showBroadcast();
+//        //从新监听下是否有悬浮窗权限
+//        if (EmptyUtils.isNotEmpty(mFloatPermissionManager)) {
+//            mFloatPermissionManager.checkPermission(getActivity());
+//        }
+//        //判断是app否运行在前台
+//        boolean isForeBack = DocUtils.getLinuxCoreInfo(getActivity(), "com.real.doctor.realdoc");
+//        if (isForeBack && EmptyUtils.isNotEmpty(mFloatballManager)) {
+//            mFloatballManager.show();
+//        }
+//        showBroadcast();
     }
 
     private void showBroadcast() {

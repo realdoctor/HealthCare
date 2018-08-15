@@ -24,9 +24,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                app:tabIndicatorColor="@color/main"
+                app:tabIndicatorColor="@color/tab_sel_color"
                 app:tabIndicatorHeight="3dp"
-                app:tabSelectedTextColor="@color/main"
+                app:tabSelectedTextColor="@color/tab_sel_color"
                 app:tabTextColor="@color/gray" />
         </LinearLayout>
 

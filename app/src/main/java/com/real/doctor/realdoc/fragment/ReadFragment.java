@@ -73,7 +73,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
     public int pageSize = 10;
     public String userId;
     private Dialog mProgressDialog;
-    private boolean isUserIn = false;
+//    private boolean isUserIn = false;
 
     public static ReadFragment newInstance() {
         return new ReadFragment();
@@ -269,7 +269,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         int Type = parent.getAdapter().getItemViewType(position);
         if (Type == MultiNewsAdapter.TYPE_A) {
-            isUserIn = true;
+//            isUserIn = true;
             NewModel model = (NewModel) parent.getAdapter().getItem(position);
             if (Double.parseDouble(model.price) == 0.00d) {
                 Intent intent = new Intent(getContext(), NewDetailActivity.class);
@@ -287,14 +287,14 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //发送广播，关闭悬浮窗
-        if (isUserIn) {
-            Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(msgIntent);
-            isUserIn = false;
-        }
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        //发送广播，关闭悬浮窗
+//        if (isUserIn) {
+//            Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
+//            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(msgIntent);
+//            isUserIn = false;
+//        }
+//    }
 }

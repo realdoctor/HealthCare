@@ -116,7 +116,7 @@ public class UserFragment extends BaseFragment {
     View recordUploadLine;
     public static String VERIFY_TEXT = "android.intent.action.record.verify.text";
     private String originalImageUrl = "";
-    private boolean isUserIn = false;
+//    private boolean isUserIn = false;
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -289,12 +289,12 @@ public class UserFragment extends BaseFragment {
             }
             GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
         }
-        //发送广播，关闭悬浮窗
-        if (isUserIn) {
-            Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(msgIntent);
-            isUserIn = false;
-        }
+//        //发送广播，关闭悬浮窗
+//        if (isUserIn) {
+//            Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
+//            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(msgIntent);
+//            isUserIn = false;
+//        }
     }
 
     @Override
@@ -308,7 +308,7 @@ public class UserFragment extends BaseFragment {
         Intent intent = null;
         switch (v.getId()) {
             case R.id.identify:
-                isUserIn = true;
+//                isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (verifyFlag.equals("0")) {
                         //跳转到未实名认证界面
@@ -327,7 +327,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.my_appointment:
-                isUserIn = true;
+//                isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
                         //跳转到我的预约界面
@@ -343,7 +343,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.packag_history:
-                isUserIn = true;
+//                isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
                         intent = new Intent(getActivity(), RecordListActivity.class);
@@ -358,7 +358,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.my_visit:
-                isUserIn = true;
+//                isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
                         intent = new Intent(getActivity(), MyRevisitActivity.class);
@@ -373,7 +373,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.my_orders:
-                isUserIn = true;
+//                isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
                         intent = new Intent(getActivity(), OrderListActivity.class);
@@ -388,7 +388,7 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.my_follow:
-                isUserIn = true;
+//                isUserIn = true;
                 if (NetworkUtil.isNetworkAvailable(getActivity())) {
                     if (EmptyUtils.isNotEmpty(token)) {
                         intent = new Intent(getActivity(), MyFollowDoctorsActivity.class);
@@ -403,28 +403,28 @@ public class UserFragment extends BaseFragment {
                 }
                 break;
             case R.id.user_setting:
-                isUserIn = true;
+//                isUserIn = true;
                 //跳转到设置页面`
                 intent = new Intent(getActivity(), SettingActivity.class);
                 intent.putExtra("imgUrl", originalImageUrl);
                 startActivity(intent);
                 break;
             case R.id.inquiry_pay:
-                isUserIn = true;
+//                isUserIn = true;
                 intent = new Intent(getActivity(), DocPayActivity.class);
                 startActivity(intent);
                 break;
             case R.id.about_us:
                 break;
             case R.id.suggest_submit:
-                isUserIn = true;
+//                isUserIn = true;
                 //用户反馈
                 intent = new Intent(getActivity(), UserFadeActivity.class);
                 startActivity(intent);
                 break;
             case R.id.down_record:
                 if (EmptyUtils.isNotEmpty(token) && EmptyUtils.isNotEmpty(url)) {
-                    isUserIn = true;
+//                    isUserIn = true;
                     intent = new Intent(getActivity(), GlobeUnzipActivity.class);
                     startActivity(intent);
                 } else {
@@ -435,7 +435,7 @@ public class UserFragment extends BaseFragment {
                 break;
             case R.id.record_upload:
                 if (EmptyUtils.isNotEmpty(token)) {
-                    isUserIn = true;
+//                    isUserIn = true;
                     //病历上传
                     intent = new Intent(getActivity(), RecordUploadActivity.class);
                     startActivity(intent);

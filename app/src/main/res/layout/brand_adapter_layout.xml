@@ -3,26 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:id="@+id/ll_tab"
-        android:layout_height="wrap_content">
-        <View
-            android:layout_width="2dp"
-            android:id="@+id/v_line"
-            android:background="@color/main"
-            android:layout_height="match_parent"></View>
-    <TextView
         android:layout_width="match_parent"
-        android:id="@+id/tv_brand"
-        android:gravity="center"
-        android:paddingTop="@dimen/dp_10"
-        android:textSize="16sp"
-        android:text="@string/property"
-        android:textColor="@color/gray"
-        android:layout_gravity="center"
-        android:paddingBottom="@dimen/dp_10"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/v_line"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/tab_sel_color"></View>
+
+        <TextView
+            android:id="@+id/tv_brand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_10"
+            android:text="@string/property"
+            android:textColor="@color/gray"
+            android:textSize="16sp" />
     </LinearLayout>
 </RelativeLayout>
