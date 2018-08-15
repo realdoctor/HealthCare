@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.adapter.DocDetailAdapter;
+import com.real.doctor.realdoc.adapter.DocDeleteAdapter;
 import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
@@ -65,7 +65,7 @@ public class InqueryActivity extends BaseActivity {
     ImageView finishBack;
     @BindView(R.id.check_detail_rv)
     RecyclerView checkDetailRv;
-    DocDetailAdapter checkDetailAdapter;
+    DocDeleteAdapter checkDeleteAdapter;
     private String doctorUserId;
     private String patientRecordId;
     private String desease;
@@ -172,9 +172,9 @@ public class InqueryActivity extends BaseActivity {
                 list = data.getParcelableArrayListExtra("records");
                 //倒序排列
                 Collections.reverse(list);
-                checkDetailAdapter = new DocDetailAdapter(InqueryActivity.this, R.layout.doc_detail_item, list);
+                checkDeleteAdapter = new DocDeleteAdapter(InqueryActivity.this, R.layout.doc_delete_item, list);
                 //给RecyclerView设置适配器
-                checkDetailRv.setAdapter(checkDetailAdapter);
+                checkDetailRv.setAdapter(checkDeleteAdapter);
                 initCheckedEvent();
             }
         }
@@ -182,7 +182,7 @@ public class InqueryActivity extends BaseActivity {
 
     public void initCheckedEvent() {
         checkDetailRv.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(this));
-        checkDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        checkDeleteAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 SaveDocBean bean = (SaveDocBean) adapter.getItem(position);
