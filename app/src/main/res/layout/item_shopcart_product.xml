@@ -2,18 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CCCCCC" />
+        android:layout_height="0.5dp"
+        android:background="@drawable/disease_divider" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/check_box"
@@ -36,14 +36,13 @@
             android:layout_height="85dp"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="13dp"
-            android:scaleType="centerCrop"
-            />
+            android:scaleType="centerCrop" />
 
         <RelativeLayout
+            android:id="@+id/normal"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/normal"
-            android:layout_marginLeft="13dp" >
+            android:layout_marginLeft="13dp">
 
             <TextView
                 android:id="@+id/tv_intro"
@@ -53,16 +52,17 @@
                 android:layout_marginTop="20dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/txt_14" />
+                android:textSize="@dimen/txt_14"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/tv_product_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:layout_centerVertical="true"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/text_size_12sp" />
 
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="10dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_price"
@@ -102,7 +102,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/tv_num_show"
                         android:layout_width="wrap_content"
@@ -116,12 +117,13 @@
                 </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
+
         <RelativeLayout
+            android:id="@+id/edit"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:id="@+id/edit"
-            android:layout_marginLeft="13dp" >
+            android:layout_marginLeft="13dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
@@ -133,31 +135,33 @@
                 android:text=""
                 android:textColor="@color/grey_color1"
                 android:textSize="@dimen/txt_14" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:layout_centerVertical="true"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/text_size_12sp" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="30dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:singleLine="true"
-                    android:visibility="gone"
                     android:text="￥ 308.00"
                     android:textColor="@color/orange_color"
                     android:textSize="@dimen/txt_16"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -176,7 +180,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_reduce"

@@ -2,35 +2,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
     <include layout="@layout/title_bar" />
+
     <ExpandableListView
         android:id="@+id/exListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:childIndicator="@null"
-        android:groupIndicator="@null" >
-    </ExpandableListView>
+        android:groupIndicator="@null" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <CheckBox
                 android:id="@+id/all_chekbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="4dp"
                 android:button="@drawable/check_box_bg"
@@ -40,52 +41,56 @@
                 android:paddingLeft="10dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:visibility="visible" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/all_chekbox"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/ll_content"
-                android:layout_height="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:text="合计:"
-                android:layout_toLeftOf="@+id/tv_total_price"
-                android:id="@+id/coun"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_total_price"
+            <RelativeLayout
+                android:id="@+id/ll_content"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="￥0.00"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/tv_go_to_pay"
-                android:textColor="@color/paycolor"
-                android:textSize="16sp"
-                android:layout_marginRight="@dimen/txt_10"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
+                android:layout_toRightOf="@+id/all_chekbox"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/coun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toLeftOf="@+id/tv_total_price"
+                    android:text="合计:"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/txt_10"
+                    android:layout_toLeftOf="@+id/tv_go_to_pay"
+                    android:text="￥0.00"
+                    android:textColor="@color/paycolor"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/tv_go_to_pay"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:background="@color/paycolor"
-                    android:clickable="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:background="@color/paycolor"
+                    android:clickable="true"
                     android:gravity="center"
-                    android:textSize="@dimen/sp_16"
-                    android:textStyle="bold"
                     android:text="结算(0)"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold" />
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/tv_delete"
                 android:layout_width="100dp"
@@ -94,14 +99,11 @@
                 android:layout_centerVertical="true"
                 android:background="@color/paycolor"
                 android:clickable="true"
-                android:textSize="@dimen/sp_16"
                 android:gravity="center"
                 android:text="删除"
-                android:textStyle="bold"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
         </RelativeLayout>
-
-
     </LinearLayout>
-
 </LinearLayout>

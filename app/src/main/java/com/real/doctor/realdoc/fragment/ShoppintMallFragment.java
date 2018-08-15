@@ -42,10 +42,11 @@ public class ShoppintMallFragment extends BaseFragment {
     RelativeLayout topTitle;
     @BindView(R.id.img_shop_cart)
     ImageView img_shop_cart;
-    public String categoryId="1";
+    public String categoryId = "1";
     public final static int SHOPPING_EVENT_REQUEST_CODE = 3;
     public ProductPagerAdapter productPagerAdapter;
-    public ArrayList<CategoryBean> categoryBeanArrayList=new ArrayList<CategoryBean>();
+    public ArrayList<CategoryBean> categoryBeanArrayList = new ArrayList<CategoryBean>();
+
     public static ShoppintMallFragment newInstance() {
         return new ShoppintMallFragment();
     }
@@ -70,21 +71,21 @@ public class ShoppintMallFragment extends BaseFragment {
             topTitle.setLayoutParams(lp);
         }
         virtulData();
-        for(CategoryBean bean:categoryBeanArrayList){
+        for (CategoryBean bean : categoryBeanArrayList) {
             tb_category.addTab(tb_category.newTab().setText(bean.categoryName).setText(bean.categoryId));
         }
-        productPagerAdapter=new ProductPagerAdapter(getChildFragmentManager(),categoryBeanArrayList);
+        productPagerAdapter = new ProductPagerAdapter(getChildFragmentManager(), categoryBeanArrayList);
         viewPager.setAdapter(productPagerAdapter);
         tb_category.setupWithViewPager(viewPager);
         tb_category.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                  int postion=  tab.getPosition();
-                  if(postion==0){
-                      categoryId="1";
-                  }else{
-                      categoryId="2";
-                  }
+                int postion = tab.getPosition();
+                if (postion == 0) {
+                    categoryId = "1";
+                } else {
+                    categoryId = "2";
+                }
             }
 
             @Override
@@ -98,35 +99,37 @@ public class ShoppintMallFragment extends BaseFragment {
             }
         });
     }
-    public void virtulData(){
-        CategoryBean bean=new CategoryBean();
-        bean.categoryId="1";
-        bean.categoryName="医疗器械";
-        CategoryBean bean2=new CategoryBean();
-        bean2.categoryId="2";
-        bean2.categoryName="药品";
+
+    public void virtulData() {
+        CategoryBean bean = new CategoryBean();
+        bean.categoryId = "1";
+        bean.categoryName = "医疗器械";
+        CategoryBean bean2 = new CategoryBean();
+        bean2.categoryId = "2";
+        bean2.categoryName = "药品";
         categoryBeanArrayList.add(bean);
         categoryBeanArrayList.add(bean2);
     }
+
     @Override
-    @OnClick({R.id.home_search,R.id.img_shop_cart})
+    @OnClick({R.id.home_search, R.id.img_shop_cart})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.home_search:
-                Intent intent =new Intent(getContext(),SearchHistoryListActivity.class);
-                intent.putExtra("requestCode",SHOPPING_EVENT_REQUEST_CODE);
-                intent.putExtra("categoryId",categoryId);
+                Intent intent = new Intent(getContext(), SearchHistoryListActivity.class);
+                intent.putExtra("requestCode", SHOPPING_EVENT_REQUEST_CODE);
+                intent.putExtra("categoryId", categoryId);
                 startActivity(intent);
                 break;
             case R.id.img_shop_cart:
-                Intent intentShopCart =new Intent(getContext(),ShopCartActivity.class);
+                Intent intentShopCart = new Intent(getContext(), ShopCartActivity.class);
                 startActivity(intentShopCart);
                 break;
 
 
-
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

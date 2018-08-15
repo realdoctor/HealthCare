@@ -39,6 +39,7 @@ public class BrandAdapter extends RdBaseAdapter<BrandBean> {
         // 设置选中效果
         if (selectedPosition == position) {
             holder.v_line.setVisibility(View.VISIBLE);
+            holder.ll.setBackgroundColor(Color.WHITE);
             holder.brandText.setTextColor(mContext.getResources().getColor(R.color.tab_sel_color));
         } else {
             holder.v_line.setVisibility(View.INVISIBLE);

@@ -14,7 +14,7 @@
             android:id="@+id/v_line"
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@color/tab_sel_color"></View>
+            android:background="@color/tab_sel_color" />
 
         <TextView
             android:id="@+id/tv_brand"
