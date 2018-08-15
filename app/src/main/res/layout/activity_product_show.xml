@@ -93,6 +93,7 @@
             </LinearLayout>
         </ScrollView>
 
+
         <RelativeLayout
             android:id="@+id/rl_bottom"
             android:layout_width="match_parent"
@@ -102,10 +103,10 @@
             android:orientation="horizontal">
 
             <View
-                android:layout_width="1dp"
+                android:layout_width="0.5dp"
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@+id/tv_incart"
-                android:background="@color/gray"/>
+                android:background="@drawable/disease_divider" />
 
             <TextView
                 android:id="@+id/tv_incart"
@@ -131,5 +132,11 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16" />
         </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_above="@id/rl_bottom"
+            android:background="@drawable/disease_divider" />
     </RelativeLayout>
 </LinearLayout>
