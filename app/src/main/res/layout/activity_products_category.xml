@@ -11,6 +11,7 @@
         android:id="@+id/tb_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
         android:background="@color/white"
         app:tabIndicatorColor="@color/tab_sel_color"
         app:tabIndicatorHeight="3dp"
