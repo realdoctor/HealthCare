@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/finish_back"
+            android:layout_marginLeft="65dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
