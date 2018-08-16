@@ -12,6 +12,7 @@ import java.util.List;
 
 
 public class RightAdapter extends RdBaseAdapter<DeptBean> {
+
     public RightAdapter(Context context, List list) {
         super(context, list);
     }

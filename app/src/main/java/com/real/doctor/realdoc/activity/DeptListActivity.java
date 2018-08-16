@@ -23,6 +23,7 @@ import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,11 +58,11 @@ public class DeptListActivity extends BaseActivity {
     ImageView finish_back;
     @BindView(R.id.page_title)
     TextView page_title;
-
-
     ArrayList<DeptBean> arrayList = new ArrayList<DeptBean>();
     LeftAdapter leftAdapter;
     RightAdapter rightAdapter;
+    private String hospitalId;
+    private boolean isFirst = true;
 
     @Override
     public int getLayoutId() {
@@ -81,7 +83,7 @@ public class DeptListActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        final String hospitalId = getIntent().getStringExtra("hospitalId");
+        hospitalId = getIntent().getStringExtra("hospitalId");
         page_title.setText("预约科室");
         leftAdapter = new LeftAdapter(DeptListActivity.this, arrayList);
         lListView.setAdapter(leftAdapter);
@@ -90,32 +92,33 @@ public class DeptListActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long arg3) {
                 // TODO Auto-generated method stub
-                final int location = position;
                 leftAdapter.setSelectedPosition(position);
                 leftAdapter.notifyDataSetInvalidated();
-                final DeptBean bean = (DeptBean) leftAdapter.getItem(position);
-                rightAdapter = new RightAdapter(DeptListActivity.this, bean.deptList);
+                DeptBean bean = leftAdapter.getItem(position);
+                List<DeptBean> deptList = new ArrayList();
+                deptList.addAll(bean.deptList);
+                rightAdapter = new RightAdapter(DeptListActivity.this,deptList);
                 rListView.setAdapter(rightAdapter);
-                rListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View arg1,
-                                            int position, long arg3) {
-                        DeptBean dBean = bean.deptList.get(position);
-                        Intent intent = new Intent(DeptListActivity.this, OrderExpertActivity.class);
-                        intent.putExtra("hospitalId", hospitalId);
-                        intent.putExtra("deptName", dBean.deptName);
-                        startActivity(intent);
-
-                    }
-                });
-
+                initEvent();
             }
         });
     }
 
     @Override
     public void initEvent() {
-
+        if (EmptyUtils.isNotEmpty(rListView)) {
+            rListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View arg1,
+                                        int position, long arg3) {
+                    DeptBean dBean = (DeptBean) adapterView.getItemAtPosition(position);
+                    Intent intent = new Intent(DeptListActivity.this, OrderExpertActivity.class);
+                    intent.putExtra("hospitalId", hospitalId);
+                    intent.putExtra("deptName", dBean.deptName);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
@@ -138,6 +141,7 @@ public class DeptListActivity extends BaseActivity {
         HttpRequestClient.getInstance(DeptListActivity.this).createBaseApi().get("guahao/hospital/deptCategory/"
                 , param, new BaseObserver<ResponseBody>(DeptListActivity.this) {
                     protected Disposable disposable;
+
                     @Override
                     public void onSubscribe(Disposable d) {
                         disposable = d;
@@ -179,11 +183,16 @@ public class DeptListActivity extends BaseActivity {
                                     arrayList.addAll((ArrayList<DeptBean>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<DeptBean>>() {
                                             }.getType()));
+                                    if (isFirst) {
+                                        leftAdapter.setSelectedPosition(0);
+                                        final DeptBean bean = (DeptBean) leftAdapter.getItem(0);
+                                        rightAdapter = new RightAdapter(DeptListActivity.this, bean.deptList);
+                                        rListView.setAdapter(rightAdapter);
+                                        isFirst = false;
+                                    }
                                     leftAdapter.notifyDataSetChanged();
-
-                                } else {
+                                    initEvent();
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -191,7 +200,6 @@ public class DeptListActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                     }
-
                 });
     }
 }

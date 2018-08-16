@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-    <include layout="@layout/title_bar"></include>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
         android:layout_weight="1"
-        >
+        android:orientation="horizontal">
+
         <ListView
             android:id="@+id/lv_left"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:choiceMode="singleChoice"
-            android:scrollbars="none"
-            android:divider="@color/transparent"
-            android:listSelector="#00000000"
             android:layout_weight="4"
-            >
-        </ListView>
+            android:choiceMode="singleChoice"
+            android:divider="@null"
+            android:listSelector="@android:color/white"
+            android:scrollbars="none" />
+
         <ListView
             android:id="@+id/lv_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:verticalSpacing="10dp"
             android:layout_weight="2"
+            android:background="@android:color/white"
+            android:divider="@null"
             android:scrollbars="none"
-            android:background="@color/white">
-        </ListView>
+            android:verticalSpacing="10dp" />
     </LinearLayout>
 </LinearLayout>

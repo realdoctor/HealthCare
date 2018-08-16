@@ -15,6 +15,7 @@ import java.util.List;
 
 public class LeftAdapter extends RdBaseAdapter<DeptBean> {
     private int selectedPosition = -1;
+
     public LeftAdapter(Context context, List list) {
         super(context, list);
     }
@@ -27,18 +28,16 @@ public class LeftAdapter extends RdBaseAdapter<DeptBean> {
             holder = new Holder();
             convertView = mInflater.inflate(R.layout.brand_adapter_layout, parent, false);
             holder.brandText = convertView.findViewById(R.id.tv_brand);
-            holder.v_line=convertView.findViewById(R.id.v_line);
-            holder.ll=convertView.findViewById(R.id.ll_tab);
+            holder.v_line = convertView.findViewById(R.id.v_line);
+            holder.ll = convertView.findViewById(R.id.ll_tab);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
         // 设置选中效果
-        if(selectedPosition == position)
-        {
+        if (selectedPosition == position) {
             holder.v_line.setVisibility(View.VISIBLE);
-           holder.ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-
+            holder.ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         } else {
             holder.v_line.setVisibility(View.INVISIBLE);
             holder.ll.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
@@ -52,6 +51,7 @@ public class LeftAdapter extends RdBaseAdapter<DeptBean> {
         private View v_line;
         private LinearLayout ll;
     }
+
     public void setSelectedPosition(int position) {
         selectedPosition = position;
     }
