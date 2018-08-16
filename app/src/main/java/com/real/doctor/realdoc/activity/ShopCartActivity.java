@@ -115,13 +115,6 @@ public class ShopCartActivity extends BaseActivity implements ShopcartExpandable
 
     @Override
     public void initData() {
-        //加上沉浸式状态栏高度
-        int statusHeight = ScreenUtil.getStatusHeight(ShopCartActivity.this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) topTitle.getLayoutParams();
-            lp.topMargin = statusHeight;
-            topTitle.setLayoutParams(lp);
-        }
         pageTitle.setText("购物车");
         context = this;
         userId = (String) SPUtils.get(ShopCartActivity.this, Constants.USER_KEY, "");
