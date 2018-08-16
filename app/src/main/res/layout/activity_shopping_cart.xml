@@ -14,6 +14,11 @@
         android:childIndicator="@null"
         android:groupIndicator="@null" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@drawable/disease_divider" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -45,12 +50,9 @@
             <RelativeLayout
                 android:id="@+id/ll_content"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerHorizontal="true"
-                android:layout_toRightOf="@+id/all_chekbox"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_toRightOf="@+id/all_chekbox">
 
                 <TextView
                     android:id="@+id/coun"
@@ -75,6 +77,13 @@
                     android:textColor="@color/paycolor"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/price_line"
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@id/tv_total_price"
+                    android:background="@drawable/disease_divider" />
 
                 <TextView
                     android:id="@+id/tv_go_to_pay"

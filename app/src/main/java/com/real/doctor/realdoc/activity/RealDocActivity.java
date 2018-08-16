@@ -150,6 +150,14 @@ public class RealDocActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (position == 0) {
+            homeFragment.onShowMenu();
+        }
+    }
+
     /**
      * 根据位置得到对应的 Fragment
      *
