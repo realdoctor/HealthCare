@@ -4,11 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@drawable/disease_divider" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,14 +14,13 @@
             android:id="@+id/check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="15dp"
             android:button="@drawable/check_box_bg"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-            android:gravity="center"
-            android:minHeight="64dp"
-            android:minWidth="32dp"
+            android:minHeight="10dp"
+            android:minWidth="10dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:visibility="visible" />
 
@@ -35,7 +29,8 @@
             android:layout_width="85dp"
             android:layout_height="85dp"
             android:layout_marginBottom="15dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
             android:scaleType="centerCrop" />
 
         <RelativeLayout
@@ -91,7 +86,6 @@
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/tv_price"
                     android:singleLine="true"
-                    android:text="( 4L )"
                     android:textColor="@color/grey_color3"
                     android:textSize="@dimen/txt_10"
                     android:visibility="gone" />
@@ -109,11 +103,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="1"
                         android:textColor="@color/grey_color1"
                         android:textSize="@dimen/txt_12" />
-
-
                 </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
@@ -132,7 +123,6 @@
                 android:layout_marginTop="20dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text=""
                 android:textColor="@color/grey_color1"
                 android:textSize="@dimen/txt_14" />
 
@@ -157,7 +147,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:singleLine="true"
-                    android:text="￥ 308.00"
                     android:textColor="@color/orange_color"
                     android:textSize="@dimen/txt_16"
                     android:textStyle="bold"
@@ -169,7 +158,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:singleLine="true"
-                    android:text="( 4L )"
                     android:textColor="@color/grey_color3"
                     android:textSize="@dimen/txt_10"
                     android:visibility="gone" />
@@ -216,5 +204,4 @@
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
-
 </LinearLayout>

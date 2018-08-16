@@ -16,15 +16,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.real.doctor.realdoc.model.GroupInfo;
 import com.real.doctor.realdoc.model.ProductBean;
-import com.real.doctor.realdoc.model.ProductInfo;
 import com.real.doctor.realdoc.R;
 
 public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter {
     private List<GroupInfo> groups;
     private Map<String, List<ProductBean>> children;
     private Context context;
-    //HashMap<Integer, View> groupMap = new HashMap<Integer, View>();
-    //HashMap<Integer, View> childrenMap = new HashMap<Integer, View>();
     private CheckInterface checkInterface;
     private ModifyCountInterface modifyCountInterface;
     private boolean flag = false;
@@ -153,9 +150,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
             cholder.edit.setVisibility(View.GONE);
         }
         final ProductBean product = (ProductBean) getChild(groupPosition, childPosition);
-
         if (product != null) {
-
             cholder.tv_product_desc.setText(product.getName());
             cholder.tv_price.setText("￥" + product.getCost() + "");
             Glide.with(context).load(product.getSmallPic()).crossFade().into((ImageView) cholder.iv_adapter_list_pic);
@@ -206,7 +201,6 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
      */
     private class ChildHolder {
         CheckBox cb_check;
-
         TextView tv_product_name;
         TextView tv_product_desc;
         TextView tv_price;
