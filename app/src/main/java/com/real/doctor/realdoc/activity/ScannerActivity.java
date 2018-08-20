@@ -275,27 +275,10 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     }
 
 
-    private void qrSucceed(final  String result) {
-        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.notification)
-                .setMessage(result)
-                .setPositiveButton(R.string.positive_button_confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        restartPreview();
-                        focusDoctor(result);
-                    }
-                })
-                .show();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                restartPreview();
-            }
-        });
-
-
+    private void qrSucceed(final String result) {
+        focusDoctor(result);
     }
+
     private void focusDoctor(String doctorId) {
         JSONObject json = new JSONObject();
         try {
@@ -318,6 +301,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                     public void onError(Throwable e) {
                         //do nothing 通知后台开始计时失败
                         Log.d(TAG, e.getMessage());
+                        goToLogin();
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -347,10 +331,11 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(ScannerActivity.this, "关注成功");
-                                    Intent intent=new Intent(ScannerActivity.this,MyFollowDoctorsActivity.class);
+                                    Intent intent = new Intent(ScannerActivity.this, MyFollowDoctorsActivity.class);
                                     startActivity(intent);
                                     ScannerActivity.this.finish();
                                 } else {
+                                    goToLogin();
                                     ToastUtil.showLong(ScannerActivity.this, msg);
                                 }
                             } catch (JSONException e) {
@@ -364,4 +349,8 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                 });
     }
 
+    private void goToLogin() {
+        Intent intent = new Intent(ScannerActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
 }
