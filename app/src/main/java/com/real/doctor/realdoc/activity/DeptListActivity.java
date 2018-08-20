@@ -3,6 +3,8 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -10,6 +12,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -18,14 +21,11 @@ import com.real.doctor.realdoc.adapter.LeftAdapter;
 import com.real.doctor.realdoc.adapter.RightAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.DeptBean;
-import com.real.doctor.realdoc.model.PageModel;
-import com.real.doctor.realdoc.model.ProductBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
-import com.real.doctor.realdoc.util.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +53,7 @@ public class DeptListActivity extends BaseActivity {
     @BindView(R.id.lv_left)
     ListView lListView;
     @BindView(R.id.lv_right)
-    ListView rListView;
+    RecyclerView rListView;
     @BindView(R.id.finish_back)
     ImageView finish_back;
     @BindView(R.id.page_title)
@@ -83,6 +83,7 @@ public class DeptListActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        rListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         hospitalId = getIntent().getStringExtra("hospitalId");
         page_title.setText("预约科室");
         leftAdapter = new LeftAdapter(DeptListActivity.this, arrayList);
@@ -97,7 +98,7 @@ public class DeptListActivity extends BaseActivity {
                 DeptBean bean = leftAdapter.getItem(position);
                 List<DeptBean> deptList = new ArrayList();
                 deptList.addAll(bean.deptList);
-                rightAdapter = new RightAdapter(DeptListActivity.this,deptList);
+                rightAdapter = new RightAdapter(R.layout.dept_item_layout, deptList);
                 rListView.setAdapter(rightAdapter);
                 initEvent();
             }
@@ -106,12 +107,11 @@ public class DeptListActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-        if (EmptyUtils.isNotEmpty(rListView)) {
-            rListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        if (EmptyUtils.isNotEmpty(rightAdapter)) {
+            rightAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View arg1,
-                                        int position, long arg3) {
-                    DeptBean dBean = (DeptBean) adapterView.getItemAtPosition(position);
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    DeptBean dBean = (DeptBean) adapter.getItem(position);
                     Intent intent = new Intent(DeptListActivity.this, OrderExpertActivity.class);
                     intent.putExtra("hospitalId", hospitalId);
                     intent.putExtra("deptName", dBean.deptName);
@@ -186,7 +186,9 @@ public class DeptListActivity extends BaseActivity {
                                     if (isFirst) {
                                         leftAdapter.setSelectedPosition(0);
                                         final DeptBean bean = (DeptBean) leftAdapter.getItem(0);
-                                        rightAdapter = new RightAdapter(DeptListActivity.this, bean.deptList);
+                                        List<DeptBean> list = new ArrayList<>();
+                                        list.addAll(bean.deptList);
+                                        rightAdapter = new RightAdapter(R.layout.dept_item_layout, list);
                                         rListView.setAdapter(rightAdapter);
                                         isFirst = false;
                                     }

@@ -14,22 +14,19 @@
 
         <ListView
             android:id="@+id/lv_left"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_weight="1"
             android:choiceMode="singleChoice"
             android:divider="@null"
             android:listSelector="@android:color/white"
             android:scrollbars="none" />
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/lv_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
-            android:background="@android:color/white"
-            android:divider="@null"
-            android:scrollbars="none"
-            android:verticalSpacing="10dp" />
+            android:scrollbars="none" />
     </LinearLayout>
 </LinearLayout>

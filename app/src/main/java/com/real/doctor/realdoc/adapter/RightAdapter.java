@@ -1,40 +1,31 @@
 package com.real.doctor.realdoc.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.DeptBean;
+import com.real.doctor.realdoc.util.EmptyUtils;
 
 import java.util.List;
 
 
-public class RightAdapter extends RdBaseAdapter<DeptBean> {
+public class RightAdapter extends BaseQuickAdapter<DeptBean, BaseViewHolder> {
 
-    public RightAdapter(Context context, List list) {
-        super(context, list);
+    public RightAdapter(int layoutResId, @Nullable List<DeptBean> data) {
+        super(layoutResId, data);
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        DeptBean bean = getItem(position);
-        final Holder holder;
-        if (convertView == null) {
-            holder = new Holder();
-            convertView = mInflater.inflate(R.layout.dept_item_layout, parent, false);
-            holder.deptName = convertView.findViewById(R.id.tv_show);
-            convertView.setTag(holder);
-        } else {
-            holder = (Holder) convertView.getTag();
-        }
-        holder.deptName.setText(bean.deptName);
-        return convertView;
+    protected void convert(BaseViewHolder viewHolder, DeptBean item) {
+        TextView textView = viewHolder.getView(R.id.tv_show);
+        textView.setText(item.deptName);
     }
-
-    public class Holder {
-        private TextView deptName;
-    }
-
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center">
 
     <TextView
@@ -12,7 +12,6 @@
         android:gravity="center"
         android:paddingBottom="@dimen/dp_10"
         android:paddingTop="@dimen/dp_10"
-        android:text="@string/property"
         android:textColor="@color/text_black_color"
         android:textSize="16sp" />
 </RelativeLayout>
