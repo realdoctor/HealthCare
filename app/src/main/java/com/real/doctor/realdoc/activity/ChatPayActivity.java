@@ -82,6 +82,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     private String userId;
     private String price;
     private String newsId;
+    private String focusFlag;
 
     @Override
     public int getLayoutId() {
@@ -107,6 +108,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         desease = getIntent().getStringExtra("desease");
         patientRecordId = getIntent().getStringExtra("patientRecordId");
         detail = getIntent().getBooleanExtra("detail", false);
+        focusFlag = getIntent().getStringExtra("focusFlag");
         if (payType.equals("1")) {
             pageTitle.setText("聊天咨询支付");
             initGetPay();
@@ -536,6 +538,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         } else if (payType.equals("5")) {
             Intent intent = new Intent(ChatPayActivity.this, NewDetailActivity.class);
             intent.putExtra("newsId", newsId);
+            intent.putExtra("focusFlag", focusFlag);
             startActivity(intent);
         }
     }

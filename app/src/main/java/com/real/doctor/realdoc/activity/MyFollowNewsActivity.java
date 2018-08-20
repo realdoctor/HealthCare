@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -22,6 +24,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -49,9 +52,9 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/23.
  */
 
-public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreListener, OnRefreshListener, AdapterView.OnItemClickListener {
+public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreListener, OnRefreshListener {
     @BindView(R.id.lv_news)
-    ListView listView;
+    RecyclerView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.page_title)
@@ -87,11 +90,8 @@ public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreList
         }
         userId = (String) SPUtils.get(MyFollowNewsActivity.this, Constants.USER_KEY, "");
         page_title.setText("我的关注");
-        newsAdapter = new NewsAdapter(MyFollowNewsActivity.this, newModels);
+        newsAdapter = new NewsAdapter(R.layout.my_news_item, newModels);
         listView.setAdapter(newsAdapter);
-        listView.setOnItemClickListener(this);
-        ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         getData();
@@ -99,7 +99,17 @@ public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreList
 
     @Override
     public void initEvent() {
-
+        if (EmptyUtils.isNotEmpty(newsAdapter)) {
+            newsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    NewModel model = (NewModel) adapter.getItem(position);
+                    Intent intent = new Intent(MyFollowNewsActivity.this, NewDetailActivity.class);
+                    intent.putExtra("newsId", model.newsId);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
@@ -137,13 +147,6 @@ public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreList
         refreshLayout.finishRefresh();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        NewModel model = (NewModel) parent.getAdapter().getItem(position);
-        Intent intent = new Intent(MyFollowNewsActivity.this, NewDetailActivity.class);
-        intent.putExtra("newsId", model.newsId);
-        startActivity(intent);
-    }
 
     private void getData() {
         HashMap<String, Object> params = new HashMap<String, Object>();
@@ -200,6 +203,7 @@ public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreList
                                 } else {
 
                                 }
+                                initData();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

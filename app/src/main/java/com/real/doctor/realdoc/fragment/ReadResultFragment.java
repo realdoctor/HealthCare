@@ -273,6 +273,7 @@ public class ReadResultFragment extends BaseFragment implements OnLoadmoreListen
             NewModel model = (NewModel) parent.getAdapter().getItem(position);
             Intent intent = new Intent(getContext(), NewDetailActivity.class);
             intent.putExtra("newsId", model.newsId);
+            intent.putExtra("focusFlag", model.focusFlag);
             startActivity(intent);
         }else{
 

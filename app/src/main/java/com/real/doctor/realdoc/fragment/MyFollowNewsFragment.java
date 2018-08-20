@@ -6,6 +6,8 @@ import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -21,6 +24,7 @@ import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
 import com.real.doctor.realdoc.activity.NewDetailActivity;
 import com.real.doctor.realdoc.adapter.ArticleFragmentAdapter;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.model.PageModel;
@@ -28,6 +32,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -55,9 +60,9 @@ import okhttp3.ResponseBody;
  * Created by Administrator on 2018/4/18.
  */
 
-public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener, AdapterView.OnItemClickListener {
+public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener {
     @BindView(R.id.lv_news)
-    ListView listView;
+    RecyclerView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     public NewsAdapter newsAdapter;
@@ -71,6 +76,11 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
 
     public static MyFollowNewsFragment newInstance() {
         return new MyFollowNewsFragment();
+    }
+
+    public void getFragData(String userId) {
+        this.userId = userId;
+        getData();
     }
 
     @Override
@@ -89,14 +99,12 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
     }
 
     public void initData() {
-        userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
-        newsAdapter = new NewsAdapter(getContext(), newModels);
+        listView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        newsAdapter = new NewsAdapter(R.layout.my_news_item, newModels);
         listView.setAdapter(newsAdapter);
-        listView.setOnItemClickListener(this);
-        ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
+        userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
         getData();
     }
 
@@ -125,7 +133,7 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
         if (pageSize * pageNum > newModels.size()) {
-            ToastUtil.show(getContext(), "已经是最后一页", Toast.LENGTH_SHORT);
+            ToastUtil.show(getActivity(), "已经是最后一页", Toast.LENGTH_SHORT);
             refreshlayout.finishLoadmore();
             return;
         }
@@ -142,13 +150,20 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
         refreshLayout.finishRefresh();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        isUserIn = true;
-        NewModel model = (NewModel) parent.getAdapter().getItem(position);
-        Intent intent = new Intent(getContext(), NewDetailActivity.class);
-        intent.putExtra("newsId", model.newsId);
-        startActivity(intent);
+
+    public void initEvent() {
+        if (EmptyUtils.isNotEmpty(newsAdapter)) {
+            newsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    isUserIn = true;
+                    NewModel model = (NewModel) adapter.getItem(position);
+                    Intent intent = new Intent(getActivity(), NewDetailActivity.class);
+                    intent.putExtra("newsId", model.newsId);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void getData() {
@@ -156,8 +171,8 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
         params.put("userId", userId);
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
-        HttpRequestClient.getInstance(getContext()).createBaseApi().get("healthnews/myFocusList"
-                , params, new BaseObserver<ResponseBody>(getContext()) {
+        HttpRequestClient.getInstance(RealDocApplication.getContext()).createBaseApi().get("healthnews/myFocusList"
+                , params, new BaseObserver<ResponseBody>(RealDocApplication.getContext()) {
                     protected Disposable disposable;
 
                     @Override
@@ -167,6 +182,7 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(RealDocApplication.getContext(), "获取关注数据列表失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -195,6 +211,10 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
+                                    if(EmptyUtils.isNotEmpty(baseModel.list)){
+                                        baseModel.list.clear();
+                                        newModels.clear();
+                                    }
                                     JSONObject jsonObject = object.getJSONObject("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
@@ -202,10 +222,16 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
                                             new TypeToken<PageModel<NewModel>>() {
                                             }.getType());
                                     newModels.addAll(baseModel.list);
-                                    newsAdapter.notifyDataSetChanged();
+                                    if (EmptyUtils.isEmpty(newsAdapter)) {
+                                        newsAdapter = new NewsAdapter(R.layout.my_news_item, newModels);
+                                        listView.setAdapter(newsAdapter);
+                                    } else {
+                                        newsAdapter.notifyDataSetChanged();
+                                    }
                                 } else {
-
+                                    ToastUtil.showLong(RealDocApplication.getContext(), "获取关注数据列表失败!");
                                 }
+                                initEvent();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

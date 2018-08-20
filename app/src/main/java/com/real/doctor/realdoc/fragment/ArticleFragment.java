@@ -2,6 +2,7 @@ package com.real.doctor.realdoc.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ import okhttp3.ResponseBody;
 
 public class ArticleFragment extends BaseFragment implements OnLoadmoreListener, OnRefreshListener {
     @BindView(R.id.lv_news)
-    ListView listView;
+    RecyclerView listView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     public NewsAdapter newsAdapter;
@@ -72,10 +73,8 @@ public class ArticleFragment extends BaseFragment implements OnLoadmoreListener,
 
     @Override
     public void doBusiness(Context mContext) {
-        newsAdapter = new NewsAdapter(getContext(), newModels);
+        newsAdapter = new NewsAdapter(R.layout.my_news_item, newModels);
         listView.setAdapter(newsAdapter);
-        ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         getData();

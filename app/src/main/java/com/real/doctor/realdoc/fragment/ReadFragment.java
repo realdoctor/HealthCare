@@ -1,8 +1,10 @@
 package com.real.doctor.realdoc.fragment;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.real.doctor.realdoc.activity.NewDetailActivity;
 import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.adapter.MultiNewsAdapter;
 import com.real.doctor.realdoc.adapter.NewsAdapter;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.model.AdBean;
 import com.real.doctor.realdoc.model.NewModel;
@@ -54,6 +57,8 @@ import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 
+import static com.real.doctor.realdoc.adapter.ArticleFragmentAdapter.REFRESH_DATA;
+
 /**
  * Created by Administrator on 2018/4/18.
  */
@@ -73,7 +78,6 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
     public int pageSize = 10;
     public String userId;
     private Dialog mProgressDialog;
-//    private boolean isUserIn = false;
 
     public static ReadFragment newInstance() {
         return new ReadFragment();
@@ -100,11 +104,25 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
         refreshLayout.setOnRefreshListener(this);
         getAdData();
         getData();
+        localBroadcast();
     }
 
     @Override
     public void widgetClick(View v) {
 
+    }
+
+    private void localBroadcast() {
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(RealDocApplication.getContext());
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(REFRESH_DATA);
+        BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getData();
+            }
+        };
+        broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 
     @Override
@@ -269,16 +287,16 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         int Type = parent.getAdapter().getItemViewType(position);
         if (Type == MultiNewsAdapter.TYPE_A) {
-//            isUserIn = true;
             NewModel model = (NewModel) parent.getAdapter().getItem(position);
             if (Double.parseDouble(model.price) == 0.00d) {
                 Intent intent = new Intent(getContext(), NewDetailActivity.class);
                 intent.putExtra("newsId", model.newsId);
+                intent.putExtra("focusFlag", model.focusFlag);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(getContext(), ChatPayActivity.class);
                 intent.putExtra("payType", "5");
-                intent.putExtra("price", model.price);
+                intent.putExtra("focusFlag", model.focusFlag);
                 intent.putExtra("newsId", model.newsId);
                 startActivity(intent);
             }
@@ -286,15 +304,4 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
 
         }
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        //发送广播，关闭悬浮窗
-//        if (isUserIn) {
-//            Intent msgIntent = new Intent(HomeFragment.CLOSE_WINDOW_MANAGER);
-//            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(msgIntent);
-//            isUserIn = false;
-//        }
-//    }
 }

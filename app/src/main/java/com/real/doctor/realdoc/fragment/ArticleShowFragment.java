@@ -28,7 +28,9 @@ import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.model.PageModel;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -70,6 +72,7 @@ public class ArticleShowFragment extends BaseFragment {
     @BindView(R.id.tab_bar)
     RelativeLayout tabBar;
     public static final int INFO_SEARCH = 1;
+    private ArticleFragmentAdapter articleFragmentAdapter;
 
     public static ArticleShowFragment newInstance() {
         return new ArticleShowFragment();
@@ -92,11 +95,39 @@ public class ArticleShowFragment extends BaseFragment {
         }
     }
 
+
+    public void initEvent() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 0) {
+                    //do nothing
+                } else if (position == 1) {
+                    String userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
+                    //点击关注,通知fragment重新获得数据
+                    articleFragmentAdapter.getFragmentData(userId);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
     @Override
     public void doBusiness(Context mContext) {
-        ArticleFragmentAdapter articleFragmentAdapter = new ArticleFragmentAdapter(getChildFragmentManager());
+        articleFragmentAdapter = new ArticleFragmentAdapter(getChildFragmentManager());
         viewPager.setAdapter(articleFragmentAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        initEvent();
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.real.doctor.realdoc.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -11,6 +14,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.adapter.ArticleFragmentAdapter;
+import com.real.doctor.realdoc.application.RealDocApplication;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.model.NewModel;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
@@ -19,6 +24,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -63,7 +69,8 @@ public class NewDetailActivity extends BaseActivity {
     TextView new_detail;
     public String newsId;
     public String userId;
-    public boolean flag;
+    private String focusFlag;
+    public boolean flag = true;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
 
@@ -88,6 +95,16 @@ public class NewDetailActivity extends BaseActivity {
         }
         userId = (String) SPUtils.get(NewDetailActivity.this, Constants.USER_KEY, "");
         newsId = getIntent().getStringExtra("newsId");
+        focusFlag = getIntent().getStringExtra("focusFlag");
+        if (EmptyUtils.isNotEmpty(focusFlag)) {
+            if (focusFlag.equals("0")) {
+                tv_focus.setText("关注");
+            } else if (focusFlag.equals("1")) {
+                tv_focus.setText("取消关注");
+            }
+        } else {
+            tv_focus.setText("取消关注");
+        }
         getData();
     }
 
@@ -101,7 +118,7 @@ public class NewDetailActivity extends BaseActivity {
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                NewDetailActivity.this.finish();
+                goBackBtn();
                 break;
             case R.id.tv_focus:
                 if (!flag) {
@@ -236,9 +253,8 @@ public class NewDetailActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     flag = true;
                                     tv_focus.setText("取消关注");
-
                                 } else {
-
+                                    ToastUtil.showLong(RealDocApplication.getContext(), "关注失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -302,9 +318,8 @@ public class NewDetailActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     flag = false;
                                     tv_focus.setText("关注");
-
                                 } else {
-
+                                    ToastUtil.showLong(RealDocApplication.getContext(), "取消关注失败!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -315,5 +330,22 @@ public class NewDetailActivity extends BaseActivity {
                     }
 
                 });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBackBtn();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goBackBtn() {
+        //点击回退按钮,广播通知刷新列表
+        //动态注册广播
+        Intent intent = new Intent(ArticleFragmentAdapter.REFRESH_DATA);
+        LocalBroadcastManager.getInstance(NewDetailActivity.this).sendBroadcast(intent);
+        finish();
     }
 }
