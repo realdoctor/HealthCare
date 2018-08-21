@@ -102,7 +102,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
         listView.setOnItemClickListener(this);
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
-        getAdData();
+//        getAdData();
         getData();
         localBroadcast();
     }
@@ -296,6 +296,7 @@ public class ReadFragment extends BaseFragment implements OnLoadmoreListener, On
             } else {
                 Intent intent = new Intent(getContext(), ChatPayActivity.class);
                 intent.putExtra("payType", "5");
+                intent.putExtra("price", model.price);
                 intent.putExtra("focusFlag", model.focusFlag);
                 intent.putExtra("newsId", model.newsId);
                 startActivity(intent);

@@ -540,6 +540,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
             intent.putExtra("newsId", newsId);
             intent.putExtra("focusFlag", focusFlag);
             startActivity(intent);
+            finish();
         }
     }
 }

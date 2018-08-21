@@ -35,8 +35,9 @@ public class MultiNewsAdapter extends BaseAdapter {
         this.context = context;
         //把数据装载同一个list里面
         data.addAll(as);
-        data.addAll(bs);
-        Collections.shuffle(data); // 混乱的意思
+        //我看内容都重复,所以不要混乱了，广告先不要
+//        data.addAll(bs);
+//        Collections.shuffle(data); // 混乱的意思
     }
 
     @Override
