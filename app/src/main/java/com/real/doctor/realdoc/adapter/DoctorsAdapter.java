@@ -9,9 +9,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ChatPayActivity;
+import com.real.doctor.realdoc.activity.OrderExpertByDateActivity;
 import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.model.DoctorBean;
 import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.NetworkUtil;
+import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
 
 import java.util.List;
@@ -40,7 +43,7 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 intent.putExtra("payType", "1");
                 intent.putExtra("doctorUserId", item.getId());
                 intent.putExtra("desease", item.getDiagName());
-                intent.putExtra("patientRecordId",item.getPatientRecordId());
+                intent.putExtra("patientRecordId", item.getPatientRecordId());
                 context.startActivity(intent);
             }
         });
@@ -54,7 +57,7 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 intent.putExtra("payType", "2");
                 intent.putExtra("doctorUserId", item.getId());
                 intent.putExtra("desease", item.getDiagName());
-                intent.putExtra("patientRecordId",item.getPatientRecordId());
+                intent.putExtra("patientRecordId", item.getPatientRecordId());
                 context.startActivity(intent);
             }
         });
@@ -62,8 +65,10 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
         registrationsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //点击进入挂号界面,这样做是错误的,应该为在该医生名下挂号
-                Intent intent = new Intent(context, RegistrationsActivity.class);
+                Intent intent = new Intent(context, OrderExpertByDateActivity.class);
+                intent.putExtra("hospitalId", item.getHospitalId());
+                intent.putExtra("doctorCode", item.getDoctorCode());
+                intent.putExtra("deptName", item.getDeptName());
                 context.startActivity(intent);
             }
         });

@@ -243,8 +243,13 @@ public class OrderExpertByDateActivity extends BaseActivity implements ExpertByD
                                     weekList.addAll((ArrayList<WeekModel>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<WeekModel>>() {
                                             }.getType()));
-                                    orderDateAdapter.notifyDataSetChanged();
-                                    selectDefault();
+                                    if (weekList.size() > 0) {
+                                        orderDateAdapter.notifyDataSetChanged();
+                                        selectDefault();
+                                    } else {
+                                        ToastUtil.showLong(OrderExpertByDateActivity.this,"该医生无法预约!");
+                                        finish();
+                                    }
                                 } else {
                                 }
                             } catch (JSONException e) {
