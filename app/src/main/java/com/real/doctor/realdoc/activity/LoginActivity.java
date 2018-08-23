@@ -541,6 +541,8 @@ public class LoginActivity extends BaseActivity {
                 EMClient.getInstance().chatManager().loadAllConversations();
                 // get user's info (this should be get from App's server or 3rd party service)
                 HuanXinHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+                // 上传 token 方法，token 是通过广播接收器接收到的
+//                EMClient.getInstance().sendHMSPushTokenToServer("华为appId", "注册华为的 token");
             }
 
             @Override
@@ -835,6 +837,7 @@ public class LoginActivity extends BaseActivity {
                                     if (DocUtils.hasValue(obj, "verifyFlag")) {
                                         verifyFlag = obj.getString("verifyFlag");
                                         SPUtils.put(LoginActivity.this, Constants.VERIFYFLAG, verifyFlag);
+                                        registerHuanXin(mobilePhone, pwd);
                                         if (!getList && StringUtils.equals(verifyFlag, "1")) {
                                             loginHuanXin(mobilePhone, pwd);
                                             //登录成功,获得列表数据
@@ -1051,5 +1054,62 @@ public class LoginActivity extends BaseActivity {
                     }
 
                 });
+    }
+
+    private void registerHuanXin(final String mobilePhone, final String pwd) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EMClient.getInstance().createAccount(mobilePhone, pwd);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showLong(LoginActivity.this, "环信聊天注册成功");
+                        }
+                    });
+                } catch (final HyphenateException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            /**
+                             * 关于错误码可以参考官方api详细说明
+                             * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
+                             */
+                            int errorCode = e.getErrorCode();
+                            String message = e.getMessage();
+                            Log.d("lzan13", String.format("sign up - errorCode:%d, errorMsg:%s", errorCode, e.getMessage()));
+                            switch (errorCode) {
+                                // 网络错误
+                                case EMError.NETWORK_ERROR:
+                                    ToastUtil.showLong(LoginActivity.this, "网络错误 code: " + errorCode + ", message:" + message);
+                                    break;
+                                // 用户已存在
+                                case EMError.USER_ALREADY_EXIST:
+                                    ToastUtil.showLong(LoginActivity.this, "用户已存在 code: " + errorCode + ", message:" + message);
+                                    break;
+                                // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
+                                case EMError.USER_ILLEGAL_ARGUMENT:
+                                    ToastUtil.showLong(LoginActivity.this, "参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册 code: " + errorCode + ", message:" + message);
+                                    break;
+                                // 服务器未知错误
+                                case EMError.SERVER_UNKNOWN_ERROR:
+                                    ToastUtil.showLong(LoginActivity.this, "服务器未知错误 code: " + errorCode + ", message:" + message);
+                                    break;
+                                case EMError.USER_REG_FAILED:
+                                    ToastUtil.showLong(LoginActivity.this, "账户注册失败 code: " + errorCode + ", message:" + message);
+                                    break;
+                                default:
+                                    ToastUtil.showLong(LoginActivity.this, "ml_sign_up_failed code: " + errorCode + ", message:" + message);
+                                    break;
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

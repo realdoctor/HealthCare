@@ -58,7 +58,7 @@ public class DoctorsDetailActivity extends BaseActivity {
     private String doctorCode;
     private String userId;
     private String hospitalId;
-
+    private String mobile;
 
     @Override
     public int getLayoutId() {
@@ -84,6 +84,7 @@ public class DoctorsDetailActivity extends BaseActivity {
         userId = (String) SPUtils.get(DoctorsDetailActivity.this, Constants.USER_KEY, "");
         doctorUserId = getIntent().getStringExtra("doctorUserId");
         desease = getIntent().getStringExtra("desease");
+        mobile = getIntent().getStringExtra("mobile");
         patientRecordId = getIntent().getStringExtra("patientRecordId");
         getDoctorDetail();
     }
@@ -186,6 +187,7 @@ public class DoctorsDetailActivity extends BaseActivity {
                     intent.putExtra("doctorUserId", doctorUserId);
                     intent.putExtra("desease", desease);
                     intent.putExtra("patientRecordId", patientRecordId);
+                    intent.putExtra("mobile", mobile);
                     DoctorsDetailActivity.this.startActivity(intent);
                 } else {
                     ToastUtil.showLong(DoctorsDetailActivity.this, "您还未连接网络,请连接互联网!");

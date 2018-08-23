@@ -52,6 +52,7 @@ public class ProgressBarActivity extends BaseActivity {
     private String inquery;
     private String desease;
     private String questionId;
+    private String orderNo;
     private boolean detail;
     private String patientRecordId;
 
@@ -87,6 +88,7 @@ public class ProgressBarActivity extends BaseActivity {
             inquery = intent.getExtras().getString("inquery");
             desease = intent.getExtras().getString("desease");
             mList = intent.getParcelableArrayListExtra("mList");
+            orderNo = intent.getExtras().getString("orderNo");
             doctorUserId = intent.getExtras().getString("doctorUserId");
             detail = getIntent().getBooleanExtra("detail", false);
             questionId = intent.getExtras().getString("questionId");
@@ -130,6 +132,7 @@ public class ProgressBarActivity extends BaseActivity {
             startServiceIntent.putExtra("desease", desease);
             startServiceIntent.putExtra("inquery", inquery);
             startServiceIntent.putExtra("doctorUserId", doctorUserId);
+            startServiceIntent.putExtra("orderNo", orderNo);
             startServiceIntent.putExtra("questionId", questionId);
             startServiceIntent.putExtra("patientRecordId", patientRecordId);
             startService(startServiceIntent);

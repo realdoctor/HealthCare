@@ -80,9 +80,12 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     private String desease;
     private boolean detail;
     private String userId;
+    private String mobile;
+    private String mobilePhone;
     private String price;
     private String newsId;
     private String focusFlag;
+    private String orderNo;
 
     @Override
     public int getLayoutId() {
@@ -109,6 +112,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         patientRecordId = getIntent().getStringExtra("patientRecordId");
         detail = getIntent().getBooleanExtra("detail", false);
         focusFlag = getIntent().getStringExtra("focusFlag");
+        mobilePhone = getIntent().getStringExtra("mobile");
         if (payType.equals("1")) {
             pageTitle.setText("聊天咨询支付");
             initGetPay();
@@ -122,6 +126,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
             tvCountprice.setText(price);
         }
         userId = (String) SPUtils.get(ChatPayActivity.this, Constants.USER_KEY, "");
+        mobile = (String) SPUtils.get(ChatPayActivity.this, Constants.MOBILE, "");
         api = WXAPIFactory.createWXAPI(this, Constants.WX_APP_ID);
         api.registerApp(Constants.WX_APP_ID);
     }
@@ -322,16 +327,22 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(ChatPayActivity.this, "支付宝支付成功!");
-//                                    JSONObject orderObject = object.getJSONObject("data");
-//                                    final String orderInfo = orderObject.getString("orderString");
+                                    JSONObject orderObject = object.getJSONObject("data");
+                                    if (DocUtils.hasValue(orderObject, "orderNo")) {
+                                        orderNo = orderObject.getString("orderNo");
+                                    }
+//                                    String orderString = "";
+//                                    if (DocUtils.hasValue(orderObject, "orderString")) {
+//                                        orderString = orderObject.getString("orderString");
+//                                    }
+//                                    final String finalOrderString = orderString;
 //                                    Runnable payRunnable = new Runnable() {
 //                                        @Override
 //                                        public void run() {
 //                                            // 构造PayTask 对象
 //                                            PayTask alipay = new PayTask(ChatPayActivity.this);
 //                                            // 调用支付接口，获取支付结果
-//                                            String result = alipay.pay(orderInfo, true);
-//
+//                                            String result = alipay.pay(finalOrderString, true);
 //                                            Message msg = new Message();
 //                                            msg.what = SDK_PAY_FLAG;
 //                                            msg.obj = result;
@@ -523,7 +534,9 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         if (payType.equals("1")) {
             //点击进入聊天页
             Intent intent = new Intent(ChatPayActivity.this, ChatActivity.class);
-            intent.putExtra("userId", "admin");
+//            intent.putExtra("userId", "admin");
+            intent.putExtra("userId", "13750816400");
+//            intent.putExtra("userId",  mobilePhone);
             intent.putExtra("doctorUserId", doctorUserId);
             intent.putExtra("desease", desease);
             intent.putExtra("patientRecordId", patientRecordId);
@@ -532,6 +545,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
             Intent intent = new Intent(ChatPayActivity.this, InqueryActivity.class);
             intent.putExtra("doctorUserId", doctorUserId);
             intent.putExtra("desease", desease);
+            intent.putExtra("orderNo", orderNo);
             intent.putExtra("detail", detail);
             intent.putExtra("patientRecordId", patientRecordId);
             startActivity(intent);

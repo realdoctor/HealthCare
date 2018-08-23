@@ -44,6 +44,7 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 intent.putExtra("doctorUserId", item.getId());
                 intent.putExtra("desease", item.getDiagName());
                 intent.putExtra("patientRecordId", item.getPatientRecordId());
+                intent.putExtra("mobile", item.getMobile());
                 context.startActivity(intent);
             }
         });

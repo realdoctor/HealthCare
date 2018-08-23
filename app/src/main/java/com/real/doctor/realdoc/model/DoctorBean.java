@@ -25,10 +25,7 @@ public class DoctorBean extends UserBean implements Parcelable {
     private String doctorRealName;
     private String hospitalId;
     private String deptName;
-
-    public DoctorBean() {
-        super();
-    }
+    private String messageId;
 
     protected DoctorBean(Parcel in) {
         super(in);
@@ -45,6 +42,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         doctorRealName = in.readString();
         hospitalId = in.readString();
         deptName = in.readString();
+        messageId = in.readString();
     }
 
     @Override
@@ -63,6 +61,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         dest.writeString(doctorRealName);
         dest.writeString(hospitalId);
         dest.writeString(deptName);
+        dest.writeString(messageId);
     }
 
     @Override
@@ -184,5 +183,17 @@ public class DoctorBean extends UserBean implements Parcelable {
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    public static Creator<DoctorBean> getCREATOR() {
+        return CREATOR;
     }
 }

@@ -70,6 +70,8 @@ public class InqueryActivity extends BaseActivity {
     private String patientRecordId;
     private String desease;
     private String questionId;
+    private String orderNo;
+    private String mobile;
     private boolean detail;
     private String inqueryEditContent;
     private List<SaveDocBean> list;
@@ -101,6 +103,8 @@ public class InqueryActivity extends BaseActivity {
         questionId = getIntent().getStringExtra("questionId");
         detail = getIntent().getBooleanExtra("detail", false);
         patientRecordId = getIntent().getStringExtra("patientRecordId");
+        orderNo = getIntent().getStringExtra("orderNo");
+        mobile = getIntent().getStringExtra("mobile");
         //创建布局管理
         checkDetailRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         //添加自定义分割线
@@ -147,6 +151,7 @@ public class InqueryActivity extends BaseActivity {
                             intent.putExtra("doctorUserId", doctorUserId);
                             intent.putExtra("questionId", questionId);
                             intent.putExtra("detail", detail);
+                            intent.putExtra("orderNo", orderNo);
                             intent.putExtra("patientRecordId", patientRecordId);
                             startActivity(intent);
                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

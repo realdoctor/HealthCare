@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.application;
 
+import android.app.Activity;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
@@ -13,6 +14,8 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 
+//import com.huawei.android.hms.agent.HMSAgent;
+//import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.kk.taurus.ijkplayer.IjkPlayer;
 import com.kk.taurus.playerbase.config.PlayerConfig;
 import com.kk.taurus.playerbase.config.PlayerLibrary;
@@ -115,6 +118,14 @@ public class RealDocApplication extends MultiDexApplication {
         }
         //init demo helper
         HuanXinHelper.getInstance().init(getContext());
+        //华为推送初始化
+//        HMSAgent.init(this);
+//        HMSAgent.connect((Activity) getContext(), new ConnectHandler() {
+//            @Override
+//            public void onConnect(int rst) {
+////                showLog("HMS connect end:" + rst);
+//            }
+//        });
         PlayerConfig.addDecoderPlan(new DecoderPlan(PLAN_ID_IJK, IjkPlayer.class.getName(), "IjkPlayer"));
         PlayerConfig.setDefaultPlanId(PLAN_ID_IJK);
         //use default NetworkEventProducer.

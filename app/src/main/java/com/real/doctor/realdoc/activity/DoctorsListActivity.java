@@ -203,6 +203,7 @@ public class DoctorsListActivity extends BaseActivity {
                 Intent intent = new Intent(DoctorsListActivity.this, DoctorsDetailActivity.class);
                 intent.putExtra("doctorUserId", bean.getId());
                 intent.putExtra("desease", bean.getDiagName());
+                intent.putExtra("mobile", bean.getMobile());
                 intent.putExtra("patientRecordId", bean.getPatientRecordId());
                 startActivity(intent);
             }
