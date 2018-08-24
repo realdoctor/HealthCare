@@ -213,13 +213,14 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
 
     private boolean isWXAppInstalledAndSupported(Context context,
                                                  IWXAPI api) {
-        // LogOutput.d(TAG, "isWXAppInstalledAndSupported");
-        boolean sIsWXAppInstalledAndSupported = api.isWXAppInstalled()
-                && api.isWXAppSupportAPI();
-        if (!sIsWXAppInstalledAndSupported) {
-            ToastUtil.showLong(this, "尚未安装微信客户端或者微信版本不支持");
-        }
-        return sIsWXAppInstalledAndSupported;
+//        // LogOutput.d(TAG, "isWXAppInstalledAndSupported");
+//        boolean sIsWXAppInstalledAndSupported = api.isWXAppInstalled()
+//                && api.isWXAppSupportAPI();
+//        if (!sIsWXAppInstalledAndSupported) {
+//            ToastUtil.showLong(this, "尚未安装微信客户端或者微信版本不支持");
+//        }
+//        return sIsWXAppInstalledAndSupported;
+        return true;
     }
 
     @Override
@@ -535,7 +536,8 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
             //点击进入聊天页
             Intent intent = new Intent(ChatPayActivity.this, ChatActivity.class);
 //            intent.putExtra("userId", "admin");
-            intent.putExtra("userId", "13750816400");
+            intent.putExtra("userId", "18158428608");
+//            intent.putExtra("userId", "13750816400");
 //            intent.putExtra("userId",  mobilePhone);
             intent.putExtra("doctorUserId", doctorUserId);
             intent.putExtra("desease", desease);

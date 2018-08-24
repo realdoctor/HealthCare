@@ -23,6 +23,10 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,9 +55,12 @@ public class MyRegistrationActivity extends BaseActivity {
     TextView page_title;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     RegistrationAdapter registrationAdapter;
     ArrayList<RegistrationModel> registrationModelArrayList = new ArrayList<RegistrationModel>();
-    public String userid;
+    private String userid;
+    private int mPageNum = 1;
 
     @Override
     public int getLayoutId() {
@@ -98,12 +105,15 @@ public class MyRegistrationActivity extends BaseActivity {
 
     @Override
     public void doBusiness(Context mContext) {
-        getData();
+        getData("1");
+        swipeRefresh();
     }
 
-    private void getData() {
+    private void getData(String pageNum) {
         HashMap<String, Object> param = new HashMap<>();
         param.put("userid", userid);
+        param.put("pageNum", pageNum);
+        param.put("pageSize", "10");
         HttpRequestClient.getInstance(MyRegistrationActivity.this).createBaseApi().get(" user/myGuahaoOrder/"
                 , param, new BaseObserver<ResponseBody>(MyRegistrationActivity.this) {
                     protected Disposable disposable;
@@ -164,4 +174,21 @@ public class MyRegistrationActivity extends BaseActivity {
 
                 });
     }
+
+    private void swipeRefresh() {
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                //处理刷新列表逻辑
+                getData("1");
+            }
+        });
+        refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                getData(String.valueOf(++mPageNum));
+            }
+        });
+    }
+
 }

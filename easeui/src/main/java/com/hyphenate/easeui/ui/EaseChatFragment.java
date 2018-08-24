@@ -805,6 +805,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             @Override
             public void onSuccess() {
                 if (isMessageListInited) {
+                    //使用极光推送给交流的手机
+
                     messageList.refresh();
                 }
             }

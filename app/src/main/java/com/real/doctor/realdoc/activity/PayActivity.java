@@ -137,12 +137,13 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
     private boolean isWXAppInstalledAndSupported(Context context,
                                                  IWXAPI api) {
         // LogOutput.d(TAG, "isWXAppInstalledAndSupported");
-        boolean sIsWXAppInstalledAndSupported = api.isWXAppInstalled()
-                && api.isWXAppSupportAPI();
-        if (!sIsWXAppInstalledAndSupported) {
-            Toast.makeText(context, "尚未安装微信客户端或者微信版本不支持", Toast.LENGTH_SHORT).show();
-        }
-        return sIsWXAppInstalledAndSupported;
+//        boolean sIsWXAppInstalledAndSupported = api.isWXAppInstalled()
+//                && api.isWXAppSupportAPI();
+//        if (!sIsWXAppInstalledAndSupported) {
+//            Toast.makeText(context, "尚未安装微信客户端或者微信版本不支持", Toast.LENGTH_SHORT).show();
+//        }
+//        return sIsWXAppInstalledAndSupported;
+        return true;
     }
 
     @Override

@@ -36,6 +36,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 
@@ -172,8 +173,13 @@ public class InfoActivity extends BaseActivity {
     }
 
     @Override
+    @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.finish_back:
+                InfoActivity.this.finish();
+                break;
+        }
     }
 
     @Override

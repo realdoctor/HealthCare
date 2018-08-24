@@ -8,9 +8,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
 import com.real.doctor.realdoc.activity.CaseControlActivity;
 import com.real.doctor.realdoc.activity.MyRevisitActivity;
 import com.real.doctor.realdoc.fragment.HomeFragment;
+import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 
 import org.json.JSONException;
@@ -29,7 +31,8 @@ import cn.jpush.android.api.JPushInterface;
  */
 public class JPushUserReceiver extends BroadcastReceiver {
     private static final String TAG = "JPushUserReceiver";
-    private int notifactionId;
+    private static String extra;
+    private String tagId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -42,17 +45,21 @@ public class JPushUserReceiver extends BroadcastReceiver {
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
-                notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
+                extra = (String) bundle.get(JPushInterface.EXTRA_EXTRA);
                 //通知HomeFragment显示红点
                 process(context);
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-                if (notifactionId == 0) {
+                JSONObject object = new JSONObject(extra);
+                if (DocUtils.hasValue(object, "tagId")) {
+                    tagId = object.getString("tagId");
+                }
+                if (tagId.equals("0")) {
                     //病人,当病人接收到医生的回复后,跳转到我的复诊界面看答案
                     Intent i = new Intent(context, MyRevisitActivity.class);
                     i.putExtras(bundle);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(i);
-                } else if (notifactionId == 1) {
+                } else if (tagId.equals("1")) {
                     //医生,当病人上传了病历文件后,通知医生到患者管理界面
                     Intent i = new Intent(context, CaseControlActivity.class);
                     i.putExtras(bundle);

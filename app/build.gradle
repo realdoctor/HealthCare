@@ -45,7 +45,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
@@ -134,11 +134,14 @@ dependencies {
 
     //在线视频播放
     implementation project(':ijkplayer')
+
     //    //leakcanary
 
     //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.2'
 
     //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
+    implementation files('libs/jcore-android-1.2.3.jar')
+    implementation files('libs/jpush-android-3.1.5.jar')
 }
 // ADD THIS AT THE BOTTOM
 //apply plugin: 'com.google.gms.google-services'

@@ -116,6 +116,9 @@ public class RealDocApplication extends MultiDexApplication {
         } else {
             //do nothing
         }
+        //极光推送
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
         //init demo helper
         HuanXinHelper.getInstance().init(getContext());
         //华为推送初始化
@@ -132,9 +135,7 @@ public class RealDocApplication extends MultiDexApplication {
         PlayerConfig.setUseDefaultNetworkEventProducer(true);
 
         PlayerLibrary.init(this);
-        //极光推送
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
+
         //医生端下载病历文件后处理
 //        onGetPatientList();
 //        localBroadcast();
