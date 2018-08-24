@@ -202,4 +202,5 @@ public class InfoFragment extends BaseFragment implements OnLoadmoreListener,OnR
          intent.putExtra("pubId",model.pubId);
          startActivity(intent);
     }
+
 }

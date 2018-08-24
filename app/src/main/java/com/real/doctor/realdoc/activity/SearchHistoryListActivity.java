@@ -125,18 +125,57 @@ public class SearchHistoryListActivity extends BaseActivity {
                     if (EmptyUtils.isNotEmpty(search)) {
                         //从map中得到相同value的数据
                         String cate = (String) map.get(search);
-                        if (EmptyUtils.isNotEmpty(cate)) {
-                            SearchBean bean = new SearchBean();
-                            bean.setCate(cate);
-                            bean.setValue(search);
-                            insertData(bean);
-                            setBackValue(search, cate);
-                        } else {
-                            SearchBean bean = new SearchBean();
-                            bean.setCate("");
-                            bean.setValue(search);
-                            insertData(bean);
-                            setBackValue(search, "");
+                        SearchProductBean productBean = null;
+                        if (type.equals("sp")) {
+                            if (EmptyUtils.isNotEmpty(cate)) {
+                                productBean = new SearchProductBean();
+                                productBean.setCate(cate);
+                                productBean.setValue(search);
+                                //插入数据库
+                                insertProductData(productBean);
+                                setBackValue(search, cate);
+                            } else {
+                                productBean = new SearchProductBean();
+                                productBean.setCate("");
+                                productBean.setValue(search);
+                                //插入数据库
+                                insertProductData(productBean);
+                                setBackValue(search, "");
+                            }
+                        } else if (type.equals("zx")) {
+                            SearchInfoBean infoBean = null;
+                            if (EmptyUtils.isNotEmpty(cate)) {
+                                infoBean = new SearchInfoBean();
+                                infoBean.setCate(cate);
+                                infoBean.setValue(search);
+                                //插入数据库
+                                insertInfoData(infoBean);
+                                setBackValue(search, cate);
+                            } else {
+                                infoBean = new SearchInfoBean();
+                                infoBean.setCate("");
+                                infoBean.setValue(search);
+                                //插入数据库
+                                insertInfoData(infoBean);
+                                setBackValue(search, "");
+                            }
+                        } else if (type.equals("gh")) {
+                            SearchBean bean = null;
+                            if (EmptyUtils.isNotEmpty(cate)) {
+                                bean = new SearchBean();
+                                bean.setCate(cate);
+                                bean.setValue(search);
+                                //插入数据库
+                                insertData(bean);
+                                setBackValue(search, cate);
+                            } else {
+                                bean = new SearchBean();
+                                bean.setCate("");
+                                bean.setValue(search);
+                                //插入数据库
+                                insertData(bean);
+                                setBackValue(search, "");
+                            }
                         }
                     } else {
                         ToastUtil.showLong(SearchHistoryListActivity.this, "搜索框为空,请输入您要搜索的信息!");

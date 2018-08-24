@@ -6,22 +6,18 @@
     android:background="@color/common_bg"
     android:orientation="vertical">
 
-	<com.hyphenate.easeui.widget.EaseTitleBar 
-	    android:id="@+id/title_bar"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    hyphenate:titleBarTitle="@string/session"
-	    />
-    
     <include layout="@layout/ease_search_bar" />
-    
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fl_error_item"
-        >
-    </FrameLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#f1f0f6" />
+
+    <FrameLayout
+        android:id="@+id/fl_error_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <com.hyphenate.easeui.widget.EaseConversationList
         android:id="@+id/list"
@@ -30,7 +26,6 @@
         android:background="@android:color/transparent"
         android:cacheColorHint="#00000000"
         android:divider="@null"
-        hyphenate:cvsListPrimaryTextSize="16sp"
-         />
+        hyphenate:cvsListPrimaryTextSize="16sp" />
 
 </LinearLayout>

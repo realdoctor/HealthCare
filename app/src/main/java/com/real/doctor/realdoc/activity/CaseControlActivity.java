@@ -1,75 +1,58 @@
 package com.real.doctor.realdoc.activity;
 
-import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
-import com.real.doctor.realdoc.adapter.CaseControlAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
-import com.real.doctor.realdoc.model.PatientBean;
-import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
-import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
-import com.real.doctor.realdoc.util.Constants;
+import com.real.doctor.realdoc.fragment.AlreadyRevisitFragment;
+import com.real.doctor.realdoc.fragment.CaseChatFragment;
+import com.real.doctor.realdoc.fragment.CaseRecordFragment;
+import com.real.doctor.realdoc.fragment.RevisitingFragment;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
-import com.real.doctor.realdoc.util.GsonUtil;
-import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
-import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.util.SizeUtils;
+import com.real.doctor.realdoc.widget.TabViewPagerAdapter;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.disposables.Disposable;
-import okhttp3.ResponseBody;
 
-public class CaseControlActivity extends BaseActivity {
+public class CaseControlActivity extends BaseActivity implements TabLayout.OnTabSelectedListener {
 
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
+    @BindView(R.id.finish_back)
+    ImageView finish_back;
     @BindView(R.id.page_title)
     TextView pageTitle;
-    @BindView(R.id.finish_back)
-    ImageView finishBack;
-    @BindView(R.id.search_patient)
-    EditText searchPatient;
-    @BindView(R.id.my_patient_rv)
-    RecyclerView myPatientRv;
-    CaseControlAdapter caseControlAdapter;
-    private List<PatientBean> patientList;
-    private static int pageNum = 1;
-    private String mUserId;
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    private TabViewPagerAdapter viewPagerAdapter;
+    //TabLayout标签
+    private String[] titles = new String[]{"图文复诊", "通讯复诊"};
+    private List<Fragment> fragments = new ArrayList<>();
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_case_control;
+        return R.layout.activity_my_revisit;
     }
 
     @Override
@@ -82,141 +65,43 @@ public class CaseControlActivity extends BaseActivity {
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
+        pageTitle.setText("患者管理");
     }
 
     @Override
     public void initData() {
-        //添加权限
-        PackageManager p = getPackageManager();
-        boolean permission = (PackageManager.PERMISSION_GRANTED ==
-                p.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.real.doctor.realdoc"));
-        if (!permission) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(CaseControlActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-            }
+        //设置TabLayout标签的显示方式
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        //循环注入标签
+        for (String tab : titles) {
+            tabLayout.addTab(tabLayout.newTab().setText(tab));
         }
-        pageTitle.setText("患者管理");
-        patientList = new ArrayList<>();
-        //添加自定义分割线
-        myPatientRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.disease_divider));
-        myPatientRv.addItemDecoration(divider);
-        caseControlAdapter = new CaseControlAdapter(R.layout.case_control_item, patientList);
-        mUserId = (String) SPUtils.get(CaseControlActivity.this, Constants.USER_KEY, "");
-        initCaseControl("");
-    }
-
-    private void initCaseControl(String searchStr) {
-        HashMap<String, String> param = new HashMap<>();
-        param.put("pageNum", String.valueOf(pageNum));
-        param.put("roleId", "1");
-        if (EmptyUtils.isNotEmpty(searchStr)) {
-            param.put("searchStr", searchStr);
-        }
-        param.put("pageSize", "10");
-        param.put("status", "1");
-        param.put("userId", mUserId);
-        HttpRequestClient.getInstance(CaseControlActivity.this).createBaseApi().get("askQuestion/reply/list"
-                , param, new BaseObserver<ResponseBody>(CaseControlActivity.this) {
-                    protected Disposable disposable;
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        disposable = d;
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ToastUtil.showLong(CaseControlActivity.this, "获取患者管理列表失败!");
-                        if (disposable != null && !disposable.isDisposed()) {
-                            disposable.dispose();
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        if (disposable != null && !disposable.isDisposed()) {
-                            disposable.dispose();
-                        }
-                    }
-
-                    @Override
-                    protected void onHandleSuccess(ResponseBody responseBody) {
-                        String data = null;
-                        String msg = null;
-                        String code = null;
-                        try {
-                            data = responseBody.string().toString();
-                            try {
-                                JSONObject object = new JSONObject(data);
-                                if (DocUtils.hasValue(object, "msg")) {
-                                    msg = object.getString("msg");
-                                }
-                                if (DocUtils.hasValue(object, "code")) {
-                                    code = object.getString("code");
-                                }
-                                if (msg.equals("ok") && code.equals("0")) {
-                                    if (DocUtils.hasValue(object, "data")) {
-                                        JSONObject obj = object.getJSONObject("data");
-                                        if (DocUtils.hasValue(obj, "list")) {
-                                            patientList = GsonUtil.GsonToList(obj.getJSONArray("list").toString(), PatientBean.class);
-                                            caseControlAdapter = new CaseControlAdapter(R.layout.case_control_item, patientList);
-                                            myPatientRv.setAdapter(caseControlAdapter);
-                                            initEvent();
-                                        }
-                                    }
-                                } else {
-                                    ToastUtil.showLong(CaseControlActivity.this, "获取患者管理列表失败!");
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                });
+        //设置TabLayout点击事件
+        tabLayout.setOnTabSelectedListener(this);
+        fragments.add(new CaseRecordFragment());
+        fragments.add(new CaseChatFragment());
+        viewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager(), titles, fragments);
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        DocUtils.setIndicator(this, tabLayout, 20, 20);
+        LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
+        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        linearLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.layout_divider_vertical));
+        linearLayout.setDividerPadding(SizeUtils.dp2px(this, 15));
     }
 
     @Override
     public void initEvent() {
-        caseControlAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(CaseControlActivity.this, CaseListActivity.class);
-                Bundle mBundle = new Bundle();
-                PatientBean patientBean = (PatientBean) adapter.getItem(position);
-                mBundle.putString("realName", patientBean.getUserInfo().getRealname());
-                mBundle.putParcelable("patient", patientBean);
-                intent.putExtras(mBundle);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
-        });
 
-        searchPatient.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    String search = searchPatient.getText().toString().trim();
-                    if (EmptyUtils.isNotEmpty(search)) {
-                        initCaseControl(search);
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
     }
+
 
     @Override
     @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                finish();
+                goBackBtn();
                 break;
         }
     }
@@ -224,5 +109,33 @@ public class CaseControlActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        viewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBackBtn();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goBackBtn() {
+        finish();
     }
 }

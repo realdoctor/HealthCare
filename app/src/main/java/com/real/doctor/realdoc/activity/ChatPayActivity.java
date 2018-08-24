@@ -535,10 +535,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         if (payType.equals("1")) {
             //点击进入聊天页
             Intent intent = new Intent(ChatPayActivity.this, ChatActivity.class);
-//            intent.putExtra("userId", "admin");
-            intent.putExtra("userId", "18158428608");
-//            intent.putExtra("userId", "13750816400");
-//            intent.putExtra("userId",  mobilePhone);
+            intent.putExtra("userId",  mobilePhone);
             intent.putExtra("doctorUserId", doctorUserId);
             intent.putExtra("desease", desease);
             intent.putExtra("patientRecordId", patientRecordId);
