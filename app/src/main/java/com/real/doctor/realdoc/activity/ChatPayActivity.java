@@ -192,8 +192,10 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
                                 }
                             } catch (JSONException e) {
                                 if (e.getMessage().equals("Value null at data of type org.json.JSONObject$1 cannot be converted to JSONObject")) {
-                                    ToastUtil.showLong(ChatPayActivity.this, "该医生还未填写复诊咨询报价!");
-                                    ChatPayActivity.this.finish();
+//                                    ToastUtil.showLong(ChatPayActivity.this, "该医生还未填写复诊咨询报价!");
+//                                    ChatPayActivity.this.finish();
+                                    //如果医生未填写报价,默认报价为20元
+                                    tvCountprice.setText("20");
                                 }
                                 e.printStackTrace();
                             }
@@ -535,7 +537,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         if (payType.equals("1")) {
             //点击进入聊天页
             Intent intent = new Intent(ChatPayActivity.this, ChatActivity.class);
-            intent.putExtra("userId",  mobilePhone);
+            intent.putExtra("userId", mobilePhone);
             intent.putExtra("doctorUserId", doctorUserId);
             intent.putExtra("desease", desease);
             intent.putExtra("patientRecordId", patientRecordId);

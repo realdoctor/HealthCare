@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+
+    <com.real.doctor.realdoc.view.CircleImageView
+        android:id="@+id/user_avator"
+        android:layout_width="@dimen/user_avatar_height"
+        android:layout_height="@dimen/user_avatar_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/white"
+        android:src="@mipmap/ease_default_avatar"
+        app:border_circle_color="@android:color/white"
+        app:border_circle_width="0dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp">
+
+        <LinearLayout
+            android:id="@+id/pay_title_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/pay_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/txt_18" />
+
+            <TextView
+                android:id="@+id/pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/text_primary_color"
+                android:textSize="@dimen/txt_18" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/pay_type_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pay_title_linear"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/text_primary_color"
+            android:textSize="@dimen/txt_18" />
+
+        <TextView
+            android:id="@+id/pay_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pay_type_title"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/text_secondary_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pay_type"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/pay_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/text_secondary_color" />
+
+            <TextView
+                android:id="@+id/is_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_secondary_color" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

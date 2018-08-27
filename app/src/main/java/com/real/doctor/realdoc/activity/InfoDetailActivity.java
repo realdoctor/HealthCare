@@ -39,12 +39,14 @@ import okhttp3.ResponseBody;
  */
 
 public class InfoDetailActivity extends BaseActivity {
+
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.lv_show)
     ListView lv_show;
-    public ArrayList<InfoDetailModel> list=new ArrayList<InfoDetailModel>();
+    public ArrayList<InfoDetailModel> list = new ArrayList<InfoDetailModel>();
     public ImageAdapter adapter;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_info_detail;
@@ -64,8 +66,8 @@ public class InfoDetailActivity extends BaseActivity {
 
     @Override
     public void initData() {
-      String pubId=  getIntent().getStringExtra("pubId");
-      adapter=  new ImageAdapter(InfoDetailActivity.this,list);
+        String pubId = getIntent().getStringExtra("pubId");
+        adapter = new ImageAdapter(InfoDetailActivity.this, list);
         lv_show.setAdapter(adapter);
         getData(pubId);
     }
@@ -78,7 +80,7 @@ public class InfoDetailActivity extends BaseActivity {
     @Override
     @OnClick({R.id.finish_back})
     public void widgetClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.finish_back:
                 InfoDetailActivity.this.finish();
                 break;
@@ -89,9 +91,10 @@ public class InfoDetailActivity extends BaseActivity {
     public void doBusiness(Context mContext) {
 
     }
+
     private void getData(String pubId) {
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("pubId",pubId);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pubId", pubId);
         HttpRequestClient.getInstance(InfoDetailActivity.this).createBaseApi().get("news_pub/info"
                 , params, new BaseObserver<ResponseBody>(InfoDetailActivity.this) {
                     @Override
@@ -124,10 +127,10 @@ public class InfoDetailActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONArray jsonObject=object.getJSONArray("data");
+                                    JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    list.addAll((ArrayList<InfoDetailModel>)localGson.fromJson(jsonObject.toString(),
+                                    list.addAll((ArrayList<InfoDetailModel>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<InfoDetailModel>>() {
                                             }.getType()));
                                     adapter.notifyDataSetChanged();

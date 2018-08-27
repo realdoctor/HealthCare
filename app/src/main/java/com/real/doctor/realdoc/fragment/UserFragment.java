@@ -25,6 +25,7 @@ import com.real.doctor.realdoc.activity.GlobeUnzipActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyFollowDoctorsActivity;
 import com.real.doctor.realdoc.activity.MyFollowNewsActivity;
+import com.real.doctor.realdoc.activity.MyPayActivity;
 import com.real.doctor.realdoc.activity.MyRegistrationActivity;
 import com.real.doctor.realdoc.activity.MyRevisitActivity;
 import com.real.doctor.realdoc.activity.OrderListActivity;
@@ -92,6 +93,8 @@ public class UserFragment extends BaseFragment {
     LinearLayout myVisit;
     @BindView(R.id.my_orders)
     LinearLayout myOrders;
+    @BindView(R.id.my_pay)
+    LinearLayout myPay;
     @BindView(R.id.my_follow)
     LinearLayout myFollow;
     @BindView(R.id.identify)
@@ -303,7 +306,7 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    @OnClick({R.id.identify, R.id.my_appointment, R.id.packag_history, R.id.my_visit, R.id.my_orders, R.id.my_follow, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit, R.id.down_record, R.id.record_upload})
+    @OnClick({R.id.identify, R.id.my_appointment, R.id.packag_history, R.id.my_visit, R.id.my_orders, R.id.my_follow, R.id.user_setting, R.id.inquiry_pay, R.id.suggest_submit, R.id.down_record, R.id.record_upload, R.id.my_pay})
     public void widgetClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
@@ -444,6 +447,11 @@ public class UserFragment extends BaseFragment {
                     intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
+                break;
+            case R.id.my_pay:
+                //点击支付订单,跳转到支付订单界面
+                intent = new Intent(getActivity(), MyPayActivity.class);
+                startActivity(intent);
                 break;
         }
     }
