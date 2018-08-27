@@ -3,6 +3,7 @@ package com.real.doctor.realdoc.service;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
+import android.os.Binder;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -47,10 +48,6 @@ public class RecordingService extends Service {
     private String mFolder;
     private String mModifyId;
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
 
     public interface OnTimerChangedListener {
         void onTimerChanged(int seconds);
@@ -64,19 +61,22 @@ public class RecordingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mFolder = intent.getStringExtra("folder");
-        mModifyId = intent.getStringExtra("modifyId");
-        startRecording();
+
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        if (mRecorder != null) {
-            stopRecording();
-        }
-
         super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        mFolder = intent.getStringExtra("folder");
+        mModifyId = intent.getStringExtra("modifyId");
+        startRecording();
+        return new StopBinder();
     }
 
     public void startRecording() {
@@ -125,6 +125,27 @@ public class RecordingService extends Service {
         mFilePath += mFileName;
     }
 
+    public void stopRecordService() {
+        try {
+            RecordBean bean = new RecordBean();
+            if (EmptyUtils.isNotEmpty(mModifyId)) {
+                bean.setRecordId(mModifyId);
+            }
+            bean.setFileName(mFileName);
+            bean.setFilePath(mFilePath);
+            bean.setDate(String.valueOf(mStartingTimeMillis));
+            bean.setElapsedMillis(String.valueOf(mElapsedMillis));
+            bean.setFolder(mFolder);
+            //广播给activity
+            //通知页面刷新数据
+            Intent intent = new Intent(RecordActivity.RECORD_SERVICE);
+            intent.putExtra("record", bean);
+            LocalBroadcastManager.getInstance(RecordingService.this).sendBroadcast(intent);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "exception", e);
+        }
+    }
+
     public void stopRecording() {
         if (EmptyUtils.isNotEmpty(mRecorder)) {
             mRecorder.setOnErrorListener(null);
@@ -150,25 +171,18 @@ public class RecordingService extends Service {
         }
 
         mRecorder = null;
-
-        try {
-            RecordBean bean = new RecordBean();
-            if (EmptyUtils.isNotEmpty(mModifyId)) {
-                bean.setRecordId(mModifyId);
-            }
-            bean.setFileName(mFileName);
-            bean.setFilePath(mFilePath);
-            bean.setDate(String.valueOf(mStartingTimeMillis));
-            bean.setElapsedMillis(String.valueOf(mElapsedMillis));
-            bean.setFolder(mFolder);
-            //广播给activity
-            //通知页面刷新数据
-            Intent intent = new Intent(RecordActivity.RECORD_SERVICE);
-            intent.putExtra("record", bean);
-            LocalBroadcastManager.getInstance(RecordingService.this).sendBroadcast(intent);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "exception", e);
-        }
     }
 
+    private class StopBinder extends Binder implements StopRecordService {
+
+        @Override
+        public void stopRecord() {
+            stopRecording();
+        }
+
+        @Override
+        public void stopService() {
+            stopRecordService();
+        }
+    }
 }

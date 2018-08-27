@@ -3,15 +3,18 @@ package com.real.doctor.realdoc.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -30,6 +33,7 @@ import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.model.AddLabelBean;
 import com.real.doctor.realdoc.model.RecordBean;
 import com.real.doctor.realdoc.service.RecordingService;
+import com.real.doctor.realdoc.service.StopRecordService;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.StringUtils;
@@ -55,6 +59,7 @@ public class RecordActivity extends BaseActivity {
     TextView recordingPrompt;
     @BindView(R.id.chronometer)
     Chronometer chronometer;
+    private RecordCcnnect connect;
     private int recordPromptCount = 0;
 
     private boolean startRecording = true;
@@ -69,6 +74,7 @@ public class RecordActivity extends BaseActivity {
 
     long timeWhenPaused = 0; //stores time when user clicks pause button
     private static final int REQUEST_ADD_ADVICE = 111;
+    private StopRecordService stopService;
 
     @Override
     public int getLayoutId() {
@@ -200,8 +206,10 @@ public class RecordActivity extends BaseActivity {
             }
             bundle.putString("folder", mFolder);
             intent.putExtras(bundle);
+            connect = new RecordCcnnect();
+            bindService(intent, connect, BIND_AUTO_CREATE);
             //start RecordingService
-            startService(intent);
+//            startService(intent);
             //keep screen on while recording
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -219,6 +227,7 @@ public class RecordActivity extends BaseActivity {
                                 public void onClick(DialogInterface arg0,
                                                     int arg1) {
                                     arg0.dismiss();
+                                    stopService.stopRecord();
                                     saveYesRecord();
                                 }
                             }).
@@ -247,6 +256,22 @@ public class RecordActivity extends BaseActivity {
         }
     }
 
+    //监视服务的状态
+    private class RecordCcnnect implements ServiceConnection {
+        //当服务连接成功调用
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            //获取中间人对象
+            stopService = (StopRecordService) service;
+        }
+
+        //失去连接
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    }
+
     private void saveYesRecord() {
         Intent startIntent = new Intent(RecordActivity.this, AddAdviceActivity.class);
         startIntent.putExtra("label", true);
@@ -266,7 +291,7 @@ public class RecordActivity extends BaseActivity {
 
     private void stopRecording() {
         if (EmptyUtils.isNotEmpty(intent)) {
-            stopService(intent);
+            stopService.stopService();
             //allow the screen to turn off again once recording is finished
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             intent = null;
@@ -306,5 +331,12 @@ public class RecordActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        //当Activity销毁的时候 解绑服务
+        unbindService(connect);
+        super.onDestroy();
     }
 }
