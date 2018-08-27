@@ -46,7 +46,7 @@ public class OrderExpertActivity extends BaseActivity {
     @BindView(R.id.page_title)
     TextView page_title;
     public String hospitalId = "1";
-    public String deptName = "呼吸内科";
+    public String deptCode;
     public FragPagerAdapter adapter;
     private static final int DEFAULT_OFFSCREEN_PAGES = 2;
 
@@ -69,8 +69,8 @@ public class OrderExpertActivity extends BaseActivity {
 
     @Override
     public void initData() {
-//        hospitalId=getIntent().getStringExtra("hospitalId");
-//        deptName=getIntent().getStringExtra("deptName");
+        hospitalId=getIntent().getStringExtra("hospitalId");
+        deptCode=getIntent().getStringExtra("deptCode");
         int statusHeight = ScreenUtil.getStatusHeight(OrderExpertActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) titleBar.getLayoutParams();
@@ -79,8 +79,8 @@ public class OrderExpertActivity extends BaseActivity {
         }
         page_title.setText("预约专家");
         ArrayList<Fragment> list = new ArrayList<Fragment>();
-        OrderExpertByNameFragment orderExpertFragment = OrderExpertByNameFragment.newInstance(hospitalId, deptName);
-        OrderExpertByDateFragment orderExpertFragment2 = OrderExpertByDateFragment.newInstance(hospitalId, deptName);
+        OrderExpertByNameFragment orderExpertFragment = OrderExpertByNameFragment.newInstance(hospitalId, deptCode);
+        OrderExpertByDateFragment orderExpertFragment2 = OrderExpertByDateFragment.newInstance(hospitalId, deptCode);
         list.add(orderExpertFragment);
         list.add(orderExpertFragment2);
         adapter = new FragPagerAdapter(getSupportFragmentManager(), list);

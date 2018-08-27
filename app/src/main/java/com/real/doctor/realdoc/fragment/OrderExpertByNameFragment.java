@@ -56,13 +56,13 @@ public class OrderExpertByNameFragment extends BaseFragment implements AdapterVi
     private Unbinder unbinder;
     ArrayList<ExpertBean> arrayList = new ArrayList<ExpertBean>();
     ExpertAdapter expertAdapter;
-    public String userId,token;
+    public String userId, token;
 
-    public static OrderExpertByNameFragment newInstance(String hospitalId, String deptName) {
+    public static OrderExpertByNameFragment newInstance(String hospitalId, String deptCode) {
         OrderExpertByNameFragment fragment = new OrderExpertByNameFragment();
         Bundle bundel = new Bundle();
         bundel.putString("hospitalId", hospitalId);
-        bundel.putString("deptName", deptName);
+        bundel.putString("deptCode", deptCode);
         fragment.setArguments(bundel);
         return fragment;
     }
@@ -83,17 +83,17 @@ public class OrderExpertByNameFragment extends BaseFragment implements AdapterVi
             token = (String) SPUtils.get(getActivity(), "token", "");
             userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
             String hospitalId = (String) getArguments().get("hospitalId");
-            String deptName = (String) getArguments().get("deptName");
+            String deptCode = (String) getArguments().get("deptCode");
             expertAdapter = new ExpertAdapter(getContext(), arrayList, this);
             listView.setAdapter(expertAdapter);
-            getExpert(hospitalId, deptName);
+            getExpert(hospitalId, deptCode);
         }
     }
 
-    private void getExpert(String hospitalId, String deptName) {
+    private void getExpert(String hospitalId, String deptCode) {
         HashMap<String, Object> param = new HashMap<>();
         param.put("hospitalId", hospitalId);
-        param.put("deptName", deptName);
+        param.put("deptCode", deptCode);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get(" guahao/hospital/orderExpert/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
                     protected Disposable disposable;

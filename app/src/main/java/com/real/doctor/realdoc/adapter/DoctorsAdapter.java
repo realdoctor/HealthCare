@@ -69,7 +69,7 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 Intent intent = new Intent(context, OrderExpertByDateActivity.class);
                 intent.putExtra("hospitalId", item.getHospitalId());
                 intent.putExtra("doctorCode", item.getDoctorCode());
-                intent.putExtra("deptName", item.getDeptName());
+                intent.putExtra("deptCode", item.getDeptCode());
                 context.startActivity(intent);
             }
         });

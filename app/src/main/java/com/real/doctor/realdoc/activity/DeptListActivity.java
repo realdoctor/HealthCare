@@ -114,7 +114,7 @@ public class DeptListActivity extends BaseActivity {
                     DeptBean dBean = (DeptBean) adapter.getItem(position);
                     Intent intent = new Intent(DeptListActivity.this, OrderExpertActivity.class);
                     intent.putExtra("hospitalId", hospitalId);
-                    intent.putExtra("deptName", dBean.deptName);
+                    intent.putExtra("deptCode", dBean.deptCode);
                     startActivity(intent);
                 }
             });

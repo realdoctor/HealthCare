@@ -52,7 +52,7 @@ public class DoctorsDetailActivity extends BaseActivity {
     Button registrationsBtn;
     private String doctorUserId;
     private String patientRecordId;
-    private String deptName;
+    private String deptCode;
     private String desease;
     private Dialog mProgressDialog;
     private String doctorCode;
@@ -143,8 +143,8 @@ public class DoctorsDetailActivity extends BaseActivity {
                                             docInfo.setText("\u3000\u3000该医生无简介");
                                         }
                                     }
-                                    if (DocUtils.hasValue(obj, "deptName")) {
-                                        deptName = obj.getString("deptName");
+                                    if (DocUtils.hasValue(obj, "deptCode")) {
+                                        deptCode = obj.getString("deptCode");
                                     }
                                     if (DocUtils.hasValue(obj, "doctorCode")) {
                                         doctorCode = obj.getString("doctorCode");
@@ -214,7 +214,7 @@ public class DoctorsDetailActivity extends BaseActivity {
                     Intent intent = new Intent(DoctorsDetailActivity.this, OrderExpertByDateActivity.class);
                     intent.putExtra("hospitalId", hospitalId);
                     intent.putExtra("doctorCode", doctorCode);
-                    intent.putExtra("deptName", deptName);
+                    intent.putExtra("deptCode", deptCode);
                     startActivity(intent);
                 } else {
                     ToastUtil.showLong(DoctorsDetailActivity.this, "您还未连接网络,请连接互联网!");

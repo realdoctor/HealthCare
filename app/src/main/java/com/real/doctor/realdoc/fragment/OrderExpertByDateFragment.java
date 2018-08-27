@@ -67,15 +67,15 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
     ArrayList<WeekModel> weekList = new ArrayList<WeekModel>();
     OrderDateAdapter orderDateAdapter;
     String hospitalId;
-    String deptName;
-    String userId,token;
+    String deptCode;
+    String userId, token;
     private Unbinder unbinder;
 
-    public static OrderExpertByDateFragment newInstance(String hospitalId, String deptName) {
+    public static OrderExpertByDateFragment newInstance(String hospitalId, String deptCode) {
         OrderExpertByDateFragment fragment = new OrderExpertByDateFragment();
         Bundle bundel = new Bundle();
         bundel.putString("hospitalId", hospitalId);
-        bundel.putString("deptName", deptName);
+        bundel.putString("deptCode", deptCode);
         fragment.setArguments(bundel);
         return fragment;
     }
@@ -96,7 +96,7 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
             token = (String) SPUtils.get(getActivity(), "token", "");
             userId = (String) SPUtils.get(getContext(), Constants.USER_KEY, "");
             hospitalId = (String) getArguments().get("hospitalId");
-            deptName = (String) getArguments().get("deptName");
+            deptCode = (String) getArguments().get("deptCode");
             expertAdapter = new ExpertByDateAdapter(getContext(), arrayList, this);
             lv_expert.setAdapter(expertAdapter);
             orderDateAdapter = new OrderDateAdapter(getContext(), weekList);
@@ -108,10 +108,10 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                     orderDateAdapter.setSelectedPosition(position);
                     orderDateAdapter.notifyDataSetInvalidated();
                     WeekModel model = (WeekModel) parent.getAdapter().getItem(position);
-                    getExpert(hospitalId, deptName, model.worktimeWeek.split("\\|")[0]);
+                    getExpert(hospitalId, deptCode, model.worktimeWeek.split("\\|")[0]);
                 }
             });
-            getExpertDate(hospitalId, deptName);
+            getExpertDate(hospitalId, deptCode);
         }
     }
 
@@ -129,7 +129,7 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
     private void getExpert(String hospitalId, String deptName, String orderDay) {
         HashMap<String, Object> param = new HashMap<>();
         param.put("hospitalId", hospitalId);
-        param.put("deptName", deptName);
+        param.put("deptCode", deptCode);
         param.put("orderDay", orderDay);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get(" guahao/hospital/orderDateExpert/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
@@ -193,10 +193,10 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                 });
     }
 
-    private void getExpertDate(String hospitalId, String deptName) {
+    private void getExpertDate(String hospitalId, String deptCode) {
         HashMap<String, Object> param = new HashMap<>();
         param.put("hospitalId", hospitalId);
-        param.put("deptName", deptName);
+        param.put("deptCode", deptCode);
         HttpRequestClient.getInstance(getContext()).createBaseApi().get(" guahao/hospital/orderDate/"
                 , param, new BaseObserver<ResponseBody>(getContext()) {
                     protected Disposable disposable;
@@ -265,7 +265,7 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
         orderDateAdapter.notifyDataSetInvalidated();
         final WeekModel bean = (WeekModel) orderDateAdapter.getItem(0);
         String orderDate = bean.worktimeWeek.split("\\|")[0];
-        getExpert(hospitalId, deptName, orderDate);
+        getExpert(hospitalId, deptCode, orderDate);
     }
 
     @Override

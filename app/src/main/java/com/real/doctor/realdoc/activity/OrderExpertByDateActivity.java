@@ -64,7 +64,7 @@ public class OrderExpertByDateActivity extends BaseActivity implements ExpertByD
     ArrayList<WeekModel> weekList = new ArrayList<WeekModel>();
     OrderDateAdapter orderDateAdapter;
     private String hospitalId;
-    private String deptName;
+    private String deptCode;
     private String doctorCode;
     private String userId;
     private Dialog mProgressDialog;
@@ -93,7 +93,7 @@ public class OrderExpertByDateActivity extends BaseActivity implements ExpertByD
         userId = (String) SPUtils.get(OrderExpertByDateActivity.this, Constants.USER_KEY, "");
         doctorCode = getIntent().getStringExtra("doctorCode");
         hospitalId = getIntent().getStringExtra("hospitalId");
-        deptName = getIntent().getStringExtra("deptName");
+        deptCode = getIntent().getStringExtra("deptCode");
         expertAdapter = new ExpertByDateAdapter(OrderExpertByDateActivity.this, arrayList, this);
         lv_expert.setAdapter(expertAdapter);
         orderDateAdapter = new OrderDateAdapter(OrderExpertByDateActivity.this, weekList);
@@ -105,10 +105,10 @@ public class OrderExpertByDateActivity extends BaseActivity implements ExpertByD
                 orderDateAdapter.setSelectedPosition(position);
                 orderDateAdapter.notifyDataSetInvalidated();
                 WeekModel model = (WeekModel) parent.getAdapter().getItem(position);
-                getExpert(hospitalId, deptName, model.worktimeWeek.split("\\|")[0]);
+                getExpert(hospitalId, deptCode, model.worktimeWeek.split("\\|")[0]);
             }
         });
-        getExpertDate(hospitalId, deptName);
+        getExpertDate(hospitalId, deptCode);
     }
 
     @Override
@@ -122,12 +122,12 @@ public class OrderExpertByDateActivity extends BaseActivity implements ExpertByD
 
     }
 
-    private void getExpert(String hospitalId, String deptName, String orderDay) {
+    private void getExpert(String hospitalId, String deptCode, String orderDay) {
         mProgressDialog.show();
         HashMap<String, Object> param = new HashMap<>();
         param.put("doctorCode", doctorCode);
         param.put("hospitalId", hospitalId);
-        param.put("deptName", deptName);
+        param.put("deptCode", deptCode);
         param.put("orderDay", orderDay);
         HttpRequestClient.getInstance(OrderExpertByDateActivity.this).createBaseApi().get(" guahao/hospital/orderDateExpert/"
                 , param, new BaseObserver<ResponseBody>(OrderExpertByDateActivity.this) {
@@ -192,10 +192,10 @@ public class OrderExpertByDateActivity extends BaseActivity implements ExpertByD
                 });
     }
 
-    private void getExpertDate(String hospitalId, String deptName) {
+    private void getExpertDate(String hospitalId, String deptCode) {
         HashMap<String, Object> param = new HashMap<>();
         param.put("hospitalId", hospitalId);
-        param.put("deptName", deptName);
+        param.put("deptCode", deptCode);
         param.put("doctorCode", doctorCode);
         HttpRequestClient.getInstance(OrderExpertByDateActivity.this).createBaseApi().get(" guahao/hospital/orderDate/"
                 , param, new BaseObserver<ResponseBody>(OrderExpertByDateActivity.this) {
@@ -270,7 +270,7 @@ public class OrderExpertByDateActivity extends BaseActivity implements ExpertByD
         orderDateAdapter.notifyDataSetInvalidated();
         final WeekModel bean = (WeekModel) orderDateAdapter.getItem(0);
         String orderDate = bean.worktimeWeek.split("\\|")[0];
-        getExpert(hospitalId, deptName, orderDate);
+        getExpert(hospitalId, deptCode, orderDate);
     }
 
     @Override
