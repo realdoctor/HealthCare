@@ -71,7 +71,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     private DecodeManager decodeManager = new DecodeManager();
     @BindView(R.id.light_switch)
     Switch lightSwitch;
-    private String userId;
+    public String userId;
     private String token;
 
     @Override
@@ -279,7 +279,9 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
 
 
     private void qrSucceed(final String result) {
-        focusDoctor(result);
+        restartPreview();
+        String[] doctorId = result.split("=");
+        focusDoctor(doctorId[1]);
     }
 
     private void focusDoctor(final String doctorId) {
@@ -303,8 +305,8 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                     @Override
                     public void onError(Throwable e) {
                         //do nothing 通知后台开始计时失败
-                        Log.d(TAG, e.getMessage());
                         goToLogin();
+                        Log.d(TAG, e.getMessage());
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -335,8 +337,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(ScannerActivity.this, "关注成功");
                                     Intent intent = new Intent(ScannerActivity.this, DoctorsDetailActivity.class);
-                                    String[] doctorUserId = doctorId.split("=");
-                                    intent.putExtra("doctorUserId", doctorUserId[1]);
+                                    intent.putExtra("doctorUserId", doctorId);
                                     startActivity(intent);
                                     ScannerActivity.this.finish();
                                 } else {
