@@ -155,6 +155,8 @@ public class RealDocActivity extends BaseActivity {
         super.onResume();
         if (position == 0) {
             homeFragment.onShowMenu();
+        }else{
+            homeFragment.onDestroyMenu();
         }
     }
 

@@ -40,7 +40,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:textColor="@color/text_primary_color"
-                android:textSize="@dimen/txt_18" />
+                android:textSize="@dimen/txt_16" />
 
             <TextView
                 android:id="@+id/pay"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/text_primary_color"
-                android:textSize="@dimen/txt_18" />
+                android:textSize="@dimen/txt_16" />
         </LinearLayout>
 
         <TextView
@@ -58,7 +58,7 @@
             android:layout_below="@id/pay_title_linear"
             android:layout_gravity="center_vertical"
             android:textColor="@color/text_primary_color"
-            android:textSize="@dimen/txt_18" />
+            android:textSize="@dimen/txt_14" />
 
         <TextView
             android:id="@+id/pay_type"
@@ -66,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/pay_type_title"
             android:layout_marginTop="5dp"
+            android:textSize="@dimen/txt_14"
             android:textColor="@color/text_secondary_color" />
 
         <LinearLayout
@@ -79,12 +80,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="@dimen/txt_14"
                 android:textColor="@color/text_secondary_color" />
 
             <TextView
                 android:id="@+id/is_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/txt_14"
                 android:textColor="@color/text_secondary_color" />
         </LinearLayout>
     </RelativeLayout>

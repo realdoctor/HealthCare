@@ -30,6 +30,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
@@ -70,7 +71,8 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     private DecodeManager decodeManager = new DecodeManager();
     @BindView(R.id.light_switch)
     Switch lightSwitch;
-    public String userId;
+    private String userId;
+    private String token;
 
     @Override
     public int getLayoutId() {
@@ -119,6 +121,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     @Override
     public void doBusiness(Context mContext) {
         userId = (String) SPUtils.get(ScannerActivity.this, Constants.USER_KEY, "");
+        token = (String) SPUtils.get(ScannerActivity.this, Constants.TOKEN, "");
     }
 
 
@@ -335,8 +338,8 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                                     startActivity(intent);
                                     ScannerActivity.this.finish();
                                 } else {
-                                    goToLogin();
                                     ToastUtil.showLong(ScannerActivity.this, msg);
+                                    goToLogin();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -350,7 +353,9 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
     }
 
     private void goToLogin() {
-        Intent intent = new Intent(ScannerActivity.this, LoginActivity.class);
-        startActivity(intent);
+        if (EmptyUtils.isEmpty(token)) {
+            Intent intent = new Intent(ScannerActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 }
