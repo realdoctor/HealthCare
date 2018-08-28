@@ -206,7 +206,7 @@ public class InqueryActivity extends BaseActivity {
             Map<String, RequestBody> maps = new HashMap<>();
             maps.put("content", DocUtils.toRequestBodyOfText(inqueryEditContent));
             maps.put("title", DocUtils.toRequestBodyOfText(desease));
-            maps.put("receiveUserId", DocUtils.toRequestBodyOfText(doctorUserId));
+            maps.put("doctorUserId", DocUtils.toRequestBodyOfText(doctorUserId));
             maps.put("patientRecordId", DocUtils.toRequestBodyOfText(patientRecordId));
             if (EmptyUtils.isNotEmpty(questionId)) {
                 maps.put("questionId", DocUtils.toRequestBodyOfText(questionId));

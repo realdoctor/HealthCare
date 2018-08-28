@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.real.doctor.realdoc.activity.CaseControlActivity;
+import com.real.doctor.realdoc.activity.ChatActivity;
 import com.real.doctor.realdoc.activity.MyRevisitActivity;
 import com.real.doctor.realdoc.fragment.HomeFragment;
 import com.real.doctor.realdoc.util.DocUtils;
@@ -33,6 +34,7 @@ public class JPushUserReceiver extends BroadcastReceiver {
     private static final String TAG = "JPushUserReceiver";
     private static String extra;
     private String tagId;
+    private String userId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -53,17 +55,26 @@ public class JPushUserReceiver extends BroadcastReceiver {
                 if (DocUtils.hasValue(object, "tagId")) {
                     tagId = object.getString("tagId");
                 }
+                if (DocUtils.hasValue(object, "userId")) {
+                    userId = object.getString("userId");
+                }
                 if (tagId.equals("0")) {
                     //病人,当病人接收到医生的回复后,跳转到我的复诊界面看答案
                     Intent i = new Intent(context, MyRevisitActivity.class);
-                    i.putExtras(bundle);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(i);
                 } else if (tagId.equals("1")) {
                     //医生,当病人上传了病历文件后,通知医生到患者管理界面
                     Intent i = new Intent(context, CaseControlActivity.class);
-                    i.putExtras(bundle);
-                    //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(i);
+                } else if (tagId.equals("2")) {
+                    //医生,当病人上传了病历文件后,通知医生到患者管理界面
+                    Intent i = new Intent(context, ChatActivity.class);
+                    String mobile = (String) bundle.get(JPushInterface.EXTRA_ALERT);
+                    //此处必须这么填,为了参数对应
+                    i.putExtra("userId", mobile);
+                    i.putExtra("doctorUserId", userId);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(i);
                 }

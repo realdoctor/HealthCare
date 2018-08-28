@@ -9,8 +9,6 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,19 +17,15 @@ import android.widget.BaseAdapter;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.model.EaseDingMessageHelper;
 import com.hyphenate.easeui.ui.EaseChatFragment;
-import com.hyphenate.easeui.ui.EaseChatFragment.EaseChatFragmentHelper;
-import com.hyphenate.easeui.ui.EaseDingMsgSendActivity;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu;
 import com.hyphenate.easeui.widget.presenter.EaseChatRowPresenter;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.EMLog;
 import com.hyphenate.util.EasyUtils;
 import com.hyphenate.util.PathUtil;
 import com.real.doctor.realdoc.R;
@@ -41,16 +35,31 @@ import com.real.doctor.realdoc.activity.UserProfileActivity;
 import com.real.doctor.realdoc.activity.VideoCallActivity;
 import com.real.doctor.realdoc.activity.VoiceCallActivity;
 import com.real.doctor.realdoc.model.RobotUser;
+import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.Constants;
+import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.SPUtils;
+import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.EmojiconExampleGroupData;
 import com.real.doctor.realdoc.widget.Constant;
 import com.real.doctor.realdoc.widget.HuanXinHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHelper {
+import io.reactivex.disposables.Disposable;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+
+public class ChatFragment extends EaseChatFragment implements EaseChatFragment.EaseChatFragmentHelper {
 
     // constant start from 11 to avoid conflict with constant in base class
     private static final int ITEM_VIDEO = 11;
@@ -75,6 +84,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
      * if it is chatBot
      */
     private boolean isRobot;
+    private String mobile;
+    private String doctorUserId;
+    private String userId;
+    protected Bundle fragmentArgs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -129,6 +142,12 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
 //                }
 //            });
 //        }
+        //获取mobile
+        mobile = (String) SPUtils.get(getActivity(), Constants.MOBILE, "");
+        userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
+        //获取传递过来的数据
+        fragmentArgs = getArguments();
+        doctorUserId = fragmentArgs.getString(EaseConstant.EXTRA_DOCTOR_USER_ID);
     }
 
     @Override
@@ -302,6 +321,73 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public void onCmdMessageReceived(List<EMMessage> messages) {
         super.onCmdMessageReceived(messages);
+    }
+
+    @Override
+    protected void pushMassage() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("content", mobile);
+            json.put("userId", userId);
+            json.put("receiveId", doctorUserId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        HttpRequestClient.getInstance(getActivity()).createBaseApi().json("push/pushmsg/"
+                , body, new BaseObserver<ResponseBody>(getActivity()) {
+                    protected Disposable disposable;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(getActivity(), "推送聊天用户失败!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    //do nothing
+                                    //ToastUtil.showLong(getActivity(), "推送医生用户成功!");
+                                } else {
+                                    ToastUtil.showLong(getActivity(), "推送聊天用户失败!");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
     }
 
     @Override

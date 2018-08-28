@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -78,7 +79,7 @@ import java.util.concurrent.Executors;
  * <br/>
  * you can see ChatActivity in demo for your reference
  */
-public class EaseChatFragment extends EaseBaseFragment implements EMMessageListener {
+public abstract class EaseChatFragment extends EaseBaseFragment implements EMMessageListener {
     protected static final String TAG = "EaseChatFragment";
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
@@ -126,6 +127,10 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     protected MyItemClickListener extendMenuItemClickListener;
     protected boolean isRoaming = false;
     private ExecutorService fetchQueue;
+    /**
+     * Fragment当前状态是否可见
+     */
+    protected boolean isVisible;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -145,7 +150,6 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         chatType = fragmentArgs.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
         // userId you are chat with or group id
         toChatUsername = fragmentArgs.getString(EaseConstant.EXTRA_USER_ID);
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -806,7 +810,9 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             public void onSuccess() {
                 if (isMessageListInited) {
                     //使用极光推送给交流的手机
-
+                    if (!isVisible) {
+                        pushMsg();
+                    }
                     messageList.refresh();
                 }
             }
@@ -836,6 +842,11 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         }
     }
 
+    private void pushMsg() {
+        pushMassage();
+    }
+
+    protected abstract void pushMassage();
 
     //===================================================================================
 
@@ -1235,5 +1246,18 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             e.printStackTrace();
         }
         return statusHeight;
+    }
+
+    /**
+     * Fragment当前状态是否可见
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getUserVisibleHint()) {
+            isVisible = true;
+        } else {
+            isVisible = false;
+        }
     }
 }

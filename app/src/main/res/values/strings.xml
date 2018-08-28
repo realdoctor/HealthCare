@@ -204,6 +204,8 @@
     <string name="whether_to_video_advice">是否为该视频添加描述内容?</string>
     <string name="whether_to_audio_advice">是否为该音频添加描述内容?</string>
     <string name="other_record">其他病历</string>
+    <string name="revisiting">进行中</string>
+    <string name="revisited">已结束</string>
     <!--二维码扫描-->
     <string name="title_activity_scan_qr_code">扫一扫</string>
     <string name="close">关闭</string>

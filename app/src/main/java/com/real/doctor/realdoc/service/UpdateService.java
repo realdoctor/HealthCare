@@ -237,7 +237,7 @@ public class UpdateService extends JobService {
                 File file = new File(SDCardUtils.getGlobalDir() + "doctor" + time + ".zip");
                 if (file.exists()) {
                     RequestBody requestBody = DocUtils.toRequestBodyOfImage(file);
-                    maps.put("attach\"; filename=\"" + file.getName() + "", requestBody);//head_img图片key
+                    maps.put("attach\"; filename=\"" + file.getName() + "", requestBody);//Hhead_img图片key
                 }
                 maps.put("content", DocUtils.toRequestBodyOfText(inquery));
                 maps.put("title", DocUtils.toRequestBodyOfText(desease));

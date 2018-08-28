@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.util.EasyUtils;
 import com.real.doctor.realdoc.R;
@@ -31,11 +32,12 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        toChatUsername = getIntent().getExtras().getString("userId");
+        toChatUsername = getIntent().getExtras().getString(EaseConstant.EXTRA_USER_ID);
         //use EaseChatFratFragment
         chatFragment = new ChatFragment();
         //pass parameters to chat fragment
         chatFragment.setArguments(getIntent().getExtras());
+//        chatFragment.onMessageRead();
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
     }
 

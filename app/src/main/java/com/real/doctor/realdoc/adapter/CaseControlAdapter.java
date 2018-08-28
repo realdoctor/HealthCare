@@ -1,7 +1,9 @@
 package com.real.doctor.realdoc.adapter;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -24,5 +26,15 @@ public class CaseControlAdapter extends BaseQuickAdapter<PatientBean, BaseViewHo
                 .setText(R.id.disease, item.getTitle())
                 .setText(R.id.add_time, DateUtil.timeStamp2Date(item.getAddTime(), "yyyy年MM月dd日 HH:mm"));
         Glide.with(mContext).load(item.getUserInfo().getAvater()).crossFade().into((ImageView) helper.getView(R.id.patient_img));
+        String status = item.getStatus();
+        TextView revisiting = helper.getView(R.id.revisiting);
+        TextView revisited = helper.getView(R.id.revisited);
+        if (status.equals("1")) {
+            revisiting.setVisibility(View.VISIBLE);
+            revisited.setVisibility(View.GONE);
+        } else if (status.equals("2")) {
+            revisiting.setVisibility(View.GONE);
+            revisited.setVisibility(View.VISIBLE);
+        }
     }
 }
