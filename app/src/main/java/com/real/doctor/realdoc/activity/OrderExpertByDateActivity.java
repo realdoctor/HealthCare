@@ -247,7 +247,7 @@ public class OrderExpertByDateActivity extends BaseActivity implements ExpertByD
                                         orderDateAdapter.notifyDataSetChanged();
                                         selectDefault();
                                     } else {
-                                        ToastUtil.showLong(OrderExpertByDateActivity.this,"该医生无法预约!");
+                                        setResult(RESULT_OK);
                                         finish();
                                     }
                                 } else {

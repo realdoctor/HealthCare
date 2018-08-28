@@ -3,27 +3,15 @@
     android:id="@+id/doc_content_dialog"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="40dp"
-    android:layout_marginRight="40dp"
     android:background="@android:color/white"
     android:orientation="vertical"
     android:paddingBottom="10dp">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/save_doc_text"
-        android:textColor="@color/appthemecolor"
-        android:textSize="16sp" />
-
-    <TextView
         android:id="@+id/doc_content_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:gravity="left|top"
+        android:gravity="center"
         android:minLines="1"
         android:textColor="@color/text_special_color"
         android:textSize="@dimen/sp_14" />

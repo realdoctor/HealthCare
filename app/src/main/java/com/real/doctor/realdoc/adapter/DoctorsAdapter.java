@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.ChatPayActivity;
+import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.OrderExpertByDateActivity;
 import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.model.DoctorBean;
@@ -70,7 +72,7 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 intent.putExtra("hospitalId", item.getHospitalId());
                 intent.putExtra("doctorCode", item.getDoctorCode());
                 intent.putExtra("deptCode", item.getDeptCode());
-                context.startActivity(intent);
+                ((Activity) context). startActivityForResult(intent, DoctorsListActivity.REQUEST_CODE_NO_EXPERT);
             }
         });
     }

@@ -28,6 +28,7 @@ import com.real.doctor.realdoc.util.GsonUtil;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
+import com.real.doctor.realdoc.view.DocContentDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -66,6 +67,9 @@ public class DoctorsListActivity extends BaseActivity {
     List<DoctorBean> doctors;
     private int mPageNum = 1;
     private Dialog mProgressDialog;
+    private DocContentDialog dialog;
+    //该医生无法预约
+    public static final int REQUEST_CODE_NO_EXPERT = 0x100;
 
     @Override
     public int getLayoutId() {
@@ -239,5 +243,22 @@ public class DoctorsListActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_NO_EXPERT) {
+            //如果医生无法预约,弹出对话框提示
+            dialog = new DocContentDialog(DoctorsListActivity.this, "该医生无法预约!").builder()
+                    .setCancelable(false)
+                    .setCanceledOnTouchOutside(true)
+                    .setConfirmBtn(new DocContentDialog.ConfirmListener() {
+                        @Override
+                        public void onConfirmClick() {
+                            dialog.dismiss();
+                        }
+                    }).show();
+        }
     }
 }

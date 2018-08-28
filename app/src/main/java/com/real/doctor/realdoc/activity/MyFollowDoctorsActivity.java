@@ -97,8 +97,6 @@ public class MyFollowDoctorsActivity extends BaseActivity implements OnLoadmoreL
         newsAdapter = new ExpertAdapter(MyFollowDoctorsActivity.this, newModels,this);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(this);
-        ClassicsHeader header = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        ClassicsFooter footer = (ClassicsFooter) refreshLayout.getRefreshFooter();
         refreshLayout.setOnLoadmoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         getData();
