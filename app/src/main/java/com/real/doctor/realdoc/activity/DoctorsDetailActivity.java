@@ -86,6 +86,10 @@ public class DoctorsDetailActivity extends BaseActivity {
         desease = getIntent().getStringExtra("desease");
         mobile = getIntent().getStringExtra("mobile");
         patientRecordId = getIntent().getStringExtra("patientRecordId");
+        if (EmptyUtils.isEmpty(desease) && EmptyUtils.isEmpty(mobile) && EmptyUtils.isEmpty(patientRecordId) && EmptyUtils.isNotEmpty(doctorUserId)) {
+            chatBtn.setVisibility(View.GONE);
+            recordBtn.setVisibility(View.GONE);
+        }
         getDoctorDetail();
     }
 

@@ -30,7 +30,7 @@ public class NewsAdapter extends BaseQuickAdapter<NewModel, BaseViewHolder> {
         if (EmptyUtils.isEmpty(item.createDate)) {
             newTime.setVisibility(View.GONE);
         } else {
-            newTime.setText(DateUtil.timeStamp2Date(item.createDate, null));
+            newTime.setText(DateUtil.timeStamp2Date(item.createDate, "yyyy年MM月dd日 HH:mm"));
         }
         TextView hospitalTv = viewHolder.getView(R.id.hospital_tv);
         StringBuffer sb = new StringBuffer();

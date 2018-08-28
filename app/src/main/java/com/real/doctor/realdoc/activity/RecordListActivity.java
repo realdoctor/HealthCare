@@ -346,8 +346,8 @@ public class RecordListActivity extends BaseActivity {
             case R.id.select_time_record:
                 if (!selectTimeLinearFlag) {
                     selectTimeLinear.setVisibility(View.VISIBLE);
-                    startTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "yyyy年MM月dd日"));
-                    endTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "yyyy年MM月dd日"));
+                    startTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "yyyy年MM月dd日 HH:mm"));
+                    endTime.setText(DateUtil.timeStamp2Date(DateUtil.timeStamp(), "yyyy年MM月dd日 HH:mm"));
                     selectTimeLinear.clearAnimation();
                     selectDiseaseLinear.setVisibility(View.GONE);
                     selectDiseaseLinearFlag = false;

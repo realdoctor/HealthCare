@@ -40,7 +40,7 @@ public class DocDeleteAdapter extends BaseQuickAdapter<SaveDocBean, BaseViewHold
     protected void convert(BaseViewHolder viewHolder, final SaveDocBean item) {
         viewHolder.setText(R.id.doc_detail_title, item.getIll())
                 .setText(R.id.doc_detail_content, item.getHospital())
-                .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(), "yyyy年MM月dd日"));
+                .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(), "yyyy年MM月dd日 HH:mm"));
         Button rvDeleteBtn = viewHolder.getView(R.id.rv_delete_btn);
         final int pos = viewHolder.getLayoutPosition();// 获取当前item的position
         rvDeleteBtn.setOnClickListener(new View.OnClickListener() {

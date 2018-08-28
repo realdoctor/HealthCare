@@ -96,7 +96,7 @@ public class MultiNewsAdapter extends BaseAdapter {
                 if (EmptyUtils.isEmpty(bean.createDate)) {
                     holder1.newTime.setVisibility(View.GONE);
                 } else {
-                    holder1.newTime.setText(DateUtil.timeStamp2Date(bean.createDate, null));
+                    holder1.newTime.setText(DateUtil.timeStamp2Date(bean.createDate, "yyyy年MM月dd日 HH:mm"));
                 }
                 holder1.commentTv.setText(bean.viewedTime);
                 holder1.newHospital.setText(bean.authorHos);

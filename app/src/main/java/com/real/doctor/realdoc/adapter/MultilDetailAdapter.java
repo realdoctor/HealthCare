@@ -23,7 +23,7 @@ public class MultilDetailAdapter extends BaseMultiItemQuickAdapter<SaveDocBean, 
             case SaveDocBean.TYPE_ONE:
                 helper.setText(R.id.doc_detail_title, item.getIll())
                         .setText(R.id.doc_detail_content, item.getHospital())
-                        .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(), "yyyy年MM月dd日"));
+                        .setText(R.id.doc_detail_time, DateUtil.timeStamp2Date(item.getTime(), "yyyy年MM月dd日 HH:mm"));
                 break;
             case SaveDocBean.TYPE_TWO:
                 //do nothing

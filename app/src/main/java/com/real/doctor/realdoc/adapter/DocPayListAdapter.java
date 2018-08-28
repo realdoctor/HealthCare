@@ -42,7 +42,7 @@ public class DocPayListAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHold
     @Override
     protected void convert(BaseViewHolder helper, final DoctorBean item) {
         helper.setText(R.id.doctor_name, item.getDoctorRealName())
-                .setText(R.id.visit_date, DateUtil.timeStamp2Date(item.getAddTime(), "yyyy年MM月dd日"))
+                .setText(R.id.visit_date, DateUtil.timeStamp2Date(item.getAddTime(), "yyyy年MM月dd日 HH:mm"))
                 .setText(R.id.inquery, item.getInquery());
 
         Glide.with(mContext).load(item.getAvater()).crossFade().into((ImageView) helper.getView(R.id.doctor_img));

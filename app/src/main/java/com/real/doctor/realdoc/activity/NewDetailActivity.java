@@ -186,7 +186,7 @@ public class NewDetailActivity extends BaseActivity {
                                     new_detail.setText(model.article);
                                     tv_autor.setText(model.newsAuthor);
                                     tv_profer.setText(model.authorProfer);
-                                    tv_time.setText(DateUtil.timeStamp2Date(model.createDate, null));
+                                    tv_time.setText(DateUtil.timeStamp2Date(model.createDate, "yyyy年MM月dd日 HH:mm"));
                                     tv_type.setText(model.newsType);
                                 } else {
                                     ToastUtil.showLong(NewDetailActivity.this, "获取咨询详情失败!");

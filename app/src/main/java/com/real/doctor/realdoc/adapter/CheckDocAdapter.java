@@ -120,7 +120,7 @@ public class CheckDocAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void bindHolder(final SaveDocBean saveDocBean) {
             mTvTitle.setText(saveDocBean.getIll());
             mTvContent.setText(saveDocBean.getHospital());
-            mTvTime.setText(DateUtil.timeStamp2Date(saveDocBean.getTime(), "yyyy年MM月dd日"));
+            mTvTime.setText(DateUtil.timeStamp2Date(saveDocBean.getTime(), "yyyy年MM月dd日 HH:mm"));
             if (saveDocBean.getIsSelect()) {
                 mCheckBox.setImageResource(R.mipmap.ic_checked);
             } else {

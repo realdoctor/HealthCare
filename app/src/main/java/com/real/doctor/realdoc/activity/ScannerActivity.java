@@ -282,7 +282,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
         focusDoctor(result);
     }
 
-    private void focusDoctor(String doctorId) {
+    private void focusDoctor(final String doctorId) {
         JSONObject json = new JSONObject();
         try {
             json.put("doctorId", doctorId);
@@ -334,7 +334,9 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(ScannerActivity.this, "关注成功");
-                                    Intent intent = new Intent(ScannerActivity.this, MyFollowDoctorsActivity.class);
+                                    Intent intent = new Intent(ScannerActivity.this, DoctorsDetailActivity.class);
+                                    String[] doctorUserId = doctorId.split("=");
+                                    intent.putExtra("doctorUserId", doctorUserId[1]);
                                     startActivity(intent);
                                     ScannerActivity.this.finish();
                                 } else {

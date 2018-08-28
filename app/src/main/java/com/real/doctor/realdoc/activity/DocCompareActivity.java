@@ -189,7 +189,7 @@ public class DocCompareActivity extends BaseActivity {
 
         CellBean cellBean4 = new CellBean();
         String timeOne = mList.get(0).getTime();
-        cellBean4.setContent(DateUtil.timeStamp2Date(timeOne, "yyyy年MM月dd日"));
+        cellBean4.setContent(DateUtil.timeStamp2Date(timeOne, "yyyy年MM月dd日 HH:mm"));
         cellList.add(cellBean1);
         cellList.add(cellBean2);
         cellList.add(cellBean3);
@@ -211,7 +211,7 @@ public class DocCompareActivity extends BaseActivity {
 
         CellBean cellOneBean4 = new CellBean();
         String timeTwo = mList.get(1).getTime();
-        cellOneBean4.setContent(DateUtil.timeStamp2Date(timeTwo, "yyyy年MM月dd日"));
+        cellOneBean4.setContent(DateUtil.timeStamp2Date(timeTwo, "yyyy年MM月dd日 HH:mm"));
         cellOneList.add(cellOneBean1);
         cellOneList.add(cellOneBean2);
         cellOneList.add(cellOneBean3);

@@ -209,7 +209,7 @@ public class DocContentActivity extends BaseActivity {
                 doctor.setText("无");
             }
             if (EmptyUtils.isNotEmpty(mTime)) {
-                time.setText(DateUtil.timeStamp2Date(mTime, "yyyy年MM月dd日"));
+                time.setText(DateUtil.timeStamp2Date(mTime, "yyyy年MM月dd日 HH:mm"));
             } else {
                 time.setText("无");
             }
@@ -435,7 +435,7 @@ public class DocContentActivity extends BaseActivity {
                     doctor.setText(mDoctor);
                 }
                 if (EmptyUtils.isNotEmpty(mTime)) {
-                    time.setText(DateUtil.timeStamp2Date(mTime, "yyyy年MM月dd日"));
+                    time.setText(DateUtil.timeStamp2Date(mTime, "yyyy年MM月dd日 HH:mm"));
                 }
                 imageOriganList.clear();
                 for (int i = 0; i < mAllList.size(); i++) {

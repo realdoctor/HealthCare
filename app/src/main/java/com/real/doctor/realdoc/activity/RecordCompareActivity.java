@@ -193,8 +193,8 @@ public class RecordCompareActivity extends BaseActivity {
         RecordTableBean bean3 = new RecordTableBean();
         bean3.setContent("就诊时间");
         bean3.setItemType(2);
-        bean3.setFristContent(DateUtil.timeStamp2Date(mList.get(0).getTime(), "yyyy年MM月dd日"));
-        bean3.setSecondContent(DateUtil.timeStamp2Date(mList.get(1).getTime(), "yyyy年MM月dd日"));
+        bean3.setFristContent(DateUtil.timeStamp2Date(mList.get(0).getTime(), "yyyy年MM月dd日 HH:mm"));
+        bean3.setSecondContent(DateUtil.timeStamp2Date(mList.get(1).getTime(), "yyyy年MM月dd日 HH:mm"));
         tableBean.add(bean3);
         String advice1 = mList.get(0).getAdvice();
         String advice2 = mList.get(1).getAdvice();

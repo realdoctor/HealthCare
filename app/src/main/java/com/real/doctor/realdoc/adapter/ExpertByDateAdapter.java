@@ -50,7 +50,7 @@ public class ExpertByDateAdapter extends RdBaseAdapter<ExpertBean> implements Vi
         }else{
             holder.expert_order.setText("预约已满");
         }
-        holder.tv_plan.setText(DateUtil.timeStamp2Date(bean.dutyDtime,null)+" "+bean.plan);
+        holder.tv_plan.setText(DateUtil.timeStamp2Date(bean.dutyDtime,"yyyy年MM月dd日 HH:mm")+" "+bean.plan);
         Glide.with(mContext).load(bean.expertImage).crossFade().into((ImageView) holder.expert_detail_img);
         return convertView;
     }

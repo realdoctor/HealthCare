@@ -24,7 +24,7 @@ public class MyPayAdapter extends BaseQuickAdapter<MyPayBean, BaseViewHolder> {
                 .setText(R.id.pay, "- ￥" + item.getMoney())
                 .setText(R.id.pay_type_title, "[" + item.getType() + "]")
                 .setText(R.id.pay_type, item.getPayFrom())
-                .setText(R.id.pay_time, DateUtil.timeStamp2Date(item.getAddTime(), "yyyy年MM月dd日"));
+                .setText(R.id.pay_time, DateUtil.timeStamp2Date(item.getAddTime(), "yyyy年MM月dd日 HH:mm"));
         CircleImageView imageView = viewHolder.getView(R.id.user_avator);
         GlideUtils.loadImageViewLoding(mContext, item.getToUserPicUrl(), imageView, R.mipmap.ease_default_avatar, R.mipmap.ease_default_avatar);
     }

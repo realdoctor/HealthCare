@@ -421,7 +421,7 @@ public class LoginActivity extends BaseActivity {
                                         }
                                     }
                                 } else {
-                                    ToastUtil.showLong(LoginActivity.this, "用户登录失败!");
+                                    ToastUtil.showLong(LoginActivity.this, msg);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

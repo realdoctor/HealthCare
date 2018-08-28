@@ -33,7 +33,7 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
         helper.setText(R.id.doctor_name, item.getName())
                 .setText(R.id.hospital_name, item.getVisitOrgName())
                 .setText(R.id.desease_name, item.getDiagName())
-                .setText(R.id.visit_date, DateUtil.timeStamp2Date(item.getVisitDtime(), "yyyy年MM月dd日"));
+                .setText(R.id.visit_date, DateUtil.timeStamp2Date(item.getVisitDtime(), "yyyy年MM月dd日 HH:mm"));
         CircleImageView chatView = helper.getView(R.id.chat);
         chatView.setOnClickListener(new View.OnClickListener() {
             @Override

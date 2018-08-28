@@ -70,7 +70,7 @@ public class SingleCompareAdapter extends RecyclerView.Adapter<SingleCompareAdap
         final SaveDocBean saveDocBean = mSaveDocBean.get(holder.getAdapterPosition());
         holder.mTvTitle.setText(saveDocBean.getIll());
         holder.mTvContent.setText(saveDocBean.getHospital());
-        holder.mTvTime.setText(DateUtil.timeStamp2Date(saveDocBean.getTime(), "yyyy年MM月dd日"));
+        holder.mTvTime.setText(DateUtil.timeStamp2Date(saveDocBean.getTime(), "yyyy年MM月dd日 HH:mm"));
         Log.d("TAG", "onBindViewHolder() called with: holder = [" + holder + "], position = [" + position + "]");
         holder.mCheckBox.setSelected(mSaveDocBean.get(position).getIsSelect());
         holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
