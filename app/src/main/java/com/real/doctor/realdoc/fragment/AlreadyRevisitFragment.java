@@ -110,7 +110,7 @@ public class AlreadyRevisitFragment extends BaseFragment {
         param.put("status", "2");
         param.put("roleId", roleChangeId);
         param.put("userId", userId);
-        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/list"
+        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/doctorList"
                 , param, new BaseObserver<ResponseBody>(getActivity()) {
                     protected Disposable disposable;
 

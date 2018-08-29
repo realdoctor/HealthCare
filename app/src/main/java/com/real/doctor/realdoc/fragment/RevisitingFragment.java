@@ -97,7 +97,7 @@ public class RevisitingFragment extends BaseFragment {
         param.put("status", "1");
         param.put("roleId", roleChangeId);
         param.put("userId", userId);
-        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/list"
+        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/doctorList"
                 , param, new BaseObserver<ResponseBody>(getActivity()) {
                     protected Disposable disposable;
 

@@ -28,9 +28,7 @@ import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.InfoActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyQrActivity;
-import com.real.doctor.realdoc.activity.PatientEduActivity;
 import com.real.doctor.realdoc.activity.PatientEduListActivity;
-import com.real.doctor.realdoc.activity.ProductShowByCategoryActivity;
 import com.real.doctor.realdoc.activity.DocContentActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
 import com.real.doctor.realdoc.activity.RegistrationsActivity;
@@ -43,7 +41,6 @@ import com.real.doctor.realdoc.base.BaseFragment;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.util.Constants;
-import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.NetworkUtil;
@@ -55,7 +52,6 @@ import com.real.doctor.realdoc.view.floatmenu.FloatBallManager;
 import com.real.doctor.realdoc.view.floatmenu.floatball.FloatBallCfg;
 import com.real.doctor.realdoc.view.floatmenu.utils.DensityUtil;
 import com.real.doctor.realdoc.widget.permission.FloatPermissionManager;
-import com.superrtc.util.AppRTCUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +110,10 @@ public class HomeFragment extends BaseFragment {
     ImageView infoIcon;
     @BindView(R.id.info_red_icon)
     TextView infoRedInfo;
+    TextView comment;
+    TextView commentTime;
+    //    TextView content;
+//    TextView connectTime;
     private HomeRecordAdapter adapter;
     private SaveDocManager instance = null;
     private String token;
@@ -130,7 +130,10 @@ public class HomeFragment extends BaseFragment {
     private String verifyFlag = "";
     private boolean isFirst = true;
     private String isRole;
-    public static String SHOW_RED_ICON = "android.intent.action.show.red.icon";
+    private View mView;
+    private String mobile;
+    //    public static String SHOW_RED_ICON = "android.intent.action.show.red.icon";
+    public static String SHOW_BOAST_INFO = "android.intent.action.show.boast.info";
     public static String SHOW_WINDOW_ICON = "android.intent.action.show.window.icon";
     public static String CLOSE_WINDOW_MANAGER = "android.intent.action.close.window.manager";
 
@@ -146,6 +149,9 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initView(View view) {
         unbinder = ButterKnife.bind(this, view);
+        //滚动栏使用
+        mView = view;
+        mobile = (String) SPUtils.get(getActivity(), Constants.MOBILE, "");
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(getActivity());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -166,6 +172,15 @@ public class HomeFragment extends BaseFragment {
             personFlag = true;
         }
         initViewFlipper();
+        String commentMobile = (String) SPUtils.get(getActivity(), Constants.COMMENT_MOBILE, "");
+        if (mobile.equals(commentMobile)) {
+            String commentStr = (String) SPUtils.get(getActivity(), Constants.COMMENT, "");
+            String commentTimeStr= (String) SPUtils.get(getActivity(), Constants.COMMENT_TIME, "");
+            comment = mView.findViewById(R.id.comment);
+            commentTime = mView.findViewById(R.id.comment_time);
+            comment.setText(commentStr);
+            commentTime.setText(commentTimeStr);
+        }
     }
 
     @Override
@@ -382,21 +397,39 @@ public class HomeFragment extends BaseFragment {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(VERIFY_TEXT);
-        intentFilter.addAction(SHOW_RED_ICON);
+        intentFilter.addAction(SHOW_BOAST_INFO);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(VERIFY_TEXT)) {
                     instance = SaveDocManager.getInstance(getActivity());
-                    verifyFlag = (String) SPUtils.get(getActivity(), Constants.VERIFYFLAG , "");
+                    verifyFlag = (String) SPUtils.get(getActivity(), Constants.VERIFYFLAG, "");
                     if (StringUtils.equals(verifyFlag, "1")) {
                         recordList();
                     }
-                } else if (action.equals(SHOW_RED_ICON)) {
+                } else if (action.equals(SHOW_BOAST_INFO)) {
                     //显示红色标记
                     if (EmptyUtils.isNotEmpty(infoRedInfo)) {
                         infoRedInfo.setVisibility(View.VISIBLE);
+                    }
+                    String info = null;
+                    String tagId = null;
+                    String time = null;
+                    if (intent != null && intent.getExtras() != null) {
+                        info = intent.getExtras().getString("info");
+                        tagId = intent.getExtras().getString("tagId");
+                        time = intent.getExtras().getString("time");
+                    }
+                    if (tagId.equals("2")) {
+                        comment = mView.findViewById(R.id.comment);
+                        commentTime = mView.findViewById(R.id.comment_time);
+                        comment.setText(info);
+                        commentTime.setText(time);
+                        //需要存储起来,下次显示，如果未登录,则不显示
+                        SPUtils.put(getActivity(), Constants.COMMENT, info);
+                        SPUtils.put(getActivity(), Constants.COMMENT_TIME, time);
+                        SPUtils.put(getActivity(), Constants.COMMENT_MOBILE, mobile);
                     }
                 }
             }

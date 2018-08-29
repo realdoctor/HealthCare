@@ -17,6 +17,9 @@ public class Constants {
     public static final String REALNAME = "realName";
     public static final String URL = "url";
     public static final String ORIGINALIMAGEURL = "originalImageUrl";
+    public static final String COMMENT = "comment";
+    public static final String COMMENT_TIME = "comment_time";
+    public static final String COMMENT_MOBILE = "comment_mobile";
 
     //微信登录
     public static final String WX_APP_ID = "wxdcd80da641faa3ae";

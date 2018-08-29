@@ -13,6 +13,7 @@ import com.real.doctor.realdoc.activity.CaseControlActivity;
 import com.real.doctor.realdoc.activity.ChatActivity;
 import com.real.doctor.realdoc.activity.MyRevisitActivity;
 import com.real.doctor.realdoc.fragment.HomeFragment;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 
@@ -32,9 +33,11 @@ import cn.jpush.android.api.JPushInterface;
  */
 public class JPushUserReceiver extends BroadcastReceiver {
     private static final String TAG = "JPushUserReceiver";
-    private static String extra;
-    private String tagId;
-    private String userId;
+    private String extra;
+    private String time;
+    private static String tagId;
+    private static String userId;
+    private static String mobile;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -48,9 +51,9 @@ public class JPushUserReceiver extends BroadcastReceiver {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                 extra = (String) bundle.get(JPushInterface.EXTRA_EXTRA);
-                //通知HomeFragment显示红点
-                process(context);
-            } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
+                time = DateUtil.timeStamp2Date(DateUtil.timeStamp(), "MM月dd日 HH:mm");
+                //发送广播更新首页
+                String info = (String) bundle.get(JPushInterface.EXTRA_ALERT);
                 JSONObject object = new JSONObject(extra);
                 if (DocUtils.hasValue(object, "tagId")) {
                     tagId = object.getString("tagId");
@@ -58,6 +61,11 @@ public class JPushUserReceiver extends BroadcastReceiver {
                 if (DocUtils.hasValue(object, "userId")) {
                     userId = object.getString("userId");
                 }
+                if (DocUtils.hasValue(object, "mobile")) {
+                    mobile = object.getString("mobile");
+                }
+                processTagId(context, info, tagId);
+            } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
                 if (tagId.equals("0")) {
                     //病人,当病人接收到医生的回复后,跳转到我的复诊界面看答案
                     Intent i = new Intent(context, MyRevisitActivity.class);
@@ -71,7 +79,7 @@ public class JPushUserReceiver extends BroadcastReceiver {
                 } else if (tagId.equals("2")) {
                     //医生,当病人上传了病历文件后,通知医生到患者管理界面
                     Intent i = new Intent(context, ChatActivity.class);
-                    String mobile = (String) bundle.get(JPushInterface.EXTRA_ALERT);
+                    //i.putExtra("str", str);
                     //此处必须这么填,为了参数对应
                     i.putExtra("userId", mobile);
                     i.putExtra("doctorUserId", userId);
@@ -129,8 +137,11 @@ public class JPushUserReceiver extends BroadcastReceiver {
     }
 
     //send msg to HomeFragment
-    private void process(Context context) {
-        Intent msgIntent = new Intent(HomeFragment.SHOW_RED_ICON);
+    private void processTagId(Context context, String info, String tagId) {
+        Intent msgIntent = new Intent(HomeFragment.SHOW_BOAST_INFO);
+        msgIntent.putExtra("info", info);
+        msgIntent.putExtra("tagId", tagId);
+        msgIntent.putExtra("time", time);
         LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }
 }
