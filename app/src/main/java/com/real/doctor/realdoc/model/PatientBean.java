@@ -13,6 +13,7 @@ public class PatientBean extends UserBean implements Parcelable {
     private String question;
     private String patientRecordId;
     private String status;
+    private String messageId;
     private String doctorRealName;
 
     public PatientBean() {
@@ -28,6 +29,7 @@ public class PatientBean extends UserBean implements Parcelable {
         question = in.readString();
         patientRecordId = in.readString();
         status = in.readString();
+        messageId = in.readString();
         doctorRealName = in.readString();
     }
 
@@ -42,6 +44,7 @@ public class PatientBean extends UserBean implements Parcelable {
         dest.writeString(question);
         dest.writeString(patientRecordId);
         dest.writeString(status);
+        dest.writeString(messageId);
         dest.writeString(doctorRealName);
     }
 
@@ -124,6 +127,14 @@ public class PatientBean extends UserBean implements Parcelable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public String getDoctorRealName() {

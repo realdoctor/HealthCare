@@ -206,6 +206,12 @@
     <string name="other_record">其他病历</string>
     <string name="revisiting">进行中</string>
     <string name="revisited">已结束</string>
+    <string name="inquery_one">问题一:</string>
+    <string name="answer_one">答案一:</string>
+    <string name="inquery_two">问题二:</string>
+    <string name="answer_two">答案二:</string>
+    <string name="inquery_three">问题三:</string>
+    <string name="answer_three">答案三:</string>
     <!--二维码扫描-->
     <string name="title_activity_scan_qr_code">扫一扫</string>
     <string name="close">关闭</string>

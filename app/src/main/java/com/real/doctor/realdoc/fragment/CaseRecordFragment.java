@@ -173,6 +173,7 @@ public class CaseRecordFragment extends BaseFragment {
                 intent.putExtra("realName", patientBean.getDoctorRealName());
                 intent.putExtra("src", patientBean.getSrc());
                 intent.putExtra("title", patientBean.getTitle());
+                intent.putExtra("messageId", patientBean.getMessageId());
                 intent.putExtra("questionId", patientBean.getQuestionId());
                 intent.putExtra("question", patientBean.getQuestion());
                 intent.putExtra("patientRecordId", patientBean.getPatientRecordId());
