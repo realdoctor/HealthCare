@@ -171,7 +171,7 @@ public class CaseRecordFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), CaseListActivity.class);
                 Bundle mBundle = new Bundle();
                 PatientBean patientBean = (PatientBean) adapter.getItem(position);
-                mBundle.putString("realName", patientBean.getRealname());
+                mBundle.putString("realName", patientBean.getDoctorRealName());
                 mBundle.putParcelable("patient", patientBean);
                 intent.putExtras(mBundle);
                 startActivity(intent);
