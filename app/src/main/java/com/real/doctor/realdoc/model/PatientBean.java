@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 @SuppressLint("ParcelCreator")
 public class PatientBean extends UserBean implements Parcelable {
+
     private String addTime;
     private String src;
     private String num;
@@ -16,11 +17,13 @@ public class PatientBean extends UserBean implements Parcelable {
     private String question;
     private String patientRecordId;
     private String status;
+    private String doctorRealName;
 
     public PatientBean() {
     }
 
     protected PatientBean(Parcel in) {
+        super(in);
         addTime = in.readString();
         src = in.readString();
         num = in.readString();
@@ -31,6 +34,28 @@ public class PatientBean extends UserBean implements Parcelable {
         question = in.readString();
         patientRecordId = in.readString();
         status = in.readString();
+        doctorRealName = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(addTime);
+        dest.writeString(src);
+        dest.writeString(num);
+        dest.writeString(pubId);
+        dest.writeString(remark);
+        dest.writeString(questionId);
+        dest.writeString(title);
+        dest.writeString(question);
+        dest.writeString(patientRecordId);
+        dest.writeString(status);
+        dest.writeString(doctorRealName);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<PatientBean> CREATOR = new Creator<PatientBean>() {
@@ -125,22 +150,11 @@ public class PatientBean extends UserBean implements Parcelable {
         this.status = status;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getDoctorRealName() {
+        return doctorRealName;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(addTime);
-        dest.writeString(src);
-        dest.writeString(num);
-        dest.writeString(pubId);
-        dest.writeString(remark);
-        dest.writeString(questionId);
-        dest.writeString(title);
-        dest.writeString(question);
-        dest.writeString(patientRecordId);
-        dest.writeString(status);
+    public void setDoctorRealName(String doctorRealName) {
+        this.doctorRealName = doctorRealName;
     }
 }
