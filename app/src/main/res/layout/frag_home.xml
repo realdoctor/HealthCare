@@ -302,8 +302,7 @@
                     android:autoStart="true"
                     android:flipInterval="2000"
                     android:inAnimation="@anim/anim_in"
-                    android:outAnimation="@anim/anim_out"
-                    android:paddingLeft="10dp" />
+                    android:outAnimation="@anim/anim_out" />
             </LinearLayout>
         </LinearLayout>
 

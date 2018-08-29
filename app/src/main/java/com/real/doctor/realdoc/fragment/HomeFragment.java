@@ -24,6 +24,7 @@ import android.widget.ViewFlipper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.activity.CaseControlActivity;
+import com.real.doctor.realdoc.activity.ChatActivity;
 import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.InfoActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
@@ -112,6 +113,7 @@ public class HomeFragment extends BaseFragment {
     TextView infoRedInfo;
     TextView comment;
     TextView commentTime;
+    RelativeLayout commentRelative;
     //    TextView content;
 //    TextView connectTime;
     private HomeRecordAdapter adapter;
@@ -132,6 +134,8 @@ public class HomeFragment extends BaseFragment {
     private String isRole;
     private View mView;
     private String mobile;
+    private String fromMobile;
+    private String fromUserId;
     //    public static String SHOW_RED_ICON = "android.intent.action.show.red.icon";
     public static String SHOW_BOAST_INFO = "android.intent.action.show.boast.info";
     public static String SHOW_WINDOW_ICON = "android.intent.action.show.window.icon";
@@ -175,11 +179,13 @@ public class HomeFragment extends BaseFragment {
         String commentMobile = (String) SPUtils.get(getActivity(), Constants.COMMENT_MOBILE, "");
         if (mobile.equals(commentMobile)) {
             String commentStr = (String) SPUtils.get(getActivity(), Constants.COMMENT, "");
-            String commentTimeStr= (String) SPUtils.get(getActivity(), Constants.COMMENT_TIME, "");
+            String commentTimeStr = (String) SPUtils.get(getActivity(), Constants.COMMENT_TIME, "");
+            commentRelative = mView.findViewById(R.id.comment_relative);
             comment = mView.findViewById(R.id.comment);
             commentTime = mView.findViewById(R.id.comment_time);
             comment.setText(commentStr);
             commentTime.setText(commentTimeStr);
+            initCommentEvent();
         }
     }
 
@@ -416,12 +422,17 @@ public class HomeFragment extends BaseFragment {
                     String info = null;
                     String tagId = null;
                     String time = null;
+                    String fromMobile = null;
+                    String fromUserId = null;
                     if (intent != null && intent.getExtras() != null) {
                         info = intent.getExtras().getString("info");
                         tagId = intent.getExtras().getString("tagId");
                         time = intent.getExtras().getString("time");
+                        fromMobile = intent.getExtras().getString("fromMobile");
+                        fromUserId = intent.getExtras().getString("userId");
                     }
                     if (tagId.equals("2")) {
+                        commentRelative = mView.findViewById(R.id.comment_relative);
                         comment = mView.findViewById(R.id.comment);
                         commentTime = mView.findViewById(R.id.comment_time);
                         comment.setText(info);
@@ -429,7 +440,10 @@ public class HomeFragment extends BaseFragment {
                         //需要存储起来,下次显示，如果未登录,则不显示
                         SPUtils.put(getActivity(), Constants.COMMENT, info);
                         SPUtils.put(getActivity(), Constants.COMMENT_TIME, time);
+                        SPUtils.put(getActivity(), Constants.COMMENT_FROM_MOBILE, fromMobile);
                         SPUtils.put(getActivity(), Constants.COMMENT_MOBILE, mobile);
+                        SPUtils.put(getActivity(), Constants.COMMENT_USER_ID, fromUserId);
+                        initCommentEvent();
                     }
                 }
             }
@@ -453,6 +467,26 @@ public class HomeFragment extends BaseFragment {
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
+    }
+
+    private void initCommentEvent() {
+        if (EmptyUtils.isNotEmpty(commentRelative)) {
+            commentRelative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //点击进入聊天界面
+                    //医生,当病人上传了病历文件后,通知医生到患者管理界面
+                    Intent i = new Intent(getActivity(), ChatActivity.class);
+                    //此处必须这么填,为了参数对应
+                    fromMobile = (String) SPUtils.get(getActivity(), Constants.COMMENT_FROM_MOBILE, "");
+                    fromUserId = (String) SPUtils.get(getActivity(), Constants.COMMENT_USER_ID, "");
+                    i.putExtra("userId", fromMobile);
+                    i.putExtra("doctorUserId", fromUserId);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    getActivity().startActivity(i);
+                }
+            });
+        }
     }
 
     private void recordList() {

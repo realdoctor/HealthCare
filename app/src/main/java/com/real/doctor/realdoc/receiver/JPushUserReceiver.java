@@ -61,8 +61,8 @@ public class JPushUserReceiver extends BroadcastReceiver {
                 if (DocUtils.hasValue(object, "userId")) {
                     userId = object.getString("userId");
                 }
-                if (DocUtils.hasValue(object, "mobile")) {
-                    mobile = object.getString("mobile");
+                if (DocUtils.hasValue(object, "mobilePhone")) {
+                    mobile = object.getString("mobilePhone");
                 }
                 processTagId(context, info, tagId);
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
@@ -141,6 +141,8 @@ public class JPushUserReceiver extends BroadcastReceiver {
         Intent msgIntent = new Intent(HomeFragment.SHOW_BOAST_INFO);
         msgIntent.putExtra("info", info);
         msgIntent.putExtra("tagId", tagId);
+        msgIntent.putExtra("userId", userId);
+        msgIntent.putExtra("fromMobile", mobile);
         msgIntent.putExtra("time", time);
         LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }

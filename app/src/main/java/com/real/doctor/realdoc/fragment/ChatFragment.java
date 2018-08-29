@@ -329,7 +329,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
     protected void pushMassage() {
         JSONObject json = new JSONObject();
         try {
-            json.put("content", realName + "向您发送了一条消息!");
+            json.put("content", realName + "向您发送了一条聊天消息!");
             json.put("userId", userId);
             json.put("mobilePhone", mobile);
             json.put("receiveId", doctorUserId);

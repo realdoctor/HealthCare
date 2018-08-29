@@ -101,7 +101,7 @@ public class CaseRecordFragment extends BaseFragment {
         param.put("pageSize", "10");
         param.put("status", "1");
         param.put("userId", mUserId);
-        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/list"
+        HttpRequestClient.getInstance(getActivity()).createBaseApi().get("askQuestion/reply/patientList"
                 , param, new BaseObserver<ResponseBody>(getActivity()) {
                     protected Disposable disposable;
 

@@ -19,7 +19,9 @@ public class Constants {
     public static final String ORIGINALIMAGEURL = "originalImageUrl";
     public static final String COMMENT = "comment";
     public static final String COMMENT_TIME = "comment_time";
+    public static final String COMMENT_FROM_MOBILE = "comment_from_mobile";
     public static final String COMMENT_MOBILE = "comment_mobile";
+    public static final String COMMENT_USER_ID = "comment_user_id";
 
     //微信登录
     public static final String WX_APP_ID = "wxdcd80da641faa3ae";
