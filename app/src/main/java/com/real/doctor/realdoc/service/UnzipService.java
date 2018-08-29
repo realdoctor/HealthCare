@@ -41,7 +41,7 @@ import java.util.List;
 public class UnzipService extends JobService {
 
     public static final String TAG = UnzipService.class.getSimpleName();
-    private PatientBean patientBean;
+
     private String srcUrl;
     //从数据库中获取数据
     private ImageManager imageInstance;
@@ -54,7 +54,6 @@ public class UnzipService extends JobService {
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            srcUrl = patientBean.getSrc();
             if (EmptyUtils.isNotEmpty(srcUrl)) {
                 //下载zip
                 downLoadData();
@@ -176,7 +175,7 @@ public class UnzipService extends JobService {
         recordInstance = RecordManager.getInstance(UnzipService.this);
         videoInstance = VideoManager.getInstance(UnzipService.this);
         if (intent != null) {
-            patientBean = intent.getParcelableExtra("patientBean");
+            srcUrl = intent.getExtras().getString("src");
         }
         Message m = Message.obtain();
         handler.sendMessage(m);

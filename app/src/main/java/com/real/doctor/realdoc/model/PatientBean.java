@@ -1,16 +1,12 @@
 package com.real.doctor.realdoc.model;
 
-import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@SuppressLint("ParcelCreator")
 public class PatientBean extends UserBean implements Parcelable {
 
     private String addTime;
     private String src;
-    private String num;
-    private String pubId;
     private String remark;
     private String questionId;
     private String title;
@@ -26,8 +22,6 @@ public class PatientBean extends UserBean implements Parcelable {
         super(in);
         addTime = in.readString();
         src = in.readString();
-        num = in.readString();
-        pubId = in.readString();
         remark = in.readString();
         questionId = in.readString();
         title = in.readString();
@@ -42,8 +36,6 @@ public class PatientBean extends UserBean implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeString(addTime);
         dest.writeString(src);
-        dest.writeString(num);
-        dest.writeString(pubId);
         dest.writeString(remark);
         dest.writeString(questionId);
         dest.writeString(title);
@@ -84,22 +76,6 @@ public class PatientBean extends UserBean implements Parcelable {
 
     public void setSrc(String src) {
         this.src = src;
-    }
-
-    public String getNum() {
-        return num;
-    }
-
-    public void setNum(String num) {
-        this.num = num;
-    }
-
-    public String getPubId() {
-        return pubId;
-    }
-
-    public void setPubId(String pubId) {
-        this.pubId = pubId;
     }
 
     public String getRemark() {

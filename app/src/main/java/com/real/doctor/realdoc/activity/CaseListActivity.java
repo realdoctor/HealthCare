@@ -44,8 +44,6 @@ import butterknife.OnClick;
 public class CaseListActivity extends BaseActivity {
 
     public static String GET_LIST = "android.intent.action.getList";
-    private PatientBean patientBean;
-    private String realName;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.page_title)
@@ -67,8 +65,11 @@ public class CaseListActivity extends BaseActivity {
     RecyclerView recordListRecycleView;
     private List<SaveDocBean> recordList;
     private String disease;
+    private String src;
     private String inqueryText;
     private String patientRecordId;
+    private String realName;
+    private String questionId;
     private Dialog mProgressDialog;
 
     @Override
@@ -91,11 +92,12 @@ public class CaseListActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        patientBean = getIntent().getParcelableExtra("patient");
-        realName = getIntent().getStringExtra("realName");
-        disease = patientBean.getTitle();
-        inqueryText = patientBean.getQuestion();
-        patientRecordId = patientBean.getPatientRecordId();
+        realName = getIntent().getExtras().getString("realName");
+        src = getIntent().getExtras().getString("src");
+        disease = getIntent().getExtras().getString("title");
+        inqueryText = getIntent().getExtras().getString("question");
+        patientRecordId = getIntent().getExtras().getString("patientRecordId");
+        questionId = getIntent().getExtras().getString("questionId");
         pageTitle.setText(realName);
         //获取患者咨询
         if (EmptyUtils.isNotEmpty(inqueryText)) {
@@ -169,7 +171,7 @@ public class CaseListActivity extends BaseActivity {
             mProgressDialog.show();
             JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             Intent startServiceIntent = new Intent(this, UnzipService.class);
-            startServiceIntent.putExtra("patientBean", patientBean);
+            startServiceIntent.putExtra("src", src);
             startService(startServiceIntent);
             JobInfo jobInfo = new JobInfo.Builder(1, new ComponentName(getPackageName(), UnzipService.class.getName()))
                     .setPeriodic(2000)
@@ -211,7 +213,7 @@ public class CaseListActivity extends BaseActivity {
             case R.id.reply:
                 //点击回复按钮
                 Intent intent = new Intent(CaseListActivity.this, ReplyActivity.class);
-                intent.putExtra("questionId", patientBean.getQuestionId());
+                intent.putExtra("questionId", questionId);
                 intent.putExtra("patientRecordId", patientRecordId);
                 startActivity(intent);
                 break;

@@ -169,11 +169,13 @@ public class CaseRecordFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), CaseListActivity.class);
-                Bundle mBundle = new Bundle();
                 PatientBean patientBean = (PatientBean) adapter.getItem(position);
-                mBundle.putString("realName", patientBean.getDoctorRealName());
-                mBundle.putParcelable("patient", patientBean);
-                intent.putExtras(mBundle);
+                intent.putExtra("realName", patientBean.getDoctorRealName());
+                intent.putExtra("src", patientBean.getSrc());
+                intent.putExtra("title", patientBean.getTitle());
+                intent.putExtra("questionId", patientBean.getQuestionId());
+                intent.putExtra("question", patientBean.getQuestion());
+                intent.putExtra("patientRecordId", patientBean.getPatientRecordId());
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
