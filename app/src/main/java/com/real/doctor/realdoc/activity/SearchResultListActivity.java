@@ -337,6 +337,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
         });
         expertAdapter = new ExpertAdapter(SearchResultListActivity.this, expertBeans, this);
         expert_list.setAdapter(expertAdapter);
+        mProgressDialog.show();
         //判断当前是否是6.0版本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0001);
@@ -433,7 +434,6 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     }
 
     private void searchHospitalOrDoctor(int pageNum, int pageSize) {
-        mProgressDialog.show();
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
@@ -504,15 +504,19 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                                         hospitalBeans.add(bean);
                                     }
                                     adapter.notifyDataSetChanged();
-                                    if (rb_hospital.isChecked()) {
-                                        hosptial_list.setVisibility(View.VISIBLE);
-                                        expert_list.setVisibility(View.GONE);
-                                    } else if (rb_expert.isChecked()) {
-                                        hosptial_list.setVisibility(View.GONE);
-                                        expert_list.setVisibility(View.VISIBLE);
-                                    }
                                 } else {
                                     ToastUtil.showLong(SearchResultListActivity.this, "查询失败!");
+                                }
+                                if (tag.equals("1")) {
+                                    rb_hospital.setChecked(true);
+                                    rb_expert.setChecked(false);
+                                    hosptial_list.setVisibility(View.VISIBLE);
+                                    expert_list.setVisibility(View.GONE);
+                                } else if (tag.equals("2")) {
+                                    rb_hospital.setChecked(false);
+                                    rb_expert.setChecked(true);
+                                    hosptial_list.setVisibility(View.GONE);
+                                    expert_list.setVisibility(View.VISIBLE);
                                 }
                                 mProgressDialog.dismiss();
                             } catch (JSONException e) {
