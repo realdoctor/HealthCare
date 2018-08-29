@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 @SuppressLint("ParcelCreator")
-public class PatientBean implements Parcelable {
+public class PatientBean extends UserBean implements Parcelable {
     private String addTime;
     private String src;
     private String num;
@@ -14,7 +14,6 @@ public class PatientBean implements Parcelable {
     private String questionId;
     private String title;
     private String question;
-    private UserBean userInfo;
     private String patientRecordId;
     private String status;
 
@@ -30,7 +29,6 @@ public class PatientBean implements Parcelable {
         questionId = in.readString();
         title = in.readString();
         question = in.readString();
-        userInfo = in.readParcelable(UserBean.class.getClassLoader());
         patientRecordId = in.readString();
         status = in.readString();
     }
@@ -111,14 +109,6 @@ public class PatientBean implements Parcelable {
         this.question = question;
     }
 
-    public UserBean getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(UserBean userInfo) {
-        this.userInfo = userInfo;
-    }
-
     public String getPatientRecordId() {
         return patientRecordId;
     }
@@ -150,7 +140,6 @@ public class PatientBean implements Parcelable {
         dest.writeString(questionId);
         dest.writeString(title);
         dest.writeString(question);
-        dest.writeParcelable(userInfo, flags);
         dest.writeString(patientRecordId);
         dest.writeString(status);
     }
