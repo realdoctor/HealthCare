@@ -17,9 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.AudioAdapter;
 import com.real.doctor.realdoc.adapter.ImageCardAdapter;
+import com.real.doctor.realdoc.adapter.RightAdapter;
 import com.real.doctor.realdoc.adapter.VideoAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
 import com.real.doctor.realdoc.fragment.PlayRecordFragment;
@@ -29,6 +33,7 @@ import com.real.doctor.realdoc.greendao.table.ImageRecycleManager;
 import com.real.doctor.realdoc.greendao.table.RecordManager;
 import com.real.doctor.realdoc.greendao.table.SaveDocManager;
 import com.real.doctor.realdoc.greendao.table.VideoManager;
+import com.real.doctor.realdoc.model.DeptBean;
 import com.real.doctor.realdoc.model.DoctorBean;
 import com.real.doctor.realdoc.model.DrugBean;
 import com.real.doctor.realdoc.model.ImageBean;
@@ -50,6 +55,7 @@ import com.real.doctor.realdoc.view.popup.EasyPopup;
 import com.real.doctor.realdoc.view.popup.XGravity;
 import com.real.doctor.realdoc.view.popup.YGravity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -391,13 +397,90 @@ public class DocContentActivity extends BaseActivity {
                         intent.putExtra("desease", desease);
                         startActivity(intent);
                     } else {
-                        ToastUtil.showLong(this, "您选择的医生不在复诊病历列表中,请确认后重试!");
+                        getDoctorInfoByName();
                     }
                 } else {
                     //不是病历列表中跳转进入的,do nothing
                 }
                 break;
         }
+    }
+
+    private void getDoctorInfoByName() {
+        HashMap<String, String> param = new HashMap<String, String>();
+        final String desease = saveDocBean.getIll().toString().trim();
+        param.put("doctorName", saveDocBean.getDoctor().toString().trim());
+        param.put("hospitalName", saveDocBean.getHospital().toString().trim());
+        HttpRequestClient.getInstance(DocContentActivity.this).createBaseApi().get("doctor/getDoctorInfoByName/"
+                , param, new BaseObserver<ResponseBody>(DocContentActivity.this) {
+                    protected Disposable disposable;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(DocContentActivity.this, "您选择的医生不在复诊病历列表中,请确认后重试!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    if (DocUtils.hasValue(object, "data")) {
+                                        JSONObject obj = object.getJSONObject("data");
+                                        if (DocUtils.hasValue(obj, "userId") && DocUtils.hasValue(obj, "doctorIntro") && DocUtils.hasValue(obj, "deptCode") && DocUtils.hasValue(obj, "hospitalId") && DocUtils.hasValue(obj, "doctorCode")) {
+                                            String doctorUserId = obj.getString("userId");
+                                            String doctorIntro = obj.getString("doctorIntro");
+                                            String deptCode = obj.getString("deptCode");
+                                            String hospitalId = obj.getString("hospitalId");
+                                            String doctorCode = obj.getString("doctorCode");
+                                            Intent intent = new Intent(DocContentActivity.this, DoctorsDetailActivity.class);
+                                            intent.putExtra("doctorUserId", doctorUserId);
+                                            intent.putExtra("patientRecordId", "0");
+                                            intent.putExtra("doctorIntro", doctorIntro);
+                                            intent.putExtra("deptCode", deptCode);
+                                            intent.putExtra("hospitalId", hospitalId);
+                                            intent.putExtra("doctorCode", doctorCode);
+                                            intent.putExtra("desease", desease);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                } else {
+                                    ToastUtil.showLong(DocContentActivity.this, "您选择的医生不在复诊病历列表中,请确认后重试!");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     private void showRightPop(View view) {

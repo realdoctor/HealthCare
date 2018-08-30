@@ -60,6 +60,7 @@ public class DoctorsDetailActivity extends BaseActivity {
     private String userId;
     private String hospitalId;
     private String mobile;
+    private String doctorIntro;
     private DocContentDialog dialog;
     //该医生无法预约
     private static final int REQUEST_CODE_NO_EXPERT = 0x100;
@@ -90,11 +91,19 @@ public class DoctorsDetailActivity extends BaseActivity {
         desease = getIntent().getStringExtra("desease");
         mobile = getIntent().getStringExtra("mobile");
         patientRecordId = getIntent().getStringExtra("patientRecordId");
+        doctorIntro = getIntent().getStringExtra("doctorIntro");
+        deptCode = getIntent().getStringExtra("deptCode");
+        hospitalId = getIntent().getStringExtra("hospitalId");
+        doctorCode = getIntent().getStringExtra("doctorCode");
         if (EmptyUtils.isEmpty(desease) && EmptyUtils.isEmpty(mobile) && EmptyUtils.isEmpty(patientRecordId) && EmptyUtils.isNotEmpty(doctorUserId)) {
             chatBtn.setVisibility(View.GONE);
             recordBtn.setVisibility(View.GONE);
         }
-        getDoctorDetail();
+        if (EmptyUtils.isNotEmpty(doctorIntro) && EmptyUtils.isNotEmpty(deptCode) && EmptyUtils.isNotEmpty(hospitalId) && EmptyUtils.isNotEmpty(doctorCode)) {
+            docInfo.setText("\u3000\u3000" + doctorIntro);
+        } else {
+            getDoctorDetail();
+        }
     }
 
     private void getDoctorDetail() {
@@ -223,7 +232,7 @@ public class DoctorsDetailActivity extends BaseActivity {
                     intent.putExtra("hospitalId", hospitalId);
                     intent.putExtra("doctorCode", doctorCode);
                     intent.putExtra("deptCode", deptCode);
-                    startActivityForResult(intent,REQUEST_CODE_NO_EXPERT);
+                    startActivityForResult(intent, REQUEST_CODE_NO_EXPERT);
                 } else {
                     ToastUtil.showLong(DoctorsDetailActivity.this, "您还未连接网络,请连接互联网!");
                     NetworkUtil.goToWifiSetting(DoctorsDetailActivity.this);
@@ -237,7 +246,7 @@ public class DoctorsDetailActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_NO_EXPERT) {
             //如果医生无法预约,弹出对话框提示
-            dialog = new DocContentDialog(DoctorsDetailActivity.this,"该医生无法预约!").builder()
+            dialog = new DocContentDialog(DoctorsDetailActivity.this, "该医生无法预约!").builder()
                     .setCancelable(false)
                     .setCanceledOnTouchOutside(true)
                     .setConfirmBtn(new DocContentDialog.ConfirmListener() {
