@@ -29,6 +29,7 @@ import com.real.doctor.realdoc.activity.DoctorsListActivity;
 import com.real.doctor.realdoc.activity.InfoActivity;
 import com.real.doctor.realdoc.activity.LoginActivity;
 import com.real.doctor.realdoc.activity.MyQrActivity;
+import com.real.doctor.realdoc.activity.MyRevisitActivity;
 import com.real.doctor.realdoc.activity.PatientEduListActivity;
 import com.real.doctor.realdoc.activity.DocContentActivity;
 import com.real.doctor.realdoc.activity.RecordListActivity;
@@ -114,8 +115,9 @@ public class HomeFragment extends BaseFragment {
     TextView comment;
     TextView commentTime;
     RelativeLayout commentRelative;
-    //    TextView content;
-//    TextView connectTime;
+    TextView connect;
+    TextView connectTime;
+    RelativeLayout connectRelative;
     private HomeRecordAdapter adapter;
     private SaveDocManager instance = null;
     private String token;
@@ -186,6 +188,17 @@ public class HomeFragment extends BaseFragment {
             comment.setText(commentStr);
             commentTime.setText(commentTimeStr);
             initCommentEvent();
+        }
+        String tagId = (String) SPUtils.get(getActivity(), Constants.CONNECT_TAG_ID, "");
+        if (EmptyUtils.isNotEmpty(tagId)) {
+            connectRelative = mView.findViewById(R.id.connect_relative);
+            connect = mView.findViewById(R.id.connect);
+            connectTime = mView.findViewById(R.id.connect_time);
+            String connectStr = (String) SPUtils.get(getActivity(), Constants.CONNECT, "");
+            String connectTimeStr = (String) SPUtils.get(getActivity(), Constants.CONNECT_TIME, "");
+            connect.setText(connectStr);
+            connectTime.setText(connectTimeStr);
+            initConnectEvent(tagId);
         }
     }
 
@@ -414,7 +427,27 @@ public class HomeFragment extends BaseFragment {
                         fromMobile = intent.getExtras().getString("fromMobile");
                         fromUserId = intent.getExtras().getString("userId");
                     }
-                    if (tagId.equals("2")) {
+                    if (tagId.equals("0")) {
+                        connectRelative = mView.findViewById(R.id.connect_relative);
+                        connect = mView.findViewById(R.id.connect);
+                        connectTime = mView.findViewById(R.id.connect_time);
+                        connect.setText(info);
+                        connectTime.setText(time);
+                        SPUtils.put(getActivity(), Constants.CONNECT, info);
+                        SPUtils.put(getActivity(), Constants.CONNECT_TIME, time);
+                        SPUtils.put(getActivity(), Constants.CONNECT_TAG_ID, tagId);
+                        initConnectEvent(tagId);
+                    } else if (tagId.equals("1")) {
+                        connectRelative = mView.findViewById(R.id.connect_relative);
+                        connect = mView.findViewById(R.id.connect);
+                        connectTime = mView.findViewById(R.id.connect_time);
+                        connect.setText(info);
+                        connectTime.setText(time);
+                        SPUtils.put(getActivity(), Constants.CONNECT, info);
+                        SPUtils.put(getActivity(), Constants.CONNECT_TIME, time);
+                        SPUtils.put(getActivity(), Constants.CONNECT_TAG_ID, tagId);
+                        initConnectEvent(tagId);
+                    } else if (tagId.equals("2")) {
                         commentRelative = mView.findViewById(R.id.comment_relative);
                         comment = mView.findViewById(R.id.comment);
                         commentTime = mView.findViewById(R.id.comment_time);
@@ -467,6 +500,27 @@ public class HomeFragment extends BaseFragment {
                     i.putExtra("doctorUserId", fromUserId);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     getActivity().startActivity(i);
+                }
+            });
+        }
+    }
+
+    private void initConnectEvent(final String tagId) {
+        if (EmptyUtils.isNotEmpty(connectRelative)) {
+            connectRelative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (tagId.equals("0")) {
+                        //病人,当病人接收到医生的回复后,跳转到我的复诊界面看答案
+                        Intent i = new Intent(getActivity(), MyRevisitActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        getActivity().startActivity(i);
+                    } else if (tagId.equals("1")) {
+                        //医生,当病人上传了病历文件后,通知医生到患者管理界面
+                        Intent i = new Intent(getActivity(), CaseControlActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        getActivity().startActivity(i);
+                    }
                 }
             });
         }

@@ -86,7 +86,6 @@ public class AddLabelActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //点击item,回调数据
-
                 AddLabelBean bean = (AddLabelBean) adapter.getItem(position);
                 Intent intent = new Intent();
                 intent.putExtra("addLabelBean", bean);

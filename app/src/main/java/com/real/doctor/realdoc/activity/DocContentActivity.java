@@ -411,7 +411,8 @@ public class DocContentActivity extends BaseActivity {
         final String desease = saveDocBean.getIll().toString().trim();
         param.put("doctorName", saveDocBean.getDoctor().toString().trim());
         param.put("hospitalName", saveDocBean.getHospital().toString().trim());
-        HttpRequestClient.getInstance(DocContentActivity.this).createBaseApi().get("doctor/getDoctorInfoByName/"
+        param.put("flag", "1");
+        HttpRequestClient.getInstance(DocContentActivity.this).createBaseApi().get("doctor/getDoctorInfo/"
                 , param, new BaseObserver<ResponseBody>(DocContentActivity.this) {
                     protected Disposable disposable;
 
@@ -453,8 +454,8 @@ public class DocContentActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     if (DocUtils.hasValue(object, "data")) {
                                         JSONObject obj = object.getJSONObject("data");
-                                        if (DocUtils.hasValue(obj, "userId") && DocUtils.hasValue(obj, "doctorIntro") && DocUtils.hasValue(obj, "deptCode") && DocUtils.hasValue(obj, "hospitalId") && DocUtils.hasValue(obj, "doctorCode")) {
-                                            String doctorUserId = obj.getString("userId");
+                                        if (DocUtils.hasValue(obj, "doctorUserId") && DocUtils.hasValue(obj, "doctorIntro") && DocUtils.hasValue(obj, "deptCode") && DocUtils.hasValue(obj, "hospitalId") && DocUtils.hasValue(obj, "doctorCode")) {
+                                            String doctorUserId = obj.getString("doctorUserId");
                                             String doctorIntro = obj.getString("doctorIntro");
                                             String deptCode = obj.getString("deptCode");
                                             String hospitalId = obj.getString("hospitalId");

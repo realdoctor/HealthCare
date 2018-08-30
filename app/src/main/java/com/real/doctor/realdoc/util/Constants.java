@@ -22,7 +22,9 @@ public class Constants {
     public static final String COMMENT_FROM_MOBILE = "comment_from_mobile";
     public static final String COMMENT_MOBILE = "comment_mobile";
     public static final String COMMENT_USER_ID = "comment_user_id";
-
+    public static final String CONNECT = "connect";
+    public static final String CONNECT_TIME = "connect_time";
+    public static final String CONNECT_TAG_ID = "connect_tag_id";
     //微信登录
     public static final String WX_APP_ID = "wxdcd80da641faa3ae";
     public static final String GetCodeRequest = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";

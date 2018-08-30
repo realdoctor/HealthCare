@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="有人回复了你的评论"
+            android:text="对面没有用户跟你进行聊天!"
             android:textColor="@color/text_gray_color"
             android:textSize="12sp" />
 
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="25dp"
-            android:text="2018年5月22日"
+            android:text="5月22日"
             android:textColor="@color/time_color"
             android:textSize="12sp" />
 
@@ -40,17 +40,17 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/content_relative"
+        android:id="@+id/connect_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="就诊结束，病历更新了"
+            android:text="没有患者向您发送患者病历!"
             android:textColor="@color/text_gray_color"
             android:textSize="12sp" />
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="25dp"
-            android:text="2018年5月22日"
+            android:text="5月22日"
             android:textColor="@color/time_color"
             android:textSize="12sp" />
 

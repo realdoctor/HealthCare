@@ -13,9 +13,14 @@ import com.real.doctor.realdoc.activity.CaseControlActivity;
 import com.real.doctor.realdoc.activity.ChatActivity;
 import com.real.doctor.realdoc.activity.MyRevisitActivity;
 import com.real.doctor.realdoc.fragment.HomeFragment;
+import com.real.doctor.realdoc.greendao.table.PushInfoManager;
+import com.real.doctor.realdoc.greendao.table.SaveDocManager;
+import com.real.doctor.realdoc.model.PushInfoBean;
+import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.SPUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +43,9 @@ public class JPushUserReceiver extends BroadcastReceiver {
     private static String tagId;
     private static String userId;
     private static String mobile;
+    private String myUserId;
+    private String title;
+    private PushInfoManager instance;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -50,10 +58,12 @@ public class JPushUserReceiver extends BroadcastReceiver {
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
+                myUserId = (String) SPUtils.get(context, Constants.USER_KEY, "");
                 extra = (String) bundle.get(JPushInterface.EXTRA_EXTRA);
                 time = DateUtil.timeStamp2Date(DateUtil.timeStamp(), "MM月dd日 HH:mm");
                 //发送广播更新首页
                 String info = (String) bundle.get(JPushInterface.EXTRA_ALERT);
+                title = (String) bundle.get(JPushInterface.EXTRA_NOTIFICATION_TITLE);
                 JSONObject object = new JSONObject(extra);
                 if (DocUtils.hasValue(object, "tagId")) {
                     tagId = object.getString("tagId");
@@ -77,7 +87,7 @@ public class JPushUserReceiver extends BroadcastReceiver {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(i);
                 } else if (tagId.equals("2")) {
-                    //医生,当病人上传了病历文件后,通知医生到患者管理界面
+                    //跳转到聊天界面
                     Intent i = new Intent(context, ChatActivity.class);
                     //i.putExtra("str", str);
                     //此处必须这么填,为了参数对应
@@ -138,6 +148,17 @@ public class JPushUserReceiver extends BroadcastReceiver {
 
     //send msg to HomeFragment
     private void processTagId(Context context, String info, String tagId) {
+        //保存信息到数据库
+        PushInfoBean bean = new PushInfoBean();
+        bean.setUserId(myUserId);
+        bean.setContent(info);
+        bean.setTitle(title);
+        bean.setTabId(tagId);
+        bean.setFromUserId(userId);
+        bean.setTime(time);
+        bean.setFromMobile(mobile);
+        instance = PushInfoManager.getInstance(context);
+        instance.insertPushInfo(context, bean);
         Intent msgIntent = new Intent(HomeFragment.SHOW_BOAST_INFO);
         msgIntent.putExtra("info", info);
         msgIntent.putExtra("tagId", tagId);
