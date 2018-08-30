@@ -192,31 +192,18 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-//        //从新监听下是否有悬浮窗权限
-//        if (EmptyUtils.isNotEmpty(mFloatPermissionManager)) {
-//            mFloatPermissionManager.checkPermission(getActivity());
-//        }
-//        //判断是app否运行在前台
-//        boolean isForeBack = DocUtils.getLinuxCoreInfo(getActivity(), "com.real.doctor.realdoc");
-//        if (isForeBack && EmptyUtils.isNotEmpty(mFloatballManager)) {
-//            mFloatballManager.show();
-//        }
-//        showBroadcast();
+        showBroadcast();
     }
 
     private void showBroadcast() {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SHOW_WINDOW_ICON);
         intentFilter.addAction(RECORD_LIST_TEXT);
-        intentFilter.addAction(CLOSE_WINDOW_MANAGER);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                if (action.equals(SHOW_WINDOW_ICON)) {
-                    onShowMenu();
-                } else if (action.equals(RECORD_LIST_TEXT)) {
+                if (action.equals(RECORD_LIST_TEXT)) {
                     if (EmptyUtils.isNotEmpty(instance)) {
                         if (EmptyUtils.isNotEmpty(recycleView)) {
                             recordList = instance.querySaveDocList(getActivity());
@@ -224,10 +211,6 @@ public class HomeFragment extends BaseFragment {
                             recycleView.setAdapter(adapter);
                             initEvent();
                         }
-                    }
-                } else if (action.equals(CLOSE_WINDOW_MANAGER)) {
-                    if (EmptyUtils.isNotEmpty(mFloatballManager)) {
-                        mFloatballManager.hide();
                     }
                 }
             }
