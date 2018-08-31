@@ -34,6 +34,8 @@ public class InfoActivity extends BaseActivity {
     RelativeLayout titleBar;
     @BindView(R.id.page_title)
     TextView pageTitle;
+    @BindView(R.id.right_title)
+    TextView rightTitle;
     @BindView(R.id.finish_back)
     ImageView finishBack;
     @BindView(R.id.info_recycle_view)
@@ -59,6 +61,8 @@ public class InfoActivity extends BaseActivity {
             titleBar.setLayoutParams(lp);
         }
         pageTitle.setText("系统消息");
+        rightTitle.setVisibility(View.VISIBLE);
+        rightTitle.setText("清除");
     }
 
     @Override
@@ -109,11 +113,17 @@ public class InfoActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back})
+    @OnClick({R.id.finish_back, R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
                 InfoActivity.this.finish();
+                break;
+            case R.id.right_title:
+                //点击清除
+                instance.deleteAllPushInfo(this);
+                pushInfoList.clear();
+                infoAdapter.notifyDataSetChanged();
                 break;
         }
     }
