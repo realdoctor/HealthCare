@@ -241,13 +241,7 @@ public class InqueryActivity extends BaseActivity {
                             } else {
                                 ToastUtil.showLong(RealDocApplication.getContext(), "病历信息上传失败!");
                             }
-                            Intent intent;
-                            if (detail) {
-                                intent = new Intent(InqueryActivity.this, DoctorsDetailActivity.class);
-                                intent.putExtra("doctorUserId", doctorUserId);
-                            } else {
-                                intent = new Intent(InqueryActivity.this, DoctorsListActivity.class);
-                            }
+                            Intent intent = new Intent(InqueryActivity.this, MyRevisitActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
