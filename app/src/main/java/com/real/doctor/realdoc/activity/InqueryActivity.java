@@ -208,6 +208,7 @@ public class InqueryActivity extends BaseActivity {
             maps.put("title", DocUtils.toRequestBodyOfText(desease));
             maps.put("doctorUserId", DocUtils.toRequestBodyOfText(doctorUserId));
             maps.put("patientRecordId", DocUtils.toRequestBodyOfText(patientRecordId));
+            maps.put("messageId", DocUtils.toRequestBodyOfText(orderNo));
             if (EmptyUtils.isNotEmpty(questionId)) {
                 maps.put("questionId", DocUtils.toRequestBodyOfText(questionId));
             }

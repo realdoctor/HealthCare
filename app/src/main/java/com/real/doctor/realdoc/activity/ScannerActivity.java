@@ -280,14 +280,14 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
 
     private void qrSucceed(final String result) {
         restartPreview();
-        String[] doctorId = result.split("=");
-        focusDoctor(doctorId[1]);
+        String[] doctorUserId = result.split("=");
+        focusDoctor(doctorUserId[1]);
     }
 
-    private void focusDoctor(final String doctorId) {
+    private void focusDoctor(final String doctorUserId) {
         JSONObject json = new JSONObject();
         try {
-            json.put("doctorId", doctorId);
+            json.put("doctorUserId", doctorUserId);
             json.put("userId", userId);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -337,7 +337,7 @@ public class ScannerActivity extends BaseActivity implements SurfaceHolder.Callb
                                 if (msg.equals("ok") && code.equals("0")) {
                                     ToastUtil.showLong(ScannerActivity.this, "关注成功");
                                     Intent intent = new Intent(ScannerActivity.this, DoctorsDetailActivity.class);
-                                    intent.putExtra("doctorUserId", doctorId);
+                                    intent.putExtra("doctorUserId", doctorUserId);
                                     startActivity(intent);
                                     ScannerActivity.this.finish();
                                 } else {
