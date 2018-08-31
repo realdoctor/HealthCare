@@ -323,6 +323,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
     @Override
     public void onCmdMessageReceived(List<EMMessage> messages) {
         super.onCmdMessageReceived(messages);
+        System.out.print("messages" + messages);
     }
 
     @Override

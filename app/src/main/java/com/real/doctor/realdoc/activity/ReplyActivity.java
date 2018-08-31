@@ -3,7 +3,9 @@ package com.real.doctor.realdoc.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,7 +90,7 @@ public class ReplyActivity extends BaseActivity {
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                finish();
+                goBackBtn();
                 break;
             case R.id.confirm_charge:
                 //点击确认收费按钮
@@ -172,5 +174,21 @@ public class ReplyActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBackBtn();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goBackBtn() {
+        //动态注册广播,通知病历上传成功
+        Intent intent = new Intent(CaseListActivity.GET_ANSWER);
+        LocalBroadcastManager.getInstance(ReplyActivity.this).sendBroadcast(intent);
+        finish();
     }
 }

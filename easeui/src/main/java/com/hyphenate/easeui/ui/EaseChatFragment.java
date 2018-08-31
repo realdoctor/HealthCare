@@ -37,6 +37,7 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMImageMessageBody;
@@ -620,7 +621,9 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
                 // single chat message
                 username = message.getFrom();
             }
-
+            String realName = message.getStringAttribute("realName", null);
+            String imageUrl = message.getStringAttribute("imageUrl", null);
+            // 将自己服务器返回的环信账号、昵称和头像URL设置到帮助类中。
             // if the message is for current conversation
             if (username.equals(toChatUsername) || message.getTo().equals(toChatUsername) || message.conversationId().equals(toChatUsername)) {
                 messageList.refreshSelectLast();
@@ -634,7 +637,6 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
 
     @Override
     public void onCmdMessageReceived(List<EMMessage> messages) {
-
     }
 
     @Override
@@ -792,6 +794,7 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
 
 
     protected void sendMessage(EMMessage message) {
+//        sendCmdMessage();
         if (message == null) {
             return;
         }
@@ -833,7 +836,13 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
                 }
             }
         });
-
+        SharedPreferences sp = getActivity().getSharedPreferences("share_data",
+                Context.MODE_PRIVATE);
+        String realName = sp.getString("realName", "");
+        String imageUrl = sp.getString("originalImageUrl", "");
+        // 增加自己特定的属性
+        message.setAttribute("realName", realName);
+        message.setAttribute("imageUrl", imageUrl);
         // Send message.
         EMClient.getInstance().chatManager().sendMessage(message);
         //refresh ui
@@ -847,6 +856,22 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
     }
 
     protected abstract void pushMassage();
+
+    private void sendCmdMessage() {
+        //发送透传消息
+        EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        //支持单聊和群聊，默认单聊，如果是群聊添加下面这行
+        cmdMsg.setChatType(ChatType.GroupChat);
+        SharedPreferences sp = getActivity().getSharedPreferences("share_data",
+                Context.MODE_PRIVATE);
+        String realName = sp.getString("realName", "");
+        String imageUrl = sp.getString("originalImageUrl", "");
+        String action = realName + ";" + imageUrl;//action可以自定义
+        EMCmdMessageBody cmdBody = new EMCmdMessageBody(action);
+        cmdMsg.setTo(toChatUsername);
+        cmdMsg.addBody(cmdBody);
+        EMClient.getInstance().chatManager().sendMessage(cmdMsg);
+    }
 
     //===================================================================================
 

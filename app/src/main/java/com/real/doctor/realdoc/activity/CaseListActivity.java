@@ -55,6 +55,7 @@ import okhttp3.ResponseBody;
 public class CaseListActivity extends BaseActivity {
 
     public static String GET_LIST = "android.intent.action.getList";
+    public static String GET_ANSWER = "android.intent.action.getAnswer";
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.page_title)
@@ -308,48 +309,54 @@ public class CaseListActivity extends BaseActivity {
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(GET_LIST);
+        intentFilter.addAction(GET_ANSWER);
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                //获得列表数据
-                if (EmptyUtils.isEmpty(intent.getExtras())) {
-                    line.setVisibility(View.GONE);
-                    recordListTitle.setVisibility(View.GONE);
-                    mProgressDialog.dismiss();
-                    return;
-                }
-                recordList = intent.getExtras().getParcelableArrayList("list");
-                if (EmptyUtils.isNotEmpty(recordList)) {
-                    List<SaveDocBean> mList = new ArrayList<>();
-                    List<SaveDocBean> oneList = new ArrayList<>();
-                    List<SaveDocBean> twoList = new ArrayList<>();
-                    int i;
-                    for (i = 0; i < recordList.size(); i++) {
-                        if (disease.equals(recordList.get(i).getIll())) {
-                            oneList.add(recordList.get(i));
-                        } else {
-                            twoList.add(recordList.get(i));
+                String action = intent.getAction();
+                if (action.equals(GET_LIST)) {
+                    //获得列表数据
+                    if (EmptyUtils.isEmpty(intent.getExtras())) {
+                        line.setVisibility(View.GONE);
+                        recordListTitle.setVisibility(View.GONE);
+                        mProgressDialog.dismiss();
+                        return;
+                    }
+                    recordList = intent.getExtras().getParcelableArrayList("list");
+                    if (EmptyUtils.isNotEmpty(recordList)) {
+                        List<SaveDocBean> mList = new ArrayList<>();
+                        List<SaveDocBean> oneList = new ArrayList<>();
+                        List<SaveDocBean> twoList = new ArrayList<>();
+                        int i;
+                        for (i = 0; i < recordList.size(); i++) {
+                            if (disease.equals(recordList.get(i).getIll())) {
+                                oneList.add(recordList.get(i));
+                            } else {
+                                twoList.add(recordList.get(i));
+                            }
                         }
+                        mList.addAll(oneList);
+                        if (oneList.size() > 0 && twoList.size() > 0) {
+                            SaveDocBean bean = new SaveDocBean();
+                            bean.setType(2);
+                            mList.add(bean);
+                        }
+                        mList.addAll(twoList);
+                        //创建布局管理
+                        recordListRecycleView.setLayoutManager(new LinearLayoutManager(CaseListActivity.this, LinearLayoutManager.VERTICAL, false));
+                        //添加自定义分割线
+                        DividerItemDecoration divider = new DividerItemDecoration(CaseListActivity.this, DividerItemDecoration.VERTICAL);
+                        divider.setDrawable(ContextCompat.getDrawable(CaseListActivity.this, R.drawable.disease_divider));
+                        recordListRecycleView.addItemDecoration(divider);
+                        //创建适配器
+                        multilDetailAdapter = new MultilDetailAdapter(mList);
+                        //给RecyclerView设置适配器
+                        recordListRecycleView.setAdapter(multilDetailAdapter);
+                        initListEvent();
+                        mProgressDialog.dismiss();
                     }
-                    mList.addAll(oneList);
-                    if (oneList.size() > 0 && twoList.size() > 0) {
-                        SaveDocBean bean = new SaveDocBean();
-                        bean.setType(2);
-                        mList.add(bean);
-                    }
-                    mList.addAll(twoList);
-                    //创建布局管理
-                    recordListRecycleView.setLayoutManager(new LinearLayoutManager(CaseListActivity.this, LinearLayoutManager.VERTICAL, false));
-                    //添加自定义分割线
-                    DividerItemDecoration divider = new DividerItemDecoration(CaseListActivity.this, DividerItemDecoration.VERTICAL);
-                    divider.setDrawable(ContextCompat.getDrawable(CaseListActivity.this, R.drawable.disease_divider));
-                    recordListRecycleView.addItemDecoration(divider);
-                    //创建适配器
-                    multilDetailAdapter = new MultilDetailAdapter(mList);
-                    //给RecyclerView设置适配器
-                    recordListRecycleView.setAdapter(multilDetailAdapter);
-                    initListEvent();
-                    mProgressDialog.dismiss();
+                } else if (action.equals(GET_ANSWER)) {
+                    getAnswers();
                 }
             }
         };
