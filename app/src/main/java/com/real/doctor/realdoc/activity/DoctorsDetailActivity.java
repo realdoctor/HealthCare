@@ -49,6 +49,8 @@ public class DoctorsDetailActivity extends BaseActivity {
     Button chatBtn;
     @BindView(R.id.record_btn)
     Button recordBtn;
+    @BindView(R.id.edu_btn)
+    Button eduBtn;
     @BindView(R.id.registrations_btn)
     Button registrationsBtn;
     private String doctorUserId;
@@ -98,6 +100,7 @@ public class DoctorsDetailActivity extends BaseActivity {
         if (EmptyUtils.isEmpty(desease) && EmptyUtils.isEmpty(mobile) && EmptyUtils.isEmpty(patientRecordId) && EmptyUtils.isNotEmpty(doctorUserId)) {
             chatBtn.setVisibility(View.GONE);
             recordBtn.setVisibility(View.GONE);
+            eduBtn.setVisibility(View.VISIBLE);
         }
         if (EmptyUtils.isNotEmpty(doctorIntro) && EmptyUtils.isNotEmpty(deptCode) && EmptyUtils.isNotEmpty(hospitalId) && EmptyUtils.isNotEmpty(doctorCode)) {
             docInfo.setText("\u3000\u3000" + doctorIntro);
@@ -190,7 +193,7 @@ public class DoctorsDetailActivity extends BaseActivity {
     }
 
     @Override
-    @OnClick({R.id.finish_back, R.id.chat_btn, R.id.record_btn, R.id.registrations_btn})
+    @OnClick({R.id.finish_back, R.id.chat_btn, R.id.record_btn, R.id.registrations_btn, R.id.edu_btn})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
@@ -237,6 +240,12 @@ public class DoctorsDetailActivity extends BaseActivity {
                     ToastUtil.showLong(DoctorsDetailActivity.this, "您还未连接网络,请连接互联网!");
                     NetworkUtil.goToWifiSetting(DoctorsDetailActivity.this);
                 }
+                break;
+            case R.id.edu_btn:
+                //进入患者教育页面
+                Intent intent = new Intent(DoctorsDetailActivity.this, PatientEduListActivity.class);
+                intent.putExtra("id", doctorUserId);
+                startActivity(intent);
                 break;
         }
     }

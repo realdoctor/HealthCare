@@ -78,7 +78,8 @@ public class PatientEduListActivity extends BaseActivity implements TabLayout.On
     private static final int REQUEST_CODE_TAKE_PHOTO = 0x110;
     private String mCurrentPhotoPath;
     private String folder;
-    public String id="";
+    public String id = "";
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_patient_edu_show;
@@ -96,16 +97,17 @@ public class PatientEduListActivity extends BaseActivity implements TabLayout.On
             lp.topMargin = statusHeight;
             titleBar.setLayoutParams(lp);
         }
-        id=getIntent().getStringExtra("id");
-        if(id.length()!=0) {
+        id = getIntent().getStringExtra("id");
+        if (id.length() != 0) {
             right_title.setVisibility(View.GONE);
-        }else{
+        } else {
             right_title.setVisibility(View.VISIBLE);
             right_title.setText("上传");
         }
         pageTitle.setText("咨询");
         mPopup = new SelectPopupWindowUpload(PatientEduListActivity.this, itemsOnClick);
     }
+
     //为弹出窗口实现监听类
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {
 
@@ -121,12 +123,12 @@ public class PatientEduListActivity extends BaseActivity implements TabLayout.On
                  * 读写SD卡
                  */
                 requestPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x0001);
-            }  else if (i == R.id.add_video) {
+            } else if (i == R.id.add_video) {
                 if (DocUtils.isFastClick()) {
                     Intent intent = new Intent(PatientEduListActivity.this, VideoOneActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("folder", folder);
-                    bundle.putInt("key",1);
+                    bundle.putInt("key", 1);
                     intent.putExtras(bundle);
                     //startActivityForResult(intent, 112);
                     startActivity(intent);
@@ -171,7 +173,7 @@ public class PatientEduListActivity extends BaseActivity implements TabLayout.On
     }
 
     @Override
-    @OnClick({R.id.finish_back,R.id.right_title})
+    @OnClick({R.id.finish_back, R.id.right_title})
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
@@ -210,6 +212,7 @@ public class PatientEduListActivity extends BaseActivity implements TabLayout.On
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
     /**
      * 权限成功回调函数
      *
@@ -258,8 +261,8 @@ public class PatientEduListActivity extends BaseActivity implements TabLayout.On
 //                videoAdapter = new VideoAdapter(R.layout.video_item, videoList);
 //                videoRecycleView.setAdapter(videoAdapter);
 //                initEvent();
-            }
         }
+    }
 
     public void takePhotoCompress() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

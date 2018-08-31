@@ -171,7 +171,7 @@ public class MyFollowNewsFragment extends BaseFragment implements OnLoadmoreList
         params.put("userId", userId);
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
-        HttpRequestClient.getInstance(RealDocApplication.getContext()).createBaseApi().get("healthnews/myFocusList"
+        HttpRequestClient.getInstance(RealDocApplication.getContext()).createBaseApi().get("healthnews/focus/list"
                 , params, new BaseObserver<ResponseBody>(RealDocApplication.getContext()) {
                     protected Disposable disposable;
 

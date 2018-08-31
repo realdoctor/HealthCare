@@ -275,35 +275,21 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="65dp"
             android:layout_marginTop="10dp"
             android:background="@android:color/white"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <ViewFlipper
+                android:id="@+id/viewFlipper"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
-                android:src="@mipmap/banner_bg_icon" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <ViewFlipper
-                    android:id="@+id/viewFlipper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autoStart="true"
-                    android:flipInterval="2000"
-                    android:inAnimation="@anim/anim_in"
-                    android:outAnimation="@anim/anim_out" />
-            </LinearLayout>
+                android:autoStart="true"
+                android:flipInterval="2000"
+                android:inAnimation="@anim/anim_in"
+                android:outAnimation="@anim/anim_out" />
         </LinearLayout>
 
         <LinearLayout

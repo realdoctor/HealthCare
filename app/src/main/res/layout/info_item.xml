@@ -33,20 +33,29 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/doctor_name"
                 android:layout_marginBottom="5dp"
-                android:paddingRight="5dp"
-                android:text="RealDoc"
                 android:textColor="@color/text_black_color"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/doctor_name"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="5dp"
+                android:paddingRight="15dp"
+                android:textColor="@color/text_gray_color"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/info_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/visit_date"
+                android:layout_below="@id/title"
                 android:layout_marginBottom="5dp"
                 android:paddingRight="5dp"
                 android:text="消息内容:"
-                android:layout_below="@id/title"
                 android:textColor="@color/text_gray_color"
                 android:textSize="14sp" />
 
@@ -55,9 +64,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
-                android:text="111111"
                 android:layout_marginBottom="5dp"
                 android:layout_toRightOf="@id/info_tv"
+                android:ellipsize="end"
+                android:lines="1"
                 android:textColor="@color/text_gray_color"
                 android:textSize="14sp" />
         </RelativeLayout>

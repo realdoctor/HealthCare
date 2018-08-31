@@ -50,8 +50,8 @@
             android:layout_marginLeft="18.0dip"
             android:layout_marginRight="18.0dip"
             android:background="@drawable/button_selector"
-            android:text="@string/confirm_charge"
-            android:textColor="#ffffffff"
+            android:text="@string/confirm_btn"
+            android:textColor="@android:color/white"
             android:textSize="15.0sp" />
     </RelativeLayout>
 </LinearLayout>

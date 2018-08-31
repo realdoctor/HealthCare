@@ -22,10 +22,10 @@ public class CaseControlAdapter extends BaseQuickAdapter<PatientBean, BaseViewHo
 
     @Override
     protected void convert(BaseViewHolder helper, PatientBean item) {
-        helper.setText(R.id.patient_name, item.getDoctorRealName())
+        helper.setText(R.id.patient_name, item.getName())
                 .setText(R.id.disease, item.getTitle())
                 .setText(R.id.add_time, DateUtil.timeStamp2Date(item.getAddTime(), "yyyy年MM月dd日 HH:mm"));
-        Glide.with(mContext).load(item.getAvater()).crossFade().into((ImageView) helper.getView(R.id.patient_img));
+        Glide.with(mContext).load(item.getPatientImageUrl()).crossFade().into((ImageView) helper.getView(R.id.patient_img));
         String status = item.getStatus();
         TextView revisiting = helper.getView(R.id.revisiting);
         TextView revisited = helper.getView(R.id.revisited);

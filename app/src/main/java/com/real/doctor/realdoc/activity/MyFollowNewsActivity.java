@@ -153,7 +153,7 @@ public class MyFollowNewsActivity extends BaseActivity implements OnLoadmoreList
         params.put("userId", userId);
         params.put("pageNum", pageNum);
         params.put("pageSize", pageSize);
-        HttpRequestClient.getInstance(MyFollowNewsActivity.this).createBaseApi().get("healthnews/myFocusList"
+        HttpRequestClient.getInstance(MyFollowNewsActivity.this).createBaseApi().get("healthnews/focus/list"
                 , params, new BaseObserver<ResponseBody>(MyFollowNewsActivity.this) {
                     protected Disposable disposable;
 

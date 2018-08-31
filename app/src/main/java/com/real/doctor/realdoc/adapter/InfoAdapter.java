@@ -17,6 +17,6 @@ public class InfoAdapter extends BaseQuickAdapter<PushInfoBean, BaseViewHolder> 
 
     @Override
     protected void convert(BaseViewHolder helper, PushInfoBean item) {
-        helper.setText(R.id.title, item.getTitle()).setText(R.id.info, item.getContent());
+        helper.setText(R.id.title, item.getTitle()).setText(R.id.info, item.getContent()).setText(R.id.time, item.getTime());
     }
 }

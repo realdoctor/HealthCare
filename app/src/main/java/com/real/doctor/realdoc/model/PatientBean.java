@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.model;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -15,9 +16,7 @@ public class PatientBean extends UserBean implements Parcelable {
     private String status;
     private String messageId;
     private String doctorRealName;
-
-    public PatientBean() {
-    }
+    private String patientImageUrl;
 
     protected PatientBean(Parcel in) {
         super(in);
@@ -31,6 +30,7 @@ public class PatientBean extends UserBean implements Parcelable {
         status = in.readString();
         messageId = in.readString();
         doctorRealName = in.readString();
+        patientImageUrl = in.readString();
     }
 
     @Override
@@ -46,6 +46,7 @@ public class PatientBean extends UserBean implements Parcelable {
         dest.writeString(status);
         dest.writeString(messageId);
         dest.writeString(doctorRealName);
+        dest.writeString(patientImageUrl);
     }
 
     @Override
@@ -143,5 +144,13 @@ public class PatientBean extends UserBean implements Parcelable {
 
     public void setDoctorRealName(String doctorRealName) {
         this.doctorRealName = doctorRealName;
+    }
+
+    public String getPatientImageUrl() {
+        return patientImageUrl;
+    }
+
+    public void setPatientImageUrl(String patientImageUrl) {
+        this.patientImageUrl = patientImageUrl;
     }
 }

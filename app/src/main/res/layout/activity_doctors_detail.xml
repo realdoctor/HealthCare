@@ -39,7 +39,7 @@
                     android:layout_marginRight="18.0dip"
                     android:layout_weight="1"
                     android:background="@drawable/button_selector"
-                    android:text="通讯复诊"
+                    android:text="@string/communication_review"
                     android:textColor="@android:color/white"
                     android:textSize="15.0sp" />
 
@@ -51,9 +51,22 @@
                     android:layout_marginRight="18.0dip"
                     android:layout_weight="1"
                     android:background="@drawable/button_selector"
-                    android:text="图文复诊"
+                    android:text="@string/graphic_text_review"
                     android:textColor="@android:color/white"
                     android:textSize="15.0sp" />
+
+                <Button
+                    android:id="@+id/edu_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="43.0dip"
+                    android:layout_marginLeft="18.0dip"
+                    android:layout_marginRight="18.0dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_selector"
+                    android:text="@string/function_six_string"
+                    android:textColor="@android:color/white"
+                    android:textSize="15.0sp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/registrations_btn"
