@@ -14,7 +14,7 @@ import com.real.doctor.realdoc.greendao.UserBeanDao;
 import com.real.doctor.realdoc.model.RecieverAddressListBean;
 import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.util.EmptyUtils;
-import com.real.doctor.realdoc.util.PreferenceManager;
+import com.real.doctor.realdoc.util.HuanXinPreferenceManager;
 import com.real.doctor.realdoc.widget.Constant;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -48,7 +48,7 @@ public class RecieverAddressListManager {
             synchronized (RecieverAddressListManager.class) {
                 if (mInstance == null) {
                     mInstance = new RecieverAddressListManager(context);
-                    PreferenceManager.init(context);
+                    HuanXinPreferenceManager.init(context);
                 }
             }
         }

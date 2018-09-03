@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -52,7 +53,8 @@ import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.parse.UserProfileManager;
 import com.real.doctor.realdoc.receiver.CallReceiver;
 import com.real.doctor.realdoc.receiver.HeadsetReceiver;
-import com.real.doctor.realdoc.util.PreferenceManager;
+import com.real.doctor.realdoc.util.EmptyUtils;
+import com.real.doctor.realdoc.util.HuanXinPreferenceManager;
 import com.real.doctor.realdoc.view.EmojiconExampleGroupData;
 
 import java.util.ArrayList;
@@ -183,7 +185,7 @@ public class HuanXinHelper {
             //to set user's profile and avatar
             setEaseUIProviders();
             //initialize preference manager
-            PreferenceManager.init(context);
+            HuanXinPreferenceManager.init(context);
             //initialize profile manager
             getUserProfileManager().init(context);
             //set Call options
@@ -401,17 +403,34 @@ public class HuanXinHelper {
         // To get instance of EaseUser, here we get it from the user list in memory
         // You'd better cache it if you get it from your server
         EaseUser user = null;
-        if (username.equals(EMClient.getInstance().getCurrentUser()))
-            return getUserProfileManager().getCurrentUserInfo();
+//        if (username.equals(EMClient.getInstance().getCurrentUser()))
+//            return getUserProfileManager().getCurrentUserInfo();
         user = getContactList().get(username);
         if (user == null && robotInstance.getRobotList(RealDocApplication.getDaoSession(RealDocApplication.getContext())) != null) {
             user = robotInstance.getRobotList(RealDocApplication.getDaoSession(RealDocApplication.getContext())).get(username);
-        }
-
-        // if user is not in your contacts, set inital letter for him/her
-        if (user == null) {
-            user = new EaseUser(username);
-            EaseCommonUtils.setUserInitialLetter(user);
+        } else {
+            SharedPreferences sp = appContext.getSharedPreferences("share_data",
+                    Context.MODE_PRIVATE);
+            String fromRealName = sp.getString("fromRealName", "");
+            String fromImageUrl = sp.getString("fromImageUrl", "");
+            String realName = sp.getString("realName", "");
+            String imageUrl = sp.getString("originalImageUrl", "");
+            String mobile = sp.getString("mobile", "");
+            // if user is not in your contacts, set inital letter for him/her
+            if (EmptyUtils.isEmpty(realName) && EmptyUtils.isEmpty(imageUrl) && EmptyUtils.isNotEmpty(fromRealName) && EmptyUtils.isNotEmpty(fromImageUrl)) {
+                user = new EaseUser(username);
+                EaseCommonUtils.setUserInitialLetter(user);
+            } else {
+                EaseUser easeUser = new EaseUser(username);
+                if (username.equals(mobile)) {
+                    easeUser.setNick(realName);
+                    easeUser.setAvatar(imageUrl);
+                } else{
+                    easeUser.setNick(fromRealName);
+                    easeUser.setAvatar(fromImageUrl);
+                }
+                return easeUser;
+            }
         }
         return user;
     }
@@ -467,25 +486,25 @@ public class HuanXinHelper {
         appContext.registerReceiver(headsetReceiver, headsetFilter);
 
         // min video kbps
-        int minBitRate = PreferenceManager.getInstance().getCallMinVideoKbps();
+        int minBitRate = HuanXinPreferenceManager.getInstance().getCallMinVideoKbps();
         if (minBitRate != -1) {
             EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(minBitRate);
         }
 
         // max video kbps
-        int maxBitRate = PreferenceManager.getInstance().getCallMaxVideoKbps();
+        int maxBitRate = HuanXinPreferenceManager.getInstance().getCallMaxVideoKbps();
         if (maxBitRate != -1) {
             EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(maxBitRate);
         }
 
         // max frame rate
-        int maxFrameRate = PreferenceManager.getInstance().getCallMaxFrameRate();
+        int maxFrameRate = HuanXinPreferenceManager.getInstance().getCallMaxFrameRate();
         if (maxFrameRate != -1) {
             EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(maxFrameRate);
         }
 
         // audio sample rate
-        int audioSampleRate = PreferenceManager.getInstance().getCallAudioSampleRate();
+        int audioSampleRate = HuanXinPreferenceManager.getInstance().getCallAudioSampleRate();
         if (audioSampleRate != -1) {
             EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(audioSampleRate);
         }
@@ -500,9 +519,9 @@ public class HuanXinHelper {
         //EMClient.getInstance().callManager().getVideoCallHelper().setPreferMovFormatEnable(true);
 
         // resolution
-        String resolution = PreferenceManager.getInstance().getCallBackCameraResolution();
+        String resolution = HuanXinPreferenceManager.getInstance().getCallBackCameraResolution();
         if (resolution.equals("")) {
-            resolution = PreferenceManager.getInstance().getCallFrontCameraResolution();
+            resolution = HuanXinPreferenceManager.getInstance().getCallFrontCameraResolution();
         }
         String[] wh = resolution.split("x");
         if (wh.length == 2) {
@@ -514,14 +533,14 @@ public class HuanXinHelper {
         }
 
         // enabled fixed sample rate
-        boolean enableFixSampleRate = PreferenceManager.getInstance().isCallFixedVideoResolution();
+        boolean enableFixSampleRate = HuanXinPreferenceManager.getInstance().isCallFixedVideoResolution();
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(enableFixSampleRate);
 
         // Offline call push
         EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(userInstance.isPushCall());
 
         // 设置会议模式
-        if (PreferenceManager.getInstance().isLargeConferenceMode()) {
+        if (HuanXinPreferenceManager.getInstance().isLargeConferenceMode()) {
             EMClient.getInstance().conferenceManager().setConferenceMode(EMConferenceListener.ConferenceMode.LARGE);
         } else {
             EMClient.getInstance().conferenceManager().setConferenceMode(EMConferenceListener.ConferenceMode.NORMAL);
@@ -824,11 +843,11 @@ public class HuanXinHelper {
     }
 
     public boolean isMsgRoaming() {
-        return PreferenceManager.getInstance().isMsgRoaming();
+        return HuanXinPreferenceManager.getInstance().isMsgRoaming();
     }
 
     public void setMsgRoaming(boolean roaming) {
-        PreferenceManager.getInstance().setMsgRoaming(roaming);
+        HuanXinPreferenceManager.getInstance().setMsgRoaming(roaming);
     }
 
     /**

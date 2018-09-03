@@ -9,10 +9,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,6 +31,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -69,6 +73,9 @@ import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -93,6 +100,7 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
     protected Bundle fragmentArgs;
     protected int chatType;
     protected String toChatUsername;
+    protected String mobilePhone;
     protected EaseChatMessageList messageList;
     protected EaseChatInputMenu inputMenu;
 
@@ -151,6 +159,7 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
         chatType = fragmentArgs.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
         // userId you are chat with or group id
         toChatUsername = fragmentArgs.getString(EaseConstant.EXTRA_USER_ID);
+        mobilePhone = fragmentArgs.getString("mobilePhone");
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -623,7 +632,12 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
             }
             String realName = message.getStringAttribute("realName", null);
             String imageUrl = message.getStringAttribute("imageUrl", null);
-            // 将自己服务器返回的环信账号、昵称和头像URL设置到帮助类中。
+            SharedPreferences sp = getActivity().getSharedPreferences("share_data",
+                    Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("fromRealName", realName);
+            editor.putString("fromImageUrl", imageUrl);
+            editor.commit();
             // if the message is for current conversation
             if (username.equals(toChatUsername) || message.getTo().equals(toChatUsername) || message.conversationId().equals(toChatUsername)) {
                 messageList.refreshSelectLast();
@@ -634,6 +648,27 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
             }
         }
     }
+
+    //加载图片
+    public Bitmap getURLimage(String url) {
+        Bitmap bmp = null;
+        try {
+            URL myurl = new URL(url);
+            // 获得连接
+            HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
+            conn.setConnectTimeout(6000);//设置超时
+            conn.setDoInput(true);
+            conn.setUseCaches(true);//不缓存
+            conn.connect();
+            InputStream is = conn.getInputStream();//获得图片的数据流
+            bmp = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bmp;
+    }
+
 
     @Override
     public void onCmdMessageReceived(List<EMMessage> messages) {
@@ -758,7 +793,6 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
                     EaseAtMessageHelper.get().atListToJsonArray(EaseAtMessageHelper.get().getAtMessageUsernames(content)));
         }
         sendMessage(message);
-
     }
 
 
@@ -794,7 +828,6 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
 
 
     protected void sendMessage(EMMessage message) {
-//        sendCmdMessage();
         if (message == null) {
             return;
         }
@@ -1250,6 +1283,7 @@ public abstract class EaseChatFragment extends EaseBaseFragment implements EMMes
          * @return
          */
         EaseCustomChatRowProvider onSetCustomChatRowProvider();
+
     }
 
     /**

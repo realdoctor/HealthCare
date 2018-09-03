@@ -77,6 +77,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
     private String payType;
     private String doctorUserId;
     private String patientRecordId;
+    private String respDoctorName;
     private String desease;
     private boolean detail;
     private String userId;
@@ -110,6 +111,7 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
         doctorUserId = getIntent().getStringExtra("doctorUserId");
         desease = getIntent().getStringExtra("desease");
         patientRecordId = getIntent().getStringExtra("patientRecordId");
+        respDoctorName = getIntent().getStringExtra("respDoctorName");
         detail = getIntent().getBooleanExtra("detail", false);
         focusFlag = getIntent().getStringExtra("focusFlag");
         mobilePhone = getIntent().getStringExtra("mobile");
@@ -535,6 +537,9 @@ public class ChatPayActivity extends BaseActivity implements CompoundButton.OnCh
 
     private void goToNextStep() {
         if (payType.equals("1")) {
+            //聊天所需的头像,名称
+            SPUtils.put(this, "fromRealName", respDoctorName);
+            SPUtils.put(this, "fromImageUrl", "");
             //点击进入聊天页
             Intent intent = new Intent(ChatPayActivity.this, ChatActivity.class);
             intent.putExtra("userId", mobilePhone);

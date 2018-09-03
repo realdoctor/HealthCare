@@ -45,6 +45,7 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 intent.putExtra("payType", "1");
                 intent.putExtra("doctorUserId", item.getId());
                 intent.putExtra("desease", item.getDiagName());
+                intent.putExtra("respDoctorName", item.getName());
                 intent.putExtra("patientRecordId", item.getPatientRecordId());
                 intent.putExtra("mobile", item.getMobile());
                 context.startActivity(intent);
@@ -72,7 +73,7 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 intent.putExtra("hospitalId", item.getHospitalId());
                 intent.putExtra("doctorCode", item.getDoctorCode());
                 intent.putExtra("deptCode", item.getDeptCode());
-                ((Activity) context). startActivityForResult(intent, DoctorsListActivity.REQUEST_CODE_NO_EXPERT);
+                ((Activity) context).startActivityForResult(intent, DoctorsListActivity.REQUEST_CODE_NO_EXPERT);
             }
         });
     }

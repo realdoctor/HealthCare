@@ -13,7 +13,7 @@ import com.real.doctor.realdoc.greendao.NewFriendsMsgsDao;
 import com.real.doctor.realdoc.greendao.UserBeanDao;
 import com.real.doctor.realdoc.model.UserBean;
 import com.real.doctor.realdoc.util.EmptyUtils;
-import com.real.doctor.realdoc.util.PreferenceManager;
+import com.real.doctor.realdoc.util.HuanXinPreferenceManager;
 import com.real.doctor.realdoc.widget.Constant;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -51,7 +51,7 @@ public class UserManager {
             synchronized (UserManager.class) {
                 if (mInstance == null) {
                     mInstance = new UserManager(context);
-                    PreferenceManager.init(context);
+                    HuanXinPreferenceManager.init(context);
                 }
             }
         }
@@ -189,15 +189,15 @@ public class UserManager {
      * @param username
      */
     public void setCurrentUserName(String username) {
-        PreferenceManager.getInstance().setCurrentUserName(username);
+        HuanXinPreferenceManager.getInstance().setCurrentUserName(username);
     }
 
     public String getCurrentUsernName() {
-        return PreferenceManager.getInstance().getCurrentUsername();
+        return HuanXinPreferenceManager.getInstance().getCurrentUsername();
     }
 
     public void setSettingMsgNotification(boolean paramBoolean) {
-        PreferenceManager.getInstance().setSettingMsgNotification(paramBoolean);
+        HuanXinPreferenceManager.getInstance().setSettingMsgNotification(paramBoolean);
         valueCache.put(Key.VibrateAndPlayToneOn, paramBoolean);
     }
 
@@ -205,7 +205,7 @@ public class UserManager {
         Object val = valueCache.get(Key.VibrateAndPlayToneOn);
 
         if (val == null) {
-            val = PreferenceManager.getInstance().getSettingMsgNotification();
+            val = HuanXinPreferenceManager.getInstance().getSettingMsgNotification();
             valueCache.put(Key.VibrateAndPlayToneOn, val);
         }
 
@@ -213,47 +213,47 @@ public class UserManager {
     }
 
     public void setSettingMsgSound(boolean paramBoolean) {
-        PreferenceManager.getInstance().setSettingMsgSound(paramBoolean);
+        HuanXinPreferenceManager.getInstance().setSettingMsgSound(paramBoolean);
         valueCache.put(Key.PlayToneOn, paramBoolean);
     }
 
     public String getCutomAppkey() {
-        return PreferenceManager.getInstance().getCustomAppkey();
+        return HuanXinPreferenceManager.getInstance().getCustomAppkey();
     }
 
     public boolean isCustomServerEnable() {
-        return PreferenceManager.getInstance().isCustomServerEnable();
+        return HuanXinPreferenceManager.getInstance().isCustomServerEnable();
     }
 
     public String getRestServer() {
-        return PreferenceManager.getInstance().getRestServer();
+        return HuanXinPreferenceManager.getInstance().getRestServer();
     }
 
     public void setIMServer(String imServer) {
-        PreferenceManager.getInstance().setIMServer(imServer);
+        HuanXinPreferenceManager.getInstance().setIMServer(imServer);
     }
 
     public String getIMServer() {
-        return PreferenceManager.getInstance().getIMServer();
+        return HuanXinPreferenceManager.getInstance().getIMServer();
     }
 
     public boolean isCustomAppkeyEnabled() {
-        return PreferenceManager.getInstance().isCustomAppkeyEnabled();
+        return HuanXinPreferenceManager.getInstance().isCustomAppkeyEnabled();
     }
 
     public boolean isSetTransferFileByUser() {
-        return PreferenceManager.getInstance().isSetTransferFileByUser();
+        return HuanXinPreferenceManager.getInstance().isSetTransferFileByUser();
     }
 
     public boolean isSetAutodownloadThumbnail() {
-        return PreferenceManager.getInstance().isSetAutodownloadThumbnail();
+        return HuanXinPreferenceManager.getInstance().isSetAutodownloadThumbnail();
     }
 
     public boolean getSettingMsgSpeaker() {
         Object val = valueCache.get(Key.SpakerOn);
 
         if (val == null) {
-            val = PreferenceManager.getInstance().getSettingMsgSpeaker();
+            val = HuanXinPreferenceManager.getInstance().getSettingMsgSpeaker();
             valueCache.put(Key.SpakerOn, val);
         }
 
@@ -264,7 +264,7 @@ public class UserManager {
         Object val = valueCache.get(Key.VibrateOn);
 
         if (val == null) {
-            val = PreferenceManager.getInstance().getSettingMsgVibrate();
+            val = HuanXinPreferenceManager.getInstance().getSettingMsgVibrate();
             valueCache.put(Key.VibrateOn, val);
         }
 
@@ -275,7 +275,7 @@ public class UserManager {
         Object val = valueCache.get(Key.PlayToneOn);
 
         if (val == null) {
-            val = PreferenceManager.getInstance().getSettingMsgSound();
+            val = HuanXinPreferenceManager.getInstance().getSettingMsgSound();
             valueCache.put(Key.PlayToneOn, val);
         }
 
@@ -283,39 +283,39 @@ public class UserManager {
     }
 
     public boolean isContactSynced() {
-        return PreferenceManager.getInstance().isContactSynced();
+        return HuanXinPreferenceManager.getInstance().isContactSynced();
     }
 
     public boolean isGroupsSynced() {
-        return PreferenceManager.getInstance().isGroupsSynced();
+        return HuanXinPreferenceManager.getInstance().isGroupsSynced();
     }
 
     public boolean isBacklistSynced() {
-        return PreferenceManager.getInstance().isBacklistSynced();
+        return HuanXinPreferenceManager.getInstance().isBacklistSynced();
     }
 
     public boolean isPushCall() {
-        return PreferenceManager.getInstance().isPushCall();
+        return HuanXinPreferenceManager.getInstance().isPushCall();
     }
 
     public boolean isChatroomOwnerLeaveAllowed() {
-        return PreferenceManager.getInstance().getSettingAllowChatroomOwnerLeave();
+        return HuanXinPreferenceManager.getInstance().getSettingAllowChatroomOwnerLeave();
     }
 
     public boolean isDeleteMessagesAsExitGroup() {
-        return PreferenceManager.getInstance().isDeleteMessagesAsExitGroup();
+        return HuanXinPreferenceManager.getInstance().isDeleteMessagesAsExitGroup();
     }
 
     public boolean isAutoAcceptGroupInvitation() {
-        return PreferenceManager.getInstance().isAutoAcceptGroupInvitation();
+        return HuanXinPreferenceManager.getInstance().isAutoAcceptGroupInvitation();
     }
 
     public void setGroupsSynced(boolean synced) {
-        PreferenceManager.getInstance().setGroupsSynced(synced);
+        HuanXinPreferenceManager.getInstance().setGroupsSynced(synced);
     }
 
     public void setBlacklistSynced(boolean synced) {
-        PreferenceManager.getInstance().setBlacklistSynced(synced);
+        HuanXinPreferenceManager.getInstance().setBlacklistSynced(synced);
     }
 
     enum Key {

@@ -5,7 +5,7 @@ import android.content.Context;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
-import com.real.doctor.realdoc.util.PreferenceManager;
+import com.real.doctor.realdoc.util.HuanXinPreferenceManager;
 import com.real.doctor.realdoc.widget.HuanXinHelper;
 
 import java.util.ArrayList;
@@ -109,7 +109,7 @@ public class UserProfileManager {
 	public synchronized void reset() {
 		isSyncingContactInfosWithServer = false;
 		currentUser = null;
-		PreferenceManager.getInstance().removeCurrentUserInfo();
+		HuanXinPreferenceManager.getInstance().removeCurrentUserInfo();
 	}
 
 	public synchronized EaseUser getCurrentUserInfo() {
@@ -162,20 +162,20 @@ public class UserProfileManager {
 	}
 	private void setCurrentUserNick(String nickname) {
 		getCurrentUserInfo().setNick(nickname);
-		PreferenceManager.getInstance().setCurrentUserNick(nickname);
+		HuanXinPreferenceManager.getInstance().setCurrentUserNick(nickname);
 	}
 
 	private void setCurrentUserAvatar(String avatar) {
 		getCurrentUserInfo().setAvatar(avatar);
-		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
+		HuanXinPreferenceManager.getInstance().setCurrentUserAvatar(avatar);
 	}
 
 	private String getCurrentUserNick() {
-		return PreferenceManager.getInstance().getCurrentUserNick();
+		return HuanXinPreferenceManager.getInstance().getCurrentUserNick();
 	}
 
 	private String getCurrentUserAvatar() {
-		return PreferenceManager.getInstance().getCurrentUserAvatar();
+		return HuanXinPreferenceManager.getInstance().getCurrentUserAvatar();
 	}
 
 }
