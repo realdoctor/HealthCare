@@ -405,7 +405,13 @@ public class HuanXinHelper {
         EaseUser user = null;
 //        if (username.equals(EMClient.getInstance().getCurrentUser()))
 //            return getUserProfileManager().getCurrentUserInfo();
-        user = getContactList().get(username);
+        if (EmptyUtils.isNotEmpty(username)) {
+            user = getContactList().get(username);
+        }else{
+            user = new EaseUser(username);
+            EaseCommonUtils.setUserInitialLetter(user);
+            return user;
+        }
         if (user == null && robotInstance.getRobotList(RealDocApplication.getDaoSession(RealDocApplication.getContext())) != null) {
             user = robotInstance.getRobotList(RealDocApplication.getDaoSession(RealDocApplication.getContext())).get(username);
         } else {
@@ -422,10 +428,10 @@ public class HuanXinHelper {
                 EaseCommonUtils.setUserInitialLetter(user);
             } else {
                 EaseUser easeUser = new EaseUser(username);
-                if (username.equals(mobile)) {
+                if (EmptyUtils.isNotEmpty(username) && username.equals(mobile)) {
                     easeUser.setNick(realName);
                     easeUser.setAvatar(imageUrl);
-                } else{
+                } else {
                     easeUser.setNick(fromRealName);
                     easeUser.setAvatar(fromImageUrl);
                 }

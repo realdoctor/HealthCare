@@ -41,6 +41,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         public final static Property PatientRecordId = new Property(14, String.class, "patientRecordId", false, "PATIENT_RECORD_ID");
         public final static Property IsSelect = new Property(15, boolean.class, "isSelect", false, "IS_SELECT");
         public final static Property IsPatient = new Property(16, String.class, "isPatient", false, "IS_PATIENT");
+        public final static Property MobilePhone = new Property(17, String.class, "mobilePhone", false, "MOBILE_PHONE");
     }
 
     private DaoSession daoSession;
@@ -75,7 +76,8 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
                 "\"VISIT_WAY\" TEXT," + // 13: visitWay
                 "\"PATIENT_RECORD_ID\" TEXT," + // 14: patientRecordId
                 "\"IS_SELECT\" INTEGER NOT NULL ," + // 15: isSelect
-                "\"IS_PATIENT\" TEXT);"); // 16: isPatient
+                "\"IS_PATIENT\" TEXT," + // 16: isPatient
+                "\"MOBILE_PHONE\" TEXT);"); // 17: mobilePhone
     }
 
     /** Drops the underlying database table. */
@@ -168,6 +170,11 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         if (isPatient != null) {
             stmt.bindString(17, isPatient);
         }
+ 
+        String mobilePhone = entity.getMobilePhone();
+        if (mobilePhone != null) {
+            stmt.bindString(18, mobilePhone);
+        }
     }
 
     @Override
@@ -254,6 +261,11 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         if (isPatient != null) {
             stmt.bindString(17, isPatient);
         }
+ 
+        String mobilePhone = entity.getMobilePhone();
+        if (mobilePhone != null) {
+            stmt.bindString(18, mobilePhone);
+        }
     }
 
     @Override
@@ -286,7 +298,8 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // visitWay
             cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // patientRecordId
             cursor.getShort(offset + 15) != 0, // isSelect
-            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // isPatient
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // isPatient
+            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17) // mobilePhone
         );
         return entity;
     }
@@ -310,6 +323,7 @@ public class SaveDocBeanDao extends AbstractDao<SaveDocBean, String> {
         entity.setPatientRecordId(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
         entity.setIsSelect(cursor.getShort(offset + 15) != 0);
         entity.setIsPatient(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
+        entity.setMobilePhone(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
      }
     
     @Override

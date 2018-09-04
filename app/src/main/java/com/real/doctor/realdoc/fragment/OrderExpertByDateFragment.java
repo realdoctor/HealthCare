@@ -53,11 +53,14 @@ import io.reactivex.disposables.Disposable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Administrator on 2018/4/18.
  */
 
 public class OrderExpertByDateFragment extends BaseFragment implements ExpertByDateAdapter.MyClickListener {
+
     @BindView(R.id.hlv_date)
     HorizontalListView horizontalListView;
     @BindView(R.id.lv_expert)
@@ -179,7 +182,6 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                                             new TypeToken<ArrayList<ExpertBean>>() {
                                             }.getType()));
                                     expertAdapter.notifyDataSetChanged();
-
                                 } else {
                                 }
                             } catch (JSONException e) {
@@ -240,6 +242,14 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                                     JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
+                                    if (weekList.size() > 0) {
+                                        orderDateAdapter.notifyDataSetChanged();
+                                        selectDefault();
+                                    } else {
+                                        getActivity().setResult(RESULT_OK);
+                                        getActivity().finish();
+                                        return;
+                                    }
                                     weekList.addAll((ArrayList<WeekModel>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<WeekModel>>() {
                                             }.getType()));

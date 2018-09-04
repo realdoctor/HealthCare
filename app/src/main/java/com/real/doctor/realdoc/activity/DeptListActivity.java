@@ -26,6 +26,7 @@ import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.view.DocContentDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +64,9 @@ public class DeptListActivity extends BaseActivity {
     RightAdapter rightAdapter;
     private String hospitalId;
     private boolean isFirst = true;
+    private DocContentDialog dialog;
+    //该医生无法预约
+    private static final int REQUEST_CODE_NO_EXPERT = 0x100;
 
     @Override
     public int getLayoutId() {
@@ -115,7 +119,7 @@ public class DeptListActivity extends BaseActivity {
                     Intent intent = new Intent(DeptListActivity.this, OrderExpertActivity.class);
                     intent.putExtra("hospitalId", hospitalId);
                     intent.putExtra("deptCode", dBean.deptCode);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_NO_EXPERT);
                 }
             });
         }
@@ -203,5 +207,22 @@ public class DeptListActivity extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_NO_EXPERT) {
+            //如果医生无法预约,弹出对话框提示
+            dialog = new DocContentDialog(DeptListActivity.this, "该医生无法预约!").builder()
+                    .setCancelable(false)
+                    .setCanceledOnTouchOutside(true)
+                    .setConfirmBtn(new DocContentDialog.ConfirmListener() {
+                        @Override
+                        public void onConfirmClick() {
+                            dialog.dismiss();
+                        }
+                    }).show();
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -15,6 +16,7 @@ import com.real.doctor.realdoc.activity.OrderExpertByDateActivity;
 import com.real.doctor.realdoc.activity.RegistrationsActivity;
 import com.real.doctor.realdoc.model.DoctorBean;
 import com.real.doctor.realdoc.util.DateUtil;
+import com.real.doctor.realdoc.util.GlideUtils;
 import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.view.CircleImageView;
@@ -32,10 +34,12 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
 
     @Override
     protected void convert(BaseViewHolder helper, final DoctorBean item) {
-        helper.setText(R.id.doctor_name, item.getName())
+        helper.setText(R.id.doctor_name, item.getRespDoctorName())
                 .setText(R.id.hospital_name, item.getVisitOrgName())
                 .setText(R.id.desease_name, item.getDiagName())
                 .setText(R.id.visit_date, DateUtil.timeStamp2Date(item.getVisitDtime(), "yyyy年MM月dd日 HH:mm"));
+        ImageView imageView = helper.getView(R.id.doctor_avater);
+        GlideUtils.loadImageViewDiskCache(mContext,item.getAvater(), imageView);
         CircleImageView chatView = helper.getView(R.id.chat);
         chatView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +49,8 @@ public class DoctorsAdapter extends BaseQuickAdapter<DoctorBean, BaseViewHolder>
                 intent.putExtra("payType", "1");
                 intent.putExtra("doctorUserId", item.getId());
                 intent.putExtra("desease", item.getDiagName());
-                intent.putExtra("respDoctorName", item.getName());
+                intent.putExtra("respDoctorName", item.getRespDoctorName());
+                intent.putExtra("imageUrl", item.getAvater());
                 intent.putExtra("patientRecordId", item.getPatientRecordId());
                 intent.putExtra("mobile", item.getMobile());
                 context.startActivity(intent);

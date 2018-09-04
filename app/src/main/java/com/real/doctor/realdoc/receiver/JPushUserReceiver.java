@@ -43,6 +43,8 @@ public class JPushUserReceiver extends BroadcastReceiver {
     private static String tagId;
     private static String userId;
     private static String mobile;
+    private static String imageUrl;
+    private static String userName;
     private String myUserId;
     private String title;
     private PushInfoManager instance;
@@ -73,6 +75,21 @@ public class JPushUserReceiver extends BroadcastReceiver {
                 }
                 if (DocUtils.hasValue(object, "mobilePhone")) {
                     mobile = object.getString("mobilePhone");
+                }
+                if (DocUtils.hasValue(object, "imageUrl")) {
+                    imageUrl = object.getString("imageUrl");
+                }
+                if (DocUtils.hasValue(object, "userName")) {
+                    userName = object.getString("userName");
+                }
+                //聊天所需的头像,名称
+                if (EmptyUtils.isNotEmpty(userName)) {
+                    SPUtils.put(context, "fromRealName", userName);
+                }
+                if (EmptyUtils.isNotEmpty(imageUrl)) {
+                    SPUtils.put(context, "fromImageUrl", imageUrl);
+                } else {
+                    SPUtils.put(context, "fromImageUrl", "");
                 }
                 processTagId(context, info, tagId);
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {

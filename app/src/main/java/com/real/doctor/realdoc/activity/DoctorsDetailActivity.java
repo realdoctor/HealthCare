@@ -61,6 +61,8 @@ public class DoctorsDetailActivity extends BaseActivity {
     private String doctorCode;
     private String userId;
     private String hospitalId;
+    private String mobilePhone;
+    private String respDoctorName;
     private String mobile;
     private String doctorIntro;
     private DocContentDialog dialog;
@@ -90,6 +92,7 @@ public class DoctorsDetailActivity extends BaseActivity {
     public void initData() {
         userId = (String) SPUtils.get(DoctorsDetailActivity.this, Constants.USER_KEY, "");
         doctorUserId = getIntent().getStringExtra("doctorUserId");
+        respDoctorName = getIntent().getStringExtra("respDoctorName");
         desease = getIntent().getStringExtra("desease");
         mobile = getIntent().getStringExtra("mobile");
         patientRecordId = getIntent().getStringExtra("patientRecordId");
@@ -206,6 +209,7 @@ public class DoctorsDetailActivity extends BaseActivity {
                     intent.putExtra("payType", "1");
                     intent.putExtra("doctorUserId", doctorUserId);
                     intent.putExtra("desease", desease);
+                    intent.putExtra("respDoctorName", respDoctorName);
                     intent.putExtra("patientRecordId", patientRecordId);
                     intent.putExtra("mobile", mobile);
                     DoctorsDetailActivity.this.startActivity(intent);

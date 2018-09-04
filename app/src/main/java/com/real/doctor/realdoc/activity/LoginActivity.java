@@ -995,6 +995,10 @@ public class LoginActivity extends BaseActivity {
                                                         String patientRecordId = jsonObj.getString("patientRecordId");
                                                         bean.setPatientRecordId(patientRecordId);
                                                     }
+                                                    if (DocUtils.hasValue(jsonObj, "mobilePhone")) {
+                                                        String mobilePhone = jsonObj.getString("mobilePhone");
+                                                        bean.setMobilePhone(mobilePhone);
+                                                    }
                                                     //插入到数据库中
                                                     if (!time.contains(bean.getTime())) {
                                                         bean.setId(String.valueOf(Math.random()));
@@ -1087,7 +1091,7 @@ public class LoginActivity extends BaseActivity {
                                     break;
                                 // 用户已存在
                                 case EMError.USER_ALREADY_EXIST:
-                                    ToastUtil.showLong(LoginActivity.this, "用户已存在 code: " + errorCode + ", message:" + message);
+//                                  ToastUtil.showLong(LoginActivity.this, "用户已存在 code: " + errorCode + ", message:" + message);
                                     break;
                                 // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
                                 case EMError.USER_ILLEGAL_ARGUMENT:

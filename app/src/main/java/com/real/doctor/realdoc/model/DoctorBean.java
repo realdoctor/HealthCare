@@ -12,6 +12,7 @@ public class DoctorBean extends UserBean implements Parcelable {
     private String doctorCode;
     //    private String doctorImg;
     private String visitOrgName;
+    private String respDoctorName;
     @SerializedName(value = "diagName", alternate = {"title"})
     private String diagName;
     private String visitDtime;
@@ -32,6 +33,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         super(in);
         doctorCode = in.readString();
         visitOrgName = in.readString();
+        respDoctorName = in.readString();
         diagName = in.readString();
         visitDtime = in.readString();
         questionId = in.readString();
@@ -52,6 +54,7 @@ public class DoctorBean extends UserBean implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeString(doctorCode);
         dest.writeString(visitOrgName);
+        dest.writeString(respDoctorName);
         dest.writeString(diagName);
         dest.writeString(visitDtime);
         dest.writeString(questionId);
@@ -98,6 +101,14 @@ public class DoctorBean extends UserBean implements Parcelable {
 
     public void setVisitOrgName(String visitOrgName) {
         this.visitOrgName = visitOrgName;
+    }
+
+    public String getRespDoctorName() {
+        return respDoctorName;
+    }
+
+    public void setRespDoctorName(String respDoctorName) {
+        this.respDoctorName = respDoctorName;
     }
 
     public String getDiagName() {

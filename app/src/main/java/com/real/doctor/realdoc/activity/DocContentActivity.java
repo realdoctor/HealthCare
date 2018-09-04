@@ -390,9 +390,13 @@ public class DocContentActivity extends BaseActivity {
                     String doctorUserId = saveDocBean.getDoctorUserId();
                     String desease = saveDocBean.getIll();
                     String patientRecordId = saveDocBean.getPatientRecordId();
+                    String respDoctorName = saveDocBean.getDoctor();
+                    String mobilePhone = saveDocBean.getMobilePhone();
                     if (EmptyUtils.isNotEmpty(doctorUserId) && EmptyUtils.isNotEmpty(desease)) {
                         Intent intent = new Intent(DocContentActivity.this, DoctorsDetailActivity.class);
                         intent.putExtra("doctorUserId", doctorUserId);
+                        intent.putExtra("respDoctorName", respDoctorName);
+                        intent.putExtra("mobile", mobilePhone);
                         intent.putExtra("patientRecordId", patientRecordId);
                         intent.putExtra("desease", desease);
                         startActivity(intent);
@@ -454,16 +458,20 @@ public class DocContentActivity extends BaseActivity {
                                 if (msg.equals("ok") && code.equals("0")) {
                                     if (DocUtils.hasValue(object, "data")) {
                                         JSONObject obj = object.getJSONObject("data");
-                                        if (DocUtils.hasValue(obj, "doctorUserId") && DocUtils.hasValue(obj, "doctorIntro") && DocUtils.hasValue(obj, "deptCode") && DocUtils.hasValue(obj, "hospitalId") && DocUtils.hasValue(obj, "doctorCode")) {
+                                        if (DocUtils.hasValue(obj, "doctorUserId") && DocUtils.hasValue(obj, "doctorIntro") && DocUtils.hasValue(obj, "deptCode") && DocUtils.hasValue(obj, "hospitalId") && DocUtils.hasValue(obj, "doctorCode") && DocUtils.hasValue(obj, "doctorName")) {
                                             String doctorUserId = obj.getString("doctorUserId");
                                             String doctorIntro = obj.getString("doctorIntro");
                                             String deptCode = obj.getString("deptCode");
                                             String hospitalId = obj.getString("hospitalId");
                                             String doctorCode = obj.getString("doctorCode");
+                                            String doctorName = obj.getString("doctorName");
+                                            String mobilePhone = obj.getString("mobilePhone");
                                             Intent intent = new Intent(DocContentActivity.this, DoctorsDetailActivity.class);
                                             intent.putExtra("doctorUserId", doctorUserId);
                                             intent.putExtra("patientRecordId", "0");
                                             intent.putExtra("doctorIntro", doctorIntro);
+                                            intent.putExtra("mobile", mobilePhone);
+                                            intent.putExtra("respDoctorName", doctorName);
                                             intent.putExtra("deptCode", deptCode);
                                             intent.putExtra("hospitalId", hospitalId);
                                             intent.putExtra("doctorCode", doctorCode);

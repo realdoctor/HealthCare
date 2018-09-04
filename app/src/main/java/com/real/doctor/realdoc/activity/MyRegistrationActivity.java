@@ -1,5 +1,6 @@
 package com.real.doctor.realdoc.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
+import com.real.doctor.realdoc.util.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -47,6 +49,7 @@ import okhttp3.ResponseBody;
  */
 
 public class MyRegistrationActivity extends BaseActivity {
+
     @BindView(R.id.lv_registration)
     ListView lv_registration;
     @BindView(R.id.finish_back)
@@ -59,7 +62,8 @@ public class MyRegistrationActivity extends BaseActivity {
     SmartRefreshLayout refreshLayout;
     RegistrationAdapter registrationAdapter;
     ArrayList<RegistrationModel> registrationModelArrayList = new ArrayList<RegistrationModel>();
-    private String userid;
+    private String userId;
+    private Dialog mProgressDialog;
     private int mPageNum = 1;
 
     @Override
@@ -70,6 +74,7 @@ public class MyRegistrationActivity extends BaseActivity {
     @Override
     public void initView() {
         ButterKnife.bind(this);
+        mProgressDialog = DocUtils.getProgressDialog(this, "正在加载数据....");
     }
 
     @Override
@@ -82,7 +87,7 @@ public class MyRegistrationActivity extends BaseActivity {
             titleBar.setLayoutParams(lp);
         }
         page_title.setText("我的预约");
-        userid = (String) SPUtils.get(MyRegistrationActivity.this, Constants.USER_KEY, "");
+        userId = (String) SPUtils.get(MyRegistrationActivity.this, Constants.USER_KEY, "");
         registrationAdapter = new RegistrationAdapter(MyRegistrationActivity.this, registrationModelArrayList);
         lv_registration.setAdapter(registrationAdapter);
     }
@@ -110,11 +115,12 @@ public class MyRegistrationActivity extends BaseActivity {
     }
 
     private void getData(String pageNum) {
+        mProgressDialog.show();
         HashMap<String, Object> param = new HashMap<>();
-        param.put("userid", userid);
+        param.put("userId", userId);
         param.put("pageNum", pageNum);
         param.put("pageSize", "10");
-        HttpRequestClient.getInstance(MyRegistrationActivity.this).createBaseApi().get(" user/myGuahaoOrder/"
+        HttpRequestClient.getInstance(MyRegistrationActivity.this).createBaseApi().get("user/myGuahaoOrder/"
                 , param, new BaseObserver<ResponseBody>(MyRegistrationActivity.this) {
                     protected Disposable disposable;
 
@@ -125,6 +131,13 @@ public class MyRegistrationActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        if (mPageNum == 1) {
+                            refreshLayout.finishRefresh();
+                        } else {
+                            refreshLayout.finishLoadmore();
+                        }
+                        ToastUtil.showLong(MyRegistrationActivity.this, "获取我的预约列表失败!");
+                        mProgressDialog.dismiss();
                         Log.d(TAG, e.getMessage());
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
@@ -143,6 +156,7 @@ public class MyRegistrationActivity extends BaseActivity {
                         String data = null;
                         String msg = null;
                         String code = null;
+                        registrationModelArrayList.clear();
                         try {
                             data = responseBody.string().toString();
                             try {
@@ -154,16 +168,28 @@ public class MyRegistrationActivity extends BaseActivity {
                                     code = object.getString("code");
                                 }
                                 if (msg.equals("ok") && code.equals("0")) {
-                                    JSONArray jsonObject = object.getJSONArray("data");
-                                    Gson localGson = new GsonBuilder()
-                                            .create();
-                                    registrationModelArrayList.addAll((ArrayList<RegistrationModel>) localGson.fromJson(jsonObject.toString(),
-                                            new TypeToken<ArrayList<RegistrationModel>>() {
-                                            }.getType()));
-                                    registrationAdapter.notifyDataSetChanged();
-
+                                    if (DocUtils.hasValue(object, "data")) {
+                                        JSONObject obj = object.getJSONObject("data");
+                                        if (DocUtils.hasValue(obj, "list")) {
+                                            JSONArray jsonObject = obj.getJSONArray("list");
+                                            Gson localGson = new GsonBuilder()
+                                                    .create();
+                                            registrationModelArrayList.addAll((ArrayList<RegistrationModel>) localGson.fromJson(jsonObject.toString(),
+                                                    new TypeToken<ArrayList<RegistrationModel>>() {
+                                                    }.getType()));
+                                            registrationAdapter.notifyDataSetChanged();
+                                        }
+                                    }
                                 } else {
+                                    ToastUtil.showLong(MyRegistrationActivity.this, "获取我的预约列表失败!");
                                 }
+                                if (mPageNum == 1) {
+                                    refreshLayout.finishRefresh();
+                                } else {
+                                    refreshLayout.finishRefresh();
+                                    refreshLayout.finishLoadmore();
+                                }
+                                mProgressDialog.dismiss();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -13,11 +13,13 @@
         android:paddingTop="@dimen/dp_10">
 
         <ImageView
-            android:layout_width="75dp"
-            android:layout_height="68dp"
+            android:id="@+id/doctor_avater"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
-            android:background="@mipmap/ease_default_avatar" />
+            android:background="@mipmap/ease_default_avatar"
+            android:scaleType="fitXY" />
 
         <RelativeLayout
             android:layout_width="match_parent"

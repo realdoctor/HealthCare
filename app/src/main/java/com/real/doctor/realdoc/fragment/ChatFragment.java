@@ -88,6 +88,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
     private String doctorUserId;
     private String userId;
     private String realName;
+    private String originalImageUrl;
     protected Bundle fragmentArgs;
 
     @Override
@@ -147,6 +148,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
         mobile = (String) SPUtils.get(getActivity(), Constants.MOBILE, "");
         userId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
         realName = (String) SPUtils.get(getActivity(), Constants.REALNAME, "");
+        originalImageUrl = (String) SPUtils.get(getActivity(), Constants.ORIGINALIMAGEURL, "");
         //获取传递过来的数据
         fragmentArgs = getArguments();
         doctorUserId = fragmentArgs.getString(EaseConstant.EXTRA_DOCTOR_USER_ID);
@@ -333,6 +335,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
             json.put("content", realName + "向您发送了一条聊天消息!");
             json.put("userId", userId);
             json.put("mobilePhone", mobile);
+            json.put("userName", realName);
+            json.put("imageUrl", originalImageUrl);
             json.put("receiveId", doctorUserId);
         } catch (JSONException e) {
             e.printStackTrace();

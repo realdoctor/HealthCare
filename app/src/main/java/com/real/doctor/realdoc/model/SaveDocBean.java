@@ -85,6 +85,7 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     private boolean isSelect = false;
     //如果该字段是空,则该病历是本地的病历，否则如果是"1",就是患者传给医生的病历
     private String isPatient;
+    private String mobilePhone;
     @Transient
     private int type = 1;
     /**
@@ -98,12 +99,12 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     @Generated(hash = 225895165)
     private transient SaveDocBeanDao myDao;
 
-    @Generated(hash = 1379033457)
+    @Generated(hash = 593878873)
     public SaveDocBean(String id, String ill, String hospital, String doctor,
                        String doctorUserId, String time, String folder, String imgs,
                        String advice, String orgCode, String patientDiagId, String patientId,
                        String visitDeptName, String visitWay, String patientRecordId,
-                       boolean isSelect, String isPatient) {
+                       boolean isSelect, String isPatient, String mobilePhone) {
         this.id = id;
         this.ill = ill;
         this.hospital = hospital;
@@ -121,6 +122,7 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         this.patientRecordId = patientRecordId;
         this.isSelect = isSelect;
         this.isPatient = isPatient;
+        this.mobilePhone = mobilePhone;
     }
 
     @Generated(hash = 592665827)
@@ -148,6 +150,7 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         patientRecordId = in.readString();
         isSelect = in.readByte() != 0;
         isPatient = in.readString();
+        mobilePhone = in.readString();
         type = in.readInt();
     }
 
@@ -299,6 +302,27 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         this.isPatient = isPatient;
     }
 
+    public String getMobilePhone() {
+        return this.mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    @Override
+    public int getItemType() {
+        return type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     /**
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
@@ -438,19 +462,6 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
     }
 
     @Override
-    public int getItemType() {
-        return type;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }
@@ -477,6 +488,7 @@ public class SaveDocBean implements Parcelable, MultiItemEntity {
         dest.writeString(patientRecordId);
         dest.writeByte((byte) (isSelect ? 1 : 0));
         dest.writeString(isPatient);
+        dest.writeString(mobilePhone);
         dest.writeInt(type);
     }
 }
