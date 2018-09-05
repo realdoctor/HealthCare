@@ -45,7 +45,7 @@ public class AppointmentAddressActivity extends AppCompatActivity {
     TextView selectedAddressHeader;
 
     @OnClick(R.id.cancel)
-    void cancel(){
+    void cancel() {
         Intent resultIntent = new Intent();
         setResult(RESULT_CANCELED, resultIntent);
 
@@ -104,23 +104,19 @@ public class AppointmentAddressActivity extends AppCompatActivity {
                 adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
                         // set selected city
                         selectedCity = cities.get(position);
 
                         // don't show 热门地区 in the header, show only the city name
-                        if(selectedProvince.equals("热门地区"))
+                        if (selectedProvince.equals("热门地区")) {
                             selectedAddressHeader.setText(selectedCity);
-                        else
-                            selectedAddressHeader.setText(selectedProvince+selectedCity);
-
+                        } else {
+                            selectedAddressHeader.setText(selectedProvince + selectedCity);
+                        }
                         // return selected province and city
                         Intent resultIntent = new Intent();
-                        resultIntent.putExtra("province", selectedProvince);
                         resultIntent.putExtra("city", selectedCity);
-
                         setResult(RESULT_OK, resultIntent);
-
                         finish();
                     }
                 });
@@ -128,14 +124,14 @@ public class AppointmentAddressActivity extends AppCompatActivity {
         });
     }
 
-    public void initData(){
+    public void initData() {
         provinces = new ArrayList<>();
         populateProvinceList();
 
     }
 
 
-    public class AppointmentAddressAdapter extends BaseQuickAdapter<String, BaseViewHolder>{
+    public class AppointmentAddressAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
         List<String> data;
         String selectedListflag;
@@ -150,10 +146,10 @@ public class AppointmentAddressActivity extends AppCompatActivity {
         @Override
         protected void convert(BaseViewHolder helper, String item) {
 
-            helper.setText(R.id.appointment_address_text, item+"");
+            helper.setText(R.id.appointment_address_text, item + "");
 
             // select one item at a time in the province list
-            if(selectedListflag.equals("province"))
+            if (selectedListflag.equals("province"))
                 singleSelectItem(helper.itemView, data.indexOf(item), selectedProvincePosition);
 
         }
@@ -161,22 +157,23 @@ public class AppointmentAddressActivity extends AppCompatActivity {
     }
 
 
-
-    /** Populate lists  **/
-    public void populateProvinceList(){
+    /**
+     * Populate lists
+     **/
+    public void populateProvinceList() {
 
         // manually add 热门地区 to province list
         provinces.add("热门地区");
 
-        String jsonString  = parseJSON();
+        String jsonString = parseJSON();
 
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
-           // Log.e("jsonArray: ", jsonArray.toString());
+            // Log.e("jsonArray: ", jsonArray.toString());
 
-            for(int i = 0; i < jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject provincesObject = jsonArray.getJSONObject(i);
-               // Log.e("provincesObject: ", provincesObject.toString());
+                // Log.e("provincesObject: ", provincesObject.toString());
                 provincesObjectList.add(provincesObject);
 
                 Iterator<String> iter = provincesObject.keys();
@@ -186,17 +183,17 @@ public class AppointmentAddressActivity extends AppCompatActivity {
 
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e("populateProvinceList: ", e.getMessage());
         }
     }
 
-    public void populateCitiesList(String province, int position){
+    public void populateCitiesList(String province, int position) {
 
         cities.clear();
 
         // manually populate 热门地区 cities
-        if(province.equals("热门地区")) {
+        if (province.equals("热门地区")) {
             cities.add("全国");
             cities.add("上海");
             cities.add("北京");
@@ -212,7 +209,7 @@ public class AppointmentAddressActivity extends AppCompatActivity {
             // get the list of cities according to the selected province:
             try {
                 /** delete when 热门地区 cities will be got from API **/
-                position = position-1;
+                position = position - 1;
 
                 int numberOfCities = provincesObjectList.get(position).getJSONArray(province).length();
                 for (int j = 0; j < numberOfCities; j++) {
@@ -239,8 +236,10 @@ public class AppointmentAddressActivity extends AppCompatActivity {
     }
 
 
-    /** Utility functions **/
-    public String parseJSON(){
+    /**
+     * Utility functions
+     **/
+    public String parseJSON() {
 
         InputStream is = getResources().openRawResource(R.raw.address);
         StringBuilder buffer = new StringBuilder();
@@ -255,26 +254,25 @@ public class AppointmentAddressActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             Log.e("Error :", e.getMessage());
-        } finally
-        {
+        } finally {
             try {
                 is.close();
                 reader.close();
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.e("Error :", e.getMessage());
             }
         }
 
         String jsonString = buffer.toString();
 
-        return  jsonString;
+        return jsonString;
 
     }
 
 
-    public void  singleSelectItem(View view, int position, int selectedPosition){
+    public void singleSelectItem(View view, int position, int selectedPosition) {
 
-        if(position == selectedPosition){
+        if (position == selectedPosition) {
             view.setBackgroundColor(Color.parseColor("#ffffff"));
         } else {
             view.setBackgroundColor(Color.parseColor("#E2EEE9"));
@@ -283,10 +281,11 @@ public class AppointmentAddressActivity extends AppCompatActivity {
 
     }
 
-    public void updateSelectedPosition(int position,  String selectedRow){
+    public void updateSelectedPosition(int position, String selectedRow) {
 
-        switch (selectedRow){
-            case "province": selectedProvincePosition = position;
+        switch (selectedRow) {
+            case "province":
+                selectedProvincePosition = position;
                 break;
 
         }

@@ -113,6 +113,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     public int pageNum2 = 1;
     public String tag;
     public String userId;
+    private String token;
     private String[] titleList;//标题
     private DropMenuAdapterForResult dropMenuAdapter;
     private PageModel<HospitalBean> baseModel = new PageModel<HospitalBean>();
@@ -142,6 +143,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
     @Override
     public void initData() {
         userId = (String) SPUtils.get(SearchResultListActivity.this, Constants.USER_KEY, "");
+        token = (String) SPUtils.get(SearchResultListActivity.this, Constants.TOKEN, "");
         //加上沉浸式状态栏高度
         int statusHeight = ScreenUtil.getStatusHeight(SearchResultListActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -167,7 +169,33 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
     @Override
     public void initEvent() {
-
+        expert_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //将地址还给baseUrl
+                HttpRequestClient client = HttpRequestClient.getNotInstance(SearchResultListActivity.this, HttpNetUtil.BASE_URL, null);
+                if (EmptyUtils.isNotEmpty(client)) {
+                    //点击进入详情界面
+                    ExpertBean bean = (ExpertBean) parent.getAdapter().getItem(position);
+                    if (EmptyUtils.isNotEmpty(bean)) {
+                        Intent intent = new Intent(SearchResultListActivity.this, DoctorsDetailActivity.class);
+                        //doctorUserId为空
+//                    intent.putExtra("doctorUserId", doctorUserId);
+                        intent.putExtra("patientRecordId", "0");
+                        intent.putExtra("doctorIntro", bean.doctorIntro);
+                        //mobilePhone为空
+//                    intent.putExtra("mobile", mobilePhone);
+                        intent.putExtra("respDoctorName", bean.doctorName);
+                        intent.putExtra("deptCode", bean.deptCode);
+                        intent.putExtra("hospitalId", bean.hospitalId);
+                        intent.putExtra("doctorCode", bean.doctorCode);
+                        //desease为空
+//                    intent.putExtra("desease", desease);
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -547,8 +575,13 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
 
     @Override
     public void clickListener(View v) {
-        ExpertBean bean = (ExpertBean) v.getTag();
-        orderExpert(bean);
+        if (EmptyUtils.isNotEmpty(token)) {
+            ExpertBean bean = (ExpertBean) v.getTag();
+            orderExpert(bean);
+        } else {
+            Intent intent = new Intent(SearchResultListActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void orderExpert(ExpertBean bean) {
@@ -579,6 +612,7 @@ public class SearchResultListActivity extends BaseActivity implements OnFilterDo
                     public void onError(Throwable e) {
                         mProgressDialog.dismiss();
                         Log.d(TAG, e.getMessage());
+                        ToastUtil.showLong(SearchResultListActivity.this, "预约失败!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }

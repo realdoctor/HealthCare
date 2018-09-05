@@ -178,6 +178,9 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                                     JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
+                                    if (arrayList.size() == 0) {
+                                        return;
+                                    }
                                     arrayList.addAll((ArrayList<ExpertBean>) localGson.fromJson(jsonObject.toString(),
                                             new TypeToken<ArrayList<ExpertBean>>() {
                                             }.getType()));
@@ -242,12 +245,15 @@ public class OrderExpertByDateFragment extends BaseFragment implements ExpertByD
                                     JSONArray jsonObject = object.getJSONArray("data");
                                     Gson localGson = new GsonBuilder()
                                             .create();
-                                    if (weekList.size() > 0) {
-                                        orderDateAdapter.notifyDataSetChanged();
-                                        selectDefault();
-                                    } else {
-                                        getActivity().setResult(RESULT_OK);
-                                        getActivity().finish();
+//                                    if (weekList.size() > 0) {
+//                                        orderDateAdapter.notifyDataSetChanged();
+//                                        selectDefault();
+//                                    } else {
+//                                        getActivity().setResult(RESULT_OK);
+//                                        getActivity().finish();
+//                                        return;
+//                                    }
+                                    if (weekList.size() == 0) {
                                         return;
                                     }
                                     weekList.addAll((ArrayList<WeekModel>) localGson.fromJson(jsonObject.toString(),

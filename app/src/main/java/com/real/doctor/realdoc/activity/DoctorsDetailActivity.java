@@ -106,7 +106,14 @@ public class DoctorsDetailActivity extends BaseActivity {
             eduBtn.setVisibility(View.VISIBLE);
         }
         if (EmptyUtils.isNotEmpty(doctorIntro) && EmptyUtils.isNotEmpty(deptCode) && EmptyUtils.isNotEmpty(hospitalId) && EmptyUtils.isNotEmpty(doctorCode)) {
-            docInfo.setText("\u3000\u3000" + doctorIntro);
+            if(EmptyUtils.isNotEmpty(doctorUserId)&&EmptyUtils.isNotEmpty(mobilePhone)&&EmptyUtils.isNotEmpty(desease)){
+                docInfo.setText("\u3000\u3000" + doctorIntro);
+            }else{
+                chatBtn.setVisibility(View.GONE);
+                recordBtn.setVisibility(View.GONE);
+                eduBtn.setVisibility(View.GONE);
+                docInfo.setText("\u3000\u3000" + doctorIntro);
+            }
         } else {
             getDoctorDetail();
         }

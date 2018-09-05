@@ -70,6 +70,7 @@ public class NewDetailActivity extends BaseActivity {
     public String newsId;
     public String userId;
     private String focusFlag;
+    private String token;
     public boolean flag = true;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
@@ -94,13 +95,16 @@ public class NewDetailActivity extends BaseActivity {
             titleBar.setLayoutParams(lp);
         }
         userId = (String) SPUtils.get(NewDetailActivity.this, Constants.USER_KEY, "");
+        token = (String) SPUtils.get(NewDetailActivity.this, Constants.TOKEN, "");
         newsId = getIntent().getStringExtra("newsId");
         focusFlag = getIntent().getStringExtra("focusFlag");
         if (EmptyUtils.isNotEmpty(focusFlag)) {
             if (focusFlag.equals("0")) {
                 tv_focus.setText("关注");
+                flag = false;
             } else if (focusFlag.equals("1")) {
                 tv_focus.setText("取消关注");
+                flag = true;
             }
         } else {
             tv_focus.setText("取消关注");
@@ -121,10 +125,15 @@ public class NewDetailActivity extends BaseActivity {
                 goBackBtn();
                 break;
             case R.id.tv_focus:
-                if (!flag) {
-                    postFocus();
+                if (EmptyUtils.isNotEmpty(token)) {
+                    if (!flag) {
+                        postFocus();
+                    } else {
+                        postUnFocus();
+                    }
                 } else {
-                    postUnFocus();
+                    Intent intent = new Intent(NewDetailActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
                 break;
         }

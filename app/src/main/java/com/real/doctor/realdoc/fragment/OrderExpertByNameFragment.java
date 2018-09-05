@@ -141,7 +141,6 @@ public class OrderExpertByNameFragment extends BaseFragment implements AdapterVi
                                             new TypeToken<ArrayList<ExpertBean>>() {
                                             }.getType()));
                                     expertAdapter.notifyDataSetChanged();
-
                                 } else {
                                 }
                             } catch (JSONException e) {

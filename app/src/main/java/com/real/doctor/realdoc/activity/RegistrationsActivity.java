@@ -301,28 +301,25 @@ public class RegistrationsActivity extends BaseActivity implements OnFilterDoneL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            String province = data.getStringExtra("province");
+        if (resultCode == RESULT_OK && requestCode == REGISTRATION_AREA_EVENT_REQUEST_CODE) {
             String city = data.getStringExtra("city");
-
-            if (requestCode == REGISTRATION_AREA_EVENT_REQUEST_CODE) {
-                // 地区回传
+            // 地区回传
+            if (city.equals("全国")) {
+                cityName = "";
+                right_title.setText("全国");
+            } else {
                 cityName = city;
-                right_title.setText(cityName);
-                pageNum = 1;
-                hospitalBeanArrayList.clear();
-                mProgressDialog.show();
-                getData();
-                refreshLayout.finishRefresh();
+                right_title.setText(city);
             }
+            right_title.setVisibility(View.VISIBLE);
+            pageNum = 1;
+            hospitalBeanArrayList.clear();
+            mProgressDialog.show();
+            getData();
+            refreshLayout.finishRefresh();
         }
-
-
     }
-/**
- * 显示
- */
+
     /**
      * 筛选框 初始化+获取列表数据+筛选条件监听
      */
@@ -478,8 +475,6 @@ public class RegistrationsActivity extends BaseActivity implements OnFilterDoneL
                                     ToastUtil.showLong(RegistrationsActivity.this, "获取医院列表成功!");
                                 } else {
                                     ToastUtil.showLong(RegistrationsActivity.this, msg.toString().trim());
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                    finish();
                                 }
                                 mProgressDialog.dismiss();
                             } catch (JSONException e) {
