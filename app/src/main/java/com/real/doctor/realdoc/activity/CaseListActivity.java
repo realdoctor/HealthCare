@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,11 +27,13 @@ import com.real.doctor.realdoc.R;
 import com.real.doctor.realdoc.adapter.DocDetailAdapter;
 import com.real.doctor.realdoc.adapter.MultilDetailAdapter;
 import com.real.doctor.realdoc.base.BaseActivity;
+import com.real.doctor.realdoc.fragment.CaseRecordFragment;
 import com.real.doctor.realdoc.model.PatientBean;
 import com.real.doctor.realdoc.model.SaveDocBean;
 import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
 import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
 import com.real.doctor.realdoc.service.UnzipService;
+import com.real.doctor.realdoc.util.DateUtil;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.ScreenUtil;
@@ -64,6 +67,10 @@ public class CaseListActivity extends BaseActivity {
     ImageView finishBack;
     @BindView(R.id.inquery)
     TextView inquery;
+    @BindView(R.id.inquery_answer)
+    TextView inqueryAnswer;
+    @BindView(R.id.inquery_answer_time)
+    TextView inqueryAnswerTime;
     @BindView(R.id.inquery_answer_tv)
     TextView inqueryAnswerTv;
     @BindView(R.id.inquery_one)
@@ -72,6 +79,8 @@ public class CaseListActivity extends BaseActivity {
     TextView inqueryQuestionOne;
     @BindView(R.id.inquery_one_tv)
     TextView inqueryOneTv;
+    @BindView(R.id.inquery_one_tv_time)
+    TextView inqueryOneTvTime;
     @BindView(R.id.inquery_one_answer_tv)
     TextView inqueryOneAnswerTv;
     @BindView(R.id.inquery_two)
@@ -80,6 +89,8 @@ public class CaseListActivity extends BaseActivity {
     TextView inqueryQuestionTwo;
     @BindView(R.id.inquery_two_tv)
     TextView inqueryTwoTv;
+    @BindView(R.id.inquery_two_tv_time)
+    TextView inqueryTwoTvTime;
     @BindView(R.id.inquery_two_answer_tv)
     TextView inqueryTwoAnswerTv;
     @BindView(R.id.inquery_three)
@@ -88,6 +99,8 @@ public class CaseListActivity extends BaseActivity {
     TextView inqueryQuestionThree;
     @BindView(R.id.inquery_three_tv)
     TextView inqueryThreeTv;
+    @BindView(R.id.inquery_three_tv_time)
+    TextView inqueryThreeTvTime;
     @BindView(R.id.inquery_three_answer_tv)
     TextView inqueryThreeAnswerTv;
     @BindView(R.id.inquery_info)
@@ -203,6 +216,7 @@ public class CaseListActivity extends BaseActivity {
                                         JSONArray jsonArray = object.getJSONArray("data");
                                         int length = jsonArray.length();
                                         if (length == 1) {
+                                            inqueryAnswer.setVisibility(View.VISIBLE);
                                             JSONObject jsonObj = jsonArray.getJSONObject(0);
                                             if (DocUtils.hasValue(jsonObj, "question")) {
                                                 String question = jsonObj.getString("question");
@@ -214,6 +228,11 @@ public class CaseListActivity extends BaseActivity {
                                                 inqueryAnswerTv.setVisibility(View.VISIBLE);
                                                 inqueryAnswerTv.setText(answer);
                                             }
+                                            if (DocUtils.hasValue(jsonObj, "lastUpdateDtime")) {
+                                                String lastUpdateDtime = jsonObj.getString("lastUpdateDtime");
+                                                inqueryAnswerTime.setVisibility(View.VISIBLE);
+                                                inqueryAnswerTime.setText("(" + DateUtil.timeStamp2Date(lastUpdateDtime, "yyyy年MM月dd日 HH:mm") + ")");
+                                            }
                                         } else if (length == 2) {
                                             for (int i = 0; i < length; i++) {
                                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
@@ -221,6 +240,7 @@ public class CaseListActivity extends BaseActivity {
                                                 inqueryOneTv.setVisibility(View.VISIBLE);
                                                 inqueryTwo.setVisibility(View.VISIBLE);
                                                 inqueryTwoTv.setVisibility(View.VISIBLE);
+                                                inqueryAnswer.setVisibility(View.GONE);
                                                 if (i == 0) {
                                                     if (DocUtils.hasValue(jsonObj, "question")) {
                                                         String question = jsonObj.getString("question");
@@ -232,6 +252,11 @@ public class CaseListActivity extends BaseActivity {
                                                         inqueryOneAnswerTv.setVisibility(View.VISIBLE);
                                                         inqueryOneAnswerTv.setText(answer);
                                                     }
+                                                    if (DocUtils.hasValue(jsonObj, "lastUpdateDtime")) {
+                                                        String lastUpdateDtime = jsonObj.getString("lastUpdateDtime");
+                                                        inqueryOneTvTime.setVisibility(View.VISIBLE);
+                                                        inqueryOneTvTime.setText("(" + DateUtil.timeStamp2Date(lastUpdateDtime, "yyyy年MM月dd日 HH:mm") + ")");
+                                                    }
                                                 } else if (i == 1) {
                                                     if (DocUtils.hasValue(jsonObj, "question")) {
                                                         String question = jsonObj.getString("question");
@@ -242,6 +267,11 @@ public class CaseListActivity extends BaseActivity {
                                                         String answer = jsonObj.getString("answer");
                                                         inqueryTwoAnswerTv.setVisibility(View.VISIBLE);
                                                         inqueryTwoAnswerTv.setText(answer);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "lastUpdateDtime")) {
+                                                        String lastUpdateDtime = jsonObj.getString("lastUpdateDtime");
+                                                        inqueryTwoTvTime.setVisibility(View.VISIBLE);
+                                                        inqueryTwoTvTime.setText("(" + DateUtil.timeStamp2Date(lastUpdateDtime, "yyyy年MM月dd日 HH:mm") + ")");
                                                     }
                                                 }
                                             }
@@ -252,6 +282,7 @@ public class CaseListActivity extends BaseActivity {
                                             inqueryTwoTv.setVisibility(View.VISIBLE);
                                             inqueryThree.setVisibility(View.VISIBLE);
                                             inqueryThreeTv.setVisibility(View.VISIBLE);
+                                            inqueryAnswer.setVisibility(View.GONE);
                                             for (int i = 0; i < length; i++) {
                                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
                                                 if (i == 0) {
@@ -265,6 +296,11 @@ public class CaseListActivity extends BaseActivity {
                                                         inqueryOneAnswerTv.setVisibility(View.VISIBLE);
                                                         inqueryOneAnswerTv.setText(answer);
                                                     }
+                                                    if (DocUtils.hasValue(jsonObj, "lastUpdateDtime")) {
+                                                        String lastUpdateDtime = jsonObj.getString("lastUpdateDtime");
+                                                        inqueryOneTvTime.setVisibility(View.VISIBLE);
+                                                        inqueryOneTvTime.setText("(" + DateUtil.timeStamp2Date(lastUpdateDtime, "yyyy年MM月dd日 HH:mm") + ")");
+                                                    }
                                                 } else if (i == 1) {
                                                     if (DocUtils.hasValue(jsonObj, "question")) {
                                                         String question = jsonObj.getString("question");
@@ -275,6 +311,11 @@ public class CaseListActivity extends BaseActivity {
                                                         String answer = jsonObj.getString("answer");
                                                         inqueryTwoAnswerTv.setVisibility(View.VISIBLE);
                                                         inqueryTwoAnswerTv.setText(answer);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "lastUpdateDtime")) {
+                                                        String lastUpdateDtime = jsonObj.getString("lastUpdateDtime");
+                                                        inqueryTwoTvTime.setVisibility(View.VISIBLE);
+                                                        inqueryTwoTvTime.setText("(" + DateUtil.timeStamp2Date(lastUpdateDtime, "yyyy年MM月dd日 HH:mm") + ")");
                                                     }
                                                 } else if (i == 2) {
                                                     if (DocUtils.hasValue(jsonObj, "question")) {
@@ -286,6 +327,11 @@ public class CaseListActivity extends BaseActivity {
                                                         String answer = jsonObj.getString("answer");
                                                         inqueryThreeAnswerTv.setVisibility(View.VISIBLE);
                                                         inqueryThreeAnswerTv.setText(answer);
+                                                    }
+                                                    if (DocUtils.hasValue(jsonObj, "lastUpdateDtime")) {
+                                                        String lastUpdateDtime = jsonObj.getString("lastUpdateDtime");
+                                                        inqueryThreeTvTime.setVisibility(View.VISIBLE);
+                                                        inqueryThreeTvTime.setText("(" + DateUtil.timeStamp2Date(lastUpdateDtime, "yyyy年MM月dd日 HH:mm") + ")");
                                                     }
                                                 }
                                             }
@@ -405,7 +451,7 @@ public class CaseListActivity extends BaseActivity {
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.finish_back:
-                finish();
+                goBackBtn();
                 break;
             case R.id.reply:
                 //点击回复按钮
@@ -420,5 +466,21 @@ public class CaseListActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBackBtn();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goBackBtn() {
+        //动态注册广播,通知患者管理列表刷新
+        Intent intent = new Intent(CaseRecordFragment.GET_RECOED_LIST);
+        LocalBroadcastManager.getInstance(CaseListActivity.this).sendBroadcast(intent);
+        finish();
     }
 }

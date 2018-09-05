@@ -276,9 +276,9 @@ public class HomeFragment extends BaseFragment {
         final int ballSize = DensityUtil.dip2px(getActivity(), 60);
         Drawable ballIcon;
         if (personFlag) {
-            ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
-        } else {
             ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
+        } else {
+            ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
         }
         //可以尝试使用以下几种不同的config。
         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
@@ -293,7 +293,7 @@ public class HomeFragment extends BaseFragment {
                     if (personFlag) {
                         personFlag = false;
                         SPUtils.put(getActivity(), Constants.ROLE_CHANGE_ID, "1");
-                        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
+                        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
                         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
                         mFloatballManager.changeIcon(getActivity(), ballCfg);
                         docLayout.setVisibility(View.VISIBLE);
@@ -301,7 +301,7 @@ public class HomeFragment extends BaseFragment {
                     } else {
                         personFlag = true;
                         SPUtils.put(getActivity(), Constants.ROLE_CHANGE_ID, "0");
-                        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon_checked);
+                        final Drawable ballIcon = getActivity().getResources().getDrawable(R.mipmap.change_icon);
                         final FloatBallCfg ballCfg = new FloatBallCfg(ballSize, ballIcon, FloatBallCfg.Gravity.RIGHT_CENTER, 450);
                         mFloatballManager.changeIcon(getActivity(), ballCfg);
                         mainLayout.setVisibility(View.VISIBLE);

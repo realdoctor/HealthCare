@@ -41,7 +41,7 @@ public class AudioAdapter extends BaseQuickAdapter<RecordBean, BaseViewHolder> {
         int pos = viewHolder.getLayoutPosition();// 获取当前item的position
         viewHolder.setText(R.id.name, "Record" + String.valueOf(pos + ".mp3"))
                 .setText(R.id.time, DateUtil.timeStamp2Date(item.getElapsedMillis(), "mm:ss"))
-                .setText(R.id.date, DateUtil.timeStamp2Date(String.valueOf(Long.valueOf(time) / 1000), "yyyy年MM月dd日 HH:mm"));
+                .setText(R.id.date, DateUtil.timeStamp2Date(String.valueOf(Long.valueOf(time)), "yyyy年MM月dd日 HH:mm"));
         int spare = item.getSpareImage();
         if (spare == 0) {
             imageView.setVisibility(View.GONE);

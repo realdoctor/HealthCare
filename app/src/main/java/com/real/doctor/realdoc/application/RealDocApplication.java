@@ -34,6 +34,7 @@ import com.real.doctor.realdoc.util.Constants;
 import com.real.doctor.realdoc.util.DocUtils;
 import com.real.doctor.realdoc.util.EmptyUtils;
 import com.real.doctor.realdoc.util.FileUtils;
+import com.real.doctor.realdoc.util.NetworkUtil;
 import com.real.doctor.realdoc.util.SDCardUtils;
 import com.real.doctor.realdoc.util.SPUtils;
 import com.real.doctor.realdoc.util.StringUtils;
@@ -111,10 +112,14 @@ public class RealDocApplication extends MultiDexApplication {
         StrictMode.setVmPolicy(new
                 StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
         verifyFlag = (String) SPUtils.get(mContext, Constants.VERIFYFLAG, "");
-        if (StringUtils.equals(verifyFlag, "1")) {
-            getRecordListData();
+        if (NetworkUtil.isNetworkAvailable(getContext())) {
+            if (StringUtils.equals(verifyFlag, "1")) {
+                getRecordListData();
+            } else {
+                //do nothing
+            }
         } else {
-            //do nothing
+            NetworkUtil.goToWifiSetting(getContext());
         }
         //极光推送
         JPushInterface.setDebugMode(true);
@@ -337,7 +342,6 @@ public class RealDocApplication extends MultiDexApplication {
                                 } else {
                                     ToastUtil.showLong(getContext(), "病历数据列表请求失败!");
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

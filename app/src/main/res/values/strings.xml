@@ -205,6 +205,7 @@
     <string name="other_record">其他病历</string>
     <string name="revisiting">进行中</string>
     <string name="revisited">已结束</string>
+    <string name="inquery_answer">答案:</string>
     <string name="inquery_one">问题一:</string>
     <string name="answer_one">答案一:</string>
     <string name="inquery_two">问题二:</string>

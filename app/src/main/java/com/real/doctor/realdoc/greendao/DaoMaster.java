@@ -28,6 +28,7 @@ public class DaoMaster extends AbstractDaoMaster {
         MessageBeanDao.createTable(db, ifNotExists);
         NewFriendsMsgsDao.createTable(db, ifNotExists);
         PrefBeanDao.createTable(db, ifNotExists);
+        PushInfoBeanDao.createTable(db, ifNotExists);
         RecieverAddressListBeanDao.createTable(db, ifNotExists);
         RecordBeanDao.createTable(db, ifNotExists);
         RobotBeanDao.createTable(db, ifNotExists);
@@ -37,7 +38,6 @@ public class DaoMaster extends AbstractDaoMaster {
         SearchProductBeanDao.createTable(db, ifNotExists);
         UserBeanDao.createTable(db, ifNotExists);
         VideoBeanDao.createTable(db, ifNotExists);
-        PushInfoBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -49,6 +49,7 @@ public class DaoMaster extends AbstractDaoMaster {
         MessageBeanDao.dropTable(db, ifExists);
         NewFriendsMsgsDao.dropTable(db, ifExists);
         PrefBeanDao.dropTable(db, ifExists);
+        PushInfoBeanDao.dropTable(db, ifExists);
         RecieverAddressListBeanDao.dropTable(db, ifExists);
         RecordBeanDao.dropTable(db, ifExists);
         RobotBeanDao.dropTable(db, ifExists);
@@ -58,7 +59,6 @@ public class DaoMaster extends AbstractDaoMaster {
         SearchProductBeanDao.dropTable(db, ifExists);
         UserBeanDao.dropTable(db, ifExists);
         VideoBeanDao.dropTable(db, ifExists);
-        PushInfoBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -84,6 +84,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(MessageBeanDao.class);
         registerDaoClass(NewFriendsMsgsDao.class);
         registerDaoClass(PrefBeanDao.class);
+        registerDaoClass(PushInfoBeanDao.class);
         registerDaoClass(RecieverAddressListBeanDao.class);
         registerDaoClass(RecordBeanDao.class);
         registerDaoClass(RobotBeanDao.class);
@@ -93,7 +94,6 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(SearchProductBeanDao.class);
         registerDaoClass(UserBeanDao.class);
         registerDaoClass(VideoBeanDao.class);
-        registerDaoClass(PushInfoBeanDao.class);
     }
 
     public DaoSession newSession() {

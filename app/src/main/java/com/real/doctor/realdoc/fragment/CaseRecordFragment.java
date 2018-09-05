@@ -1,13 +1,15 @@
 package com.real.doctor.realdoc.fragment;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,6 +59,7 @@ public class CaseRecordFragment extends BaseFragment {
     private List<PatientBean> patientList;
     private static int pageNum = 1;
     private String mUserId;
+    public static String GET_RECOED_LIST = "android.intent.action.getRecordList";
 
     @Override
     public int getLayoutId() {
@@ -89,6 +92,7 @@ public class CaseRecordFragment extends BaseFragment {
         caseControlAdapter = new CaseControlAdapter(R.layout.case_control_item, patientList);
         mUserId = (String) SPUtils.get(getActivity(), Constants.USER_KEY, "");
         initCaseControl("");
+        loadBroadCast();
     }
 
     private void initCaseControl(String searchStr) {
@@ -200,6 +204,19 @@ public class CaseRecordFragment extends BaseFragment {
     @Override
     public void doBusiness(Context mContext) {
 
+    }
+
+    private void loadBroadCast() {
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(GET_RECOED_LIST);
+        BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                initCaseControl("");
+            }
+        };
+        broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
     }
 
     @Override

@@ -47,6 +47,7 @@ import java.util.UUID;
  *
  */
 public class VoiceCallActivity extends CallActivity implements OnClickListener {
+
     private LinearLayout comingBtnContainer;
     private Button hangupBtn;
     private Button refuseBtn;
