@@ -190,12 +190,9 @@ public class CallActivity extends AppCompatActivity {
                     ringtone.stop();
                 if (isInComingCall) {
                     try {
-                        EMClient.getInstance().callManager().answerCall();
-                        isAnswered = true;
                         // meizu MX5 4G, hasDataConnection(context) return status is incorrect
                         // MX5 con.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() return false in 4G
                         // so we will not judge it, App can decide whether judge the network status
-
                         if (NetUtils.hasDataConnection(CallActivity.this)) {
                             EMClient.getInstance().callManager().answerCall();
                             isAnswered = true;

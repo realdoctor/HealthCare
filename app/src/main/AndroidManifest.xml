@@ -542,7 +542,7 @@
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="1154180531099372#realdoc" />
+            android:value="1152180524099501#healthcare" />
         <!-- 开机自启动服务 -->
         <receiver android:name=".receiver.StartServiceReceiver">
             <intent-filter android:priority="1000">
