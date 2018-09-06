@@ -833,7 +833,7 @@ public class SaveRecordActivity extends BaseActivity {
             case 0x0002:
                 takePhotoCompress();
                 break;
-            case 0x003:
+            case 0x0003:
                 if (DocUtils.isFastClick()) {
                     Intent intent = new Intent(SaveRecordActivity.this, VideoOneActivity.class);
                     Bundle bundle = new Bundle();
