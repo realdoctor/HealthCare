@@ -115,7 +115,7 @@ public class MyPayActivity extends BaseActivity {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("pageNum", pageNum);
         param.put("pageSize", "10");
-        param.put("mark", "2");
+        param.put("payFlag", "1");
         param.put("userId", userId);
         HttpRequestClient.getInstance(MyPayActivity.this).createBaseApi().get("account/payment/list"
                 , param, new BaseObserver<ResponseBody>(MyPayActivity.this) {
