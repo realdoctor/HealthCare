@@ -38,13 +38,26 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import com.real.doctor.realdoc.R;
+import com.real.doctor.realdoc.application.RealDocApplication;
+import com.real.doctor.realdoc.rxjavaretrofit.entity.BaseObserver;
+import com.real.doctor.realdoc.rxjavaretrofit.http.HttpRequestClient;
+import com.real.doctor.realdoc.util.DocUtils;
+import com.real.doctor.realdoc.util.GlideUtils;
+import com.real.doctor.realdoc.util.ToastUtil;
 import com.real.doctor.realdoc.widget.HuanXinHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.UUID;
+
+import io.reactivex.disposables.Disposable;
+import okhttp3.ResponseBody;
 
 /**
  * 语音通话页面
- *
  */
 public class VoiceCallActivity extends CallActivity implements OnClickListener {
 
@@ -54,7 +67,9 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
     private Button answerBtn;
     private ImageView muteImage;
     private ImageView handsFreeImage;
-
+    private ImageView swingCard;
+    private TextView nickTextView;
+    private TextView durationTextView;
     private boolean isMuteState;
     private boolean isHandsfreeState;
 
@@ -84,9 +99,10 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
         hangupBtn = (Button) findViewById(R.id.btn_hangup_call);
         muteImage = (ImageView) findViewById(R.id.iv_mute);
         handsFreeImage = (ImageView) findViewById(R.id.iv_handsfree);
+        swingCard = (ImageView) findViewById(R.id.swing_card);
         callStateTextView = (TextView) findViewById(R.id.tv_call_state);
-        TextView nickTextView = (TextView) findViewById(R.id.tv_nick);
-        TextView durationTextView = (TextView) findViewById(R.id.tv_calling_duration);
+        nickTextView = (TextView) findViewById(R.id.tv_nick);
+        durationTextView = (TextView) findViewById(R.id.tv_calling_duration);
         chronometer = (Chronometer) findViewById(R.id.chronometer);
         voiceContronlLayout = (LinearLayout) findViewById(R.id.ll_voice_control);
         netwrokStatusVeiw = (TextView) findViewById(R.id.tv_network_status);
@@ -106,7 +122,6 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 
         username = getIntent().getStringExtra("username");
         isInComingCall = getIntent().getBooleanExtra("isComingCall", false);
-        nickTextView.setText(username);
         if (!isInComingCall) {// outgoing call
             soundPool = new SoundPool(1, AudioManager.STREAM_RING, 0);
             outgoing = soundPool.load(this, R.raw.em_outgoing, 1);
@@ -132,6 +147,8 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
         final int MAKE_CALL_TIMEOUT = 50 * 1000;
         handler.removeCallbacks(timeoutHangup);
         handler.postDelayed(timeoutHangup, MAKE_CALL_TIMEOUT);
+        //显示对方的头像swingCard,只能通过请求获得
+        getUserInfo();
     }
 
     /**
@@ -432,4 +449,70 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 
     }
 
+    private void getUserInfo() {
+        HashMap<String, String> param = new HashMap<String, String>();
+        param.put("mobilePhone", username);
+        HttpRequestClient.getInstance(VoiceCallActivity.this).createBaseApi().get("user/info"
+                , param, new BaseObserver<ResponseBody>(VoiceCallActivity.this) {
+                    protected Disposable disposable;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showLong(VoiceCallActivity.this, "获取用户信息失败,请确定是否已登录!");
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (disposable != null && !disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    protected void onHandleSuccess(ResponseBody responseBody) {
+                        String data = null;
+                        String msg = null;
+                        String code = null;
+                        try {
+                            data = responseBody.string().toString();
+                            try {
+                                JSONObject object = new JSONObject(data);
+                                if (DocUtils.hasValue(object, "msg")) {
+                                    msg = object.getString("msg");
+                                }
+                                if (DocUtils.hasValue(object, "code")) {
+                                    code = object.getString("code");
+                                }
+                                if (msg.equals("ok") && code.equals("0")) {
+                                    JSONObject obj = object.getJSONObject("data");
+                                    if (DocUtils.hasValue(obj, "realName")) {
+                                        String realName = obj.getString("realName");
+                                        nickTextView.setText(realName);
+                                    }
+                                    if (DocUtils.hasValue(obj, "originalImageUrl")) {
+                                        String imageUrl = obj.getString("originalImageUrl");
+                                        GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), imageUrl, swingCard);
+                                    }
+                                } else {
+                                    ToastUtil.showLong(VoiceCallActivity.this, "获取用户信息失败,请确定是否已登录!");
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+    }
 }

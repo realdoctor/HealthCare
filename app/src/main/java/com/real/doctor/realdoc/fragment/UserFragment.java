@@ -207,6 +207,7 @@ public class UserFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        ToastUtil.showLong(getActivity(), "获取用户信息失败,请确定是否已登录!");
                         if (disposable != null && !disposable.isDisposed()) {
                             disposable.dispose();
                         }
@@ -254,7 +255,7 @@ public class UserFragment extends BaseFragment {
                                         GlideUtils.loadImageViewDiskCache(RealDocApplication.getContext(), originalImageUrl, userAvator);
                                     }
                                 } else {
-                                    ToastUtil.showLong(getActivity(), "获取用户信息失败.请确定是否已登录!");
+                                    ToastUtil.showLong(getActivity(), "获取用户信息失败,请确定是否已登录!");
                                 }
 
                             } catch (JSONException e) {
